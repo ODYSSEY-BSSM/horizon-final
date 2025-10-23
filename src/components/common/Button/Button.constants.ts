@@ -54,11 +54,12 @@ export const buttonStyles = {
     default: css`
       background-color: ${colors.primary[500]};
       color: ${colors.white};
-        
+      border: none;
+
       &:hover {
         background-color: ${colors.primary[700]};
       }
-        
+
       &:active {
         background-color: ${colors.primary[900]};
       }
@@ -67,6 +68,7 @@ export const buttonStyles = {
       cursor: not-allowed;
       background-color: ${colors.neutral[300]};
       color: ${colors.neutral[500]};
+      border: none;
     `,
   },
   outlined: {
@@ -74,12 +76,12 @@ export const buttonStyles = {
       background-color: transparent;
       border: 1px solid ${colors.primary[500]};
       color: ${colors.primary[500]};
-        
+
       &:hover {
         background-color: ${colors.primary[600]};
         color: ${colors.white};
       }
-        
+
       &:active {
         background-color: ${colors.primary[900]};
         color: ${colors.white};
@@ -90,6 +92,27 @@ export const buttonStyles = {
       background-color: transparent;
       color: ${colors.neutral[300]};
       border: 1px solid ${colors.neutral[300]};
+    `,
+  },
+  text: {
+    default: css`
+      background-color: transparent;
+      border: none;
+      color: ${colors.primary[500]};
+
+      &:hover {
+        background-color: ${colors.primary[50]};
+      }
+
+      &:active {
+        background-color: ${colors.primary[100]};
+      }
+    `,
+    disabled: css`
+      cursor: not-allowed;
+      background-color: transparent;
+      color: ${colors.neutral[300]};
+      border: none;
     `,
   },
 } as const;
