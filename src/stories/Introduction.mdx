@@ -1,0 +1,90 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Horizon Design System
+
+Welcome to the Horizon Design System Storybook! This is your comprehensive guide to building consistent, accessible, and beautiful user interfaces.
+
+## 🎨 Design Tokens
+
+Our design system is built on a foundation of design tokens that ensure consistency across all components:
+
+- **[Colors](/story/design-tokens-colors--color-palette)** - Primary, neutral, semantic, and roadmap color palettes
+- **[Typography](/story/design-tokens-typography--font-families)** - Font families, sizes, weights, line heights, and letter spacing
+- **[Spacing](/story/design-tokens-spacing--spacing-scale)** - Consistent spacing scale for layout and component spacing
+- **[Border Radius](/story/design-tokens-border-radius--radius-scale)** - Border radius system for component styling
+
+## 🧱 Components
+
+### Common Components
+
+- **[Button](/story/common-button--primary)** - Primary actions and interactive elements
+- **[Text](/story/common-text--heading-1)** - Typography component with all text variants
+- **[Icon](/story/common-icon--small)** - Icon system with multiple sizes and states
+- **[Divider](/story/common-divider--horizontal)** - Visual separation elements
+- **[TextField](/story/common-textfield--default)** - Input fields with various states and types
+
+## 🎯 Getting Started
+
+1. **Explore Design Tokens** - Start with our design tokens to understand the visual foundation
+2. **Browse Components** - Check out individual component documentation and examples
+3. **Interactive Controls** - Use the Controls panel to experiment with component props
+4. **Accessibility Testing** - Use the A11y panel to ensure components meet accessibility standards
+5. **Responsive Design** - Test components across different viewport sizes
+
+## 🔧 Development Guidelines
+
+### Using Design Tokens
+
+```jsx
+import { colors } from '@/core/tokens/color/color';
+import { spacing } from '@/core/tokens/spacing/spacing';
+import { typos } from '@/core/tokens/typo/typo';
+
+const styles = {
+  backgroundColor: colors.primary[500],
+  padding: spacing.medium,
+  fontFamily: typos.fontFamily.text.join(', '),
+};
+```
+
+### Component Implementation
+
+All components follow consistent patterns:
+- TypeScript for type safety
+- Emotion for styling with design tokens
+- Comprehensive props interfaces
+- Built-in accessibility features
+
+### Testing
+
+- **Visual Testing** - Use Storybook to verify component appearance
+- **Accessibility** - Use the A11y addon to check compliance
+- **Responsive** - Test across different viewport sizes
+- **Interactive** - Verify component behavior with Controls
+
+## 📱 Responsive Design
+
+Our components are designed to work across all screen sizes:
+- **Mobile**: 375px - 767px
+- **Tablet**: 768px - 1199px
+- **Desktop**: 1200px - 1439px
+- **Wide**: 1440px+
+
+## ♿ Accessibility
+
+Accessibility is built into every component:
+- Semantic HTML structure
+- ARIA attributes where needed
+- Keyboard navigation support
+- Color contrast compliance
+- Screen reader compatibility
+
+## 🎨 Theming
+
+The design system supports theming through design tokens. Use the theme switcher in the toolbar to preview components in different themes.
+
+---
+
+Ready to explore? Start with our [Design Tokens](/story/design-tokens-colors--color-palette) or jump into [Components](/story/common-button--primary)!

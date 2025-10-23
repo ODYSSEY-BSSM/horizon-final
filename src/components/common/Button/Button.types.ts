@@ -1,7 +1,7 @@
 import type React from 'react';
 
 export type ButtonSize = 'small' | 'medium' | 'large';
-export type ButtonVariant = 'contained' | 'outlined';
+export type ButtonVariant = 'contained' | 'outlined' | 'text';
 export type IconPosition = 'none' | 'left' | 'right' | 'only';
 
 export interface ButtonProps<T extends React.ElementType = 'button'> {
