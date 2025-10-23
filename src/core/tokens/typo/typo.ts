@@ -54,5 +54,5 @@ export const typos = {
   fontSize,
   fontWeight,
   letterSpacing,
-  lineHeight
+  lineHeight,
 } as const;

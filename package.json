@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "prepare": "husky",
+    "format": "bunx @biomejs/biome format . --write && bunx @biomejs/biome lint . --write",
+    "lint": "bunx @biomejs/biome check .",
+    "lint:fix": "bunx @biomejs/biome format . --write && bunx @biomejs/biome lint . --write",
+    "lint:unsafe": "bunx @biomejs/biome check . --write --unsafe"
   },
   "dependencies": {
     "react": "19.1.0",
@@ -14,9 +18,11 @@
     "next": "15.4.6"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@biomejs/biome": "2.2.7",
     "@types/node": "^20",
     "@types/react": "^19",
-    "@types/react-dom": "^19"
+    "@types/react-dom": "^19",
+    "husky": "^9.1.7",
+    "typescript": "^5"
   }
 }
