@@ -1,0 +1,60 @@
+name: '문서 작성 및 수정'
+description: '문서 작성 및 수정에 대한 이슈입니다.'
+title: 'docs: '
+labels: ['docs']
+body:
+  - type: textarea
+    attributes:
+      label: 📚 문서 개요
+      description: 작성하거나 수정할 문서에 대한 설명을 작성해 주세요.
+      placeholder: |
+        어떤 문서를 작성하거나 수정할 예정인가요?
+        예) API 문서 업데이트, 컴포넌트 사용법 가이드 작성 등
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: 📝 문서 유형
+      description: 작성할 문서의 유형을 선택해 주세요.
+      options:
+        - README
+        - API 문서
+        - 사용법 가이드
+        - 개발 가이드
+        - 아키텍처 문서
+        - 스토리북 문서
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✅ 작업 내용
+      description: 문서 작업에 포함될 내용을 작성해 주세요.
+      placeholder: |
+        - [ ] 새로운 컴포넌트 사용법 문서화
+        - [ ] API 변경사항 반영
+        - [ ] 예제 코드 추가
+        - [ ] 스크린샷 업데이트
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🎯 대상 독자
+      description: 이 문서의 주요 독자층을 명시해 주세요.
+      placeholder: |
+        - 개발자
+        - 디자이너
+        - PM/기획자
+        - 사용자
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🏄‍♂️ 참고 자료
+      description: 문서 작성에 참고할 자료가 있다면 작성해 주세요.
+      placeholder: |
+        - 관련 문서 링크
+        - 참고할 다른 프로젝트 문서
+        - 디자인 시스템 가이드 등
+    validations:
+      required: false
