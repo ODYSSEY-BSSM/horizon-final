@@ -6,7 +6,10 @@ const config: StorybookConfig = {
     '../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/tokens/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
-  addons: ['@storybook/addon-docs', '@storybook/addon-controls', '@storybook/addon-actions'],
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y',
+  ],
   framework: {
     name: '@storybook/nextjs-vite',
     options: {
@@ -26,9 +29,6 @@ const config: StorybookConfig = {
   typescript: {
     check: false,
     reactDocgen: false,
-  },
-  docs: {
-    autodocs: true,
   },
 };
 export default config;
