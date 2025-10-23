@@ -1,0 +1,50 @@
+name: '기능 제안 및 추가'
+description: '새로운 기능에 대한 이슈를 작성하세요!'
+title: 'feat: '
+labels: ['feature']
+body:
+  - type: input
+    attributes:
+      label: ✨ 개요
+      description: 새로운 기능에 대한 설명을 작성해 주세요.
+      placeholder: 꼼꼼하게 적을수록 좋습니다!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✅ 해야 할 일
+      description: 해야 할 일을 작성해 주세요.
+      placeholder: |
+        - [ ] UI 컴포넌트 구현
+        - [ ] 상태 관리 로직 구현
+        - [ ] 테스트 코드 작성
+        - [ ] 스토리북 문서화
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🎨 UI/UX 요구사항
+      description: 디자인 및 사용자 경험 관련 요구사항을 정리해 주세요.
+      placeholder: |
+        - [ ] 모바일 반응형 지원
+        - [ ] 접근성 (a11y) 고려
+        - [ ] 다크모드 지원
+        - [ ] 로딩 상태 표시
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🔧 기술적 요구사항
+      description: 개발시 유의해야 할 기술적 요구사항을 정리해 주세요.
+      placeholder: |
+        - [ ] TypeScript 타입 안전성 보장
+        - [ ] 성능 최적화 (번들 크기, 렌더링)
+        - [ ] 브라우저 호환성 (Chrome, Safari, Firefox)
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🙋🏻 덧붙일 말
+      description: 더 하고 싶은 말이 있다면 작성해 주세요.
+    validations:
+      required: false

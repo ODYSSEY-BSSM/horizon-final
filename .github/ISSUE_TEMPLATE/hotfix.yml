@@ -1,0 +1,75 @@
+name: '긴급 수정'
+description: '프로덕션 환경의 긴급한 문제를 해결하는 이슈입니다.'
+title: 'hotfix: '
+labels: ['hotfix', 'urgent']
+body:
+  - type: textarea
+    attributes:
+      label: 🚨 긴급 문제 설명
+      description: 발생한 긴급 문제에 대한 상세한 설명을 작성해 주세요.
+      placeholder: |
+        어떤 문제가 발생했나요? 얼마나 심각한가요?
+        사용자에게 미치는 영향과 비즈니스 임팩트를 포함해 주세요.
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: 🔥 심각도
+      description: 문제의 심각도를 선택해 주세요.
+      options:
+        - Critical (서비스 중단)
+        - High (주요 기능 장애)
+        - Medium (일부 기능 문제)
+        - Low (사용성 문제)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🏃‍♂️ 재현 방법
+      description: 문제가 발생하는 정확한 재현 방법을 작성해 주세요.
+      placeholder: |
+        1. 특정 페이지에 접속한다
+        2. 특정 액션을 수행한다
+        3. 오류가 발생한다
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🌍 영향 범위
+      description: 이 문제가 영향을 미치는 범위를 작성해 주세요.
+      placeholder: |
+        - 영향받는 사용자: 전체 사용자 / 특정 브라우저 / 특정 기능 사용자
+        - 영향받는 환경: Production / Staging
+        - 시작 시점: 언제부터 발생했는지
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ⚡ 임시 해결책
+      description: 현재 적용 중인 임시 해결책이나 우선 고려할 해결 방안을 작성해 주세요.
+      placeholder: |
+        - 현재 적용된 임시 조치
+        - 빠른 해결을 위한 우선순위 방안
+        - 롤백 가능 여부
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 📊 에러 로그
+      description: 관련 에러 로그나 스택 트레이스를 첨부해 주세요.
+      render: shell
+      placeholder: |
+        에러 로그, 스택 트레이스, 모니터링 데이터 등
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 📱 환경 정보
+      description: 문제가 발생한 환경 정보를 작성해 주세요.
+      placeholder: |
+        - 브라우저: Chrome 120.0.0
+        - OS: Windows 10 / macOS 14
+        - 디바이스: Desktop / Mobile
+        - 네트워크: WiFi / Mobile
+    validations:
+      required: true

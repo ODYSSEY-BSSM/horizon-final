@@ -1,0 +1,38 @@
+name: '코드 개선'
+description: '더 나은 코드를 위하여!'
+title: 'refactor: '
+labels: ['refactor']
+body:
+  - type: textarea
+    attributes:
+      label: 🙌 개선 방향
+      description: 개선 방향을 작성해 주세요.
+      placeholder: |
+        현재 문제점과 개선하고 싶은 방향을 꼼꼼하게 적어주세요!
+        예) 버튼 컴포넌트의 접근성 개선, 번들 크기 최적화 등
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 💻 코드
+      description: 관련 코드가 있다면 복붙해 주세요.
+      placeholder: |
+        ```tsx
+        // 현재 코드 또는 개선하고 싶은 코드
+        ```
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🎨 스크린샷/화면
+      description: 현재 UI 스크린샷이나 개선 전후 비교 이미지
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🏄‍♂️ 참고 자료
+      description: 참고 자료가 있다면 작성해 주세요.
+      placeholder: |
+        - 관련 문서 링크
+        - 비슷한 사례
+        - 성능 측정 결과 등

@@ -1,0 +1,55 @@
+name: '버그 수정'
+description: '버그가 발생했나요?'
+title: 'fix: '
+labels: ['fix']
+body:
+  - type: textarea
+    attributes:
+      label: 🐞 설명
+      description: 버그에 대한 설명을 작성해 주세요.
+      placeholder: 꼼꼼하게 적을수록 좋습니다!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ⛰️ 재현 방법
+      description: 버그가 발생한 맥락(=재현 방법)을 작성해 주세요.
+      placeholder: |
+        1. 로그인 페이지에 접속한다.
+        2. 이메일 입력 필드를 클릭한다.
+        3. 키보드로 이메일을 입력한다.
+        4. 입력 필드가 깜빡거리면서 텍스트가 사라진다.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🌏 환경
+      description: 버그가 발생한 환경에 대해 작성해 주세요.
+      placeholder: |
+        OS: macOS 14.2.1
+        브라우저: Chrome 120.0.0 / Safari 17.2
+        디바이스: MacBook Pro 16" / iPhone 15 Pro
+        화면 크기: 1920x1080 / 390x844
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🖼️ 스크린샷/영상
+      description: 버그 발생 화면의 스크린샷이나 화면 녹화 영상
+      placeholder: 이미지나 동영상을 드래그&드롭하거나 붙여넣기 해주세요
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 📄 콘솔 로그/에러
+      description: 브라우저 개발자 도구의 콘솔 로그나 에러 메시지
+      render: shell
+      placeholder: |
+        TypeError: Cannot read property 'length' of undefined
+            at Component.render (App.tsx:25:8)
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: 🙋🏻 덧붙일 말
+      description: 더 하고 싶은 말이 있다면 작성해 주세요.
