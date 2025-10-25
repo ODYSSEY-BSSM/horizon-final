@@ -1,11 +1,22 @@
 import { apiClient } from './client';
-import type { LoginRequest, LoginResponse, TokenRefreshResponse, UserInfoResponse } from './types';
+import type {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  TokenRefreshResponse,
+  UserInfoResponse,
+} from './types';
 
 export const authApi = {
   // 로그인
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<LoginResponse>('/auth', credentials);
     return response.data;
+  },
+
+  // 회원가입
+  register: async (data: RegisterRequest): Promise<void> => {
+    await apiClient.post('/user', data);
   },
 
   // 토큰 갱신
