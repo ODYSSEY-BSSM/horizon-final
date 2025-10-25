@@ -7,6 +7,7 @@ export type {
   ApiResponse,
   LoginRequest,
   LoginResponse,
+  RegisterRequest,
   TokenRefreshResponse,
   UserInfoResponse,
 } from './types';

@@ -16,6 +16,12 @@ export interface LoginResponse {
   refreshToken: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  username: string;
+}
+
 export interface UserInfoResponse {
   id: string;
   email: string;
