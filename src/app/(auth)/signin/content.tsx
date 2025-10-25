@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
-import ContinueWithGoogle from '../_components/ContinueWithGoogle';
-import SecondaryAction from '../_components/SecondaryAction';
-import { useLogin } from '../_hooks/useSignIn';
+import ContinueWithGoogle from './_components/ContinueWithGoogle';
+import SecondaryAction from './_components/SecondaryAction';
+import { useLogin } from './_hooks/useSignIn';
 
 const SignInForm = () => {
   const [email, setEmail] = useState('');
