@@ -13,8 +13,13 @@ const PasswordStep = ({
   isLoading,
   errors,
 }: PasswordStepProps) => {
+  const isPasswordValid =
+    password.length >= 8 &&
+    /[!@#$%^&*(),.?":{}|<>]/.test(password) &&
+    /\d/.test(password);
+
   return (
-    <>
+    <StyledContainer>
       <StyledFieldsWrapper>
         <TextField
           label="비밀번호"
@@ -24,7 +29,7 @@ const PasswordStep = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={!!errors.password}
-          helperText={errors.password}
+          helperText={errors.password || '8자 이상, 숫자 포함, 기호 포함'}
         />
         <TextField
           label="비밀번호 확인"
@@ -45,6 +50,7 @@ const PasswordStep = ({
           !confirmPassword.trim() ||
           !!errors.password ||
           !!errors.confirmPassword ||
+          !isPasswordValid ||
           isLoading
         }
       >
@@ -52,11 +58,18 @@ const PasswordStep = ({
           {isLoading ? '설정 중...' : '완료'}
         </Text>
       </StyledSubmitButton>
-    </>
+    </StyledContainer>
   );
 };
 
 export default PasswordStep;
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 62px;
+  width: 100%;
+`;
 
 const StyledFieldsWrapper = styled.div`
   display: flex;
@@ -75,7 +88,6 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
-  margin-top: 62px;
   
   &:hover {
     background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};

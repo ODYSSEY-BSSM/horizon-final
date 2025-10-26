@@ -43,35 +43,37 @@ const SignInForm = () => {
 
   return (
     <StyledContainer>
-      <StyledHeaderWrapper>
-        <Text variant="H2" color={tokens.colors.primary[500]}>
-          HORIZON
-        </Text>
-        <Text variant="B1" color={tokens.colors.neutral[500]}>
-          환영합니다, 로그인을 진행해주세요.
-        </Text>
-      </StyledHeaderWrapper>
+      <StyledContentWrapper>
+        <StyledHeaderWrapper>
+          <Text variant="H2" color={tokens.colors.primary[500]}>
+            HORIZON
+          </Text>
+          <Text variant="B1" color={tokens.colors.neutral[500]}>
+            환영합니다, 로그인을 진행해주세요.
+          </Text>
+        </StyledHeaderWrapper>
 
-      <StyledFormWrapper>
-        <TextField
-          label="이메일"
-          placeholder="이메일 입력"
-          type="email"
-          leftIcon="person"
-          width="100%"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          label="비밀번호"
-          placeholder="비밀번호 입력"
-          type="password"
-          leftIcon="lock"
-          width="100%"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </StyledFormWrapper>
+        <StyledFormWrapper>
+          <TextField
+            label="이메일"
+            placeholder="이메일 입력"
+            type="email"
+            leftIcon="person"
+            width="100%"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="비밀번호"
+            placeholder="비밀번호 입력"
+            type="password"
+            leftIcon="lock"
+            width="100%"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </StyledFormWrapper>
+      </StyledContentWrapper>
 
       <StyledActionsWrapper>
         <StyledButtonGroup>
@@ -107,11 +109,17 @@ export default SignInForm;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 28px;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100vh;
+`;
+
+const StyledContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 `;
 
 const StyledLoginButton = styled.button<{ disabled: boolean }>`

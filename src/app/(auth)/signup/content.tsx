@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { SwitchCase } from '@toss/react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
@@ -61,135 +62,103 @@ const SignUpContent = () => {
     }
   };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 'email':
-        return (
-          <>
-            <StyledFormSection direction="column" gap="40px">
-              <StyledHeaderSection direction="column" gap="16px">
-                <StyledBackButton onClick={handleBack}>
-                  <Icon name="arrow_left_alt" color={tokens.colors.neutral[400]} size="24px" />
-                </StyledBackButton>
-                <StyledTitleSection direction="column" gap="8px" align="start">
-                  <StyledTitle>{getStepTitle()}</StyledTitle>
-                  <StyledDescription>{getStepDescription()}</StyledDescription>
-                </StyledTitleSection>
-              </StyledHeaderSection>
-              <TextField
-                label="이메일"
-                placeholder="이메일 입력"
-                type="email"
-                width="100%"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
+
+  return (
+    <StyledContainer>
+      <StyledContentWrapper>
+        <StyledHeaderWrapper>
+          {currentStep !== 'email' && (
+            <StyledBackButton onClick={handleBack}>
+              <Icon name="arrow_left_alt" color={tokens.colors.neutral[400]} size="24px" />
+            </StyledBackButton>
+          )}
+          <StyledTitleSection>
+            <Text variant="H2" color={tokens.colors.primary[500]}>{getStepTitle()}</Text>
+            <Text variant="B1">{getStepDescription()}</Text>
+          </StyledTitleSection>
+        </StyledHeaderWrapper>
+
+        <SwitchCase
+          value={currentStep}
+          caseBy={{
+            email: (
+              <EmailStep
+                email={email}
+                setEmail={(value: string) => {
+                  setEmail(value);
                   if (errors.email) {
                     setErrors((prev: Record<string, string>) => ({ ...prev, email: '' }));
                   }
                 }}
-                error={!!errors.email}
-                helperText={errors.email}
+                onSubmit={handleEmailSubmit}
+                isLoading={isLoading}
+                errors={errors}
+                onGoogleSignUp={handleGoogleSignUp}
+                onSignIn={handleSignIn}
               />
-            </StyledFormSection>
-            <EmailStep
-              email={email}
-              onSubmit={handleEmailSubmit}
-              isLoading={isLoading}
-              errors={errors}
-              onGoogleSignUp={handleGoogleSignUp}
-              onSignIn={handleSignIn}
-            />
-          </>
-        );
-
-      case 'verification':
-        return (
-          <VerificationStep
-            verificationCode={verificationCode}
-            setVerificationCode={(value: string) => {
-              setVerificationCode(value);
-              if (errors.code) {
-                setErrors((prev: Record<string, string>) => ({ ...prev, code: '' }));
-              }
-            }}
-            onSubmit={handleVerificationSubmit}
-            isLoading={isLoading}
-            errors={errors}
-            email={signUpData.email}
-          />
-        );
-
-      case 'password':
-        return (
-          <PasswordStep
-            password={password}
-            setPassword={(value: string) => {
-              setPassword(value);
-              if (errors.password) {
-                setErrors((prev: Record<string, string>) => ({ ...prev, password: '' }));
-              }
-            }}
-            confirmPassword={confirmPassword}
-            setConfirmPassword={(value: string) => {
-              setConfirmPassword(value);
-              if (errors.confirmPassword) {
-                setErrors((prev: Record<string, string>) => ({ ...prev, confirmPassword: '' }));
-              }
-            }}
-            onSubmit={handlePasswordSubmit}
-            isLoading={isLoading}
-            errors={errors}
-          />
-        );
-
-      case 'username':
-        return (
-          <UsernameStep
-            username={username}
-            setUsername={(value: string) => {
-              setUsername(value);
-              if (errors.username) {
-                setErrors((prev: Record<string, string>) => ({ ...prev, username: '' }));
-              }
-            }}
-            onSubmit={handleUsernameSubmit}
-            isLoading={isLoading}
-            errors={errors}
-          />
-        );
-    }
-  };
-
-  return (
-    <StyledContainer>
-      <StyledMainWrapper>
-        <StyledContentWrapper>
-          <StyledMainContent
-            direction="column"
-            gap={
-              currentStep === 'email' ? '82px' : currentStep === 'verification' ? '60px' : '30px'
-            }
-          >
-            {currentStep === 'email' ? (
-              renderStepContent()
-            ) : (
-              <>
-                <StyledHeaderSection direction="column" gap="16px">
-                  <StyledBackButton onClick={handleBack}>
-                    <Icon name="arrow_left_alt" color={tokens.colors.neutral[400]} size="24px" />
-                  </StyledBackButton>
-                  <StyledTitleSection direction="column" gap="8px" align="start">
-                    <StyledTitle>{getStepTitle()}</StyledTitle>
-                    <StyledDescription>{getStepDescription()}</StyledDescription>
-                  </StyledTitleSection>
-                </StyledHeaderSection>
-                {renderStepContent()}
-              </>
-            )}
-          </StyledMainContent>
-        </StyledContentWrapper>
-      </StyledMainWrapper>
+            ),
+            verification: (
+              <VerificationStep
+                verificationCode={verificationCode}
+                setVerificationCode={(value: string) => {
+                  setVerificationCode(value);
+                  if (errors.code) {
+                    setErrors((prev: Record<string, string>) => ({ ...prev, code: '' }));
+                  }
+                }}
+                onSubmit={handleVerificationSubmit}
+                isLoading={isLoading}
+                errors={errors}
+                email={signUpData.email}
+              />
+            ),
+            password: (
+              <PasswordStep
+                password={password}
+                setPassword={(value: string) => {
+                  setPassword(value);
+                  if (errors.password) {
+                    setErrors((prev: Record<string, string>) => ({
+                      ...prev,
+                      password: '',
+                    }));
+                  }
+                }}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={(value: string) => {
+                  setConfirmPassword(value);
+                  if (errors.confirmPassword) {
+                    setErrors((prev: Record<string, string>) => ({
+                      ...prev,
+                      confirmPassword: '',
+                    }));
+                  }
+                }}
+                onSubmit={handlePasswordSubmit}
+                isLoading={isLoading}
+                errors={errors}
+              />
+            ),
+            username: (
+              <UsernameStep
+                username={username}
+                setUsername={(value: string) => {
+                  setUsername(value);
+                  if (errors.username) {
+                    setErrors((prev: Record<string, string>) => ({
+                      ...prev,
+                      username: '',
+                    }));
+                  }
+                }}
+                onSubmit={handleUsernameSubmit}
+                isLoading={isLoading}
+                errors={errors}
+              />
+            ),
+          }}
+        />
+      </StyledContentWrapper>
     </StyledContainer>
   );
 };
@@ -200,52 +169,31 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  padding-top: 140px;
   width: 100%;
   min-height: 100vh;
-  background-color: ${tokens.colors.neutral[100]};
-  padding: 0;
-`;
-
-const StyledMainWrapper = styled.div`
-  background-color: ${tokens.colors.white};
-  width: 720px;
-  min-height: 100vh;
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-  display: flex;
-  justify-content: center;
-  padding-top: 140px;
 `;
 
 const StyledContentWrapper = styled.div`
-  width: 400px;
   display: flex;
   flex-direction: column;
+  gap: 30px;
+  width: 400px;
 `;
 
-const StyledMainContent = styled.div<{ direction: string; gap: string }>`
+const StyledHeaderWrapper = styled.div`
   display: flex;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => gap};
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  width: 400px;
 `;
 
-const StyledFormSection = styled.div<{ direction: string; gap: string }>`
+const StyledTitleSection = styled.div`
   display: flex;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => gap};
-`;
-
-const StyledHeaderSection = styled.div<{ direction: string; gap: string }>`
-  display: flex;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => gap};
-`;
-
-const StyledTitleSection = styled.div<{ direction: string; gap: string; align: string }>`
-  display: flex;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => gap};
-  align-items: ${({ align }) => align};
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
 `;
 
 const StyledBackButton = styled.button`
@@ -258,6 +206,7 @@ const StyledBackButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 0;
+  align-self: flex-start;
 
   &:hover {
     opacity: 0.7;
@@ -272,18 +221,4 @@ const StyledBackButton = styled.button`
   &:focus:not(:focus-visible) {
     outline: none;
   }
-`;
-
-const StyledTitle = styled(Text)`
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 34px;
-  letter-spacing: -0.36px;
-  color: ${tokens.colors.primary[500]};
-`;
-
-const StyledDescription = styled(Text)`
-  font-size: 16px;
-  line-height: 24px;
-  color: ${tokens.colors.neutral[900]};
 `;

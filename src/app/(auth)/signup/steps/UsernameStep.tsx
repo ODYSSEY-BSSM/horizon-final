@@ -12,16 +12,16 @@ const UsernameStep = ({
   errors,
 }: UsernameStepProps) => {
   return (
-    <>
+    <StyledContainer>
       <TextField
-        label="이름"
-        placeholder="이름 입력"
+        label="사용자 이름"
+        placeholder="UserName"
         type="text"
         width="100%"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         error={!!errors.username}
-        helperText={errors.username}
+        helperText={errors.username || '16자 이내 한글 또는 영어로 작성'}
       />
 
       <StyledSubmitButton
@@ -32,11 +32,18 @@ const UsernameStep = ({
           {isLoading ? '완료 중...' : '완료'}
         </Text>
       </StyledSubmitButton>
-    </>
+    </StyledContainer>
   );
 };
 
 export default UsernameStep;
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 62px;
+  width: 100%;
+`;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   width: 100%;
@@ -49,7 +56,6 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
-  margin-top: 62px;
   
   &:hover {
     background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};

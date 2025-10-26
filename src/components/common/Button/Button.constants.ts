@@ -101,7 +101,7 @@ export const buttonStyles = {
       color: ${colors.primary[500]};
 
       &:hover {
-        background-color: ${colors.primary[50]};
+        background-color: ${colors.primary[100]};
       }
 
       &:active {
