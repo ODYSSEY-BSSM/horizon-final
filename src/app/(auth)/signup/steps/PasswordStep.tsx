@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
-import type { PasswordStepProps } from '@/types';
+import type { PasswordStepProps } from '@/core/types';
 
 const PasswordStep = ({
   password,

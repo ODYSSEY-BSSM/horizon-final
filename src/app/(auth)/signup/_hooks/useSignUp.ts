@@ -1,8 +1,8 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import type { RegisterRequest } from '@/apis/index';
-import { userApi } from '@/apis/index';
+import type { RegisterRequest } from '@/core/api';
+import { userApi } from '@/core/api';
 
 export const useRegister = () => {
   return useMutation({

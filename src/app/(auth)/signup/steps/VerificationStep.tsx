@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
-import type { VerificationStepProps } from '@/types';
+import type { VerificationStepProps } from '@/core/types';
 import SecondaryAction from '../_components/SecondaryAction';
 import VerificationInput from '../_components/VerificationInput';
 

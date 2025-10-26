@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
-import type { SignUpData, SignUpStep } from '@/types';
+import type { SignUpData, SignUpStep } from '@/core/types';
 import { useRegister } from './useSignUp';
 import { useSignUpValidation } from './useSignUpValidation';
 

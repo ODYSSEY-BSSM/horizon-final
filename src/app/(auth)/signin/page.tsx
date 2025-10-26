@@ -1,9 +1,9 @@
 'use client';
 
-import SignInForm from './steps/SignInForm';
+import SignInContent from './content';
 
 const SignIn = () => {
-  return <SignInForm />;
+  return <SignInContent />;
 };
 
 export default SignIn;
