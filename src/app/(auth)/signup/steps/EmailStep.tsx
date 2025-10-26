@@ -17,46 +17,57 @@ const EmailStep = ({
   onGoogleSignUp,
   onSignIn,
 }: EmailStepProps) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !!errors.email || isLoading) {
+      return;
+    }
+    onSubmit(e);
+  };
+
   return (
     <StyledContainer>
-      <TextField
-        label="이메일"
-        placeholder="이메일 입력"
-        type="email"
-        width="100%"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        error={!!errors.email}
-        helperText={errors.email}
+      <form onSubmit={handleSubmit}>
+        <StyledFormContent>
+          <TextField
+            label="이메일"
+            placeholder="이메일 입력"
+            type="email"
+            width="100%"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            helperText={errors.email}
+          />
+          <StyledActionsWrapper>
+            <StyledButtonSection>
+              <StyledSubmitButton
+                type="submit"
+                disabled={!email.trim() || !!errors.email || isLoading}
+              >
+                <Text variant="ST" color={tokens.colors.white}>
+                  {isLoading ? '전송 중...' : '인증번호 보내기'}
+                </Text>
+              </StyledSubmitButton>
+
+            </StyledButtonSection>
+          </StyledActionsWrapper>
+        </StyledFormContent>
+      </form>
+      <StyledDividerWrapper>
+        <StyledDividerLine />
+        <StyledDividerText>
+          <Text variant="O" color={tokens.colors.neutral[400]}>
+            또는
+          </Text>
+        </StyledDividerText>
+      </StyledDividerWrapper>
+      <ContinueWithGoogle onClick={onGoogleSignUp} />
+      <SecondaryAction
+        primaryText="이미 계정이 있으신가요?"
+        actionText="로그인하기"
+        onActionClick={onSignIn}
       />
-      <StyledActionsWrapper>
-        <StyledButtonSection>
-          <StyledSubmitButton
-            onClick={onSubmit}
-            disabled={!email.trim() || !!errors.email || isLoading}
-          >
-            <Text variant="ST" color={tokens.colors.white}>
-              {isLoading ? '전송 중...' : '인증번호 보내기'}
-            </Text>
-          </StyledSubmitButton>
-
-          <StyledDividerWrapper>
-            <StyledDividerLine />
-            <StyledDividerText>
-              <Text variant="O" color={tokens.colors.neutral[400]}>
-                또는
-              </Text>
-            </StyledDividerText>
-          </StyledDividerWrapper>
-
-          <ContinueWithGoogle onClick={onGoogleSignUp} />
-        </StyledButtonSection>
-        <SecondaryAction
-          primaryText="이미 계정이 있으신가요?"
-          actionText="로그인하기"
-          onActionClick={onSignIn}
-        />
-      </StyledActionsWrapper>
     </StyledContainer>
   );
 };
@@ -64,6 +75,13 @@ const EmailStep = ({
 export default EmailStep;
 
 const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+`;
+
+const StyledFormContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 82px;
