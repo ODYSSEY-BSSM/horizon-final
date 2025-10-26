@@ -45,63 +45,65 @@ const SignInForm = () => {
 
   return (
     <StyledContainer>
-      <StyledContentWrapper>
-        <StyledHeaderWrapper>
-          <Text variant="H2" color={tokens.colors.primary[500]}>
-            HORIZON
-          </Text>
-          <Text variant="B1" color={tokens.colors.neutral[500]}>
-            환영합니다, 로그인을 진행해주세요.
-          </Text>
-        </StyledHeaderWrapper>
-
-        <StyledFormWrapper>
-          <TextField
-            label="이메일"
-            placeholder="이메일 입력"
-            type="email"
-            leftIcon="person"
-            width="100%"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="비밀번호"
-            placeholder="비밀번호 입력"
-            type="password"
-            leftIcon="lock"
-            width="100%"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </StyledFormWrapper>
-      </StyledContentWrapper>
-
-      <StyledActionsWrapper>
-        <StyledButtonGroup>
-          <StyledLoginButton
-            disabled={!isFormValid || loginMutation.isPending}
-            onClick={handleLogin}
-          >
-            <Text variant="ST" color={tokens.colors.white}>
-              {loginMutation.isPending ? '로그인 중...' : '로그인'}
+      <StyledCard>
+        <StyledContentWrapper>
+          <StyledHeaderWrapper>
+            <Text variant="H2" color={tokens.colors.primary[500]}>
+              HORIZON
             </Text>
-          </StyledLoginButton>
+            <Text variant="B1" color={tokens.colors.neutral[500]}>
+              환영합니다, 로그인을 진행해주세요.
+            </Text>
+          </StyledHeaderWrapper>
 
-          <StyledDividerWrapper>
-            <StyledDividerLine />
-            <StyledDividerText>
-              <Text variant="O" color={tokens.colors.neutral[400]}>
-                또는
+          <StyledFormWrapper>
+            <TextField
+              label="이메일"
+              placeholder="이메일 입력"
+              type="email"
+              leftIcon="person"
+              width="100%"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="비밀번호"
+              placeholder="비밀번호 입력"
+              type="password"
+              leftIcon="lock"
+              width="100%"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </StyledFormWrapper>
+        </StyledContentWrapper>
+
+        <StyledActionsWrapper>
+          <StyledButtonGroup>
+            <StyledLoginButton
+              disabled={!isFormValid || loginMutation.isPending}
+              onClick={handleLogin}
+            >
+              <Text variant="ST" color={tokens.colors.white}>
+                {loginMutation.isPending ? '로그인 중...' : '로그인'}
               </Text>
-            </StyledDividerText>
-          </StyledDividerWrapper>
+            </StyledLoginButton>
 
-          <ContinueWithGoogle onClick={handleGoogleLogin} />
-        </StyledButtonGroup>
+            <StyledDividerWrapper>
+              <StyledDividerLine />
+              <StyledDividerText>
+                <Text variant="O" color={tokens.colors.neutral[400]}>
+                  또는
+                </Text>
+              </StyledDividerText>
+            </StyledDividerWrapper>
 
-        <SecondaryAction onSignUpClick={handleSignUp} />
-      </StyledActionsWrapper>
+            <ContinueWithGoogle onClick={handleGoogleLogin} />
+          </StyledButtonGroup>
+
+          <SecondaryAction onSignUpClick={handleSignUp} />
+        </StyledActionsWrapper>
+      </StyledCard>
     </StyledContainer>
   );
 };
@@ -116,6 +118,18 @@ const StyledContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100vh;
+  background-color: ${tokens.colors.background};
+`;
+
+const StyledCard = styled.div`
+  width: 720px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: ${tokens.colors.white};
+  align-items: center;
+  justify-content: center;
+  box-shadow: ${tokens.shadow[0]};
 `;
 
 const StyledContentWrapper = styled.div`
