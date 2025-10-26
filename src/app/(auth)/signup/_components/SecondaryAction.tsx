@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
 
 interface SecondaryActionProps {
@@ -48,36 +47,30 @@ const SecondaryAction = ({
     onActionClick?.();
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, '0');
-    const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
-    return `${minutes}:${remainingSeconds}`;
-  };
-
   if (showTimer) {
     return (
       <StyledTimerWrapper>
-        <StyledTimerContainer>
-          <StyledTextRow>
-            <Text variant="B2" color={tokens.colors.neutral[600]}>
-              {primaryText}
-            </Text>
-            <StyledActionButton
-              onClick={handleActionClick}
-              disabled={isTimerActive}
-              isActive={!isTimerActive}
+        <StyledTextRow>
+          <StyledText $color={tokens.colors.neutral[600]}>
+            {primaryText}
+          </StyledText>
+          <StyledActionButton
+            onClick={handleActionClick}
+            disabled={isTimerActive}
+            isActive={!isTimerActive}
+          >
+            <StyledText
+              $color={isTimerActive ? tokens.colors.primary[400] : tokens.colors.primary[500]}
             >
-              <Text
-                variant="B2"
-                color={isTimerActive ? tokens.colors.neutral[400] : tokens.colors.primary[500]}
-              >
-                {actionText} {isTimerActive && `(${formatTime(timeLeft)})`}
-              </Text>
-            </StyledActionButton>
-          </StyledTextRow>
-        </StyledTimerContainer>
+              {actionText}
+            </StyledText>
+          </StyledActionButton>
+        </StyledTextRow>
+        {isTimerActive && (
+          <StyledTimerText $color={tokens.colors.neutral[400]}>
+            ({timeLeft}초 후 다시 보내기)
+          </StyledTimerText>
+        )}
       </StyledTimerWrapper>
     );
   }
@@ -85,21 +78,13 @@ const SecondaryAction = ({
   return (
     <StyledCenterWrapper>
       <StyledTextRow>
-        <Text
-          variant="B2"
-          color={tokens.colors.neutral[600]}
-          style={{ fontSize: '14px', lineHeight: '20px' }}
-        >
+        <StyledText $color={tokens.colors.neutral[600]}>
           {primaryText}
-        </Text>
+        </StyledText>
         <StyledActionButton onClick={onActionClick} isActive={true}>
-          <Text
-            variant="B2"
-            color={tokens.colors.primary[500]}
-            style={{ fontSize: '14px', lineHeight: '20px' }}
-          >
+          <StyledText $color={tokens.colors.primary[500]}>
             {actionText}
-          </Text>
+          </StyledText>
         </StyledActionButton>
       </StyledTextRow>
     </StyledCenterWrapper>
@@ -112,18 +97,36 @@ const StyledTimerWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const StyledTimerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 0;
 `;
 
 const StyledTextRow = styled.div`
   display: flex;
   gap: 4px;
+  align-items: start;
+  justify-content: center;
+`;
+
+const StyledText = styled.p<{ $color: string }>`
+  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ $color }) => $color};
+  text-align: center;
+  white-space: pre;
+  margin: 0;
+`;
+
+const StyledTimerText = styled.p<{ $color: string }>`
+  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ $color }) => $color};
+  text-align: center;
+  white-space: pre;
+  margin: 0;
 `;
 
 const StyledCenterWrapper = styled.div`
@@ -136,9 +139,8 @@ const StyledActionButton = styled.button<{ isActive: boolean; disabled?: boolean
   background: none;
   padding: 0;
   cursor: ${({ isActive, disabled }) => (disabled || !isActive ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   
   &:hover {
-    opacity: ${({ disabled }) => (disabled ? 0.6 : 0.8)};
+    opacity: ${({ disabled }) => (disabled ? 1 : 0.8)};
   }
 `;
