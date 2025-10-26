@@ -1,3 +1,4 @@
+import { tokenStore } from '../auth/tokenStore';
 import type { ApiResponse } from './types';
 
 // Base API configuration
@@ -15,7 +16,7 @@ class ApiClient {
 
   private initializeToken() {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
+      const token = tokenStore.getAccessToken();
       if (token) {
         this.accessToken = token;
       }
@@ -27,9 +28,9 @@ class ApiClient {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
-    // Always get the latest token from localStorage
+    // Always get the latest token from tokenStore (in-memory)
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
+      const token = tokenStore.getAccessToken();
       if (token && token !== this.accessToken) {
         this.accessToken = token;
       }
@@ -91,7 +92,7 @@ class ApiClient {
       return false;
     }
 
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = tokenStore.getRefreshToken();
     if (!refreshToken) {
       return false;
     }
@@ -110,17 +111,18 @@ class ApiClient {
         const newAccessToken = data.data.accessToken;
         const newRefreshToken = data.data.refreshToken;
 
-        localStorage.setItem('accessToken', newAccessToken);
-        localStorage.setItem('refreshToken', newRefreshToken);
+        // 보안 개선: tokenStore 사용
+        tokenStore.setTokens(newAccessToken, newRefreshToken);
         this.accessToken = newAccessToken;
 
         return true;
       }
-    } catch (_error) {}
+    } catch (_error) {
+      // Token refresh failed
+    }
 
     // Refresh failed, clear tokens
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    tokenStore.clearTokens();
     this.accessToken = null;
 
     return false;
