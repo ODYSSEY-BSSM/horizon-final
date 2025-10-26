@@ -30,8 +30,11 @@ export const useSignUpValidation = () => {
     if (password.length < 8) {
       return '비밀번호는 8자 이상이어야 합니다';
     }
-    if (!/^(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
-      return '영문과 숫자를 포함해야 합니다';
+    if (!/\d/.test(password)) {
+      return '숫자를 포함해야 합니다';
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return '기호를 포함해야 합니다';
     }
     return '';
   };
@@ -48,16 +51,16 @@ export const useSignUpValidation = () => {
 
   const validateUsername = (username: string) => {
     if (!username.trim()) {
-      return '이름을 입력해주세요';
+      return '사용자 이름을 입력해주세요';
     }
     if (username.length < 2) {
-      return '이름은 2자 이상이어야 합니다';
+      return '사용자 이름은 2자 이상이어야 합니다';
     }
-    if (username.length > 20) {
-      return '이름은 20자 이하여야 합니다';
+    if (username.length > 16) {
+      return '사용자 이름은 16자 이하여야 합니다';
     }
-    if (!/^[가-힣a-zA-Z\s]+$/.test(username)) {
-      return '한글, 영문만 사용 가능합니다';
+    if (!/^[가-힣a-zA-Z]+$/.test(username)) {
+      return '한글 또는 영어만 사용 가능합니다';
     }
     return '';
   };

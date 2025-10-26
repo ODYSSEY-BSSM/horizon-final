@@ -27,33 +27,34 @@ const EmailStep = ({
         error={!!errors.email}
         helperText={errors.email}
       />
-
-      <StyledButtonSection>
-        <StyledSubmitButton
-          onClick={onSubmit}
-          disabled={!email.trim() || !!errors.email || isLoading}
-        >
-          <Text variant="ST" color={tokens.colors.white}>
-            {isLoading ? '전송 중...' : '인증번호 보내기'}
-          </Text>
-        </StyledSubmitButton>
-
-        <StyledDividerWrapper>
-          <StyledDividerLine />
-          <StyledDividerText>
-            <Text variant="O" color={tokens.colors.neutral[400]}>
-              또는
+      <StyledActionsWrapper>
+        <StyledButtonSection>
+          <StyledSubmitButton
+            onClick={onSubmit}
+            disabled={!email.trim() || !!errors.email || isLoading}
+          >
+            <Text variant="ST" color={tokens.colors.white}>
+              {isLoading ? '전송 중...' : '인증번호 보내기'}
             </Text>
-          </StyledDividerText>
-        </StyledDividerWrapper>
+          </StyledSubmitButton>
 
-        <ContinueWithGoogle onClick={onGoogleSignUp} />
-      </StyledButtonSection>
-      <SecondaryAction
-        primaryText="이미 계정이 있으신가요?"
-        actionText="로그인하기"
-        onActionClick={onSignIn}
-      />
+          <StyledDividerWrapper>
+            <StyledDividerLine />
+            <StyledDividerText>
+              <Text variant="O" color={tokens.colors.neutral[400]}>
+                또는
+              </Text>
+            </StyledDividerText>
+          </StyledDividerWrapper>
+
+          <ContinueWithGoogle onClick={onGoogleSignUp} />
+        </StyledButtonSection>
+        <SecondaryAction
+          primaryText="이미 계정이 있으신가요?"
+          actionText="로그인하기"
+          onActionClick={onSignIn}
+        />
+      </StyledActionsWrapper>
     </StyledContainer>
   );
 };
@@ -63,7 +64,14 @@ export default EmailStep;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 62px;
+  gap: 82px;
+  width: 100%;
+`;
+
+const StyledActionsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 `;
 
 const StyledButtonSection = styled.div`

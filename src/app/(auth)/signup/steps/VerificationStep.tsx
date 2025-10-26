@@ -14,7 +14,7 @@ const VerificationStep = ({
   email,
 }: VerificationStepProps) => {
   return (
-    <>
+    <StyledContainer>
       <VerificationInput
         value={verificationCode}
         onChange={setVerificationCode}
@@ -40,14 +40,14 @@ const VerificationStep = ({
           timerDuration={30}
         />
       </StyledButtonSection>
-    </>
+    </StyledContainer>
   );
 };
 
 export default VerificationStep;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
-  width: 100%;
+  width: 400px;
   height: 48px;
   background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
   border: none;
@@ -57,11 +57,12 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
-  
+  align-self: center;
+
   &:hover {
     background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
   }
-  
+
   &:disabled {
     opacity: 1;
   }
@@ -76,9 +77,14 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   }
 `;
 
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+`;
+
 const StyledButtonSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  margin-top: 60px;
+  gap: 32px;
 `;

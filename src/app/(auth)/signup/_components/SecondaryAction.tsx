@@ -48,6 +48,14 @@ const SecondaryAction = ({
     onActionClick?.();
   };
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, '0');
+    const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${remainingSeconds}`;
+  };
+
   if (showTimer) {
     return (
       <StyledTimerWrapper>
@@ -56,7 +64,6 @@ const SecondaryAction = ({
             <Text
               variant="B2"
               color={tokens.colors.neutral[600]}
-              style={{ fontSize: '14px', lineHeight: '20px' }}
             >
               {primaryText}
             </Text>
@@ -67,22 +74,12 @@ const SecondaryAction = ({
             >
               <Text
                 variant="B2"
-                color={isTimerActive ? tokens.colors.primary[400] : tokens.colors.primary[500]}
-                style={{ fontSize: '14px', lineHeight: '20px' }}
+                color={isTimerActive ? tokens.colors.neutral[400] : tokens.colors.primary[500]}
               >
-                {actionText}
+                {actionText} {isTimerActive && `(${formatTime(timeLeft)})`}
               </Text>
             </StyledActionButton>
           </StyledTextRow>
-          {isTimerActive && (
-            <Text
-              variant="B2"
-              color={tokens.colors.neutral[400]}
-              style={{ fontSize: '14px', lineHeight: '20px' }}
-            >
-              ({timeLeft}초 후 다시 보내기)
-            </Text>
-          )}
         </StyledTimerContainer>
       </StyledTimerWrapper>
     );
