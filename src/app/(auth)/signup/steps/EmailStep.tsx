@@ -49,7 +49,6 @@ const EmailStep = ({
                   {isLoading ? '전송 중...' : '인증번호 보내기'}
                 </Text>
               </StyledSubmitButton>
-
             </StyledButtonSection>
           </StyledActionsWrapper>
         </StyledFormContent>
