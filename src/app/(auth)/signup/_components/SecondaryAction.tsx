@@ -65,9 +65,7 @@ const SecondaryAction = ({
           </StyledActionButton>
         </StyledTextRow>
         {isTimerActive && (
-          <StyledText $color={tokens.colors.neutral[400]}>
-            ({timeLeft}초 후 다시 보내기)
-          </StyledText>
+          <StyledText $color={tokens.colors.neutral[400]}>({timeLeft}초 후 다시 보내기)</StyledText>
         )}
       </StyledTimerWrapper>
     );
