@@ -14,9 +14,7 @@ const PasswordStep = ({
   errors,
 }: PasswordStepProps) => {
   const isPasswordValid =
-    password.length >= 8 &&
-    /[!@#$%^&*(),.?":{}|<>]/.test(password) &&
-    /\d/.test(password);
+    password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password) && /\d/.test(password);
 
   return (
     <StyledContainer>
