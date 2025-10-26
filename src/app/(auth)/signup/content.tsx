@@ -33,6 +33,7 @@ const SignUpContent = () => {
     handleGoogleSignUp,
     handleSignIn,
     handleBack,
+    handleResendVerificationCode,
   } = useSignUpHandlers();
 
   const getStepTitle = () => {
@@ -107,6 +108,7 @@ const SignUpContent = () => {
                   }
                 }}
                 onSubmit={handleVerificationSubmit}
+                onResendCode={handleResendVerificationCode}
                 isLoading={isLoading}
                 errors={errors}
                 email={signUpData.email}

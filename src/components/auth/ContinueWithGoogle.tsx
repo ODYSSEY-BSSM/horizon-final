@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
@@ -9,7 +11,7 @@ interface ContinueWithGoogleProps {
 
 const ContinueWithGoogle = ({ onClick, className }: ContinueWithGoogleProps) => {
   return (
-    <StyledButton onClick={onClick} className={className}>
+    <StyledButton onClick={onClick} className={className} aria-label="구글 계정으로 계속하기">
       <GoogleIcon />
       <Text variant="B2" color={tokens.colors.black}>
         구글로 계속하기
@@ -72,3 +74,4 @@ const GoogleIcon = () => (
     />
   </svg>
 );
+

@@ -9,10 +9,17 @@ const VerificationStep = ({
   verificationCode,
   setVerificationCode,
   onSubmit,
+  onResendCode,
   isLoading,
   errors,
   email,
 }: VerificationStepProps) => {
+  const handleResend = async () => {
+    if (onResendCode) {
+      await onResendCode();
+    }
+  };
+
   return (
     <StyledContainer>
       <VerificationInput
@@ -35,7 +42,7 @@ const VerificationStep = ({
         <SecondaryAction
           primaryText="인증번호를 받지 못하셨나요?"
           actionText="다시 보내기"
-          onActionClick={() => undefined}
+          onActionClick={handleResend}
           showTimer={true}
           timerDuration={30}
         />
