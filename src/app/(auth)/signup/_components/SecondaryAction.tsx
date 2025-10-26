@@ -65,9 +65,9 @@ const SecondaryAction = ({
           </StyledActionButton>
         </StyledTextRow>
         {isTimerActive && (
-          <StyledTimerText $color={tokens.colors.neutral[400]}>
+          <StyledText $color={tokens.colors.neutral[400]}>
             ({timeLeft}초 후 다시 보내기)
-          </StyledTimerText>
+          </StyledText>
         )}
       </StyledTimerWrapper>
     );
@@ -102,17 +102,6 @@ const StyledTextRow = styled.div`
 `;
 
 const StyledText = styled.p<{ $color: string }>`
-  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  color: ${({ $color }) => $color};
-  text-align: center;
-  white-space: pre;
-  margin: 0;
-`;
-
-const StyledTimerText = styled.p<{ $color: string }>`
   font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
   font-weight: 600;
   font-size: 14px;

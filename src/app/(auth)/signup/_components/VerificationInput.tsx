@@ -5,6 +5,25 @@ import { tokens } from '@/core/tokens';
 
 const OTP_LENGTH = 6;
 
+// Utils: normalize and distribute incoming digits into fixed slots
+const toDigits = (s: string) => s.replace(/\D/g, '');
+const distributeDigits = (current: string, start: number, incoming: string) => {
+  const slots = Array.from({ length: OTP_LENGTH }, (_, i) => current[i] ?? '');
+  // Deletion path
+  if (incoming === '') {
+    slots[start] = '';
+    return slots.join('');
+  }
+  const digits = toDigits(incoming);
+  for (let i = 0; i < digits.length && start + i < OTP_LENGTH; i += 1) {
+    const digit = digits[i];
+    if (digit !== undefined) {
+      slots[start + i] = digit;
+    }
+  }
+  return slots.join('');
+};
+
 interface VerificationInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -16,17 +35,22 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value: inputValue } = e.target;
-    if (!/^[0-9]$/.test(inputValue) && inputValue !== '') {
+    const raw = e.target.value;
+    // Multi-char path (paste/auto-fill into a single cell)
+    if (raw.length > 1) {
+      const next = distributeDigits(value, index, raw);
+      onChange(next);
+      const nextIndex = Math.min(index + toDigits(raw).length, OTP_LENGTH - 1);
+      inputRefs.current[nextIndex]?.focus();
       return;
     }
-
-    const newOtp = value.split('');
-    newOtp[index] = inputValue;
-    const newOtpString = newOtp.join('').slice(0, OTP_LENGTH);
-    onChange(newOtpString);
-
-    if (inputValue !== '' && index < OTP_LENGTH - 1) {
+    // Single-char: allow only digits or empty (deletion)
+    if (raw !== '' && !/^[0-9]$/.test(raw)) {
+      return;
+    }
+    const next = distributeDigits(value, index, raw);
+    onChange(next);
+    if (raw !== '' && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };

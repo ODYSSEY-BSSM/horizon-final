@@ -16,7 +16,7 @@ const PasswordStep = ({
   isLoading,
   errors,
 }: PasswordStepProps) => {
-  const hasMinLength = password.length >= 10;
+  const hasMinLength = password.length >= 8;
   const hasNumber = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
@@ -43,7 +43,7 @@ const PasswordStep = ({
             error={!!errors.password}
           />
           <StyledValidationsWrapper>
-            <PasswordValidation text="10자 이상" isValid={getValidationState(hasMinLength)} />
+            <PasswordValidation text="8자 이상" isValid={getValidationState(hasMinLength)} />
             <PasswordValidation text="숫자 포함" isValid={getValidationState(hasNumber)} />
             <PasswordValidation text="기호 포함" isValid={getValidationState(hasSpecialChar)} />
           </StyledValidationsWrapper>
