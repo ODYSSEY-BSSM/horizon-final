@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import { SwitchCase } from '@toss/react';
 import Icon from '@/components/common/Icon/Icon';

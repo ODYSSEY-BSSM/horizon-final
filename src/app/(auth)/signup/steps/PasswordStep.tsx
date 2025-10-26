@@ -19,7 +19,7 @@ const PasswordStep = ({
   const hasMinLength = password.length >= 10;
   const hasNumber = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
+
   const isPasswordValid = hasMinLength && hasNumber && hasSpecialChar;
 
   const getValidationState = (condition: boolean): boolean | null => {
@@ -43,21 +43,12 @@ const PasswordStep = ({
             error={!!errors.password}
           />
           <StyledValidationsWrapper>
-            <PasswordValidation
-              text="10자 이상"
-              isValid={getValidationState(hasMinLength)}
-            />
-            <PasswordValidation
-              text="숫자 포함"
-              isValid={getValidationState(hasNumber)}
-            />
-            <PasswordValidation
-              text="기호 포함"
-              isValid={getValidationState(hasSpecialChar)}
-            />
+            <PasswordValidation text="10자 이상" isValid={getValidationState(hasMinLength)} />
+            <PasswordValidation text="숫자 포함" isValid={getValidationState(hasNumber)} />
+            <PasswordValidation text="기호 포함" isValid={getValidationState(hasSpecialChar)} />
           </StyledValidationsWrapper>
         </StyledPasswordFieldWrapper>
-        
+
         <TextField
           label="비밀번호 확인"
           placeholder="비밀번호 재입력"

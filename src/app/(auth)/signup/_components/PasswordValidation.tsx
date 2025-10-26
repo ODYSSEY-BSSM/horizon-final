@@ -5,12 +5,12 @@ import { tokens } from '@/core/tokens';
 
 interface PasswordValidationProps {
   text: string;
-  isValid: boolean | null; 
+  isValid: boolean | null;
 }
 
 const PasswordValidation = ({ text, isValid }: PasswordValidationProps) => {
   const iconName = isValid === true ? 'check' : 'close';
-  
+
   const color =
     isValid === null
       ? tokens.colors.neutral[500]
@@ -35,4 +35,3 @@ const StyledContainer = styled.div`
   align-items: center;
   gap: 0;
 `;
-

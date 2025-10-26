@@ -51,9 +51,7 @@ const SecondaryAction = ({
     return (
       <StyledTimerWrapper>
         <StyledTextRow>
-          <StyledText $color={tokens.colors.neutral[600]}>
-            {primaryText}
-          </StyledText>
+          <StyledText $color={tokens.colors.neutral[600]}>{primaryText}</StyledText>
           <StyledActionButton
             onClick={handleActionClick}
             disabled={isTimerActive}
@@ -78,13 +76,9 @@ const SecondaryAction = ({
   return (
     <StyledCenterWrapper>
       <StyledTextRow>
-        <StyledText $color={tokens.colors.neutral[600]}>
-          {primaryText}
-        </StyledText>
+        <StyledText $color={tokens.colors.neutral[600]}>{primaryText}</StyledText>
         <StyledActionButton onClick={onActionClick} isActive={true}>
-          <StyledText $color={tokens.colors.primary[500]}>
-            {actionText}
-          </StyledText>
+          <StyledText $color={tokens.colors.primary[500]}>{actionText}</StyledText>
         </StyledActionButton>
       </StyledTextRow>
     </StyledCenterWrapper>
