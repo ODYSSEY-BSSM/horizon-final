@@ -1,23 +1,33 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
+import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
-import type { EmailStepProps } from '@/types';
+import type { EmailStepProps } from '@/core/types';
 import ContinueWithGoogle from '../_components/ContinueWithGoogle';
 import SecondaryAction from '../_components/SecondaryAction';
 
 const EmailStep = ({
   email,
+  setEmail,
   onSubmit,
   isLoading,
   errors,
   onGoogleSignUp,
   onSignIn,
-}: Pick<
-  EmailStepProps,
-  'email' | 'onSubmit' | 'isLoading' | 'errors' | 'onGoogleSignUp' | 'onSignIn'
->) => {
+}: EmailStepProps) => {
   return (
     <StyledContainer>
+      <TextField
+        label="이메일"
+        placeholder="이메일 입력"
+        type="email"
+        width="100%"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        error={!!errors.email}
+        helperText={errors.email}
+      />
+
       <StyledButtonSection>
         <StyledSubmitButton
           onClick={onSubmit}
@@ -53,7 +63,7 @@ export default EmailStep;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 62px;
 `;
 
 const StyledButtonSection = styled.div`
