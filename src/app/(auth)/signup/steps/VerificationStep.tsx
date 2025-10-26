@@ -38,7 +38,7 @@ const VerificationStep = ({
         </StyledSubmitButton>
 
         <SecondaryAction
-          primaryText="인증번호를 받지 못하셨나요?"
+          primaryText="인증번호를 받지 못했나요?"
           actionText="다시 보내기"
           onActionClick={handleResend}
           showTimer={true}

@@ -5,6 +5,7 @@ import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
 import type { PasswordStepProps } from '@/core/types';
+import PasswordValidation from '../_components/PasswordValidation';
 
 const PasswordStep = ({
   password,
@@ -15,22 +16,48 @@ const PasswordStep = ({
   isLoading,
   errors,
 }: PasswordStepProps) => {
-  const isPasswordValid =
-    password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password) && /\d/.test(password);
+  const hasMinLength = password.length >= 10;
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  const isPasswordValid = hasMinLength && hasNumber && hasSpecialChar;
+
+  const getValidationState = (condition: boolean): boolean | null => {
+    if (password.length === 0) {
+      return null;
+    }
+    return condition;
+  };
 
   return (
     <StyledContainer>
       <StyledFieldsWrapper>
-        <TextField
-          label="비밀번호"
-          placeholder="비밀번호 입력"
-          type="password"
-          width="100%"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          error={!!errors.password}
-          helperText={errors.password || '8자 이상, 숫자 포함, 기호 포함'}
-        />
+        <StyledPasswordFieldWrapper>
+          <TextField
+            label="비밀번호"
+            placeholder="비밀번호 입력"
+            type="password"
+            width="100%"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+          />
+          <StyledValidationsWrapper>
+            <PasswordValidation
+              text="10자 이상"
+              isValid={getValidationState(hasMinLength)}
+            />
+            <PasswordValidation
+              text="숫자 포함"
+              isValid={getValidationState(hasNumber)}
+            />
+            <PasswordValidation
+              text="기호 포함"
+              isValid={getValidationState(hasSpecialChar)}
+            />
+          </StyledValidationsWrapper>
+        </StyledPasswordFieldWrapper>
+        
         <TextField
           label="비밀번호 확인"
           placeholder="비밀번호 재입력"
@@ -75,6 +102,18 @@ const StyledFieldsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const StyledPasswordFieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const StyledValidationsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
