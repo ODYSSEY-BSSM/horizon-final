@@ -9,7 +9,6 @@ interface VerificationInputProps {
   value: string;
   onChange: (value: string) => void;
   error?: string;
-  email?: string;
 }
 
 const VerificationInput = ({ value, onChange, error }: VerificationInputProps) => {
