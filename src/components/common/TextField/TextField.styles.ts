@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { colors } from '@/core/tokens/color/color';
 import { typos } from '@/core/tokens/typo/typo';
@@ -14,6 +13,7 @@ export interface StyledInputProps {
   hasLeft: boolean;
   hasRight: boolean;
   hasToggle: boolean;
+  isFocused: boolean;
 }
 
 export const shouldForwardProp = (prop: string): boolean => {
@@ -78,9 +78,12 @@ const getInputPadding = (hasLeft: boolean, hasRight: boolean) => {
   return '';
 };
 
-const getInputBoxShadow = (hasError: boolean, filled: boolean) => {
+const getInputBoxShadow = (hasError: boolean, filled: boolean, isFocused: boolean) => {
   if (hasError) {
     return `box-shadow: inset 0 0 0 1px ${colors.error[200]};`;
+  }
+  if (isFocused) {
+    return `box-shadow: inset 0 0 0 2px ${colors.primary[500]};`;
   }
   if (filled) {
     return `box-shadow: inset 0 0 0 1px ${colors.primary[500]};`;
@@ -115,7 +118,6 @@ export const StyledInput = styled('input', { shouldForwardProp })<StyledInputPro
 
   &:focus {
     outline: none;
-    box-shadow: inset 0 0 0 calc(1px * 2) ${colors.primary[500]};
   }
 
   &:disabled {
@@ -123,14 +125,5 @@ export const StyledInput = styled('input', { shouldForwardProp })<StyledInputPro
   }
 
   ${({ hasLeft, hasRight }) => getInputPadding(hasLeft, hasRight)}
-  ${({ hasError, filled }) => getInputBoxShadow(hasError, filled)}
-
-  ${({ filled, hasError }) =>
-    !hasError &&
-    filled &&
-    css`
-      &:focus {
-        box-shadow: inset 0 0 0 calc(1px * 2) ${colors.primary[500]};
-      }
-    `}
+  ${({ hasError, filled, isFocused }) => getInputBoxShadow(hasError, filled, isFocused)}
 `;

@@ -42,16 +42,16 @@ export const useTextField = (props: TextFieldProps) => {
   const isFilled = !!value;
 
   const hasToggle = type === 'password';
-  const hasLeft = !!leftIcon || error;
+  const hasLeft = !!leftIcon;
   const hasRight = !!rightIcon;
   const resolvedType = hasToggle ? (showPassword ? 'text' : 'password') : type;
-  const leftIconResolved = error ? 'warning' : leftIcon;
+  const leftIconResolved = leftIcon;
 
   const borderColor = error
     ? colors.error[200]
-    : isFocused
+    : isFocused || isFilled
       ? colors.primary[500]
-      : colors.neutral[300];
+      : colors.neutral[500];
 
   const affixColor = error ? colors.error[200] : isFilled ? colors.black : colors.neutral[400];
 
@@ -81,6 +81,7 @@ export const useTextField = (props: TextFieldProps) => {
     helperId,
     value,
     isFilled,
+    isFocused,
     showPassword,
     hasToggle,
     hasLeft,
