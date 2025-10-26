@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { SwitchCase } from '@toss/react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
-import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
 import { useSignUpHandlers } from './_hooks/useSignUpHandlers';
 import EmailStep from './steps/EmailStep';
@@ -62,7 +61,6 @@ const SignUpContent = () => {
     }
   };
 
-
   return (
     <StyledContainer>
       <StyledContentWrapper>
@@ -73,7 +71,9 @@ const SignUpContent = () => {
             </StyledBackButton>
           )}
           <StyledTitleSection>
-            <Text variant="H2" color={tokens.colors.primary[500]}>{getStepTitle()}</Text>
+            <Text variant="H2" color={tokens.colors.primary[500]}>
+              {getStepTitle()}
+            </Text>
             <Text variant="B1">{getStepDescription()}</Text>
           </StyledTitleSection>
         </StyledHeaderWrapper>

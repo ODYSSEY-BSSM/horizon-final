@@ -61,10 +61,7 @@ const SecondaryAction = ({
       <StyledTimerWrapper>
         <StyledTimerContainer>
           <StyledTextRow>
-            <Text
-              variant="B2"
-              color={tokens.colors.neutral[600]}
-            >
+            <Text variant="B2" color={tokens.colors.neutral[600]}>
               {primaryText}
             </Text>
             <StyledActionButton

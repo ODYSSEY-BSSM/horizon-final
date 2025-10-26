@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/core/tokens';
 import type { TextFieldProps } from '@/components/common/TextField/TextField.types';
+import { tokens } from '@/core/tokens';
 
 interface ValidationProps {
   isValid: boolean;

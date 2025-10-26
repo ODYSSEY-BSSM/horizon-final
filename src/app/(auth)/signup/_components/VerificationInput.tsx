@@ -1,6 +1,6 @@
-import { useRef } from 'react';
-import type { ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react';
 import styled from '@emotion/styled';
+import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
+import { useRef } from 'react';
 import { tokens } from '@/core/tokens';
 
 const OTP_LENGTH = 6;
@@ -71,11 +71,7 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
         })}
       </StyledOtpWrapper>
 
-      {error && (
-        <StyledErrorText>
-          {error}
-        </StyledErrorText>
-      )}
+      {error && <StyledErrorText>{error}</StyledErrorText>}
     </StyledContainer>
   );
 };
