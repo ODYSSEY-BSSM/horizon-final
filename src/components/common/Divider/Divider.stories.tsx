@@ -8,10 +8,11 @@ const meta: Meta<typeof Divider> = {
   parameters: {
     layout: 'centered',
   },
+  tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Divider>;
 
 export const Default: Story = {
   args: {

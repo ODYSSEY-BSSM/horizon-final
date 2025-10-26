@@ -1,4 +1,11 @@
-export const BLOCKED_PROPS = new Set(['hasError', 'filled', 'hasLeft', 'hasRight', 'hasToggle']);
+export const BLOCKED_PROPS = new Set([
+  'hasError',
+  'filled',
+  'hasLeft',
+  'hasRight',
+  'hasToggle',
+  'isFocused',
+]);
 
 export const baseAffixStyles = `
   position: absolute;

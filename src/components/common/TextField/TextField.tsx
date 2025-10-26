@@ -19,6 +19,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
     helperId,
     value,
     isFilled,
+    isFocused,
     showPassword,
     hasToggle,
     hasLeft,
@@ -62,6 +63,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
           type={resolvedType}
           hasError={error}
           filled={isFilled}
+          isFocused={isFocused}
           hasLeft={hasLeft}
           hasRight={hasRight}
           hasToggle={hasToggle}
