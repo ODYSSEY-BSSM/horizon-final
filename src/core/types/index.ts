@@ -27,6 +27,7 @@ export interface VerificationStepProps extends StepProps {
   verificationCode: string;
   setVerificationCode: (value: string) => void;
   email?: string;
+  onResendCode?: () => Promise<void>;
 }
 
 export interface PasswordStepProps extends StepProps {

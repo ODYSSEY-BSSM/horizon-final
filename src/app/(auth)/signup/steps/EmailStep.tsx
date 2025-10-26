@@ -1,9 +1,11 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
 import type { EmailStepProps } from '@/core/types';
-import ContinueWithGoogle from '../_components/ContinueWithGoogle';
+import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import SecondaryAction from '../_components/SecondaryAction';
 
 const EmailStep = ({

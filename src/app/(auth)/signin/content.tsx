@@ -1,10 +1,12 @@
+'use client';
+
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
-import ContinueWithGoogle from './_components/ContinueWithGoogle';
+import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import SecondaryAction from './_components/SecondaryAction';
 import { useLogin } from './_hooks/useSignIn';
 
@@ -38,7 +40,7 @@ const SignInForm = () => {
   };
 
   const handleSignUp = () => {
-    router.push('/auth/signup');
+    router.push('/signup');
   };
 
   return (

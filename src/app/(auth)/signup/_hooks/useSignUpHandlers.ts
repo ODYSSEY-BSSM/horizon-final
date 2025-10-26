@@ -48,6 +48,20 @@ export const useSignUpHandlers = () => {
     }
   };
 
+  const handleResendVerificationCode = async () => {
+    setIsLoading(true);
+    setErrors({});
+    try {
+      // 실제 인증번호 재전송 API 호출
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 성공 시 타이머 리셋은 SecondaryAction 컴포넌트에서 자동으로 처리됨
+    } catch (_error) {
+      setErrors({ code: '인증번호 전송에 실패했습니다' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleVerificationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const codeError = validateVerificationCode(verificationCode);
@@ -115,7 +129,7 @@ export const useSignUpHandlers = () => {
       });
 
       // 회원가입 성공 시 로그인 페이지로 이동
-      router.push('/auth/signin');
+      router.push('/signin');
     } catch (error) {
       // console.error('회원가입 실패:', error);
 
@@ -139,7 +153,7 @@ export const useSignUpHandlers = () => {
   };
 
   const handleSignIn = () => {
-    router.push('/auth/signin');
+    router.push('/signin');
   };
 
   const handleBack = () => {
@@ -181,5 +195,6 @@ export const useSignUpHandlers = () => {
     handleGoogleSignUp,
     handleSignIn,
     handleBack,
+    handleResendVerificationCode,
   };
 };
