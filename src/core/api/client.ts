@@ -116,9 +116,7 @@ class ApiClient {
 
         return true;
       }
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-    }
+    } catch (_error) {}
 
     // Refresh failed, clear tokens
     localStorage.removeItem('accessToken');

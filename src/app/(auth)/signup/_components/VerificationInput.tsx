@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { tokens } from '@/core/tokens';
 
 const OTP_LENGTH = 6;
@@ -13,6 +13,7 @@ interface VerificationInputProps {
 
 const VerificationInput = ({ value, onChange, error }: VerificationInputProps) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const { value: inputValue } = e.target;
@@ -46,11 +47,19 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
     }
   };
 
+  const handleFocus = (index: number) => {
+    setFocusedIndex(index);
+  };
+
+  const handleBlur = () => {
+    setFocusedIndex(null);
+  };
+
   return (
     <StyledContainer>
       <StyledOtpWrapper>
         {[...Array(OTP_LENGTH)].map((_, index) => {
-          const isFilled = !!value[index];
+          const isFocused = focusedIndex === index;
           return (
             <StyledInput
               key={`otp-${index}`}
@@ -63,8 +72,10 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
               onChange={(e) => handleChange(e, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onPaste={index === 0 ? handlePaste : undefined}
+              onFocus={() => handleFocus(index)}
+              onBlur={handleBlur}
               isError={!!error}
-              isFilled={isFilled}
+              isFocused={isFocused}
             />
           );
         })}
@@ -92,8 +103,18 @@ const StyledOtpWrapper = styled.div`
 
 interface StyledInputProps {
   isError: boolean;
-  isFilled: boolean;
+  isFocused: boolean;
 }
+
+const getBorderStyle = (isError: boolean, isFocused: boolean) => {
+  if (isError) {
+    return `box-shadow: inset 0 0 0 1px ${tokens.colors.error[200]};`;
+  }
+  if (isFocused) {
+    return `box-shadow: inset 0 0 0 2px ${tokens.colors.primary[500]};`;
+  }
+  return `box-shadow: inset 0 0 0 1px ${tokens.colors.neutral[400]};`;
+};
 
 const StyledInput = styled.input<StyledInputProps>`
   display: flex;
@@ -107,16 +128,7 @@ const StyledInput = styled.input<StyledInputProps>`
   font-weight: 700;
   line-height: 44px;
   letter-spacing: -0.8px;
-  border: 1px solid
-    ${({ isError, isFilled }) => {
-      if (isError) {
-        return tokens.colors.error[200];
-      }
-      if (isFilled) {
-        return tokens.colors.primary[500];
-      }
-      return tokens.colors.neutral[400];
-    }};
+  border: none;
   border-radius: 8px;
   text-align: center;
   background-color: ${tokens.colors.white};
@@ -124,25 +136,10 @@ const StyledInput = styled.input<StyledInputProps>`
   outline: none;
   transition: all 0.15s ease;
   font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
-
-  &:focus {
-    border: 2px solid ${tokens.colors.primary[500]};
-    text-decoration: underline;
-    text-decoration-style: solid;
-    text-underline-position: from-font;
-  }
-
-  &:hover:not(:focus) {
-    border-color: ${({ isError, isFilled }) => {
-      if (isError) {
-        return tokens.colors.error[200];
-      }
-      if (isFilled) {
-        return tokens.colors.primary[500];
-      }
-      return tokens.colors.neutral[500];
-    }};
-  }
+  text-decoration: ${({ isFocused }) => (isFocused ? 'underline' : 'none')};
+  text-decoration-style: solid;
+  text-underline-position: from-font;
+  ${({ isError, isFocused }) => getBorderStyle(isError, isFocused)}
 
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
@@ -156,6 +153,7 @@ const StyledErrorText = styled.div`
   font-weight: 300;
   font-size: 14px;
   line-height: 22px;
+  height: 20px;
   color: ${tokens.colors.error[200]};
   text-align: center;
   width: 100%;
