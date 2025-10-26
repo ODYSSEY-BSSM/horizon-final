@@ -12,7 +12,6 @@ const VerificationStep = ({
   onResendCode,
   isLoading,
   errors,
-  email,
 }: VerificationStepProps) => {
   const handleResend = async () => {
     if (onResendCode) {
@@ -26,7 +25,6 @@ const VerificationStep = ({
         value={verificationCode}
         onChange={setVerificationCode}
         error={errors.code}
-        email={email}
       />
 
       <StyledButtonSection>

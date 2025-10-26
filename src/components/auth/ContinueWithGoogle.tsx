@@ -74,4 +74,3 @@ const GoogleIcon = () => (
     />
   </svg>
 );
-
