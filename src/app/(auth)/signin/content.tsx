@@ -10,7 +10,7 @@ import { tokens } from '@/core/tokens';
 import SecondaryAction from './_components/SecondaryAction';
 import { useLogin } from './_hooks/useSignIn';
 
-const SignInForm = () => {
+const SignInContent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -108,7 +108,7 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignInContent;
 
 const StyledContainer = styled.div`
   display: flex;
