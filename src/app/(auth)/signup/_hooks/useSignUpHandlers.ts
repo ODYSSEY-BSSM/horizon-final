@@ -151,7 +151,8 @@ export const useSignUpHandlers = () => {
   };
 
   const handleGoogleSignUp = () => {
-    router.push('/');
+    // TODO: Google OAuth 흐름 구현 필요 (window.location.href = '/api/auth/google')
+    // router.push('/');
   };
 
   const handleSignIn = () => {
