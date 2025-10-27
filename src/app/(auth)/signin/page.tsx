@@ -23,15 +23,11 @@ export default function SignInPage() {
       return;
     }
 
-    try {
-      await loginMutation.mutateAsync({
-        email,
-        password,
-      });
-      router.push('/');
-    } catch (_error) {
-      // 에러는 error.tsx에서 자동 처리됨
-    }
+    await loginMutation.mutateAsync({
+      email,
+      password,
+    });
+    router.push('/');
   };
 
   const handleGoogleLogin = () => {
