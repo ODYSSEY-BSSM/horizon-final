@@ -17,14 +17,14 @@ export default function SignInError({
   return (
     <StyledContainer>
       {/* 브랜딩 */}
-      <StyledBrandingSection>
+      <StyledHeaderWrapper>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
         </Text>
         <Text variant="B1" color={tokens.colors.neutral[500]}>
           로그인 중 문제가 발생했습니다
         </Text>
-      </StyledBrandingSection>
+      </StyledHeaderWrapper>
 
       {/* 에러 아이콘 */}
       <StyledErrorIcon>
@@ -101,7 +101,7 @@ const StyledContainer = styled.div`
   text-align: center;
 `;
 
-const StyledBrandingSection = styled.div`
+const StyledHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

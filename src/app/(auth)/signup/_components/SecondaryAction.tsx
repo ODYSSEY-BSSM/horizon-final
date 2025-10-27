@@ -102,7 +102,7 @@ const StyledTextRow = styled.div`
 `;
 
 const StyledText = styled.p<{ $color: string }>`
-  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
+  font-family: SUIT Variable, sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;

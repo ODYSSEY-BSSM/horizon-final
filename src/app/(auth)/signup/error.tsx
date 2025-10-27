@@ -16,7 +16,6 @@ export default function SignUpError({
 
   return (
     <StyledContainer>
-      {/* 브랜딩 */}
       <StyledBrandingSection>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
@@ -26,7 +25,6 @@ export default function SignUpError({
         </Text>
       </StyledBrandingSection>
 
-      {/* 에러 아이콘 */}
       <StyledErrorIcon>
         <svg
           width="32"
@@ -47,7 +45,6 @@ export default function SignUpError({
         </svg>
       </StyledErrorIcon>
 
-      {/* 에러 메시지 */}
       <StyledErrorMessageSection>
         <Text variant="H3" color={tokens.colors.neutral[900]}>
           회원가입을 완료할 수 없습니다
@@ -67,7 +64,6 @@ export default function SignUpError({
         )}
       </StyledErrorMessageSection>
 
-      {/* 액션 버튼들 */}
       <StyledActionSection>
         <StyledRetryButton type="button" onClick={reset}>
           <Text variant="ST" color={tokens.colors.white}>

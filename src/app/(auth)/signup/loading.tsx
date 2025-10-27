@@ -11,13 +11,11 @@ export default function SignUpLoading() {
       highlightColor={tokens.colors.neutral[100]}
     >
       <StyledContainer>
-        {/* 헤더 섹션 */}
         <StyledHeaderSection>
           <Skeleton circle width={24} height={24} />
           <Skeleton height={24} width={120} />
         </StyledHeaderSection>
 
-        {/* 브랜딩 */}
         <StyledBrandingSection>
           <Text variant="H2" color={tokens.colors.primary[500]}>
             HORIZON
@@ -25,9 +23,7 @@ export default function SignUpLoading() {
           <Skeleton height={20} width={180} />
         </StyledBrandingSection>
 
-        {/* 스텝별 폼 - 동적 구조 */}
         <StyledFormSection>
-          {/* 입력 필드들 */}
           <StyledFieldContainer>
             <StyledLabelSkeleton>
               <Skeleton height={16} width={80} />
@@ -35,7 +31,6 @@ export default function SignUpLoading() {
             <Skeleton height={48} />
           </StyledFieldContainer>
 
-          {/* 추가 필드 또는 설명 */}
           <StyledDescriptionContainer>
             <StyledDescriptionSkeleton>
               <Skeleton height={14} width={250} />
@@ -43,14 +38,12 @@ export default function SignUpLoading() {
             <Skeleton height={14} width={200} />
           </StyledDescriptionContainer>
 
-          {/* 액션 버튼들 */}
           <StyledActionSection>
             <Skeleton height={48} />
             <Skeleton height={40} />
           </StyledActionSection>
         </StyledFormSection>
 
-        {/* 하단 링크 */}
         <StyledFooterLink>
           <Skeleton height={16} width={160} />
         </StyledFooterLink>
