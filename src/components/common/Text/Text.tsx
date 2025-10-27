@@ -1,3 +1,5 @@
+'use client';
+
 import { useText } from './Text.hooks';
 import { StyledText } from './Text.styles';
 import type { TextProps } from './Text.types';

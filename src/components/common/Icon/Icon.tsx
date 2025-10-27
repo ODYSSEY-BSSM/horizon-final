@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef } from 'react';
 import { useIcon } from './Icon.hooks';
 import { StyledIcon } from './Icon.styles';
