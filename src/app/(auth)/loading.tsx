@@ -1,35 +1,20 @@
+import styled from '@emotion/styled';
 import { ClipLoader } from 'react-spinners';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
 
 export default function AuthLoading() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '24px',
-        width: '400px',
-      }}
-    >
+    <StyledContainer>
       {/* 브랜딩 */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '8px',
-        }}
-      >
+      <StyledBrandingSection>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
         </Text>
         <Text variant="B1" color={tokens.colors.neutral[500]}>
           잠시만 기다려주세요...
         </Text>
-      </div>
+      </StyledBrandingSection>
 
       {/* React Spinners */}
       <ClipLoader
@@ -45,6 +30,22 @@ export default function AuthLoading() {
       <Text variant="O" color={tokens.colors.neutral[400]}>
         페이지를 준비하고 있습니다
       </Text>
-    </div>
+    </StyledContainer>
   );
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 400px;
+`;
+
+const StyledBrandingSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;

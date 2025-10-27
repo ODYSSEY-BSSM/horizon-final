@@ -1,5 +1,6 @@
 'use client';
 
+import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
@@ -14,45 +15,19 @@ export default function SignInError({
   const router = useRouter();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '32px',
-        width: '400px',
-        textAlign: 'center',
-      }}
-    >
+    <StyledContainer>
       {/* 브랜딩 */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '8px',
-        }}
-      >
+      <StyledBrandingSection>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
         </Text>
         <Text variant="B1" color={tokens.colors.neutral[500]}>
           로그인 중 문제가 발생했습니다
         </Text>
-      </div>
+      </StyledBrandingSection>
 
       {/* 에러 아이콘 */}
-      <div
-        style={{
-          width: '64px',
-          height: '64px',
-          borderRadius: '50%',
-          backgroundColor: tokens.colors.error[100],
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <StyledErrorIcon>
         <svg
           width="32"
           height="32"
@@ -71,17 +46,10 @@ export default function SignInError({
           <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3" />
           <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3" />
         </svg>
-      </div>
+      </StyledErrorIcon>
 
       {/* 에러 메시지 */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          alignItems: 'center',
-        }}
-      >
+      <StyledErrorMessageSection>
         <Text variant="H3" color={tokens.colors.neutral[900]}>
           로그인할 수 없습니다
         </Text>
@@ -93,123 +61,136 @@ export default function SignInError({
             : error.message || '서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.'}
         </Text>
         {process.env.NODE_ENV === 'development' && (
-          <details style={{ marginTop: '8px' }}>
-            <summary
-              style={{
-                cursor: 'pointer',
-                color: tokens.colors.neutral[500],
-                fontSize: '12px',
-              }}
-            >
-              기술적 세부사항
-            </summary>
-            <pre
-              style={{
-                fontSize: '11px',
-                color: tokens.colors.neutral[600],
-                background: tokens.colors.neutral[100],
-                padding: '8px',
-                borderRadius: '4px',
-                marginTop: '4px',
-                textAlign: 'left',
-                overflow: 'auto',
-                maxWidth: '100%',
-              }}
-            >
-              {error.stack}
-            </pre>
-          </details>
+          <StyledDebugDetails>
+            <StyledDebugSummary>기술적 세부사항</StyledDebugSummary>
+            <StyledDebugPre>{error.stack}</StyledDebugPre>
+          </StyledDebugDetails>
         )}
-      </div>
+      </StyledErrorMessageSection>
 
       {/* 액션 버튼들 */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          width: '100%',
-        }}
-      >
-        <button
-          type="button"
-          onClick={reset}
-          style={{
-            width: '100%',
-            height: '48px',
-            backgroundColor: tokens.colors.primary[500],
-            color: tokens.colors.white,
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.primary[600];
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.primary[500];
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.primary[600];
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.primary[500];
-          }}
-        >
+      <StyledActionSection>
+        <StyledRetryButton type="button" onClick={reset}>
           <Text variant="ST" color={tokens.colors.white}>
             다시 로그인
           </Text>
-        </button>
+        </StyledRetryButton>
 
-        <button
-          type="button"
-          onClick={() => router.push('/signup')}
-          style={{
-            width: '100%',
-            height: '48px',
-            backgroundColor: 'transparent',
-            color: tokens.colors.neutral[700],
-            border: `1px solid ${tokens.colors.neutral[300]}`,
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.neutral[100];
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.backgroundColor = tokens.colors.neutral[100];
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-          }}
-        >
+        <StyledSignUpButton type="button" onClick={() => router.push('/signup')}>
           <Text variant="ST" color={tokens.colors.neutral[700]}>
             회원가입하기
           </Text>
-        </button>
+        </StyledSignUpButton>
 
-        <button
-          type="button"
-          onClick={() => router.push('/')}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: tokens.colors.neutral[500],
-            cursor: 'pointer',
-            padding: '8px',
-            textDecoration: 'underline',
-          }}
-        >
+        <StyledHomeButton type="button" onClick={() => router.push('/')}>
           <Text variant="O" color={tokens.colors.neutral[500]}>
             홈으로 돌아가기
           </Text>
-        </button>
-      </div>
-    </div>
+        </StyledHomeButton>
+      </StyledActionSection>
+    </StyledContainer>
   );
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 400px;
+  text-align: center;
+`;
+
+const StyledBrandingSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const StyledErrorIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: ${tokens.colors.error[100]};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledErrorMessageSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+`;
+
+const StyledDebugDetails = styled.details`
+  margin-top: 8px;
+`;
+
+const StyledDebugSummary = styled.summary`
+  cursor: pointer;
+  color: ${tokens.colors.neutral[500]};
+  font-size: 12px;
+`;
+
+const StyledDebugPre = styled.pre`
+  font-size: 11px;
+  color: ${tokens.colors.neutral[600]};
+  background: ${tokens.colors.neutral[100]};
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  text-align: left;
+  overflow: auto;
+  max-width: 100%;
+`;
+
+const StyledActionSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+`;
+
+const StyledRetryButton = styled.button`
+  width: 100%;
+  height: 48px;
+  background-color: ${tokens.colors.primary[500]};
+  color: ${tokens.colors.white};
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover,
+  &:focus {
+    background-color: ${tokens.colors.primary[600]};
+  }
+`;
+
+const StyledSignUpButton = styled.button`
+  width: 100%;
+  height: 48px;
+  background-color: transparent;
+  color: ${tokens.colors.neutral[700]};
+  border: 1px solid ${tokens.colors.neutral[300]};
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover,
+  &:focus {
+    background-color: ${tokens.colors.neutral[100]};
+  }
+`;
+
+const StyledHomeButton = styled.button`
+  background: none;
+  border: none;
+  color: ${tokens.colors.neutral[500]};
+  cursor: pointer;
+  padding: 8px;
+  text-decoration: underline;
+`;
