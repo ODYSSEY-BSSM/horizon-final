@@ -7,8 +7,8 @@ import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/core/tokens';
-import SecondaryAction from './components/SecondaryAction';
-import { useLogin } from './hooks/useSignIn';
+import SecondaryAction from './_components/SecondaryAction';
+import { useLogin } from './_hooks/useSignIn';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');

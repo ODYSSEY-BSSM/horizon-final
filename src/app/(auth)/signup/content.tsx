@@ -1,15 +1,14 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { SwitchCase } from '@toss/react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
 import { useSignUpHandlers } from './_hooks/useSignUpHandlers';
-import EmailStep from './steps/EmailStep';
-import PasswordStep from './steps/PasswordStep';
-import UsernameStep from './steps/UsernameStep';
-import VerificationStep from './steps/VerificationStep';
+import EmailStep from './_steps/EmailStep';
+import PasswordStep from './_steps/PasswordStep';
+import UsernameStep from './_steps/UsernameStep';
+import VerificationStep from './_steps/VerificationStep';
 
 const SignUpContent = () => {
   const {
@@ -82,87 +81,82 @@ const SignUpContent = () => {
             </StyledTitleSection>
           </StyledHeaderWrapper>
 
-          <SwitchCase
-            value={currentStep}
-            caseBy={{
-              email: (
-                <EmailStep
-                  email={email}
-                  setEmail={(value: string) => {
-                    setEmail(value);
-                    if (errors.email) {
-                      setErrors((prev: Record<string, string>) => ({ ...prev, email: '' }));
-                    }
-                  }}
-                  onSubmit={handleEmailSubmit}
-                  isLoading={isLoading}
-                  errors={errors}
-                  onGoogleSignUp={handleGoogleSignUp}
-                  onSignIn={handleSignIn}
-                />
-              ),
-              verification: (
-                <VerificationStep
-                  verificationCode={verificationCode}
-                  setVerificationCode={(value: string) => {
-                    setVerificationCode(value);
-                    if (errors.code) {
-                      setErrors((prev: Record<string, string>) => ({ ...prev, code: '' }));
-                    }
-                  }}
-                  onSubmit={handleVerificationSubmit}
-                  onResendCode={handleResendVerificationCode}
-                  isLoading={isLoading}
-                  errors={errors}
-                  email={signUpData.email}
-                />
-              ),
-              password: (
-                <PasswordStep
-                  password={password}
-                  setPassword={(value: string) => {
-                    setPassword(value);
-                    if (errors.password) {
-                      setErrors((prev: Record<string, string>) => ({
-                        ...prev,
-                        password: '',
-                      }));
-                    }
-                  }}
-                  confirmPassword={confirmPassword}
-                  setConfirmPassword={(value: string) => {
-                    setConfirmPassword(value);
-                    if (errors.confirmPassword) {
-                      setErrors((prev: Record<string, string>) => ({
-                        ...prev,
-                        confirmPassword: '',
-                      }));
-                    }
-                  }}
-                  onSubmit={handlePasswordSubmit}
-                  isLoading={isLoading}
-                  errors={errors}
-                />
-              ),
-              username: (
-                <UsernameStep
-                  username={username}
-                  setUsername={(value: string) => {
-                    setUsername(value);
-                    if (errors.username) {
-                      setErrors((prev: Record<string, string>) => ({
-                        ...prev,
-                        username: '',
-                      }));
-                    }
-                  }}
-                  onSubmit={handleUsernameSubmit}
-                  isLoading={isLoading}
-                  errors={errors}
-                />
-              ),
-            }}
-          />
+          {currentStep === 'email' && (
+            <EmailStep
+              email={email}
+              setEmail={(value: string) => {
+                setEmail(value);
+                if (errors.email) {
+                  setErrors((prev: Record<string, string>) => ({ ...prev, email: '' }));
+                }
+              }}
+              onSubmit={handleEmailSubmit}
+              isLoading={isLoading}
+              errors={errors}
+              onGoogleSignUp={handleGoogleSignUp}
+              onSignIn={handleSignIn}
+            />
+          )}
+          {currentStep === 'verification' && (
+            <VerificationStep
+              verificationCode={verificationCode}
+              setVerificationCode={(value: string) => {
+                setVerificationCode(value);
+                if (errors.code) {
+                  setErrors((prev: Record<string, string>) => ({ ...prev, code: '' }));
+                }
+              }}
+              onSubmit={handleVerificationSubmit}
+              onResendCode={handleResendVerificationCode}
+              isLoading={isLoading}
+              errors={errors}
+              email={signUpData.email}
+            />
+          )}
+          {currentStep === 'password' && (
+            <PasswordStep
+              password={password}
+              setPassword={(value: string) => {
+                setPassword(value);
+                if (errors.password) {
+                  setErrors((prev: Record<string, string>) => ({
+                    ...prev,
+                    password: '',
+                  }));
+                }
+              }}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={(value: string) => {
+                setConfirmPassword(value);
+                if (errors.confirmPassword) {
+                  setErrors((prev: Record<string, string>) => ({
+                    ...prev,
+                    confirmPassword: '',
+                  }));
+                }
+              }}
+              onSubmit={handlePasswordSubmit}
+              isLoading={isLoading}
+              errors={errors}
+            />
+          )}
+          {currentStep === 'username' && (
+            <UsernameStep
+              username={username}
+              setUsername={(value: string) => {
+                setUsername(value);
+                if (errors.username) {
+                  setErrors((prev: Record<string, string>) => ({
+                    ...prev,
+                    username: '',
+                  }));
+                }
+              }}
+              onSubmit={handleUsernameSubmit}
+              isLoading={isLoading}
+              errors={errors}
+            />
+          )}
         </StyledContentWrapper>
       </StyledCard>
     </StyledContainer>
