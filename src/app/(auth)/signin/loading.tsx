@@ -11,7 +11,6 @@ export default function SignInLoading() {
       highlightColor={tokens.colors.neutral[100]}
     >
       <StyledContainer>
-        {/* 헤더 섹션 */}
         <StyledHeaderSection>
           <Text variant="H2" color={tokens.colors.primary[500]}>
             HORIZON
@@ -19,9 +18,7 @@ export default function SignInLoading() {
           <Skeleton height={20} width={200} />
         </StyledHeaderSection>
 
-        {/* 폼 섹션 */}
         <StyledFormSection>
-          {/* 이메일 필드 */}
           <StyledFieldContainer>
             <StyledLabelSkeleton>
               <Skeleton height={16} width={60} />
@@ -29,7 +26,6 @@ export default function SignInLoading() {
             <Skeleton height={48} />
           </StyledFieldContainer>
 
-          {/* 비밀번호 필드 */}
           <StyledFieldContainer>
             <StyledLabelSkeleton>
               <Skeleton height={16} width={80} />
@@ -38,20 +34,15 @@ export default function SignInLoading() {
           </StyledFieldContainer>
         </StyledFormSection>
 
-        {/* 액션 섹션 */}
         <StyledActionSection>
-          {/* 로그인 버튼 */}
           <Skeleton height={48} />
 
-          {/* 구분선 */}
           <StyledDivider>
             <Skeleton height={1} />
           </StyledDivider>
 
-          {/* Google 로그인 버튼 */}
           <Skeleton height={48} />
 
-          {/* 회원가입 링크 */}
           <StyledLinkSkeleton>
             <Skeleton height={16} width={150} />
           </StyledLinkSkeleton>
