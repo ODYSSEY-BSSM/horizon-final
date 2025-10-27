@@ -1,0 +1,12 @@
+html, body {
+    overflow: hidden; 
+    height: 100%; 
+  }
+  :root {
+    --app-height: 100vh;
+    --app-height: 100lvh;
+  }
+  
+  body {
+    height: var(--app-height);
+  }
