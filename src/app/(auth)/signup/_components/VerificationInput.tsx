@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
 import { useRef, useState } from 'react';
