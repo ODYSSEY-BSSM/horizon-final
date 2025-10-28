@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';

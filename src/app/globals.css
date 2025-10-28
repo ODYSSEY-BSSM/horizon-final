@@ -1,0 +1,14 @@
+html, body {
+    overflow: hidden; 
+    height: 100%; 
+ }
+
+:root {
+  --app-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import type React from 'react';
 import { useId, useState } from 'react';
 import { colors } from '@/core/tokens/color/color';

@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
