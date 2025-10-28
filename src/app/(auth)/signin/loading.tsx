@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/core/tokens';
 
