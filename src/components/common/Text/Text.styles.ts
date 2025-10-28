@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { typos } from '@/core/tokens/typo/typo';
+import { typos } from '@/shared/tokens/typo/typo';
 import { BLOCKED_PROPS, TEXT_VARIANTS } from './Text.constants';
 import type { StyledTextProps, TextVariant } from './Text.types';
 

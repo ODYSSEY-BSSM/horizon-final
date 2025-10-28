@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import Text from '@/components/common/Text/Text';
-import { tokens } from '@/core/tokens';
+import { tokens } from '@/shared/tokens';
 
 export default function SignUpError({
   error,

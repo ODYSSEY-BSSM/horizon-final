@@ -3,19 +3,17 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/core/tokens';
-import type { PasswordStepProps } from '@/core/types';
+import { useSignUpActions, useSignUpStore } from '@/lib/stores/signupStore';
+import { tokens } from '@/shared/tokens';
 import PasswordValidation from '../_components/PasswordValidation';
 
-const PasswordStep = ({
-  password,
-  setPassword,
-  confirmPassword,
-  setConfirmPassword,
-  onSubmit,
-  isLoading,
-  errors,
-}: PasswordStepProps) => {
+interface PasswordStepProps {
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+const PasswordStep = ({ onSubmit }: PasswordStepProps) => {
+  const { password, confirmPassword, isLoading, errors } = useSignUpStore();
+  const { setPassword, setConfirmPassword } = useSignUpActions();
   const hasMinLength = password.length >= 8;
   const hasNumber = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);

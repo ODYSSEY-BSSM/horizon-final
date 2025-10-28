@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { colors } from '@/core/tokens/color/color';
+import { colors } from '@/shared/tokens/color/color';
 
 const ColorsDemo = () => null;
 

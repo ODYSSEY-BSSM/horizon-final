@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
-import { tokens } from '@/core/tokens';
+import { tokens } from '@/shared/tokens';
 
 interface PasswordValidationProps {
   text: string;

@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { colors } from '@/core/tokens/color/color';
-import { icons } from '@/core/tokens/icon/icon';
-import { radius } from '@/core/tokens/radius/radius';
-import { typos } from '@/core/tokens/typo/typo';
+import { colors } from '@/shared/tokens/color/color';
+import { icons } from '@/shared/tokens/icon/icon';
+import { radius } from '@/shared/tokens/radius/radius';
+import { typos } from '@/shared/tokens/typo/typo';
 import {
   BLOCKED_PROPS,
   BUTTON_ICON_CONFIGS,

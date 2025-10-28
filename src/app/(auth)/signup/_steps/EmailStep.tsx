@@ -4,49 +4,40 @@ import styled from '@emotion/styled';
 import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/core/tokens';
-import type { EmailStepProps } from '@/core/types';
+import { tokens } from '@/shared/tokens';
 import SecondaryAction from '../_components/SecondaryAction';
+import { useEmailForm } from '../_hooks/useEmailForm';
 
-const EmailStep = ({
-  email,
-  setEmail,
-  onSubmit,
-  isLoading,
-  errors,
-  onGoogleSignUp,
-  onSignIn,
-}: EmailStepProps) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !!errors.email || isLoading) {
-      return;
-    }
-    onSubmit(e);
-  };
+interface EmailStepProps {
+  onGoogleSignUp: () => void;
+  onSignIn: () => void;
+}
+
+const EmailStep = ({ onGoogleSignUp, onSignIn }: EmailStepProps) => {
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    onSubmit,
+  } = useEmailForm();
 
   return (
     <StyledContainer>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <StyledFormContent>
           <TextField
             label="이메일"
             placeholder="이메일 입력"
             type="email"
             width="100%"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register('email')}
             error={!!errors.email}
-            helperText={errors.email}
+            helperText={errors.email?.message}
           />
           <StyledActionsWrapper>
             <StyledButtonSection>
-              <StyledSubmitButton
-                type="submit"
-                disabled={!email.trim() || !!errors.email || isLoading}
-              >
+              <StyledSubmitButton type="submit" disabled={isSubmitting}>
                 <Text variant="ST" color={tokens.colors.white}>
-                  {isLoading ? '전송 중...' : '인증번호 보내기'}
+                  {isSubmitting ? '전송 중...' : '인증번호 보내기'}
                 </Text>
               </StyledSubmitButton>
             </StyledButtonSection>
@@ -110,11 +101,11 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
-  
+
   &:hover {
     background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
   }
-  
+
   &:disabled {
     opacity: 1;
   }
