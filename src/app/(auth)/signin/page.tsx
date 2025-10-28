@@ -13,6 +13,7 @@ import { useLogin } from './_hooks/useSignIn';
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const loginMutation = useLogin();
 
@@ -23,11 +24,17 @@ export default function SignInPage() {
       return;
     }
 
-    await loginMutation.mutateAsync({
-      email,
-      password,
-    });
-    router.push('/');
+    try {
+      setError(null);
+      await loginMutation.mutateAsync({
+        email,
+        password,
+      });
+      router.push('/');
+    } catch (_err) {
+      // 에러 메시지 설정
+      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -69,6 +76,13 @@ export default function SignInPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {error && (
+          <StyledErrorMessage>
+            <Text variant="O" color={tokens.colors.error[200]}>
+              {error}
+            </Text>
+          </StyledErrorMessage>
+        )}
       </StyledFormWrapper>
 
       <StyledActionsWrapper>
@@ -181,4 +195,11 @@ const StyledButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const StyledErrorMessage = styled.div`
+  padding: 8px 12px;
+  background-color: ${tokens.colors.error[100]};
+  border-radius: 4px;
+  border: 1px solid ${tokens.colors.error[200]};
 `;
