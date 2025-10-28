@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
+import { flex, spacing } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 import SecondaryAction from './_components/SecondaryAction';
 import { useLogin } from './_hooks/useSignIn';
@@ -114,48 +115,40 @@ export default function SignInContent() {
 }
 
 const StyledPageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+  ${flex.column}
+  ${flex.gap(60)}
 `;
 
 const StyledHeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
+  ${flex.columnStart}
+  ${flex.gap(8)}
   width: 400px;
 `;
 
 const StyledFormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  ${flex.column}
+  ${flex.gap(16)}
   width: 400px;
 `;
 
 const StyledActionsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+  ${flex.column}
+  ${flex.gap(40)}
   width: 400px;
 `;
 
 const StyledButtonGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  ${flex.column}
+  ${flex.gap(16)}
 `;
 
 const StyledLoginButton = styled.button<{ disabled: boolean }>`
+  ${flex.center}
   width: 100%;
   height: 48px;
   background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
   border: none;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
 
@@ -169,12 +162,10 @@ const StyledLoginButton = styled.button<{ disabled: boolean }>`
 `;
 
 const StyledDividerWrapper = styled.div`
+  ${flex.center}
   position: relative;
   height: 40px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const StyledDividerLine = styled.div`
@@ -187,17 +178,19 @@ const StyledDividerLine = styled.div`
 `;
 
 const StyledDividerText = styled.div`
+  ${flex.center}
+  ${spacing.pl(16)}
+  ${spacing.pr(16)}
   background-color: ${tokens.colors.white};
-  padding: 0 16px;
   height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: absolute;
 `;
 
 const StyledErrorMessage = styled.div`
-  padding: 8px 12px;
+  ${spacing.pt(8)}
+  ${spacing.pb(8)}
+  ${spacing.pl(12)}
+  ${spacing.pr(12)}
   background-color: ${tokens.colors.error[100]};
   border-radius: 4px;
   border: 1px solid ${tokens.colors.error[200]};

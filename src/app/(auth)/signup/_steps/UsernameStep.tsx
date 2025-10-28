@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
+import { flex } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 import type { UsernameStepProps } from '@/core/types';
 
@@ -39,21 +40,18 @@ const UsernameStep = ({
 export default UsernameStep;
 
 const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 62px;
+  ${flex.column}
+  ${flex.gap(62)}
   width: 100%;
 `;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
+  ${flex.center}
   width: 100%;
   height: 48px;
   background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
   border: none;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
   

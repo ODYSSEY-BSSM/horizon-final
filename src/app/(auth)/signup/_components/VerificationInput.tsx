@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
 import { useRef, useState } from 'react';
+import { flex, spacing } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 
 const OTP_LENGTH = 6;
@@ -112,15 +113,13 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
 export default VerificationInput;
 
 const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  ${flex.column}
+  ${flex.gap(8)}
   width: 100%;
 `;
 
 const StyledOtpWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  ${flex.spaceBetween}
   width: 400px;
 `;
 
@@ -140,13 +139,12 @@ const getBorderStyle = (isError: boolean, isFocused: boolean) => {
 };
 
 const StyledInput = styled.input<StyledInputProps>`
-  display: flex;
+  ${flex.center}
+  ${spacing.pt(18)}
+  ${spacing.pb(18)}
   width: 56px;
   height: 80px;
-  padding: 18px 0;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   font-size: 40px;
   font-weight: 700;
   line-height: 44px;
@@ -163,7 +161,7 @@ const StyledInput = styled.input<StyledInputProps>`
   text-decoration-style: solid;
   text-underline-position: from-font;
   ${({ isError, isFocused }) => getBorderStyle(isError, isFocused)}
-
+  
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;

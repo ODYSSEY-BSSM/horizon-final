@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { SwitchCase } from '@toss/react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
+import { flex, spacing } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 import { useSignUpHandlers } from './_hooks/useSignUpHandlers';
 import EmailStep from './_steps/EmailStep';
@@ -172,62 +173,49 @@ export default function SignUpContent() {
 }
 
 const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  ${flex.columnCenter}
   width: 100%;
   height: 100vh;
   background-color: ${tokens.colors.background};
 `;
 
 const StyledCard = styled.div`
+  ${flex.columnCenter}
   width: 720px;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
   background-color: ${tokens.colors.white};
-  align-items: center;
   box-shadow: ${tokens.shadow[0]};
 `;
 
 const StyledFormWrapper = styled.div`
-  margin-top: 140px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  ${flex.columnCenter}
+  ${spacing.mt(140)}
 `;
 
 const StyledContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  ${flex.column}
+  ${flex.gap(30)}
   width: 400px;
 `;
 
 const StyledHeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: flex-start;
+  ${flex.columnStart}
+  ${flex.gap(16)}
   width: 400px;
 `;
 
 const StyledTitleSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
+  ${flex.columnStart}
+  ${flex.gap(8)}
 `;
 
 const StyledBackButton = styled.button`
+  ${flex.center}
   width: 24px;
   height: 24px;
   border: none;
   background: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
   align-self: flex-start;
 

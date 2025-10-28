@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { flex } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 
 interface SecondaryActionProps {
@@ -88,17 +89,14 @@ const SecondaryAction = ({
 export default SecondaryAction;
 
 const StyledTimerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  ${flex.columnCenter}
   gap: 0;
 `;
 
 const StyledTextRow = styled.div`
-  display: flex;
-  gap: 4px;
+  ${flex.rowCenter}
+  ${flex.gap(4)}
   align-items: start;
-  justify-content: center;
 `;
 
 const StyledText = styled.p<{ $color: string }>`
@@ -113,8 +111,7 @@ const StyledText = styled.p<{ $color: string }>`
 `;
 
 const StyledCenterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  ${flex.center}
 `;
 
 const StyledActionButton = styled.button<{ isActive: boolean; disabled?: boolean }>`

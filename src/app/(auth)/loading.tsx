@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import { ClipLoader } from 'react-spinners';
 import Text from '@/components/common/Text/Text';

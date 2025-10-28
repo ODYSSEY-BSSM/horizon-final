@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
+import { flex } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 
 interface PasswordValidationProps {
@@ -33,7 +34,6 @@ const PasswordValidation = ({ text, isValid }: PasswordValidationProps) => {
 export default PasswordValidation;
 
 const StyledContainer = styled.div`
-  display: flex;
-  align-items: center;
+  ${flex.rowCenter}
   gap: 0;
 `;

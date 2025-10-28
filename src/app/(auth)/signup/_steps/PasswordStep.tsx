@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
+import { flex } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 import type { PasswordStepProps } from '@/core/types';
 import PasswordValidation from '../_components/PasswordValidation';
@@ -83,39 +84,33 @@ const PasswordStep = ({
 export default PasswordStep;
 
 const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 62px;
+  ${flex.column}
+  ${flex.gap(62)}
   width: 100%;
 `;
 
 const StyledFieldsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  ${flex.column}
+  ${flex.gap(16)}
 `;
 
 const StyledPasswordFieldWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  ${flex.column}
+  ${flex.gap(8)}
 `;
 
 const StyledValidationsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  ${flex.rowCenter}
+  ${flex.gap(8)}
 `;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
+  ${flex.center}
   width: 100%;
   height: 48px;
   background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
   border: none;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
   

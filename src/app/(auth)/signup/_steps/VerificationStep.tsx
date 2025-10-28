@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
+import { flex } from '@/core/styles';
 import { tokens } from '@/core/tokens';
 import type { VerificationStepProps } from '@/core/types';
 import SecondaryAction from '../_components/SecondaryAction';
@@ -52,14 +53,12 @@ const VerificationStep = ({
 export default VerificationStep;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
+  ${flex.center}
   width: 400px;
   height: 48px;
   background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
   border: none;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s ease;
   align-self: center;
@@ -83,13 +82,11 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
 `;
 
 const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+  ${flex.column}
+  ${flex.gap(60)}
 `;
 
 const StyledButtonSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+  ${flex.column}
+  ${flex.gap(32)}
 `;

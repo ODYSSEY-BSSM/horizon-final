@@ -1,4 +1,4 @@
-import SignUpContent from './content';
+import SignUpContent from './SignUpContent';
 
 export default function SignUpPage() {
   return <SignUpContent />;
