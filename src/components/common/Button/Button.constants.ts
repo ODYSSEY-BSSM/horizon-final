@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { colors } from '@/core/tokens/color/color';
-import { spacing } from '@/core/tokens/spacing/spacing';
+import { colors } from '@/shared/tokens/color/color';
+import { spacing } from '@/shared/tokens/spacing/spacing';
 
 export const BUTTON_TEXT_CONFIGS = {
   small: { fontSize: 13 as const, fontWeight: 'semibold' as const, lineHeight: 18 as const },

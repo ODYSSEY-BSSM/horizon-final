@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { colors } from '@/core/tokens/color/color';
-import { typos } from '@/core/tokens/typo/typo';
+import { colors } from '@/shared/tokens/color/color';
+import { typos } from '@/shared/tokens/typo/typo';
 import { BLOCKED_PROPS, baseAffixStyles, baseButtonStyles } from './TextField.constants';
 
 export interface StyledInputWrapperProps {

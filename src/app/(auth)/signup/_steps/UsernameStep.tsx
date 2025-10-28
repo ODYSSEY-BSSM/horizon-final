@@ -1,16 +1,16 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/core/tokens';
-import type { UsernameStepProps } from '@/core/types';
+import { useSignUpActions, useSignUpStore } from '@/lib/stores/signupStore';
+import { tokens } from '@/shared/tokens';
 
-const UsernameStep = ({
-  username,
-  setUsername,
-  onSubmit,
-  isLoading,
-  errors,
-}: UsernameStepProps) => {
+interface UsernameStepProps {
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+const UsernameStep = ({ onSubmit }: UsernameStepProps) => {
+  const { username, isLoading, errors } = useSignUpStore();
+  const { setUsername } = useSignUpActions();
   return (
     <StyledContainer>
       <TextField

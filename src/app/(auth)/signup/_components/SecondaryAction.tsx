@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { tokens } from '@/core/tokens';
+import { tokens } from '@/shared/tokens';
 
 interface SecondaryActionProps {
   primaryText: string;

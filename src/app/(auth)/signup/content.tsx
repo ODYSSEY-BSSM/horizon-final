@@ -1,41 +1,37 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRouter } from 'next/navigation';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
-import { tokens } from '@/core/tokens';
-import { useSignUpHandlers } from './_hooks/useSignUpHandlers';
+import { useSignupFlow } from '@/lib/stores/signupFlow';
+import { tokens } from '@/shared/tokens';
 import EmailStep from './_steps/EmailStep';
 import PasswordStep from './_steps/PasswordStep';
 import UsernameStep from './_steps/UsernameStep';
 import VerificationStep from './_steps/VerificationStep';
 
 export default function SignUpContent() {
-  const {
-    currentStep,
-    signUpData,
-    isLoading,
-    errors,
-    setErrors,
-    email,
-    setEmail,
-    verificationCode,
-    setVerificationCode,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    username,
-    setUsername,
-    handleEmailSubmit,
-    handleVerificationSubmit,
-    handlePasswordSubmit,
-    handleUsernameSubmit,
-    handleGoogleSignUp,
-    handleSignIn,
-    handleBack,
-    handleResendVerificationCode,
-  } = useSignUpHandlers();
+  const { currentStep, completedData } = useSignupFlow();
+  const router = useRouter();
+
+  const handleGoogleSignUp = () => {
+    // TODO: Google OAuth 흐름 구현 필요
+  };
+
+  const handleSignIn = () => {
+    router.push('/signin');
+  };
+
+  const handleBack = () => {
+    const stepOrder = ['email', 'verification', 'password', 'username'];
+    const currentIndex = stepOrder.indexOf(currentStep);
+    if (currentIndex > 0) {
+      // goToStep logic will be handled by individual step hooks
+    } else {
+      router.back();
+    }
+  };
 
   const getStepTitle = () => {
     switch (currentStep) {
@@ -55,7 +51,7 @@ export default function SignUpContent() {
       case 'email':
         return '이메일 주소를 입력하고 인증을 완료하세요.';
       case 'verification':
-        return `${signUpData.email}으로 인증번호를 전송했습니다.`;
+        return `${completedData.email}으로 인증번호를 전송했습니다.`;
       case 'password':
         return '비밀번호를 지정해주세요.';
       case 'username':
@@ -83,81 +79,11 @@ export default function SignUpContent() {
             </StyledHeaderWrapper>
 
             {currentStep === 'email' && (
-              <EmailStep
-                email={email}
-                setEmail={(value: string) => {
-                  setEmail(value);
-                  if (errors.email) {
-                    setErrors((prev: Record<string, string>) => ({ ...prev, email: '' }));
-                  }
-                }}
-                onSubmit={handleEmailSubmit}
-                isLoading={isLoading}
-                errors={errors}
-                onGoogleSignUp={handleGoogleSignUp}
-                onSignIn={handleSignIn}
-              />
+              <EmailStep onGoogleSignUp={handleGoogleSignUp} onSignIn={handleSignIn} />
             )}
-            {currentStep === 'verification' && (
-              <VerificationStep
-                verificationCode={verificationCode}
-                setVerificationCode={(value: string) => {
-                  setVerificationCode(value);
-                  if (errors.code) {
-                    setErrors((prev: Record<string, string>) => ({ ...prev, code: '' }));
-                  }
-                }}
-                onSubmit={handleVerificationSubmit}
-                onResendCode={handleResendVerificationCode}
-                isLoading={isLoading}
-                errors={errors}
-                email={signUpData.email}
-              />
-            )}
-            {currentStep === 'password' && (
-              <PasswordStep
-                password={password}
-                setPassword={(value: string) => {
-                  setPassword(value);
-                  if (errors.password) {
-                    setErrors((prev: Record<string, string>) => ({
-                      ...prev,
-                      password: '',
-                    }));
-                  }
-                }}
-                confirmPassword={confirmPassword}
-                setConfirmPassword={(value: string) => {
-                  setConfirmPassword(value);
-                  if (errors.confirmPassword) {
-                    setErrors((prev: Record<string, string>) => ({
-                      ...prev,
-                      confirmPassword: '',
-                    }));
-                  }
-                }}
-                onSubmit={handlePasswordSubmit}
-                isLoading={isLoading}
-                errors={errors}
-              />
-            )}
-            {currentStep === 'username' && (
-              <UsernameStep
-                username={username}
-                setUsername={(value: string) => {
-                  setUsername(value);
-                  if (errors.username) {
-                    setErrors((prev: Record<string, string>) => ({
-                      ...prev,
-                      username: '',
-                    }));
-                  }
-                }}
-                onSubmit={handleUsernameSubmit}
-                isLoading={isLoading}
-                errors={errors}
-              />
-            )}
+            {currentStep === 'verification' && <VerificationStep />}
+            {currentStep === 'password' && <PasswordStep />}
+            {currentStep === 'username' && <UsernameStep />}
           </StyledContentWrapper>
         </StyledFormWrapper>
       </StyledCard>

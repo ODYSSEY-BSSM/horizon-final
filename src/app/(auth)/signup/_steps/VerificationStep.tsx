@@ -1,55 +1,58 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
-import { tokens } from '@/core/tokens';
-import type { VerificationStepProps } from '@/core/types';
+import { tokens } from '@/shared/tokens';
 import SecondaryAction from '../_components/SecondaryAction';
 import VerificationInput from '../_components/VerificationInput';
+import { useVerificationForm } from '../_hooks/useVerificationForm';
 
-const VerificationStep = ({
-  verificationCode,
-  setVerificationCode,
-  onSubmit,
-  onResendCode,
-  isLoading,
-  errors,
-}: VerificationStepProps) => {
-  const handleResend = async () => {
-    if (onResendCode) {
-      await onResendCode();
-    }
-  };
+const VerificationStep = () => {
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    onSubmit,
+    onResendCode,
+  } = useVerificationForm();
 
   return (
     <StyledContainer>
-      <VerificationInput
-        value={verificationCode}
-        onChange={setVerificationCode}
-        error={errors.code}
-      />
-
-      <StyledButtonSection>
-        <StyledSubmitButton
-          onClick={onSubmit}
-          disabled={verificationCode.length !== 6 || !!errors.code || isLoading}
-        >
-          <Text variant="ST" color={tokens.colors.white}>
-            {isLoading ? '인증 중...' : '확인'}
-          </Text>
-        </StyledSubmitButton>
-
-        <SecondaryAction
-          primaryText="인증번호를 받지 못했나요?"
-          actionText="다시 보내기"
-          onActionClick={handleResend}
-          showTimer={true}
-          timerDuration={30}
+      <form onSubmit={onSubmit}>
+        <VerificationInput
+          {...register('verificationCode')}
+          error={errors.verificationCode?.message}
         />
-      </StyledButtonSection>
+        <StyledButtonSection>
+          <StyledSubmitButton type="submit" disabled={isSubmitting}>
+            <Text variant="ST" color={tokens.colors.white}>
+              {isSubmitting ? '인증 중...' : '확인'}
+            </Text>
+          </StyledSubmitButton>
+
+          <SecondaryAction
+            primaryText="인증번호를 받지 못했나요?"
+            actionText="다시 보내기"
+            onActionClick={onResendCode}
+            showTimer={true}
+            timerDuration={30}
+          />
+        </StyledButtonSection>
+      </form>
     </StyledContainer>
   );
 };
 
 export default VerificationStep;
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+`;
+
+const StyledButtonSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+`;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   width: 400px;
@@ -80,16 +83,4 @@ const StyledSubmitButton = styled.button<{ disabled: boolean }>`
   &:focus:not(:focus-visible) {
     outline: none;
   }
-`;
-
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const StyledButtonSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
 `;

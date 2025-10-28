@@ -1,23 +1,33 @@
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useState } from 'react';
-import type { SignUpData, SignUpStep } from '@/core/types';
+import { useSignUpActions, useSignUpStore } from '@/lib/stores/signupStore';
 import { useRegister } from './useSignUp';
 import { useSignUpValidation } from './useSignUpValidation';
 
 export const useSignUpHandlers = () => {
-  const [currentStep, setCurrentStep] = useState<SignUpStep>('email');
-  const [signUpData, setSignUpData] = useState<Partial<SignUpData>>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
   const registerMutation = useRegister();
 
-  const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const {
+    currentStep,
+    email,
+    verificationCode,
+    password,
+    confirmPassword,
+    username,
+    isLoading,
+    errors,
+    signUpData,
+  } = useSignUpStore();
+
+  const {
+    setIsLoading,
+    setErrors,
+    clearAllErrors,
+    updateSignUpData,
+    goToNextStep,
+    goToPreviousStep,
+  } = useSignUpActions();
 
   const {
     validateEmail,
@@ -36,11 +46,11 @@ export const useSignUpHandlers = () => {
     }
 
     setIsLoading(true);
-    setErrors({});
+    clearAllErrors();
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSignUpData((prev) => ({ ...prev, email }));
-      setCurrentStep('verification');
+      updateSignUpData({ email });
+      goToNextStep();
     } catch (_error) {
       setErrors({ email: '이미 가입된 이메일입니다' });
     } finally {
@@ -50,7 +60,7 @@ export const useSignUpHandlers = () => {
 
   const handleResendVerificationCode = async () => {
     setIsLoading(true);
-    setErrors({});
+    clearAllErrors();
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (_error) {
@@ -69,11 +79,11 @@ export const useSignUpHandlers = () => {
     }
 
     setIsLoading(true);
-    setErrors({});
+    clearAllErrors();
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSignUpData((prev) => ({ ...prev, verificationCode }));
-      setCurrentStep('password');
+      updateSignUpData({ verificationCode });
+      goToNextStep();
     } catch (_error) {
       setErrors({ code: '인증번호가 올바르지 않습니다' });
     } finally {
@@ -95,10 +105,10 @@ export const useSignUpHandlers = () => {
     }
 
     setIsLoading(true);
-    setErrors({});
+    clearAllErrors();
     try {
-      setSignUpData((prev) => ({ ...prev, password, confirmPassword }));
-      setCurrentStep('username');
+      updateSignUpData({ password, confirmPassword });
+      goToNextStep();
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +123,7 @@ export const useSignUpHandlers = () => {
     }
 
     setIsLoading(true);
-    setErrors({});
+    clearAllErrors();
     try {
       if (!signUpData.email || !signUpData.password) {
         throw new Error('이메일 또는 비밀번호가 없습니다');
@@ -153,13 +163,9 @@ export const useSignUpHandlers = () => {
   const handleBack = () => {
     switch (currentStep) {
       case 'verification':
-        setCurrentStep('email');
-        break;
       case 'password':
-        setCurrentStep('verification');
-        break;
       case 'username':
-        setCurrentStep('password');
+        goToPreviousStep();
         break;
       default:
         router.back();
@@ -171,17 +177,6 @@ export const useSignUpHandlers = () => {
     signUpData,
     isLoading,
     errors,
-    setErrors,
-    email,
-    setEmail,
-    verificationCode,
-    setVerificationCode,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    username,
-    setUsername,
     handleEmailSubmit,
     handleVerificationSubmit,
     handlePasswordSubmit,
