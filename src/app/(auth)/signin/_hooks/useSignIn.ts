@@ -1,5 +1,3 @@
-'use client';
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { LoginRequest, LoginResponse, UserInfoResponse } from '@/core/api';
 import { apiClient, userApi } from '@/core/api';
