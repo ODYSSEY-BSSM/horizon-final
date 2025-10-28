@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
@@ -52,9 +54,7 @@ export const useSignUpHandlers = () => {
     setIsLoading(true);
     setErrors({});
     try {
-      // 실제 인증번호 재전송 API 호출
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      // 성공 시 타이머 리셋은 SecondaryAction 컴포넌트에서 자동으로 처리됨
     } catch (_error) {
       setErrors({ code: '인증번호 전송에 실패했습니다' });
     } finally {
@@ -117,7 +117,6 @@ export const useSignUpHandlers = () => {
     setIsLoading(true);
     setErrors({});
     try {
-      // 실제 회원가입 API 호출
       if (!signUpData.email || !signUpData.password) {
         throw new Error('이메일 또는 비밀번호가 없습니다');
       }
@@ -128,12 +127,8 @@ export const useSignUpHandlers = () => {
         username,
       });
 
-      // 회원가입 성공 시 로그인 페이지로 이동
       router.push('/signin');
     } catch (error) {
-      // console.error('회원가입 실패:', error);
-
-      // API 에러 메시지 처리
       const errorMessage =
         error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다';
       if (errorMessage.includes('이메일')) {
@@ -149,7 +144,8 @@ export const useSignUpHandlers = () => {
   };
 
   const handleGoogleSignUp = () => {
-    router.push('/');
+    // TODO: Google OAuth 흐름 구현 필요 (window.location.href = '/api/auth/google')
+    // router.push('/');
   };
 
   const handleSignIn = () => {

@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef } from 'react';
 import Icon from '../Icon/Icon';
 import Text from '../Text/Text';

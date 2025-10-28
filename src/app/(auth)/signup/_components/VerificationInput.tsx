@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
 import { useRef, useState } from 'react';
@@ -5,11 +7,9 @@ import { tokens } from '@/core/tokens';
 
 const OTP_LENGTH = 6;
 
-// Utils: normalize and distribute incoming digits into fixed slots
 const toDigits = (s: string) => s.replace(/\D/g, '');
 const distributeDigits = (current: string, start: number, incoming: string) => {
   const slots = Array.from({ length: OTP_LENGTH }, (_, i) => current[i] ?? '');
-  // Deletion path
   if (incoming === '') {
     slots[start] = '';
     return slots.join('');
@@ -36,7 +36,6 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const raw = e.target.value;
-    // Multi-char path (paste/auto-fill into a single cell)
     if (raw.length > 1) {
       const next = distributeDigits(value, index, raw);
       onChange(next);
@@ -44,7 +43,6 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
       inputRefs.current[nextIndex]?.focus();
       return;
     }
-    // Single-char: allow only digits or empty (deletion)
     if (raw !== '' && !/^[0-9]$/.test(raw)) {
       return;
     }
@@ -86,6 +84,7 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
           const isFocused = focusedIndex === index;
           return (
             <StyledInput
+              // biome-ignore lint/suspicious/noArrayIndexKey: OTP 입력 필드는 길이가 고정되어 있어 항목의 순서가 변경되지 않으므로 안전함.
               key={`otp-${index}`}
               ref={(el) => {
                 inputRefs.current[index] = el;
@@ -159,7 +158,7 @@ const StyledInput = styled.input<StyledInputProps>`
   color: ${tokens.colors.black};
   outline: none;
   transition: all 0.15s ease;
-  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
+  font-family: SUIT Variable, sans-serif;
   text-decoration: ${({ isFocused }) => (isFocused ? 'underline' : 'none')};
   text-decoration-style: solid;
   text-underline-position: from-font;
@@ -173,7 +172,7 @@ const StyledInput = styled.input<StyledInputProps>`
 `;
 
 const StyledErrorText = styled.div`
-  font-family: SUIT Variable, system-ui, -apple-system, sans-serif;
+  font-family: SUIT Variable, sans-serif;
   font-weight: 300;
   font-size: 14px;
   line-height: 22px;

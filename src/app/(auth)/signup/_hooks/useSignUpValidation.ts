@@ -1,3 +1,5 @@
+'use client';
+
 export const useSignUpValidation = () => {
   const validateEmail = (email: string) => {
     if (!email.trim()) {
