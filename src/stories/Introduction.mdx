@@ -38,14 +38,12 @@ Our design system is built on a foundation of design tokens that ensure consiste
 ### Using Design Tokens
 
 ```jsx
-import { colors } from '@/core/tokens/color/color';
-import { spacing } from '@/core/tokens/spacing/spacing';
-import { typos } from '@/core/tokens/typo/typo';
+import { tokens } from '@/shared/tokens';
 
 const styles = {
-  backgroundColor: colors.primary[500],
-  padding: spacing.medium,
-  fontFamily: typos.fontFamily.text.join(', '),
+  backgroundColor: tokens.colors.primary[500],
+  padding: tokens.spacing.medium,
+  fontFamily: tokens.typo.fontFamily.text.join(', '),
 };
 ```
 

@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { useId, useState } from 'react';
-import { colors } from '@/core/tokens/color/color';
+import { colors } from '@/shared/tokens/color/color';
 import type { TextFieldProps } from './TextField.types';
 
 export const useTextField = (props: TextFieldProps) => {
