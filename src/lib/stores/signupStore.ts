@@ -102,7 +102,7 @@ export const useSignUpStore = create<SignUpStore>()(
         set(
           (state) => ({
             verificationCode,
-            errors: { ...state.errors, code: '' },
+            errors: { ...state.errors, verificationCode: '' },
           }),
           false,
           'setVerificationCode',
@@ -165,7 +165,16 @@ export const useSignUpStore = create<SignUpStore>()(
           'updateSignUpData',
         ),
 
-      resetForm: () => set(initialState, false, 'resetForm'),
+      resetForm: () =>
+        set(
+          {
+            ...initialState,
+            errors: {},
+            signUpData: {},
+          },
+          false,
+          'resetForm',
+        ),
     }),
     {
       name: 'signup-store',
