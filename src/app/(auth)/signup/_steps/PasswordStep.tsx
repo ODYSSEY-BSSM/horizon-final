@@ -10,12 +10,13 @@ import { usePasswordForm } from '../_hooks/usePasswordForm';
 const PasswordStep = () => {
   const {
     register,
+    watch,
     formState: { errors, isSubmitting },
     onSubmit,
     passwordValidation,
   } = usePasswordForm();
 
-  const password = usePasswordForm().watch('password');
+  const password = watch('password');
 
   const getValidationState = (condition: boolean): boolean | null => {
     if (password.length === 0) {
