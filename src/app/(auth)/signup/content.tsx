@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
+import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';
 import EmailStep from './_steps/EmailStep';
 import PasswordStep from './_steps/PasswordStep';
@@ -12,7 +13,7 @@ import UsernameStep from './_steps/UsernameStep';
 import VerificationStep from './_steps/VerificationStep';
 
 export default function SignUpContent() {
-  const { currentStep, completedData } = useSignupFlow();
+  const { currentStep, completedData, goToStep } = useSignupFlow();
   const router = useRouter();
 
   const handleGoogleSignUp = () => {
@@ -24,10 +25,11 @@ export default function SignUpContent() {
   };
 
   const handleBack = () => {
-    const stepOrder = ['email', 'verification', 'password', 'username'];
+    const stepOrder: SignUpStep[] = ['email', 'verification', 'password', 'username'];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex > 0) {
-      // goToStep logic will be handled by individual step hooks
+      const previousStep = stepOrder[currentIndex - 1];
+      goToStep(previousStep);
     } else {
       router.back();
     }
@@ -51,7 +53,7 @@ export default function SignUpContent() {
       case 'email':
         return '이메일 주소를 입력하고 인증을 완료하세요.';
       case 'verification':
-        return `${completedData.email}으로 인증번호를 전송했습니다.`;
+        return `${completedData.email ?? '입력한 이메일'}으로 인증번호를 전송했습니다.`;
       case 'password':
         return '비밀번호를 지정해주세요.';
       case 'username':
