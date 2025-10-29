@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import { useSignUpValidation } from './useSignUpValidation';
 
@@ -7,7 +7,7 @@ export const useVerificationStep = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { updateCompletedData, setCurrentStep } = useSignupFlow();
+  const { saveStepData, goToStep } = useSignupFlow();
   const { validateVerificationCode } = useSignUpValidation();
 
   const clearError = () => setError('');
@@ -19,7 +19,7 @@ export const useVerificationStep = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const codeError = validateVerificationCode(verificationCode);
@@ -35,8 +35,8 @@ export const useVerificationStep = () => {
       // API call simulation
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      updateCompletedData({ verificationCode });
-      setCurrentStep('password');
+      saveStepData({ verificationCode });
+      goToStep('password');
     } catch (_error) {
       setError('인증번호가 올바르지 않습니다');
     } finally {

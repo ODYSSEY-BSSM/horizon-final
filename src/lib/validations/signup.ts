@@ -9,8 +9,9 @@ export const emailSchema = z.object({
 export const verificationSchema = z.object({
   verificationCode: z
     .string()
+    .trim()
     .min(1, '인증번호를 입력해주세요')
-    .length(6, '인증번호는 6자리입니다'),
+    .regex(/^\d{6}$/, '인증번호는 숫자 6자리입니다'),
 });
 
 // Password step validation

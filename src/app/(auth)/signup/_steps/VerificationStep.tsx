@@ -7,17 +7,21 @@ import { useVerificationForm } from '../_hooks/useVerificationForm';
 
 const VerificationStep = () => {
   const {
-    register,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
     onSubmit,
     onResendCode,
   } = useVerificationForm();
 
+  const verificationCode = watch('verificationCode');
+
   return (
     <StyledContainer>
       <form onSubmit={onSubmit}>
         <VerificationInput
-          {...register('verificationCode')}
+          value={verificationCode}
+          onChange={(value) => setValue('verificationCode', value)}
           error={errors.verificationCode?.message}
         />
         <StyledButtonSection>

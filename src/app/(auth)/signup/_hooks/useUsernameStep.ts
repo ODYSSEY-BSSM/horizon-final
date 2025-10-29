@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import { useRegister } from './useSignUp';
 import { useSignUpValidation } from './useSignUpValidation';
@@ -23,7 +23,7 @@ export const useUsernameStep = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const usernameError = validateUsername(username);

@@ -3,22 +3,19 @@
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { useSignUpActions, useSignUpStore } from '@/lib/stores/signupStore';
 import { tokens } from '@/shared/tokens';
 import PasswordValidation from '../_components/PasswordValidation';
+import { usePasswordForm } from '../_hooks/usePasswordForm';
 
-interface PasswordStepProps {
-  onSubmit: (e: React.FormEvent) => void;
-}
+const PasswordStep = () => {
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    onSubmit,
+    passwordValidation,
+  } = usePasswordForm();
 
-const PasswordStep = ({ onSubmit }: PasswordStepProps) => {
-  const { password, confirmPassword, isLoading, errors } = useSignUpStore();
-  const { setPassword, setConfirmPassword } = useSignUpActions();
-  const hasMinLength = password.length >= 8;
-  const hasNumber = /\d/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-  const isPasswordValid = hasMinLength && hasNumber && hasSpecialChar;
+  const password = usePasswordForm().watch('password');
 
   const getValidationState = (condition: boolean): boolean | null => {
     if (password.length === 0) {
@@ -29,51 +26,51 @@ const PasswordStep = ({ onSubmit }: PasswordStepProps) => {
 
   return (
     <StyledContainer>
-      <StyledFieldsWrapper>
-        <StyledPasswordFieldWrapper>
+      <form onSubmit={onSubmit}>
+        <StyledFieldsWrapper>
+          <StyledPasswordFieldWrapper>
+            <TextField
+              label="비밀번호"
+              placeholder="비밀번호 입력"
+              type="password"
+              width="100%"
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+            />
+            <StyledValidationsWrapper>
+              <PasswordValidation
+                text="8자 이상"
+                isValid={getValidationState(passwordValidation.hasMinLength)}
+              />
+              <PasswordValidation
+                text="숫자 포함"
+                isValid={getValidationState(passwordValidation.hasNumber)}
+              />
+              <PasswordValidation
+                text="기호 포함"
+                isValid={getValidationState(passwordValidation.hasSpecialChar)}
+              />
+            </StyledValidationsWrapper>
+          </StyledPasswordFieldWrapper>
+
           <TextField
-            label="비밀번호"
-            placeholder="비밀번호 입력"
+            label="비밀번호 확인"
+            placeholder="비밀번호 재입력"
             type="password"
             width="100%"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={!!errors.password}
+            {...register('confirmPassword')}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
           />
-          <StyledValidationsWrapper>
-            <PasswordValidation text="8자 이상" isValid={getValidationState(hasMinLength)} />
-            <PasswordValidation text="숫자 포함" isValid={getValidationState(hasNumber)} />
-            <PasswordValidation text="기호 포함" isValid={getValidationState(hasSpecialChar)} />
-          </StyledValidationsWrapper>
-        </StyledPasswordFieldWrapper>
+        </StyledFieldsWrapper>
 
-        <TextField
-          label="비밀번호 확인"
-          placeholder="비밀번호 재입력"
-          type="password"
-          width="100%"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword}
-        />
-      </StyledFieldsWrapper>
-
-      <StyledSubmitButton
-        onClick={onSubmit}
-        disabled={
-          !password.trim() ||
-          !confirmPassword.trim() ||
-          !!errors.password ||
-          !!errors.confirmPassword ||
-          !isPasswordValid ||
-          isLoading
-        }
-      >
-        <Text variant="ST" color={tokens.colors.white}>
-          {isLoading ? '설정 중...' : '완료'}
-        </Text>
-      </StyledSubmitButton>
+        <StyledSubmitButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
+          <Text variant="ST" color={tokens.colors.white}>
+            {isSubmitting ? '설정 중...' : '완료'}
+          </Text>
+        </StyledSubmitButton>
+      </form>
     </StyledContainer>
   );
 };

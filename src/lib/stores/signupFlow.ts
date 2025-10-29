@@ -20,26 +20,38 @@ const initialState: SignupFlowState = {
   completedData: {},
 };
 
-export const useSignupFlow = create<SignupFlowStore>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const useSignupFlow =
+  process.env.NODE_ENV !== 'production'
+    ? create<SignupFlowStore>()(
+        devtools(
+          (set) => ({
+            ...initialState,
 
-      goToStep: (step) => set({ currentStep: step }, false, 'goToStep'),
+            goToStep: (step) => set({ currentStep: step }, false, 'goToStep'),
 
-      saveStepData: (data) =>
-        set(
-          (state) => ({
-            completedData: { ...state.completedData, ...data },
+            saveStepData: (data) =>
+              set(
+                (state) => ({
+                  completedData: { ...state.completedData, ...data },
+                }),
+                false,
+                'saveStepData',
+              ),
+
+            reset: () => set(initialState, false, 'reset'),
           }),
-          false,
-          'saveStepData',
+          { name: 'signup-flow' },
         ),
+      )
+    : create<SignupFlowStore>()((set) => ({
+        ...initialState,
 
-      reset: () => set(initialState, false, 'reset'),
-    }),
-    {
-      name: 'signup-flow',
-    },
-  ),
-);
+        goToStep: (step) => set({ currentStep: step }),
+
+        saveStepData: (data) =>
+          set((state) => ({
+            completedData: { ...state.completedData, ...data },
+          })),
+
+        reset: () => set(initialState),
+      }));

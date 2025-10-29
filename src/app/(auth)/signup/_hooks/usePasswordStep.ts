@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import { useSignUpValidation } from './useSignUpValidation';
 
@@ -8,7 +8,7 @@ export const usePasswordStep = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { updateCompletedData, setCurrentStep } = useSignupFlow();
+  const { saveStepData, goToStep } = useSignupFlow();
   const { validatePassword, validateConfirmPassword } = useSignUpValidation();
 
   const clearError = (field: string) => {
@@ -29,7 +29,7 @@ export const usePasswordStep = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const passwordError = validatePassword(password);
@@ -47,8 +47,8 @@ export const usePasswordStep = () => {
     setErrors({});
 
     try {
-      updateCompletedData({ password, confirmPassword });
-      setCurrentStep('username');
+      saveStepData({ password, confirmPassword });
+      goToStep('username');
     } finally {
       setIsLoading(false);
     }
