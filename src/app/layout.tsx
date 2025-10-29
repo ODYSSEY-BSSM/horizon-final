@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import QueryProvider from '@/core/providers/QueryProvider';
+import QueryProvider from '@/shared/providers/QueryProvider';
 import './globals.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 

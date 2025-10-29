@@ -1,37 +1,38 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/core/tokens';
-import type { UsernameStepProps } from '@/core/types';
+import { tokens } from '@/shared/tokens';
+import { useUsernameForm } from '../_hooks/useUsernameForm';
 
-const UsernameStep = ({
-  username,
-  setUsername,
-  onSubmit,
-  isLoading,
-  errors,
-}: UsernameStepProps) => {
+const UsernameStep = () => {
+  const {
+    register,
+    formState: { errors },
+    onSubmit,
+    isLoading,
+  } = useUsernameForm();
+
   return (
     <StyledContainer>
-      <TextField
-        label="사용자 이름"
-        placeholder="UserName"
-        type="text"
-        width="100%"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        error={!!errors.username}
-        helperText={errors.username || '16자 이내 한글 또는 영어로 작성'}
-      />
+      <form onSubmit={onSubmit}>
+        <TextField
+          label="사용자 이름"
+          placeholder="UserName"
+          type="text"
+          width="100%"
+          {...register('username')}
+          error={!!errors.username}
+          helperText={errors.username?.message || '16자 이내 한글 또는 영어로 작성'}
+        />
 
-      <StyledSubmitButton
-        onClick={onSubmit}
-        disabled={!username.trim() || !!errors.username || isLoading}
-      >
-        <Text variant="ST" color={tokens.colors.white}>
-          {isLoading ? '완료 중...' : '완료'}
-        </Text>
-      </StyledSubmitButton>
+        <StyledSubmitButton type="submit" disabled={isLoading}>
+          <Text variant="ST" color={tokens.colors.white}>
+            {isLoading ? '완료 중...' : '완료'}
+          </Text>
+        </StyledSubmitButton>
+      </form>
     </StyledContainer>
   );
 };

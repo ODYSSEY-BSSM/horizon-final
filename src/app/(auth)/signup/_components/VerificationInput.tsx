@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import type { ChangeEvent, ClipboardEvent, KeyboardEvent } from 'react';
 import { useRef, useState } from 'react';
-import { tokens } from '@/core/tokens';
+import { tokens } from '@/shared/tokens';
 
 const OTP_LENGTH = 6;
 

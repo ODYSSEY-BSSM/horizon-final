@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { icons } from '@/core/tokens/icon/icon';
-import { typos } from '@/core/tokens/typo/typo';
+import { icons } from '@/shared/tokens/icon/icon';
+import { typos } from '@/shared/tokens/typo/typo';
 import { BLOCKED_PROPS, ICON_VARIANTS } from './Icon.constants';
 import type { IconVariant } from './Icon.types';
 

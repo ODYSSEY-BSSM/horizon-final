@@ -1,4 +1,4 @@
-import { colors } from '@/core/tokens/color/color';
+import { colors } from '@/shared/tokens/color/color';
 
 const makeGradient = (colorScale: { 100: string; 200: string }) => ({
   horizontal: `linear-gradient(to right, ${colorScale[200]} 0%, ${colorScale[100]} 100%)`,
