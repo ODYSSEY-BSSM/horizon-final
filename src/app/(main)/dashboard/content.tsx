@@ -2,8 +2,7 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import DashboardHeader from './_components/DashboardHeader';
-import GreetingSection from './_components/GreetingSection';
+import { DashboardHeader, GreetingSection } from './_components';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
 import InfoCardsGrid from './_sections/InfoCardsGrid';
