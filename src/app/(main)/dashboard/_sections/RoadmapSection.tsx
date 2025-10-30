@@ -1,5 +1,5 @@
 import type { RoadmapItem } from '@/lib/types/dashboard';
-import RoadmapList from '../_components/RoadmapList/RoadmapList';
+import { RoadmapList } from '../_components';
 
 interface RoadmapSectionProps {
   items: RoadmapItem[];

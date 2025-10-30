@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import InfoCard from '../_components/InfoCard/InfoCard';
+import { InfoCard } from '../_components';
 
 interface InfoCardsGridProps {
   myRoadmapsCount: number;
