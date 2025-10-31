@@ -11,7 +11,85 @@ import InfoStep from './steps/InfoStep';
 import StyleStep from './steps/StyleStep';
 import TeamStep from './steps/TeamStep';
 
-// Styled components
+const RoadmapFormModal = () => {
+  const { currentStep, isModalOpen, closeModal } = useRoadmapFormFlow();
+
+  const handleClose = () => {
+    closeModal();
+  };
+
+  const getModalHeight = () => {
+    switch (currentStep) {
+      case 'info':
+        return '520px';
+      case 'style':
+        return '534px';
+      default:
+        return '366px';
+    }
+  };
+
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 'folder':
+        return <FolderStep />;
+      case 'team':
+        return <TeamStep />;
+      case 'info':
+        return <InfoStep />;
+      case 'style':
+        return <StyleStep />;
+      default:
+        return null;
+    }
+  };
+
+  const stepNumber = {
+    folder: 1,
+    team: 2,
+    info: 3,
+    style: 4,
+  }[currentStep];
+
+  const title = STEP_TITLES[stepNumber as keyof typeof STEP_TITLES];
+  const description = STEP_DESCRIPTIONS[stepNumber as keyof typeof STEP_DESCRIPTIONS];
+
+  if (!isModalOpen) {
+    return null;
+  }
+
+  return (
+    <StyledModalBackdrop
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleClose();
+        }
+      }}
+    >
+      <StyledModalContainer $height={getModalHeight()}>
+        <StyledFormHeader>
+          <StyledHeaderTop>
+            <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
+              {title}
+            </Text>
+            <StyledCloseButton onClick={handleClose} aria-label="닫기">
+              <Icon name="close" variant="LG" color={tokens.colors.neutral[400]} decorative />
+            </StyledCloseButton>
+          </StyledHeaderTop>
+          <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
+            {description}
+          </Text>
+          <StyledDivider />
+        </StyledFormHeader>
+
+        <StyledFormContent>{renderCurrentStep()}</StyledFormContent>
+      </StyledModalContainer>
+    </StyledModalBackdrop>
+  );
+};
+
+export default RoadmapFormModal;
+
 const StyledModalBackdrop = styled.div`
   position: fixed;
   top: 0;
@@ -85,84 +163,3 @@ const StyledFormContent = styled.div`
   flex: 1;
   overflow: visible;
 `;
-
-const RoadmapFormModal = () => {
-  const { currentStep, isModalOpen, closeModal } = useRoadmapFormFlow();
-
-  const handleClose = () => {
-    closeModal();
-  };
-
-  const getModalHeight = () => {
-    switch (currentStep) {
-      case 'info':
-        return '520px';
-      case 'style':
-        return '534px';
-      default:
-        return '366px';
-    }
-  };
-
-  const renderCurrentStep = () => {
-    switch (currentStep) {
-      case 'folder':
-        return <FolderStep />;
-      case 'team':
-        return <TeamStep />;
-      case 'info':
-        return <InfoStep />;
-      case 'style':
-        return <StyleStep />;
-      default:
-        return null;
-    }
-  };
-
-  const stepNumber = {
-    folder: 1,
-    team: 2,
-    info: 3,
-    style: 4,
-  }[currentStep];
-
-  const title = STEP_TITLES[stepNumber as keyof typeof STEP_TITLES];
-  const description = STEP_DESCRIPTIONS[stepNumber as keyof typeof STEP_DESCRIPTIONS];
-
-  if (!isModalOpen) {
-    return null;
-  }
-
-  return (
-    <StyledModalBackdrop
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          handleClose();
-        }
-      }}
-    >
-      <StyledModalContainer $height={getModalHeight()}>
-        <StyledFormHeader>
-          <StyledHeaderTop>
-            <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
-              {title}
-            </Text>
-            <StyledCloseButton onClick={handleClose} aria-label="닫기">
-              <Icon name="close" variant="LG" color={tokens.colors.neutral[400]} decorative />
-            </StyledCloseButton>
-          </StyledHeaderTop>
-          <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
-            {description}
-          </Text>
-          <StyledDivider />
-        </StyledFormHeader>
-
-        <StyledFormContent>{renderCurrentStep()}</StyledFormContent>
-
-        {/* Form footer is now handled by individual step components */}
-      </StyledModalContainer>
-    </StyledModalBackdrop>
-  );
-};
-
-export default RoadmapFormModal;

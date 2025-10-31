@@ -7,28 +7,6 @@ import Button from '@/components/common/Button/Button';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
 
-const StyledFieldContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.large};
-  padding: ${tokens.spacing.large};
-  flex: 1;
-`;
-
-const StyledFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const StyledFormFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
-  margin-top: auto;
-`;
-
 const InfoStep = () => {
   const { control, onNext, onPrevious, isValid } = useInfoStep();
 
@@ -83,3 +61,25 @@ const InfoStep = () => {
 };
 
 export default InfoStep;
+
+const StyledFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.large};
+  padding: ${tokens.spacing.large};
+  flex: 1;
+`;
+
+const StyledFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StyledFormFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: ${tokens.spacing.large};
+  border-top: 1px solid ${tokens.colors.neutral[200]};
+  margin-top: auto;
+`;

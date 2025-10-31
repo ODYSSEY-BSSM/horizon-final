@@ -9,6 +9,101 @@ import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 
+const TeamStep = () => {
+  const {
+    control,
+    errors,
+    isValid,
+    onNext,
+    onPrevious,
+    isOpen,
+    setIsOpen,
+    teamId,
+    hasSelection,
+    getDisplayText,
+  } = useTeamStep();
+
+  return (
+    <StyledFormContainer>
+      <StyledContent>
+        <StyledDropdownContainer>
+          <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+            팀
+          </Text>
+
+          <Controller
+            name="teamId"
+            control={control}
+            render={({ field }) => (
+              <div style={{ position: 'relative' }}>
+                <StyledDropdownHeader
+                  $isOpen={isOpen}
+                  onClick={() => setIsOpen(!isOpen)}
+                  aria-label="팀 선택"
+                  aria-expanded={isOpen}
+                >
+                  <Text
+                    as="span"
+                    variant="B1"
+                    color={hasSelection ? tokens.colors.neutral[800] : tokens.colors.neutral[400]}
+                  >
+                    {getDisplayText()}
+                  </Text>
+                  <Icon
+                    name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                    variant="SM"
+                    color={tokens.colors.neutral[400]}
+                    decorative
+                  />
+                </StyledDropdownHeader>
+
+                <StyledDropdownList $isOpen={isOpen}>
+                  {TEAM_OPTIONS.map((option) => (
+                    <StyledDropdownOption
+                      key={option.id}
+                      onClick={() => {
+                        field.onChange(option.id);
+                        setIsOpen(false);
+                      }}
+                      $highlighted={teamId === option.id}
+                    >
+                      <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
+                        {option.label}
+                      </Text>
+                    </StyledDropdownOption>
+                  ))}
+                </StyledDropdownList>
+                {errors.teamId && (
+                  <Text variant="C" color={tokens.colors.error[200]}>
+                    {errors.teamId.message}
+                  </Text>
+                )}
+              </div>
+            )}
+          />
+        </StyledDropdownContainer>
+      </StyledContent>
+
+      <StyledFormFooter>
+        <Button size="medium" variant="outlined" onClick={onPrevious} aria-label="이전 단계">
+          이전
+        </Button>
+        <Button
+          size="medium"
+          variant="contained"
+          onClick={onNext}
+          disabled={!isValid}
+          aria-label="다음 단계"
+        >
+          다음
+        </Button>
+      </StyledFormFooter>
+    </StyledFormContainer>
+  );
+};
+
+export default TeamStep;
+
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -106,98 +201,3 @@ const StyledFormFooter = styled.div`
   border-top: 1px solid ${tokens.colors.neutral[200]};
   margin-top: auto;
 `;
-
-const TeamStep = () => {
-  const {
-    control,
-    errors,
-    isValid,
-    onNext,
-    onPrevious,
-    isOpen,
-    setIsOpen,
-    teamId,
-    hasSelection,
-    getDisplayText,
-  } = useTeamStep();
-
-  return (
-    <StyledFormContainer>
-      <StyledContent>
-        <StyledDropdownContainer>
-          <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
-            팀
-          </Text>
-
-          <Controller
-            name="teamId"
-            control={control}
-            render={({ field }) => (
-              <div style={{ position: 'relative' }}>
-                <StyledDropdownHeader
-                  $isOpen={isOpen}
-                  onClick={() => setIsOpen(!isOpen)}
-                  aria-label="팀 선택"
-                  aria-expanded={isOpen}
-                >
-                  <Text
-                    as="span"
-                    variant="B1"
-                    color={hasSelection ? tokens.colors.neutral[800] : tokens.colors.neutral[400]}
-                  >
-                    {getDisplayText()}
-                  </Text>
-                  <Icon
-                    name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-                    variant="SM"
-                    color={tokens.colors.neutral[400]}
-                    decorative
-                  />
-                </StyledDropdownHeader>
-
-                <StyledDropdownList $isOpen={isOpen}>
-                  {TEAM_OPTIONS.map((option) => (
-                    <StyledDropdownOption
-                      key={option.id}
-                      onClick={() => {
-                        field.onChange(option.id);
-                        setIsOpen(false);
-                      }}
-                      $highlighted={teamId === option.id}
-                    >
-                      <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
-                        {option.label}
-                      </Text>
-                    </StyledDropdownOption>
-                  ))}
-                </StyledDropdownList>
-                {errors.teamId && (
-                  <Text variant="C" color={tokens.colors.error[200]}>
-                    {errors.teamId.message}
-                  </Text>
-                )}
-              </div>
-            )}
-          />
-        </StyledDropdownContainer>
-      </StyledContent>
-
-      <StyledFormFooter>
-        <Button size="medium" variant="outlined" onClick={onPrevious} aria-label="이전 단계">
-          이전
-        </Button>
-        <Button
-          size="medium"
-          variant="contained"
-          onClick={onNext}
-          disabled={!isValid}
-          aria-label="다음 단계"
-        >
-          다음
-        </Button>
-      </StyledFormFooter>
-    </StyledFormContainer>
-  );
-};
-
-export default TeamStep;

@@ -9,25 +9,6 @@ import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 
-const StyledFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const StyledContent = styled.div`
-  padding: ${tokens.spacing.large};
-  flex: 1;
-`;
-
-const StyledFormFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
-  margin-top: auto;
-`;
-
 const StyleStep = () => {
   const {
     control,
@@ -217,6 +198,25 @@ const StyleStep = () => {
 };
 
 export default StyleStep;
+
+const StyledFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StyledContent = styled.div`
+  padding: ${tokens.spacing.large};
+  flex: 1;
+`;
+
+const StyledFormFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: ${tokens.spacing.large};
+  border-top: 1px solid ${tokens.colors.neutral[200]};
+  margin-top: auto;
+`;
 
 const StyledStyleContainer = styled.div`
   display: flex;
