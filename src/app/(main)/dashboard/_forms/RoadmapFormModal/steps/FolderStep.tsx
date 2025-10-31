@@ -1,21 +1,101 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { type KeyboardEvent, useState } from 'react';
+import { useFolderStep } from '@/app/(main)/dashboard/_hooks/useFolderStep';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useFolderStepForm } from '../../_hooks/useRoadmapForm';
-import {
-  StyledDropdownContainer,
-  StyledDropdownHeader,
-  StyledDropdownList,
-  StyledDropdownOption,
-  StyledNewOptionIcon,
-} from '../RoadmapFormModal.styles';
+
+// Styled components
+const StyledDropdownContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+`;
+
+const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  background-color: ${tokens.colors.white};
+  border: ${({ $isOpen }) =>
+    $isOpen
+      ? `2px solid ${tokens.colors.primary[500]}`
+      : `1px solid ${tokens.colors.neutral[300]}`};
+  border-radius: ${tokens.radius.medium};
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: ${tokens.colors.primary[500]};
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: ${tokens.colors.primary[500]};
+  }
+`;
+
+const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[200]};
+  border-radius: ${tokens.radius.medium};
+  box-shadow: ${tokens.shadow[0]};
+  z-index: 1001;
+  max-height: 240px;
+  overflow-y: auto;
+  display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
+`;
+
+const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: ${tokens.spacing.small};
+  width: 100%;
+  height: 48px;
+  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  background-color: ${({ $highlighted }) =>
+    $highlighted ? tokens.colors.neutral[100] : tokens.colors.white};
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid ${tokens.colors.neutral[100]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: ${tokens.colors.neutral[100]};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: -2px;
+  }
+`;
+
+const StyledNewOptionIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+`;
 
 const StyledFormContainer = styled.div`
   display: flex;
@@ -38,56 +118,21 @@ const StyledFormFooter = styled.div`
 
 const FolderStep = () => {
   const {
-    watch,
-    setValue,
+    isValid,
     onNext,
-    formState: { isValid },
-  } = useFolderStepForm();
-  const [isOpen, setIsOpen] = useState(false);
-  const [newFolderMode, setNewFolderMode] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-
-  const folderId = watch('folderId');
-  const folderName = watch('folderName');
-
-  const selectedFolder = folderId ? FOLDER_OPTIONS.find((option) => option.id === folderId) : null;
-
-  const handleFolderSelect = (selectedFolderId: string) => {
-    setValue('folderId', selectedFolderId);
-    setValue('folderName', undefined);
-    setIsOpen(false);
-    setNewFolderMode(false);
-    setNewFolderName('');
-  };
-
-  const handleNewFolderClick = () => {
-    setNewFolderMode(true);
-    setIsOpen(false);
-  };
-
-  const handleNewFolderSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && newFolderName.trim()) {
-      setValue('folderId', undefined);
-      setValue('folderName', newFolderName.trim());
-      setNewFolderMode(false);
-      setNewFolderName('');
-    } else if (e.key === 'Escape') {
-      setNewFolderMode(false);
-      setNewFolderName('');
-    }
-  };
-
-  const getDisplayText = () => {
-    if (folderName) {
-      return folderName;
-    }
-    if (selectedFolder) {
-      return selectedFolder.label;
-    }
-    return '폴더를 선택해주세요';
-  };
-
-  const hasSelection = !!(folderId || folderName);
+    isOpen,
+    setIsOpen,
+    newFolderMode,
+    newFolderName,
+    setNewFolderName,
+    selectedFolder,
+    hasSelection,
+    handleFolderSelect,
+    handleNewFolderClick,
+    handleNewFolderSubmit,
+    handleNewFolderBlur,
+    getDisplayText,
+  } = useFolderStep();
 
   return (
     <StyledFormContainer>
@@ -102,14 +147,7 @@ const FolderStep = () => {
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={handleNewFolderSubmit}
-              onBlur={() => {
-                if (newFolderName.trim()) {
-                  setValue('folderId', undefined);
-                  setValue('folderName', newFolderName.trim());
-                }
-                setNewFolderMode(false);
-                setNewFolderName('');
-              }}
+              onBlur={handleNewFolderBlur}
               placeholder="새 폴더 이름을 입력하세요"
               autoFocus
             />
@@ -150,7 +188,7 @@ const FolderStep = () => {
                   <StyledDropdownOption
                     key={option.id}
                     onClick={() => handleFolderSelect(option.id)}
-                    $highlighted={folderId === option.id}
+                    $highlighted={selectedFolder?.id === option.id}
                   >
                     <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
                       {option.label}

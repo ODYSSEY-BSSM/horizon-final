@@ -1,35 +1,95 @@
 'use client';
 
+import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
-import type { RoadmapFormData } from '@/lib/validations/roadmap';
 import { tokens } from '@/shared/tokens';
 import { STEP_DESCRIPTIONS, STEP_TITLES } from '../../_constants/RoadmapFormModal.constants';
-import {
-  StyledCloseButton,
-  StyledDivider,
-  StyledFormContent,
-  StyledFormHeader,
-  StyledHeaderTop,
-  StyledModalBackdrop,
-  StyledModalContainer,
-} from './RoadmapFormModal.styles';
-import type { RoadmapFormModalProps } from './RoadmapFormModal.types';
 import FolderStep from './steps/FolderStep';
 import InfoStep from './steps/InfoStep';
 import StyleStep from './steps/StyleStep';
 import TeamStep from './steps/TeamStep';
 
-const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ onSubmit }) => {
+// Styled components
+const StyledModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const StyledModalContainer = styled.div<{ $height?: string }>`
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[200]};
+  border-radius: ${tokens.radius.large};
+  position: relative;
+  box-shadow: ${tokens.shadow[0]};
+  width: 560px;
+  height: ${({ $height }) => $height || 'auto'};
+  min-height: 366px;
+  max-height: 90vh;
+  overflow: visible;
+`;
+
+const StyledFormHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+  padding: ${tokens.spacing.xxlarge};
+  padding-bottom: ${tokens.spacing.large};
+`;
+
+const StyledHeaderTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const StyledCloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
+    border-radius: ${tokens.radius.small};
+  }
+`;
+
+const StyledDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${tokens.colors.neutral[200]};
+`;
+
+const StyledFormContent = styled.div`
+  padding: 0 ${tokens.spacing.xxlarge};
+  padding-bottom: ${tokens.spacing.large};
+  flex: 1;
+  overflow: visible;
+`;
+
+const RoadmapFormModal = () => {
   const { currentStep, isModalOpen, closeModal } = useRoadmapFormFlow();
 
   const handleClose = () => {
-    closeModal();
-  };
-
-  const handleFormSubmit = (data: RoadmapFormData) => {
-    onSubmit(data);
     closeModal();
   };
 
@@ -45,20 +105,15 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ onSubmit }) => {
   };
 
   const renderCurrentStep = () => {
-    const stepProps = {
-      onClose: handleClose,
-      onSubmit: handleFormSubmit,
-    };
-
     switch (currentStep) {
       case 'folder':
-        return <FolderStep {...stepProps} />;
+        return <FolderStep />;
       case 'team':
-        return <TeamStep {...stepProps} />;
+        return <TeamStep />;
       case 'info':
-        return <InfoStep {...stepProps} />;
+        return <InfoStep />;
       case 'style':
-        return <StyleStep {...stepProps} />;
+        return <StyleStep />;
       default:
         return null;
     }

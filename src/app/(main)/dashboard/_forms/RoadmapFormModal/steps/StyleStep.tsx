@@ -1,14 +1,13 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { useStyleStep } from '@/app/(main)/dashboard/_hooks/useStyleStep';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useStyleStepForm } from '../../_hooks/useRoadmapForm';
 
 const StyledFormContainer = styled.div`
   display: flex;
@@ -32,24 +31,21 @@ const StyledFormFooter = styled.div`
 const StyleStep = () => {
   const {
     control,
+    isValid,
     onComplete,
     onPrevious,
-    formState: { isValid },
-    watch,
-  } = useStyleStepForm();
-  const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
-  const [iconDropdownOpen, setIconDropdownOpen] = useState(false);
-
-  const color = watch('color');
-  const icon = watch('icon');
-
-  const selectedColor = COLOR_OPTIONS.find((option) => option.value === color) || COLOR_OPTIONS[0];
-  const selectedIcon = ICON_OPTIONS.find((option) => option.value === icon) || ICON_OPTIONS[0];
-
-  const getGradient = (colorValue: string): string => {
-    const gradientKey = colorValue as keyof typeof tokens.gradients.roadmap;
-    return tokens.gradients.roadmap[gradientKey] || tokens.gradients.roadmap.red;
-  };
+    colorDropdownOpen,
+    iconDropdownOpen,
+    setColorDropdownOpen,
+    setIconDropdownOpen,
+    color,
+    icon,
+    selectedColor,
+    selectedIcon,
+    getGradient,
+    handleColorDropdownToggle,
+    handleIconDropdownToggle,
+  } = useStyleStep();
 
   return (
     <StyledFormContainer>
@@ -79,10 +75,7 @@ const StyleStep = () => {
                   <div style={{ position: 'relative' }}>
                     <StyledDropdownHeader
                       $isOpen={colorDropdownOpen}
-                      onClick={() => {
-                        setColorDropdownOpen(!colorDropdownOpen);
-                        setIconDropdownOpen(false);
-                      }}
+                      onClick={handleColorDropdownToggle}
                       aria-label="색상 선택"
                       aria-expanded={colorDropdownOpen}
                     >
@@ -138,10 +131,7 @@ const StyleStep = () => {
                   <div style={{ position: 'relative' }}>
                     <StyledDropdownHeader
                       $isOpen={iconDropdownOpen}
-                      onClick={() => {
-                        setIconDropdownOpen(!iconDropdownOpen);
-                        setColorDropdownOpen(false);
-                      }}
+                      onClick={handleIconDropdownToggle}
                       aria-label="아이콘 선택"
                       aria-expanded={iconDropdownOpen}
                     >
