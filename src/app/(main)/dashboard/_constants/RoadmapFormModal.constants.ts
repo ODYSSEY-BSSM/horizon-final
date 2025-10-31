@@ -1,15 +1,17 @@
 import type { ColorOption, DropdownOption, IconOption } from '@/lib/types/modal';
 
 export const FORM_STEPS = {
-  FOLDER: 1,
-  TEAM: 2,
-  INFO: 3,
-  STYLE: 4,
+  CATEGORY: 1,
+  FOLDER: 2,
+  TEAM: 3,
+  INFO: 4,
+  STYLE: 5,
 } as const;
 
 export const TOTAL_STEPS = Object.keys(FORM_STEPS).length;
 
 export const STEP_TITLES = {
+  [FORM_STEPS.CATEGORY]: '카테고리 선택',
   [FORM_STEPS.FOLDER]: '폴더 선택',
   [FORM_STEPS.TEAM]: '팀 선택',
   [FORM_STEPS.INFO]: '로드맵 정보',
@@ -17,6 +19,7 @@ export const STEP_TITLES = {
 } as const;
 
 export const STEP_DESCRIPTIONS = {
+  [FORM_STEPS.CATEGORY]: '로드맵 카테고리를 선택해주세요.',
   [FORM_STEPS.FOLDER]: '로드맵을 추가할 폴더를 선택해주세요.',
   [FORM_STEPS.TEAM]: '로드맵을 추가할 팀을 선택해주세요.',
   [FORM_STEPS.INFO]: '로드맵 정보를 작성해주세요.',

@@ -23,6 +23,7 @@ const InfoStep = () => {
               aria-label="로드맵 이름"
               error={!!error}
               helperText={error?.message}
+              label="이름"
             />
           )}
         />
@@ -37,6 +38,7 @@ const InfoStep = () => {
               aria-label="로드맵 설명"
               error={!!error}
               helperText={error?.message}
+              label="설명"
             />
           )}
         />
@@ -65,7 +67,7 @@ export default InfoStep;
 const StyledFieldContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.large};
+  gap: ${tokens.spacing.xlarge};
   padding: ${tokens.spacing.large};
   flex: 1;
 `;
@@ -78,8 +80,7 @@ const StyledFormContainer = styled.div`
 
 const StyledFormFooter = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
-  margin-top: auto;
+  gap: 20px;
 `;

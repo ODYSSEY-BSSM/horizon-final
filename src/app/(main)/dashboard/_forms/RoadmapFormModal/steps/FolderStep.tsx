@@ -1,12 +1,14 @@
 'use client';
 
 import styled from '@emotion/styled';
+
 import { useFolderStep } from '@/app/(main)/dashboard/_hooks/useFolderStep';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
+
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 
 const FolderStep = () => {
@@ -114,7 +116,7 @@ export default FolderStep;
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
+  gap: ${tokens.spacing.medium};
   width: 100%;
   position: relative;
   z-index: 1;
@@ -174,11 +176,6 @@ const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border-bottom: 1px solid ${tokens.colors.neutral[100]};
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:hover {
     background-color: ${tokens.colors.neutral[100]};
@@ -213,6 +210,5 @@ const StyledFormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
   margin-top: auto;
 `;

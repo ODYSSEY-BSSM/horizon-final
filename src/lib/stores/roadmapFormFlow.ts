@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type { RoadmapFormData } from '@/lib/types/modal';
 
-export type RoadmapFormStep = 'folder' | 'team' | 'info' | 'style';
+export type RoadmapFormStep = 'category' | 'folder' | 'team' | 'info' | 'style';
 
 interface RoadmapFormFlowState {
   currentStep: RoadmapFormStep;
@@ -21,8 +21,9 @@ interface RoadmapFormFlowActions {
 type RoadmapFormFlowStore = RoadmapFormFlowState & RoadmapFormFlowActions;
 
 const initialState: RoadmapFormFlowState = {
-  currentStep: 'folder',
+  currentStep: 'category',
   formData: {
+    category: '',
     name: '',
     description: '',
     color: 'red',
@@ -55,7 +56,7 @@ export const useRoadmapFormFlow =
               set(
                 {
                   isModalOpen: false,
-                  currentStep: 'folder',
+                  currentStep: 'category',
                   formData: initialState.formData,
                 },
                 false,
@@ -82,7 +83,7 @@ export const useRoadmapFormFlow =
         closeModal: () =>
           set({
             isModalOpen: false,
-            currentStep: 'folder',
+            currentStep: 'category',
             formData: initialState.formData,
           }),
 

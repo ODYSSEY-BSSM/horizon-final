@@ -1,3 +1,5 @@
+'use client';
+
 import styled from '@emotion/styled';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -10,19 +12,16 @@ export default function DashboardLoading() {
       highlightColor={tokens.colors.neutral[100]}
     >
       <StyledPageContainer>
-        {/* Header Skeleton */}
         <StyledHeaderContainer>
           <Skeleton height={48} width={240} />
           <Skeleton height={48} width={300} />
         </StyledHeaderContainer>
 
         <StyledContentContainer>
-          {/* Greeting Section Skeleton */}
           <StyledGreetingContainer>
             <Skeleton height={32} width={250} />
           </StyledGreetingContainer>
 
-          {/* Info Cards Grid Skeleton */}
           <StyledInfoCardsContainer>
             {Array.from({ length: 5 }, (_, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
@@ -34,7 +33,6 @@ export default function DashboardLoading() {
             ))}
           </StyledInfoCardsContainer>
 
-          {/* Roadmap Section Skeleton */}
           <StyledRoadmapContainer>
             <StyledRoadmapHeaderSkeleton>
               <Skeleton height={28} width={200} />

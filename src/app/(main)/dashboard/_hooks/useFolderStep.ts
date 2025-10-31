@@ -3,12 +3,13 @@ import { FOLDER_OPTIONS } from '../_constants/RoadmapFormModal.constants';
 import { useFolderStepForm } from './useRoadmapForm';
 
 export const useFolderStep = () => {
+  const form = useFolderStepForm();
   const {
     watch,
     setValue,
     onNext,
     formState: { isValid },
-  } = useFolderStepForm();
+  } = form;
 
   const [isOpen, setIsOpen] = useState(false);
   const [newFolderMode, setNewFolderMode] = useState(false);
@@ -20,8 +21,8 @@ export const useFolderStep = () => {
   const selectedFolder = folderId ? FOLDER_OPTIONS.find((option) => option.id === folderId) : null;
 
   const handleFolderSelect = (selectedFolderId: string) => {
-    setValue('folderId', selectedFolderId);
-    setValue('folderName', undefined);
+    setValue('folderId', selectedFolderId, { shouldValidate: true });
+    setValue('folderName', '', { shouldValidate: true });
     setIsOpen(false);
     setNewFolderMode(false);
     setNewFolderName('');
@@ -34,8 +35,8 @@ export const useFolderStep = () => {
 
   const handleNewFolderSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newFolderName.trim()) {
-      setValue('folderId', undefined);
-      setValue('folderName', newFolderName.trim());
+      setValue('folderId', undefined, { shouldValidate: true });
+      setValue('folderName', newFolderName.trim(), { shouldValidate: true });
       setNewFolderMode(false);
       setNewFolderName('');
     } else if (e.key === 'Escape') {
@@ -46,8 +47,8 @@ export const useFolderStep = () => {
 
   const handleNewFolderBlur = () => {
     if (newFolderName.trim()) {
-      setValue('folderId', undefined);
-      setValue('folderName', newFolderName.trim());
+      setValue('folderId', undefined, { shouldValidate: true });
+      setValue('folderName', newFolderName.trim(), { shouldValidate: true });
     }
     setNewFolderMode(false);
     setNewFolderName('');
