@@ -212,9 +212,9 @@ const StyledContent = styled.div`
 
 const StyledFormFooter = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 20px;
   padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
   margin-top: auto;
 `;
 
@@ -254,7 +254,7 @@ const StyledStyleSelectors = styled.div`
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
+  gap: ${tokens.spacing.medium};
   width: 100%;
   position: relative;
   z-index: 1;

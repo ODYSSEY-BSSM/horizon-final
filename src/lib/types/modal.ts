@@ -1,4 +1,5 @@
 export interface RoadmapFormData {
+  category?: string;
   folderId?: string;
   folderName?: string;
   teamId?: string;

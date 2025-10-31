@@ -107,7 +107,7 @@ export default TeamStep;
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
+  gap: ${tokens.spacing.medium};
   width: 100%;
   position: relative;
   z-index: 1;
@@ -167,11 +167,6 @@ const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border-bottom: 1px solid ${tokens.colors.neutral[100]};
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:hover {
     background-color: ${tokens.colors.neutral[100]};
@@ -196,8 +191,8 @@ const StyledContent = styled.div`
 
 const StyledFormFooter = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 20px;
   padding: ${tokens.spacing.large};
-  border-top: 1px solid ${tokens.colors.neutral[200]};
   margin-top: auto;
 `;

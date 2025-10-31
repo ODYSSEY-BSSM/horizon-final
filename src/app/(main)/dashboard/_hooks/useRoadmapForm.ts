@@ -2,6 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
 import {
+  type CategoryStepFormData,
+  categoryStepSchema,
   type FolderStepFormData,
   folderStepSchema,
   type InfoStepFormData,
@@ -42,7 +44,28 @@ export const useRoadmapForm = () => {
   };
 };
 
-// Individual step hooks for better type safety and validation
+export const useCategoryStepForm = () => {
+  const { formData, saveStepData, goToStep } = useRoadmapFormFlow();
+
+  const form = useForm<CategoryStepFormData>({
+    resolver: zodResolver(categoryStepSchema),
+    mode: 'onChange',
+    defaultValues: {
+      category: formData.category || '',
+    },
+  });
+
+  const handleNext = (data: CategoryStepFormData) => {
+    saveStepData(data);
+    goToStep('folder');
+  };
+
+  return {
+    ...form,
+    onNext: form.handleSubmit(handleNext),
+  };
+};
+
 export const useFolderStepForm = () => {
   const { formData, saveStepData, goToStep } = useRoadmapFormFlow();
 
@@ -60,9 +83,14 @@ export const useFolderStepForm = () => {
     goToStep('team');
   };
 
+  const handlePrevious = () => {
+    goToStep('category');
+  };
+
   return {
     ...form,
     onNext: form.handleSubmit(handleNext),
+    onPrevious: handlePrevious,
   };
 };
 

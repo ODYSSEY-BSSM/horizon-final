@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+// Category step validation
+export const categoryStepSchema = z.object({
+  category: z.string().min(1, '카테고리를 선택해주세요'),
+});
+
 // Folder step validation
 export const folderStepSchema = z
   .object({
@@ -33,12 +38,14 @@ export const styleStepSchema = z.object({
 });
 
 // Complete roadmap form validation
-export const roadmapFormSchema = folderStepSchema
+export const roadmapFormSchema = categoryStepSchema
+  .merge(folderStepSchema)
   .merge(teamStepSchema)
   .merge(infoStepSchema)
   .merge(styleStepSchema);
 
 // Type exports for form data
+export type CategoryStepFormData = z.infer<typeof categoryStepSchema>;
 export type FolderStepFormData = z.infer<typeof folderStepSchema>;
 export type TeamStepFormData = z.infer<typeof teamStepSchema>;
 export type InfoStepFormData = z.infer<typeof infoStepSchema>;

@@ -6,6 +6,7 @@ import Text from '@/components/common/Text/Text';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
 import { tokens } from '@/shared/tokens';
 import { STEP_DESCRIPTIONS, STEP_TITLES } from '../../_constants/RoadmapFormModal.constants';
+import CategoryStep from './steps/CategoryStep';
 import FolderStep from './steps/FolderStep';
 import InfoStep from './steps/InfoStep';
 import StyleStep from './steps/StyleStep';
@@ -31,6 +32,8 @@ const RoadmapFormModal = () => {
 
   const renderCurrentStep = () => {
     switch (currentStep) {
+      case 'category':
+        return <CategoryStep />;
       case 'folder':
         return <FolderStep />;
       case 'team':
@@ -45,10 +48,11 @@ const RoadmapFormModal = () => {
   };
 
   const stepNumber = {
-    folder: 1,
-    team: 2,
-    info: 3,
-    style: 4,
+    category: 1,
+    folder: 2,
+    team: 3,
+    info: 4,
+    style: 5,
   }[currentStep];
 
   const title = STEP_TITLES[stepNumber as keyof typeof STEP_TITLES];
@@ -105,7 +109,7 @@ const StyledModalBackdrop = styled.div`
 
 const StyledModalContainer = styled.div<{ $height?: string }>`
   background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[200]};
+  border: none;
   border-radius: ${tokens.radius.large};
   position: relative;
   box-shadow: ${tokens.shadow[0]};
@@ -152,6 +156,8 @@ const StyledCloseButton = styled.button`
 `;
 
 const StyledDivider = styled.div`
+  margin-top: ${tokens.spacing.xlarge};
+  margin-bottom: ${tokens.spacing.xlarge};
   width: 100%;
   height: 1px;
   background-color: ${tokens.colors.neutral[200]};
