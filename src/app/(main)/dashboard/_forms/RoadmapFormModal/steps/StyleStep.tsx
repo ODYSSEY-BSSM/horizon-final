@@ -3,11 +3,11 @@
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
 import { useStyleStep } from '@/app/(main)/dashboard/_hooks/useStyleStep';
-import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
 const StyleStep = () => {
@@ -180,20 +180,13 @@ const StyleStep = () => {
         </StyledStyleContainer>
       </StyledContent>
 
-      <StyledFormFooter>
-        <Button size="medium" variant="outlined" onClick={onPrevious} aria-label="이전 단계">
-          이전
-        </Button>
-        <Button
-          size="medium"
-          variant="contained"
-          onClick={onComplete}
-          disabled={!isValid}
-          aria-label="로드맵 생성 완료"
-        >
-          완료
-        </Button>
-      </StyledFormFooter>
+      <FormFooter
+        onPrevious={onPrevious}
+        onComplete={onComplete}
+        isValid={isValid}
+        showPrevious={true}
+        isLastStep={true}
+      />
     </StyledFormContainer>
   );
 };
@@ -209,14 +202,6 @@ const StyledFormContainer = styled.div`
 const StyledContent = styled.div`
   padding: ${MODAL_SPACING.modal.padding};
   flex: 1;
-`;
-
-const StyledFormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${MODAL_SPACING.footer.buttonGap};
-  padding: 0 ${MODAL_SPACING.modal.padding} ${MODAL_SPACING.modal.padding};
-  margin-top: auto;
 `;
 
 const StyledStyleContainer = styled.div`
