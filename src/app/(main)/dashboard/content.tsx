@@ -4,10 +4,10 @@ import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
 import DashboardHeader from './_components/DashboardHeader';
 import GreetingSection from './_components/GreetingSection';
-import InfoCardsGrid from './_components/InfoCardsGrid';
 import RoadmapSection from './_components/RoadmapSection';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
+import InfoCardsGrid from './_sections/InfoCardsGrid';
 
 const PageContainer = styled.div`
   display: flex;

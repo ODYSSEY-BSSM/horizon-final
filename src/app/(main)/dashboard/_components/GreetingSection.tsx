@@ -1,4 +1,4 @@
-import GreetingMessage from './GreetingMessage';
+import GreetingMessage from '../_components/GreetingMessage';
 
 interface GreetingSectionProps {
   userName: string;
