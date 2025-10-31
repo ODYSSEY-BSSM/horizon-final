@@ -8,11 +8,11 @@ import {
 } from '../../_constants/RoadmapFormModal.constants';
 import FormLayout from './_components/FormLayout';
 import type { STEP_HEIGHTS } from './_constants/spacing';
-import CategoryStep from './steps/CategoryStep';
-import FolderStep from './steps/FolderStep';
-import InfoStep from './steps/InfoStep';
-import StyleStep from './steps/StyleStep';
-import TeamStep from './steps/TeamStep';
+import CategoryStep from './_steps/CategoryStep';
+import FolderStep from './_steps/FolderStep';
+import InfoStep from './_steps/InfoStep';
+import StyleStep from './_steps/StyleStep';
+import TeamStep from './_steps/TeamStep';
 
 const RoadmapFormModal = () => {
   const { currentStep, isModalOpen, closeModal } = useRoadmapFormFlow();
