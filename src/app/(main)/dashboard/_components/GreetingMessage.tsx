@@ -1,7 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
+import dayjs from 'dayjs';
 import { useMemo } from 'react';
+
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 
@@ -13,11 +15,7 @@ interface GreetingMessageProps {
 
 const GreetingMessage = ({ userName = '홍길동', date, className }: GreetingMessageProps) => {
   const currentDate = useMemo(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}.${month}.${day}`;
+    return dayjs().format('YYYY.MM.DD');
   }, []);
 
   const displayDate = date || currentDate;
