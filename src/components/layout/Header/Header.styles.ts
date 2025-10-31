@@ -11,6 +11,8 @@ export const HeaderContainer = styled.header`
   background-color: ${tokens.colors.white};
   box-sizing: border-box;
   width: 100%;
+  margin-left: 60px;
+  margin-right: 60px;
 `;
 
 export const BreadcrumbNav = styled.nav`
