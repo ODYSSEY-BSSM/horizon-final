@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useId } from 'react';
 import { tokens } from '@/shared/tokens';
 import { MODAL_SPACING, STEP_HEIGHTS } from '../_constants/spacing';
 import FormHeader from './FormHeader';
@@ -15,6 +15,9 @@ interface FormLayoutProps {
 }
 
 const FormLayout = ({ title, description, children, currentStep, onClose }: FormLayoutProps) => {
+  const titleId = useId();
+  const descriptionId = useId();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -34,8 +37,20 @@ const FormLayout = ({ title, description, children, currentStep, onClose }: Form
         }
       }}
     >
-      <StyledModalContainer $height={STEP_HEIGHTS[currentStep]}>
-        <FormHeader title={title} description={description} onClose={onClose} />
+      <StyledModalContainer
+        $height={STEP_HEIGHTS[currentStep]}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+      >
+        <FormHeader
+          title={title}
+          description={description}
+          onClose={onClose}
+          titleId={titleId}
+          descriptionId={descriptionId}
+        />
 
         <StyledFormContent>{children}</StyledFormContent>
       </StyledModalContainer>

@@ -1,17 +1,22 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useId } from 'react';
 import { Controller } from 'react-hook-form';
 import { useStyleStep } from '@/app/(main)/dashboard/_hooks/useStyleStep';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../_hooks/useDropdown';
+import { useDropdown } from '../../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
 const StyleStep = () => {
+  const colorLabelId = useId();
+  const colorButtonId = `${colorLabelId}-button`;
+  const iconLabelId = useId();
+  const iconButtonId = `${iconLabelId}-button`;
   const {
     control,
     isValid,
@@ -64,7 +69,13 @@ const StyleStep = () => {
               control={control}
               render={({ field }) => (
                 <StyledDropdownContainer>
-                  <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+                  <Text
+                    as="label"
+                    id={colorLabelId}
+                    htmlFor={colorButtonId}
+                    variant="B1"
+                    color={tokens.colors.neutral[500]}
+                  >
                     컬러
                   </Text>
                   <div
@@ -80,6 +91,10 @@ const StyleStep = () => {
                     role="group"
                   >
                     <StyledDropdownHeader
+                      type="button"
+                      id={colorButtonId}
+                      aria-labelledby={colorLabelId}
+                      aria-haspopup="listbox"
                       $isOpen={colorDropdownOpen}
                       onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
                       aria-label="색상 선택"
@@ -110,6 +125,7 @@ const StyleStep = () => {
                       <StyledColorGrid>
                         {COLOR_OPTIONS.map((option, index) => (
                           <StyledColorOption
+                            type="button"
                             key={option.id}
                             id={`color-option-${option.id}`}
                             $color={option.color}
@@ -140,7 +156,13 @@ const StyleStep = () => {
               control={control}
               render={({ field }) => (
                 <StyledDropdownContainer>
-                  <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+                  <Text
+                    as="label"
+                    id={iconLabelId}
+                    htmlFor={iconButtonId}
+                    variant="B1"
+                    color={tokens.colors.neutral[500]}
+                  >
                     아이콘
                   </Text>
                   <div
@@ -156,6 +178,10 @@ const StyleStep = () => {
                     role="group"
                   >
                     <StyledDropdownHeader
+                      type="button"
+                      id={iconButtonId}
+                      aria-labelledby={iconLabelId}
+                      aria-haspopup="listbox"
                       $isOpen={iconDropdownOpen}
                       onClick={() => setIconDropdownOpen(!iconDropdownOpen)}
                       aria-label="아이콘 선택"
@@ -198,6 +224,7 @@ const StyleStep = () => {
                       <StyledIconGrid>
                         {ICON_OPTIONS.map((option, index) => (
                           <StyledIconOption
+                            type="button"
                             key={option.id}
                             id={`icon-option-${option.id}`}
                             $selected={icon === option.value}
@@ -300,7 +327,7 @@ const StyledDropdownContainer = styled.div`
   flex: 1;
 `;
 
-const StyledDropdownHeader = styled.button.attrs({ type: 'button' })<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -347,7 +374,7 @@ const StyledColorGrid = styled.div`
   padding: 0;
 `;
 
-const StyledColorOption = styled.button.attrs({ type: 'button' })<{
+const StyledColorOption = styled.button<{
   $color: string;
   $selected: boolean;
   $highlighted: boolean;
@@ -403,7 +430,7 @@ const StyledIconGrid = styled.div`
   overflow-y: auto;
 `;
 
-const StyledIconOption = styled.button.attrs({ type: 'button' })<{
+const StyledIconOption = styled.button<{
   $selected: boolean;
   $highlighted: boolean;
 }>`
