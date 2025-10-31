@@ -1,9 +1,13 @@
 import { colors } from '@/shared/tokens/color/color';
 
-const makeGradient = (colorScale: { 100: string; 200: string }) => ({
-  horizontal: `linear-gradient(to right, ${colorScale[200]} 0%, ${colorScale[100]} 100%)`,
-  vertical: `linear-gradient(to top, ${colorScale[200]} 0%, ${colorScale[100]} 100%)`,
-});
+type ColorScale = { 100: string; 200: string };
+
+const makeGradient = (colorScale: ColorScale): string => {
+  const darkColor = colorScale[200];
+  const lightColor = colorScale[100];
+
+  return `linear-gradient(to top right, ${darkColor} 0%, ${lightColor} 100%)`;
+};
 
 export const gradients = {
   roadmap: {
