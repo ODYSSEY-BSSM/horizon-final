@@ -3,12 +3,12 @@
 import styled from '@emotion/styled';
 
 import { useFolderStep } from '@/app/(main)/dashboard/_hooks/useFolderStep';
-import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
 const FolderStep = () => {
@@ -96,17 +96,7 @@ const FolderStep = () => {
         </StyledDropdownContainer>
       </StyledContent>
 
-      <StyledFormFooter>
-        <Button
-          size="medium"
-          variant="contained"
-          onClick={onNext}
-          disabled={!isValid}
-          aria-label="다음 단계"
-        >
-          다음
-        </Button>
-      </StyledFormFooter>
+      <FormFooter onNext={onNext} isValid={isValid} showPrevious={false} isLastStep={false} />
     </StyledFormContainer>
   );
 };
@@ -204,11 +194,4 @@ const StyledFormContainer = styled.div`
 const StyledContent = styled.div`
   padding: ${MODAL_SPACING.modal.padding};
   flex: 1;
-`;
-
-const StyledFormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 ${MODAL_SPACING.modal.padding} ${MODAL_SPACING.modal.padding};
-  margin-top: auto;
 `;
