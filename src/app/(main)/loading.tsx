@@ -34,7 +34,7 @@ export default function MainLoading() {
 
             <StyledContentArea>
               <Skeleton height={32} width={250} />
-              <Skeleton height={120} width="100%" />
+              <Skeleton height={136} width="100%" />
               <StyledContentGrid>
                 {Array.from({ length: 6 }, (_, i) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
@@ -67,6 +67,12 @@ const StyledSidebarSkeleton = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.large};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid ${tokens.colors.neutral[200]};
+  }
 `;
 
 const StyledSidebarHeader = styled.div`
@@ -96,7 +102,7 @@ const StyledMainContentSkeleton = styled.div`
 `;
 
 const StyledContentPadding = styled.div`
-  padding: 0 60px 80px;
+  padding: 0 ${tokens.spacing.xhuge} ${tokens.spacing.xxhuge};
   box-sizing: border-box;
 `;
 
@@ -129,5 +135,5 @@ const StyledContentCardSkeleton = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.small};
-  height: 180px;
+  height: 246px;
 `;

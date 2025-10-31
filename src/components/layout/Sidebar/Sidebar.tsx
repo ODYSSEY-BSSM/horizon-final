@@ -36,13 +36,13 @@ const MenuItem = ({ item, selected, onClick }: MenuItemProps) => {
   );
 };
 
-const Sidebar = (props: SidebarProps) => {
-  const { selected, menuItems, handleMenuClick } = useSidebar(props);
+const Sidebar = ({ className, ...restProps }: SidebarProps) => {
+  const { selected, menuItems, handleMenuClick } = useSidebar(restProps);
 
   return (
-    <SidebarContainer>
+    <SidebarContainer className={className}>
       <LogoArea>
-        <LogoImage aria-label="HORIZON 로고" role="img">
+        <LogoImage>
           <Image src="/logo.svg" alt="HORIZON Logo" width={40} height={40} priority />
         </LogoImage>
         <LogoText>HORIZON</LogoText>

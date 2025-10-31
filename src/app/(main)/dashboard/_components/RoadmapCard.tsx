@@ -24,26 +24,30 @@ const RoadmapCard = ({ item, className }: RoadmapCardProps) => {
     // TODO: Navigate to roadmap detail
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   return (
-    <StyledCardContainer className={className} onClick={handleCardClick}>
+    <StyledCardContainer
+      className={className}
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`${item.title} 로드맵 상세보기`}
+    >
       <StyledThumbnail $color={item.color}>
         <StyledThumbnailIcon>
           <Icon name={item.icon} variant="LG" color={tokens.colors.white} filled decorative />
         </StyledThumbnailIcon>
-        <StyledProgressBadge>
-          <Text
-            as="span"
-            variant="C"
-            color={tokens.colors.white}
-            style={{
-              fontSize: '11px',
-              lineHeight: '18px',
-              letterSpacing: '0.55px',
-              fontWeight: 500,
-            }}
-          >
+        <StyledProgressBadge status={item.status}>
+          <StyledBadgeText as="span" variant="C" color={tokens.colors.white}>
             {item.status === 'in-progress' ? '진행중' : '완료'}
-          </Text>
+          </StyledBadgeText>
         </StyledProgressBadge>
       </StyledThumbnail>
 
@@ -53,9 +57,6 @@ const RoadmapCard = ({ item, className }: RoadmapCardProps) => {
             <Text as="h3" variant="ST" color={tokens.colors.neutral[800]} ellipsis>
               {item.title}
             </Text>
-            <Text as="p" variant="C" color={tokens.colors.neutral[500]} ellipsis>
-              Roadmap Description
-            </Text>
           </StyledTitleSection>
 
           <StyledOverflowButton onClick={handleOverflowClick} aria-label="더보기">
@@ -64,26 +65,15 @@ const RoadmapCard = ({ item, className }: RoadmapCardProps) => {
         </StyledContentHeader>
 
         <StyledCategoryInfo>
-          <Icon
+          <StyledCategoryIcon
             name="map"
             variant="XS"
             color={tokens.colors.neutral[500]}
             decorative
-            style={{ fontSize: '16px' }}
           />
-          <Text
-            as="span"
-            variant="C"
-            color={tokens.colors.neutral[500]}
-            style={{
-              fontSize: '12px',
-              lineHeight: '18px',
-              letterSpacing: '0.12px',
-              fontWeight: 200,
-            }}
-          >
+          <StyledCategoryText as="span" variant="C" color={tokens.colors.neutral[500]}>
             {item.category === 'personal' ? '개인 로드맵' : '팀 로드맵'}
-          </Text>
+          </StyledCategoryText>
         </StyledCategoryInfo>
       </StyledContent>
     </StyledCardContainer>
@@ -125,13 +115,22 @@ export const StyledThumbnailIcon = styled.div`
   color: ${tokens.colors.white};
 `;
 
-export const StyledProgressBadge = styled.div`
+const StyledBadgeText = styled(Text)`
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.55px;
+  font-weight: 500;
+`;
+
+export const StyledProgressBadge = styled.div<{ status: RoadmapItem['status'] }>`
   position: absolute;
   top: ${tokens.spacing.small};
   right: ${tokens.spacing.small};
   padding: ${tokens.spacing.xxsmall} ${tokens.spacing.xsmall};
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: ${tokens.radius.small};
+  display: inline-flex;
+  padding: 2px 8px;
 `;
 
 export const StyledContent = styled.div`
@@ -177,9 +176,19 @@ export const StyledOverflowButton = styled.button`
   }
 `;
 
-export const StyledCategoryInfo = styled.div`
+const StyledCategoryInfo = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.xxsmall};
-  margin-top: auto;
+`;
+
+const StyledCategoryIcon = styled(Icon)`
+  font-size: 16px;
+`;
+
+const StyledCategoryText = styled(Text)`
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.12px;
+  font-weight: 200;
 `;

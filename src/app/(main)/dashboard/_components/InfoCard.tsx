@@ -24,7 +24,7 @@ const InfoCard = ({
   hasItem = false,
   className,
 }: InfoCardProps) => {
-  const config = CARD_CONFIGS[category as keyof typeof CARD_CONFIGS];
+  const config = CARD_CONFIGS[category];
   const isSchoolCard = category === 'connected-school';
   const hasSchool = isSchoolCard && hasItem && schoolName;
 
@@ -61,14 +61,7 @@ const InfoCard = ({
             decorative
           />
           <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-            {isSchoolCard ? (
-              config.subLabel(0)
-            ) : (
-              <>
-                {subCount}
-                {config.subLabel(subCount)}
-              </>
-            )}
+            {isSchoolCard ? config.subLabel(0) : config.subLabel(subCount)}
           </Text>
         </StyledSubInfo>
       </StyledCardContent>

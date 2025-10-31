@@ -11,6 +11,10 @@ interface PaginationProps {
 }
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  if (totalPages < 1) {
+    return null;
+  }
+
   const canGoPrev = currentPage > 1;
   const canGoNext = currentPage < totalPages;
 

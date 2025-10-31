@@ -47,5 +47,6 @@ const StyledContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.xxlarge};
-  width: 1080px;
+  width: 100%;
+  max-width: 1080px;
 `;

@@ -7,7 +7,7 @@ import type { RoadmapFormData } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
 import RoadmapFormModal from '../_forms/RoadmapFormModal/RoadmapFormModal';
-import FilterTap from './FilterTap';
+import FilterTab from './FilterTab';
 import ListHeader from './ListHeader';
 import Pagination from './Pagination';
 import RoadmapCard from './RoadmapCard';
@@ -16,9 +16,10 @@ import RoadmapListItem from './RoadmapListItem';
 export interface RoadmapListProps {
   className?: string;
   items?: RoadmapItem[];
-  onAddRoadmap?: () => void;
+  onAddRoadmap?: (data?: RoadmapFormData) => void;
   onViewChange?: (view: ViewType) => void;
   onFilterChange?: (filter: FilterType) => void;
+  onPageChange?: (page: number) => void;
 }
 
 export const useRoadmapList = (items: RoadmapItem[] = []) => {
@@ -120,8 +121,8 @@ const RoadmapList = ({
     setIsModalOpen(false);
   };
 
-  const handleModalSubmit = (_data: RoadmapFormData) => {
-    onAddRoadmap();
+  const handleModalSubmit = (data: RoadmapFormData) => {
+    onAddRoadmap(data);
     setIsModalOpen(false);
   };
 
@@ -133,7 +134,7 @@ const RoadmapList = ({
           onViewChange={handleViewChangeInternal}
           onAddRoadmap={handleAddRoadmapClick}
         />
-        <FilterTap currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
+        <FilterTab currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
 
         {currentView === 'list' ? (
           <StyledListItemsContainer>
