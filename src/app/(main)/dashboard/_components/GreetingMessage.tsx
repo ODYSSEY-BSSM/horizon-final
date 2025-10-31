@@ -39,6 +39,8 @@ const GreetingMessage = ({ userName = '홍길동', date, className }: GreetingMe
   );
 };
 
+export default GreetingMessage;
+
 const StyledGreetingMessageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,5 +53,3 @@ const StyledGreetingContainer = styled.div`
   align-items: center;
   gap: ${tokens.spacing.small};
 `;
-
-export default GreetingMessage;

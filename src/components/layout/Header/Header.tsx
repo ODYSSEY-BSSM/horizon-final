@@ -19,7 +19,7 @@ import type { BreadcrumbNavigationProps, HeaderProps, SearchBarProps } from './H
 
 const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
-    <BreadcrumbNav data-node-id="4452:787">
+    <BreadcrumbNav>
       {items.map((item, index) => (
         <span key={item}>
           {index > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
@@ -39,7 +39,7 @@ const SearchBar = ({ onSearch, placeholder = DEFAULT_SEARCH_PLACEHOLDER }: Searc
 
   return (
     <form onSubmit={handleSearchSubmit}>
-      <SearchBarContainer data-node-id="4452:820">
+      <SearchBarContainer>
         <SearchInput
           type="text"
           placeholder={placeholder}
@@ -57,7 +57,7 @@ const SearchBar = ({ onSearch, placeholder = DEFAULT_SEARCH_PLACEHOLDER }: Searc
 
 const Profile = () => {
   return (
-    <ProfileButton aria-label="프로필" data-node-id="4452:834">
+    <ProfileButton aria-label="프로필">
       <Icon name="person" variant="LG" filled color={tokens.colors.neutral[200]} decorative />
     </ProfileButton>
   );
@@ -65,7 +65,7 @@ const Profile = () => {
 
 const Header = ({ breadcrumbs = ['Dashboard'], onSearch, className }: HeaderProps) => {
   return (
-    <HeaderContainer className={className} data-node-id="4452:845">
+    <HeaderContainer className={className}>
       <BreadcrumbNavigation items={breadcrumbs} />
       <HeaderActions>
         <SearchBar onSearch={onSearch} />

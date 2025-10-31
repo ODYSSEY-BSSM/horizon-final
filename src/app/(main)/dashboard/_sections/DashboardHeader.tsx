@@ -4,6 +4,8 @@ interface DashboardHeaderProps {
   onSearch: (query: string) => void;
 }
 
-export default function DashboardHeader({ onSearch }: DashboardHeaderProps) {
+const DashboardHeader = ({ onSearch }: DashboardHeaderProps) => {
   return <Header breadcrumbs={['Dashboard']} onSearch={onSearch} />;
-}
+};
+
+export default DashboardHeader;

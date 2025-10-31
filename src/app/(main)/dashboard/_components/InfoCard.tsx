@@ -30,8 +30,8 @@ const InfoCard = ({
 
   return (
     <StyledCardContainer className={className}>
-      <CardContent>
-        <LabelSection>
+      <StyledCardContent>
+        <StyledLabelSection>
           <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
             {config.label}
           </Text>
@@ -51,9 +51,9 @@ const InfoCard = ({
               {count}
             </Text>
           )}
-        </LabelSection>
+        </StyledLabelSection>
 
-        <SubInfo>
+        <StyledSubInfo>
           <Icon
             name={isSchoolCard ? (hasItem ? 'check_circle' : 'cancel') : 'file_export'}
             variant="XS"
@@ -70,10 +70,10 @@ const InfoCard = ({
               </>
             )}
           </Text>
-        </SubInfo>
-      </CardContent>
+        </StyledSubInfo>
+      </StyledCardContent>
 
-      <IconContainer>
+      <StyledIconContainer>
         <Icon
           name={config.icon}
           variant="LG"
@@ -81,10 +81,12 @@ const InfoCard = ({
           filled
           decorative
         />
-      </IconContainer>
+      </StyledIconContainer>
     </StyledCardContainer>
   );
 };
+
+export default InfoCard;
 
 const StyledCardContainer = styled.div`
   display: flex;
@@ -100,7 +102,7 @@ const StyledCardContainer = styled.div`
   box-shadow: ${tokens.shadow[0]};
 `;
 
-const CardContent = styled.div`
+const StyledCardContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -109,7 +111,7 @@ const CardContent = styled.div`
   min-width: 0;
 `;
 
-const LabelSection = styled.div`
+const StyledLabelSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.xxsmall};
@@ -117,13 +119,13 @@ const LabelSection = styled.div`
   max-width: 100%;
 `;
 
-const SubInfo = styled.div`
+const StyledSubInfo = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.xxsmall};
 `;
 
-const IconContainer = styled.div`
+const StyledIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,5 +136,3 @@ const IconContainer = styled.div`
   flex-shrink: 0;
   position: relative;
 `;
-
-export default InfoCard;

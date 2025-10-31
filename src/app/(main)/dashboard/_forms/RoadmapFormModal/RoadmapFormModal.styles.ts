@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
 
-export const ModalBackdrop = styled.div`
+export const StyledModalBackdrop = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -14,7 +14,7 @@ export const ModalBackdrop = styled.div`
   z-index: 1000;
 `;
 
-export const ModalContainer = styled.div<{ $height?: string }>`
+export const StyledModalContainer = styled.div<{ $height?: string }>`
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
   border-radius: ${tokens.radius.large};
@@ -27,7 +27,7 @@ export const ModalContainer = styled.div<{ $height?: string }>`
   overflow: visible;
 `;
 
-export const FormHeader = styled.div`
+export const StyledFormHeader = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.small};
@@ -35,14 +35,14 @@ export const FormHeader = styled.div`
   padding-bottom: ${tokens.spacing.large};
 `;
 
-export const HeaderTop = styled.div`
+export const StyledHeaderTop = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,20 +62,20 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Divider = styled.div`
+export const StyledDivider = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${tokens.colors.neutral[200]};
 `;
 
-export const FormContent = styled.div`
+export const StyledFormContent = styled.div`
   padding: 0 ${tokens.spacing.xxlarge};
   padding-bottom: ${tokens.spacing.large};
   flex: 1;
   overflow: visible;
 `;
 
-export const FormFooter = styled.div`
+export const StyledFormFooter = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -84,7 +84,7 @@ export const FormFooter = styled.div`
   padding-top: ${tokens.spacing.large};
 `;
 
-export const DropdownContainer = styled.div`
+export const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.small};
@@ -94,7 +94,7 @@ export const DropdownContainer = styled.div`
   flex: 1;
 `;
 
-export const DropdownHeader = styled.button<{ $isOpen: boolean }>`
+export const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,7 +120,7 @@ export const DropdownHeader = styled.button<{ $isOpen: boolean }>`
   }
 `;
 
-export const DropdownList = styled.div<{ $isOpen: boolean }>`
+export const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -135,7 +135,7 @@ export const DropdownList = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
 
-export const DropdownOption = styled.button<{ $highlighted?: boolean }>`
+export const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -163,7 +163,7 @@ export const DropdownOption = styled.button<{ $highlighted?: boolean }>`
   }
 `;
 
-export const NewOptionIcon = styled.div`
+export const StyledNewOptionIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,19 +171,19 @@ export const NewOptionIcon = styled.div`
   height: 20px;
 `;
 
-export const FieldContainer = styled.div`
+export const StyledFieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.large};
 `;
 
-export const StyleContainer = styled.div`
+export const StyledStyleContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.large};
 `;
 
-export const ThumbnailPreview = styled.div<{ $color: string }>`
+export const StyledThumbnailPreview = styled.div<{ $color: string }>`
   width: 100%;
   height: 148px;
   border-radius: ${tokens.radius.medium};
@@ -194,7 +194,7 @@ export const ThumbnailPreview = styled.div<{ $color: string }>`
   position: relative;
 `;
 
-export const ThumbnailIcon = styled.div`
+export const StyledThumbnailIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,19 +204,19 @@ export const ThumbnailIcon = styled.div`
   border-radius: ${tokens.radius.medium};
 `;
 
-export const StyleSelectors = styled.div`
+export const StyledStyleSelectors = styled.div`
   display: flex;
   gap: ${tokens.spacing.medium};
   width: 100%;
 `;
 
-export const ColorGrid = styled.div`
+export const StyledColorGrid = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0;
 `;
 
-export const ColorOption = styled.button<{ $color: string; $selected: boolean }>`
+export const StyledColorOption = styled.button<{ $color: string; $selected: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -245,7 +245,7 @@ export const ColorOption = styled.button<{ $color: string; $selected: boolean }>
   `}
 `;
 
-export const ColorSwatch = styled.div<{ $color: string }>`
+export const StyledColorSwatch = styled.div<{ $color: string }>`
   width: 32px;
   height: 32px;
   border-radius: 4px;
@@ -253,7 +253,7 @@ export const ColorSwatch = styled.div<{ $color: string }>`
   flex-shrink: 0;
 `;
 
-export const IconGrid = styled.div`
+export const StyledIconGrid = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -261,7 +261,7 @@ export const IconGrid = styled.div`
   overflow-y: auto;
 `;
 
-export const IconOption = styled.button<{ $selected: boolean }>`
+export const StyledIconOption = styled.button<{ $selected: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -290,7 +290,7 @@ export const IconOption = styled.button<{ $selected: boolean }>`
   `}
 `;
 
-export const IconContainer = styled.div`
+export const StyledIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

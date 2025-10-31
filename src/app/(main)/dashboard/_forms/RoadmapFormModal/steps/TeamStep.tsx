@@ -7,10 +7,10 @@ import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import {
-  DropdownContainer,
-  DropdownHeader,
-  DropdownList,
-  DropdownOption,
+  StyledDropdownContainer,
+  StyledDropdownHeader,
+  StyledDropdownList,
+  StyledDropdownOption,
 } from '../RoadmapFormModal.styles';
 
 const TeamStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
@@ -35,13 +35,13 @@ const TeamStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
   const hasSelection = !!data.teamId;
 
   return (
-    <DropdownContainer>
+    <StyledDropdownContainer>
       <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
         팀
       </Text>
 
       <div style={{ position: 'relative' }}>
-        <DropdownHeader
+        <StyledDropdownHeader
           $isOpen={isOpen}
           onClick={() => setIsOpen(!isOpen)}
           aria-label="팀 선택"
@@ -60,11 +60,11 @@ const TeamStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
             color={tokens.colors.neutral[400]}
             decorative
           />
-        </DropdownHeader>
+        </StyledDropdownHeader>
 
-        <DropdownList $isOpen={isOpen}>
+        <StyledDropdownList $isOpen={isOpen}>
           {TEAM_OPTIONS.map((option) => (
-            <DropdownOption
+            <StyledDropdownOption
               key={option.id}
               onClick={() => handleTeamSelect(option.id)}
               $highlighted={data.teamId === option.id}
@@ -72,11 +72,11 @@ const TeamStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
               <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
                 {option.label}
               </Text>
-            </DropdownOption>
+            </StyledDropdownOption>
           ))}
-        </DropdownList>
+        </StyledDropdownList>
       </div>
-    </DropdownContainer>
+    </StyledDropdownContainer>
   );
 };
 
