@@ -1,15 +1,16 @@
 'use client';
 
+import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
 import type { RoadmapFormData } from '@/lib/types/modal';
+import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
 import RoadmapFormModal from '../_forms/RoadmapFormModal/RoadmapFormModal';
 import FilterTap from './FilterTap';
 import ListHeader from './ListHeader';
 import Pagination from './Pagination';
 import RoadmapCard from './RoadmapCard';
-import { ListContainer, ListItemsContainer, ThumbnailGridContainer } from './RoadmapList.styles';
 import RoadmapListItem from './RoadmapListItem';
 
 // Types
@@ -20,6 +21,32 @@ export interface RoadmapListProps {
   onViewChange?: (view: ViewType) => void;
   onFilterChange?: (filter: FilterType) => void;
 }
+
+// Styled Components
+const ListContainer = styled.div`
+  width: 1080px;
+  border: 1px solid ${tokens.colors.neutral[100]};
+  border-radius: ${tokens.radius.large};
+  overflow: hidden;
+  box-shadow: ${tokens.shadow[0]};
+`;
+
+const ListItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.large};
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
+  max-height: 944px;
+`;
+
+const ThumbnailGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 246px);
+  gap: ${tokens.spacing.medium};
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
+`;
 
 // Hook
 export const useRoadmapList = (items: RoadmapItem[] = []) => {
