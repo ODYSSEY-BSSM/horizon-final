@@ -2,9 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
-import type { RoadmapFormData } from '@/lib/validations/roadmap';
 import { tokens } from '@/shared/tokens';
-import RoadmapFormModal from './_forms/RoadmapFormModal';
+import RoadmapFormModal from './_forms/RoadmapFormModal/RoadmapFormModal';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
 import DashboardHeader from './_sections/DashboardHeader';
@@ -19,10 +18,6 @@ const DashboardContent = () => {
 
   const handleAddRoadmap = () => {
     openModal();
-  };
-
-  const handleRoadmapSubmit = (_data: RoadmapFormData) => {
-    // TODO: API call to create roadmap
   };
 
   return (
@@ -42,7 +37,7 @@ const DashboardContent = () => {
         <RoadmapSection items={roadmapsData} onAddRoadmap={handleAddRoadmap} />
       </StyledContentContainer>
 
-      <RoadmapFormModal onSubmit={handleRoadmapSubmit} />
+      <RoadmapFormModal />
     </StyledPageContainer>
   );
 };

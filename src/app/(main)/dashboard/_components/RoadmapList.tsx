@@ -3,10 +3,8 @@
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
-import type { RoadmapFormData } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
-import RoadmapFormModal from '../_forms/RoadmapFormModal/RoadmapFormModal';
 import FilterTab from './FilterTab';
 import ListHeader from './ListHeader';
 import Pagination from './Pagination';
@@ -16,7 +14,7 @@ import RoadmapListItem from './RoadmapListItem';
 export interface RoadmapListProps {
   className?: string;
   items?: RoadmapItem[];
-  onAddRoadmap?: (data?: RoadmapFormData) => void;
+  onAddRoadmap?: () => void;
   onViewChange?: (view: ViewType) => void;
   onFilterChange?: (filter: FilterType) => void;
   onPageChange?: (page: number) => void;
@@ -90,8 +88,6 @@ const RoadmapList = ({
   onFilterChange,
   className,
 }: RoadmapListProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const {
     currentView,
     currentFilter,
@@ -114,63 +110,46 @@ const RoadmapList = ({
   };
 
   const handleAddRoadmapClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleModalSubmit = (data: RoadmapFormData) => {
-    onAddRoadmap(data);
-    setIsModalOpen(false);
+    onAddRoadmap();
   };
 
   return (
-    <>
-      <StyledListContainer className={className}>
-        <ListHeader
-          currentView={currentView}
-          onViewChange={handleViewChangeInternal}
-          onAddRoadmap={handleAddRoadmapClick}
-        />
-        <FilterTab currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
-
-        {currentView === 'list' ? (
-          <StyledListItemsContainer>
-            {paginatedItems.map((item) => (
-              <RoadmapListItem key={item.id} item={item} />
-            ))}
-          </StyledListItemsContainer>
-        ) : (
-          <StyledThumbnailGridContainer>
-            {paginatedItems.map((item) => (
-              <RoadmapCard key={item.id} item={item} />
-            ))}
-          </StyledThumbnailGridContainer>
-        )}
-
-        {totalPages > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        )}
-      </StyledListContainer>
-
-      <RoadmapFormModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
+    <StyledRoadmapListContainer className={className}>
+      <ListHeader
+        currentView={currentView}
+        onViewChange={handleViewChangeInternal}
+        onAddRoadmap={handleAddRoadmapClick}
       />
-    </>
+      <FilterTab currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
+
+      {currentView === 'list' ? (
+        <StyledListItemsContainer>
+          {paginatedItems.map((item) => (
+            <RoadmapListItem key={item.id} item={item} />
+          ))}
+        </StyledListItemsContainer>
+      ) : (
+        <StyledThumbnailGridContainer>
+          {paginatedItems.map((item) => (
+            <RoadmapCard key={item.id} item={item} />
+          ))}
+        </StyledThumbnailGridContainer>
+      )}
+
+      {totalPages > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </StyledRoadmapListContainer>
   );
 };
 
 export default RoadmapList;
 
-const StyledListContainer = styled.div`
+const StyledRoadmapListContainer = styled.div`
   width: 1080px;
   border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};

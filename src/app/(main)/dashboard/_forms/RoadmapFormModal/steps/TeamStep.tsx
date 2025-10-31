@@ -1,20 +1,92 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { Controller } from 'react-hook-form';
+import { useTeamStep } from '@/app/(main)/dashboard/_hooks/useTeamStep';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useTeamStepForm } from '../../_hooks/useRoadmapForm';
-import {
-  StyledDropdownContainer,
-  StyledDropdownHeader,
-  StyledDropdownList,
-  StyledDropdownOption,
-} from '../RoadmapFormModal.styles';
+
+const StyledDropdownContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+`;
+
+const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  background-color: ${tokens.colors.white};
+  border: ${({ $isOpen }) =>
+    $isOpen
+      ? `2px solid ${tokens.colors.primary[500]}`
+      : `1px solid ${tokens.colors.neutral[300]}`};
+  border-radius: ${tokens.radius.medium};
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: ${tokens.colors.primary[500]};
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: ${tokens.colors.primary[500]};
+  }
+`;
+
+const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[200]};
+  border-radius: ${tokens.radius.medium};
+  box-shadow: ${tokens.shadow[0]};
+  z-index: 1001;
+  max-height: 240px;
+  overflow-y: auto;
+  display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
+`;
+
+const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: ${tokens.spacing.small};
+  width: 100%;
+  height: 48px;
+  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  background-color: ${({ $highlighted }) =>
+    $highlighted ? tokens.colors.neutral[100] : tokens.colors.white};
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid ${tokens.colors.neutral[100]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: ${tokens.colors.neutral[100]};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: -2px;
+  }
+`;
 
 const StyledFormContainer = styled.div`
   display: flex;
@@ -38,29 +110,16 @@ const StyledFormFooter = styled.div`
 const TeamStep = () => {
   const {
     control,
+    errors,
+    isValid,
     onNext,
     onPrevious,
-    formState: { errors, isValid },
-    watch,
-  } = useTeamStepForm();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const teamId = watch('teamId');
-  const selectedTeam = teamId ? TEAM_OPTIONS.find((option) => option.id === teamId) : null;
-
-  const _handleTeamSelect = (_selectedTeamId: string) => {
-    // This will be handled through RHF Controller
-    setIsOpen(false);
-  };
-
-  const getDisplayText = () => {
-    if (selectedTeam) {
-      return selectedTeam.label;
-    }
-    return '팀을 선택해주세요';
-  };
-
-  const hasSelection = !!teamId;
+    isOpen,
+    setIsOpen,
+    teamId,
+    hasSelection,
+    getDisplayText,
+  } = useTeamStep();
 
   return (
     <StyledFormContainer>
@@ -113,7 +172,7 @@ const TeamStep = () => {
                   ))}
                 </StyledDropdownList>
                 {errors.teamId && (
-                  <Text variant="C1" color={tokens.colors.error[500]}>
+                  <Text variant="C" color={tokens.colors.error[200]}>
                     {errors.teamId.message}
                   </Text>
                 )}

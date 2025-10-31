@@ -2,10 +2,10 @@
 
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
+import { useInfoStep } from '@/app/(main)/dashboard/_hooks/useInfoStep';
 import Button from '@/components/common/Button/Button';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
-import { useInfoStepForm } from '../../_hooks/useRoadmapForm';
 
 const StyledFieldContainer = styled.div`
   display: flex;
@@ -30,12 +30,7 @@ const StyledFormFooter = styled.div`
 `;
 
 const InfoStep = () => {
-  const {
-    control,
-    onNext,
-    onPrevious,
-    formState: { errors, isValid },
-  } = useInfoStepForm();
+  const { control, onNext, onPrevious, isValid } = useInfoStep();
 
   return (
     <StyledFormContainer>
@@ -43,13 +38,13 @@ const InfoStep = () => {
         <Controller
           name="name"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="이름"
               placeholder="이름을 입력해주세요"
               aria-label="로드맵 이름"
-              error={errors.name?.message}
+              error={!!error}
+              helperText={error?.message}
             />
           )}
         />
@@ -57,13 +52,13 @@ const InfoStep = () => {
         <Controller
           name="description"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="설명"
               placeholder="설명을 입력해주세요"
               aria-label="로드맵 설명"
-              error={errors.description?.message}
+              error={!!error}
+              helperText={error?.message}
             />
           )}
         />
