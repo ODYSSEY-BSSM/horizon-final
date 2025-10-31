@@ -5,8 +5,8 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
-import { ROADMAP_GRADIENTS } from '../../../_components/RoadmapCard.constants';
-import { COLOR_OPTIONS, ICON_OPTIONS } from '../RoadmapFormModal.constants';
+import { ROADMAP_GRADIENTS } from '../../../_components/RoadmapCard';
+import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import {
   ColorGrid,
   ColorOption,

@@ -1,202 +1,86 @@
 'use client';
 
-import { useState } from 'react';
-import Button from '@/components/common/Button/Button';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { useMemo, useState } from 'react';
+import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
 import type { RoadmapFormData } from '@/lib/types/modal';
-import { tokens } from '@/shared/tokens';
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
 import RoadmapFormModal from '../_forms/RoadmapFormModal/RoadmapFormModal';
+import FilterTap from './FilterTap';
+import ListHeader from './ListHeader';
+import Pagination from './Pagination';
 import RoadmapCard from './RoadmapCard';
-import { FILTERS, ROADMAP_COLORS } from './RoadmapList.constants';
-import { useRoadmapList } from './RoadmapList.hooks';
-import {
-  FilterButton,
-  FilterContainer,
-  FilterLabel,
-  HeaderActions,
-  HeaderContainer,
-  HeaderTitle,
-  ItemContainer,
-  ItemInfo,
-  ItemLeft,
-  ItemMeta,
-  ItemRight,
-  ItemTitle,
-  LeadingIcon,
-  ListContainer,
-  ListItemsContainer,
-  MetaSeparator,
-  MetaText,
-  OverflowButton,
-  PageButton,
-  PageNumber,
-  PageNumberButton,
-  PaginationContainer,
-  ProgressBar,
-  ProgressContainer,
-  ProgressFill,
-  ProgressText,
-  ThumbnailGridContainer,
-  ViewButton,
-  ViewToggle,
-} from './RoadmapList.styles';
-import type {
-  FilterTapProps,
-  ListHeaderProps,
-  PaginationProps,
-  RoadmapListItemProps,
-  RoadmapListProps,
-} from './RoadmapList.types';
+import { ListContainer, ListItemsContainer, ThumbnailGridContainer } from './RoadmapList.styles';
+import RoadmapListItem from './RoadmapListItem';
 
-const ListHeader = ({ currentView, onViewChange, onAddRoadmap }: ListHeaderProps) => {
-  return (
-    <HeaderContainer data-node-id="4502:1437">
-      <HeaderTitle>로드맵 리스트</HeaderTitle>
-      <HeaderActions>
-        <ViewToggle data-node-id="4452:628">
-          <ViewButton
-            $active={currentView === 'list'}
-            onClick={() => onViewChange('list')}
-            aria-label="리스트 보기"
-          >
-            <Icon name="list" variant="MD" decorative />
-            <Text as="span" variant="B2" color={tokens.colors.neutral[700]}>
-              리스트
-            </Text>
-          </ViewButton>
-          <ViewButton
-            $active={currentView === 'thumbnail'}
-            onClick={() => onViewChange('thumbnail')}
-            aria-label="썸네일 보기"
-          >
-            <Icon name="calendar_view_month" variant="MD" decorative />
-            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-              썸네일
-            </Text>
-          </ViewButton>
-        </ViewToggle>
-        <Button
-          size="medium"
-          variant="contained"
-          iconPosition="left"
-          iconName="add"
-          aria-label="새 로드맵"
-          onClick={onAddRoadmap}
-        >
-          새 로드맵
-        </Button>
-      </HeaderActions>
-    </HeaderContainer>
-  );
-};
+// Types
+export interface RoadmapListProps {
+  className?: string;
+  items?: RoadmapItem[];
+  onAddRoadmap?: () => void;
+  onViewChange?: (view: ViewType) => void;
+  onFilterChange?: (filter: FilterType) => void;
+}
 
-const FilterTap = ({ currentFilter, onFilterChange }: FilterTapProps) => {
-  return (
-    <FilterContainer data-node-id="4502:1436">
-      {FILTERS.map((filter) => (
-        <FilterButton
-          key={filter.id}
-          $active={currentFilter === filter.id}
-          onClick={() => onFilterChange(filter.id)}
-          data-node-id="4452:1171"
-        >
-          <FilterLabel>{filter.label}</FilterLabel>
-        </FilterButton>
-      ))}
-    </FilterContainer>
-  );
-};
+// Hook
+export const useRoadmapList = (items: RoadmapItem[] = []) => {
+  const [currentView, setCurrentView] = useState<ViewType>('list');
+  const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
-const RoadmapListItem = ({ item }: RoadmapListItemProps) => {
-  return (
-    <ItemContainer data-node-id="4502:1387">
-      <ItemLeft>
-        <LeadingIcon $color={item.color} data-node-id="4488:637">
-          <Icon
-            name={item.icon}
-            variant="SM"
-            color={ROADMAP_COLORS[item.color].icon}
-            filled
-            decorative
-          />
-        </LeadingIcon>
-        <ItemInfo>
-          <ItemTitle>{item.title}</ItemTitle>
-          <ItemMeta>
-            <MetaText>{item.category === 'personal' ? '개인' : '팀'}</MetaText>
-            <MetaSeparator>•</MetaSeparator>
-            <MetaText>{item.steps}단계</MetaText>
-            <MetaSeparator>•</MetaSeparator>
-            <MetaText>{item.status === 'in-progress' ? '진행중' : '완료'}</MetaText>
-          </ItemMeta>
-        </ItemInfo>
-      </ItemLeft>
-      <ItemRight>
-        <ProgressContainer data-node-id="4461:545">
-          <ProgressText>{item.progress}%</ProgressText>
-          <ProgressBar>
-            <ProgressFill $progress={item.progress} />
-          </ProgressBar>
-        </ProgressContainer>
-        <OverflowButton aria-label="더보기" data-node-id="4461:600">
-          <Icon name="more_horiz" variant="SM" color={tokens.colors.neutral[500]} decorative />
-        </OverflowButton>
-      </ItemRight>
-    </ItemContainer>
-  );
-};
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      if (currentFilter === 'all') {
+        return true;
+      }
+      if (currentFilter === 'my') {
+        return item.category === 'personal';
+      }
+      if (currentFilter === 'team') {
+        return item.category === 'team';
+      }
+      if (currentFilter === 'completed') {
+        return item.status === 'completed';
+      }
+      if (currentFilter === 'in-progress') {
+        return item.status === 'in-progress';
+      }
+      return true;
+    });
+  }, [items, currentFilter]);
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  const canGoPrev = currentPage > 1;
-  const canGoNext = currentPage < totalPages;
+  const itemsPerPage = currentView === 'thumbnail' ? ITEMS_PER_PAGE_THUMBNAIL : ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
-  return (
-    <PaginationContainer data-node-id="4502:1523">
-      <PageButton
-        $disabled={!canGoPrev}
-        onClick={() => canGoPrev && onPageChange(currentPage - 1)}
-        aria-label="이전 페이지"
-        disabled={!canGoPrev}
-        data-node-id="4502:1486"
-      >
-        <Icon
-          name="chevron_left"
-          variant="SM"
-          color={canGoPrev ? tokens.colors.neutral[700] : tokens.colors.neutral[300]}
-          decorative
-        />
-      </PageButton>
+  const paginatedItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredItems.slice(startIndex, endIndex);
+  }, [filteredItems, currentPage, itemsPerPage]);
 
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-        <PageNumberButton
-          key={page}
-          $active={currentPage === page}
-          onClick={() => onPageChange(page)}
-          aria-label={`${page}페이지`}
-          aria-current={currentPage === page ? 'page' : undefined}
-          data-node-id="4502:1478"
-        >
-          <PageNumber>{page}</PageNumber>
-        </PageNumberButton>
-      ))}
+  const handleViewChange = (view: ViewType) => {
+    setCurrentView(view);
+    setCurrentPage(1); // Reset to first page when view changes
+  };
 
-      <PageButton
-        $disabled={!canGoNext}
-        onClick={() => canGoNext && onPageChange(currentPage + 1)}
-        aria-label="다음 페이지"
-        disabled={!canGoNext}
-        data-node-id="4502:1490"
-      >
-        <Icon
-          name="chevron_right"
-          variant="SM"
-          color={canGoNext ? tokens.colors.neutral[700] : tokens.colors.neutral[300]}
-          decorative
-        />
-      </PageButton>
-    </PaginationContainer>
-  );
+  const handleFilterChange = (filter: FilterType) => {
+    setCurrentFilter(filter);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  return {
+    currentView,
+    currentFilter,
+    currentPage,
+    totalPages,
+    paginatedItems,
+    handleViewChange,
+    handleFilterChange,
+    handlePageChange,
+  };
 };
 
 const RoadmapList = ({
