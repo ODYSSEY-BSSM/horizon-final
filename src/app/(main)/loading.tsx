@@ -10,7 +10,6 @@ export default function MainLoading() {
       highlightColor={tokens.colors.neutral[100]}
     >
       <MainLayoutContainer>
-        {/* Sidebar Skeleton */}
         <SidebarSkeleton>
           <SidebarHeader>
             <Skeleton height={32} width={120} />
@@ -26,16 +25,13 @@ export default function MainLoading() {
           </SidebarNav>
         </SidebarSkeleton>
 
-        {/* Main Content Skeleton */}
         <MainContentSkeleton>
           <ContentPadding>
-            {/* Header */}
             <HeaderSkeleton>
               <Skeleton height={48} width={240} />
               <Skeleton height={48} width={300} />
             </HeaderSkeleton>
 
-            {/* Content Area */}
             <ContentArea>
               <Skeleton height={32} width={250} />
               <Skeleton height={120} width="100%" />

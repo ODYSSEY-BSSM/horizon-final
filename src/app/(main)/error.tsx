@@ -17,7 +17,6 @@ export default function MainError({
 
   return (
     <MainLayoutContainer>
-      {/* Sidebar Placeholder */}
       <SidebarPlaceholder>
         <SidebarContent>
           <Text variant="H3" color={tokens.colors.primary[500]}>
@@ -26,7 +25,6 @@ export default function MainError({
         </SidebarContent>
       </SidebarPlaceholder>
 
-      {/* Error Content */}
       <ErrorContentArea>
         <ErrorContainer>
           <BrandingSection>

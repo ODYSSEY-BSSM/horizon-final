@@ -1,13 +1,25 @@
 'use client';
 
+import styled from '@emotion/styled';
+import { useMemo } from 'react';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
-import { useGreetingMessage } from './GreetingMessage.hooks';
-import { Container, GreetingContainer } from './GreetingMessage.styles';
-import type { GreetingMessageProps } from './GreetingMessage.types';
+
+interface GreetingMessageProps {
+  className?: string;
+  userName?: string;
+  date?: string;
+}
 
 const GreetingMessage = ({ userName = '홍길동', date, className }: GreetingMessageProps) => {
-  const { currentDate } = useGreetingMessage();
+  const currentDate = useMemo(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  }, []);
+
   const displayDate = date || currentDate;
 
   return (
@@ -26,5 +38,18 @@ const GreetingMessage = ({ userName = '홍길동', date, className }: GreetingMe
     </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+  background-color: ${tokens.colors.white};
+`;
+
+const GreetingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${tokens.spacing.small};
+`;
 
 export default GreetingMessage;

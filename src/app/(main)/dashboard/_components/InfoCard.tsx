@@ -1,17 +1,40 @@
 'use client';
 
+import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
+import type { RoadmapCategory } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
-import { CARD_CONFIGS } from './InfoCard.constants';
-import {
-  CardContainer,
-  CardContent,
-  IconContainer,
-  LabelSection,
-  SubInfo,
-} from './InfoCard.styles';
-import type { InfoCardProps } from './InfoCard.types';
+
+interface InfoCardProps {
+  className?: string;
+  category: RoadmapCategory;
+  count?: number;
+  subCount?: number;
+  schoolName?: string;
+  hasItem?: boolean;
+}
+
+const CARD_CONFIGS = {
+  'my-roadmaps': {
+    icon: 'map',
+    label: '내 로드맵',
+    emptyMessage: '0',
+    subLabel: (count: number) => `${count}개 로드맵 진행중`,
+  },
+  'team-roadmaps': {
+    icon: 'group',
+    label: '팀 로드맵',
+    emptyMessage: '0',
+    subLabel: (count: number) => `${count}개 팀 참여중`,
+  },
+  'connected-school': {
+    icon: 'school',
+    label: '연결된 학교',
+    emptyMessage: '연결되지 않았습니다.',
+    subLabel: () => '연결된 학교가 없습니다',
+  },
+} as const;
 
 const InfoCard = ({
   category,
@@ -87,5 +110,54 @@ const InfoCard = ({
     </CardContainer>
   );
 };
+
+const CardContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 344px;
+  height: 136px;
+  padding: 0 ${tokens.spacing.xlarge};
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[100]};
+  border-radius: ${tokens.radius.large};
+  box-sizing: border-box;
+  box-shadow: ${tokens.shadow[0]};
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 92px;
+  flex: 1;
+  min-width: 0;
+`;
+
+const LabelSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.xxsmall};
+  min-width: 0;
+  max-width: 100%;
+`;
+
+const SubInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${tokens.spacing.xxsmall};
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: ${tokens.colors.primary[100]};
+  border-radius: ${tokens.radius.medium};
+  flex-shrink: 0;
+  position: relative;
+`;
 
 export default InfoCard;
