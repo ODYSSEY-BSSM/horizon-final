@@ -1,8 +1,6 @@
-import type { RoadmapFormData } from '@/lib/types/modal';
+import type { RoadmapFormData } from '@/lib/validations/roadmap';
 
 export interface RoadmapFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
   onSubmit: (data: RoadmapFormData) => void;
 }
 

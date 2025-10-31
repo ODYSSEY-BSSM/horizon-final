@@ -2,29 +2,49 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { Controller } from 'react-hook-form';
+import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
-import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { useStyleStepForm } from '../../_hooks/useRoadmapForm';
 
-const StyleStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
+const StyledFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const StyledContent = styled.div`
+  padding: ${tokens.spacing.large};
+  flex: 1;
+`;
+
+const StyledFormFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: ${tokens.spacing.large};
+  border-top: 1px solid ${tokens.colors.neutral[200]};
+  margin-top: auto;
+`;
+
+const StyleStep = () => {
+  const {
+    control,
+    onComplete,
+    onPrevious,
+    formState: { isValid },
+    watch,
+  } = useStyleStepForm();
   const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
   const [iconDropdownOpen, setIconDropdownOpen] = useState(false);
 
-  const selectedColor =
-    COLOR_OPTIONS.find((option) => option.value === data.color) || COLOR_OPTIONS[0];
-  const selectedIcon = ICON_OPTIONS.find((option) => option.value === data.icon) || ICON_OPTIONS[0];
+  const color = watch('color');
+  const icon = watch('icon');
 
-  const handleColorSelect = (color: string) => {
-    onUpdate({ color });
-    setColorDropdownOpen(false);
-  };
-
-  const handleIconSelect = (icon: string) => {
-    onUpdate({ icon });
-    setIconDropdownOpen(false);
-  };
+  const selectedColor = COLOR_OPTIONS.find((option) => option.value === color) || COLOR_OPTIONS[0];
+  const selectedIcon = ICON_OPTIONS.find((option) => option.value === icon) || ICON_OPTIONS[0];
 
   const getGradient = (colorValue: string): string => {
     const gradientKey = colorValue as keyof typeof tokens.gradients.roadmap;
@@ -32,132 +52,177 @@ const StyleStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
   };
 
   return (
-    <StyledStyleContainer>
-      <StyledThumbnailPreview $color={getGradient(data.color || 'red')}>
-        <StyledThumbnailIcon>
-          <Icon
-            name={data.icon || 'language'}
-            variant="LG"
-            color={tokens.colors.white}
-            filled
-            decorative
-          />
-        </StyledThumbnailIcon>
-      </StyledThumbnailPreview>
-
-      <StyledStyleSelectors>
-        <StyledDropdownContainer>
-          <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
-            컬러
-          </Text>
-          <div style={{ position: 'relative' }}>
-            <StyledDropdownHeader
-              $isOpen={colorDropdownOpen}
-              onClick={() => {
-                setColorDropdownOpen(!colorDropdownOpen);
-                setIconDropdownOpen(false);
-              }}
-              aria-label="색상 선택"
-              aria-expanded={colorDropdownOpen}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}>
-                <StyledColorSwatch $color={selectedColor.color} />
-                <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                  {selectedColor.label}
-                </Text>
-              </div>
+    <StyledFormContainer>
+      <StyledContent>
+        <StyledStyleContainer>
+          <StyledThumbnailPreview $color={getGradient(color || 'red')}>
+            <StyledThumbnailIcon>
               <Icon
-                name={colorDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-                variant="SM"
-                color={tokens.colors.neutral[600]}
+                name={icon || 'language'}
+                variant="LG"
+                color={tokens.colors.white}
+                filled
                 decorative
               />
-            </StyledDropdownHeader>
+            </StyledThumbnailIcon>
+          </StyledThumbnailPreview>
 
-            <StyledDropdownList $isOpen={colorDropdownOpen}>
-              <StyledColorGrid>
-                {COLOR_OPTIONS.map((option) => (
-                  <StyledColorOption
-                    key={option.id}
-                    $color={option.color}
-                    $selected={data.color === option.value}
-                    onClick={() => handleColorSelect(option.value)}
-                  >
-                    <StyledColorSwatch $color={option.color} />
-                    <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                      {option.label}
-                    </Text>
-                  </StyledColorOption>
-                ))}
-              </StyledColorGrid>
-            </StyledDropdownList>
-          </div>
-        </StyledDropdownContainer>
-
-        <StyledDropdownContainer>
-          <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
-            아이콘
-          </Text>
-          <div style={{ position: 'relative' }}>
-            <StyledDropdownHeader
-              $isOpen={iconDropdownOpen}
-              onClick={() => {
-                setIconDropdownOpen(!iconDropdownOpen);
-                setColorDropdownOpen(false);
-              }}
-              aria-label="아이콘 선택"
-              aria-expanded={iconDropdownOpen}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.medium }}>
-                <StyledIconContainer>
-                  <Icon
-                    name={selectedIcon.icon}
-                    variant="SM"
-                    color={tokens.colors.black}
-                    filled
-                    decorative
-                  />
-                </StyledIconContainer>
-                <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                  {selectedIcon.label}
-                </Text>
-              </div>
-              <Icon
-                name={iconDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-                variant="SM"
-                color={tokens.colors.neutral[600]}
-                decorative
-              />
-            </StyledDropdownHeader>
-
-            <StyledDropdownList $isOpen={iconDropdownOpen}>
-              <StyledIconGrid>
-                {ICON_OPTIONS.map((option) => (
-                  <StyledIconOption
-                    key={option.id}
-                    $selected={data.icon === option.value}
-                    onClick={() => handleIconSelect(option.value)}
-                  >
-                    <StyledIconContainer>
+          <StyledStyleSelectors>
+            <Controller
+              name="color"
+              control={control}
+              render={({ field }) => (
+                <StyledDropdownContainer>
+                  <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+                    컬러
+                  </Text>
+                  <div style={{ position: 'relative' }}>
+                    <StyledDropdownHeader
+                      $isOpen={colorDropdownOpen}
+                      onClick={() => {
+                        setColorDropdownOpen(!colorDropdownOpen);
+                        setIconDropdownOpen(false);
+                      }}
+                      aria-label="색상 선택"
+                      aria-expanded={colorDropdownOpen}
+                    >
+                      <div
+                        style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}
+                      >
+                        <StyledColorSwatch $color={selectedColor.color} />
+                        <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                          {selectedColor.label}
+                        </Text>
+                      </div>
                       <Icon
-                        name={option.icon}
+                        name={colorDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
                         variant="SM"
-                        color={tokens.colors.black}
-                        filled
+                        color={tokens.colors.neutral[600]}
                         decorative
                       />
-                    </StyledIconContainer>
-                    <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                      {option.label}
-                    </Text>
-                  </StyledIconOption>
-                ))}
-              </StyledIconGrid>
-            </StyledDropdownList>
-          </div>
-        </StyledDropdownContainer>
-      </StyledStyleSelectors>
-    </StyledStyleContainer>
+                    </StyledDropdownHeader>
+
+                    <StyledDropdownList $isOpen={colorDropdownOpen}>
+                      <StyledColorGrid>
+                        {COLOR_OPTIONS.map((option) => (
+                          <StyledColorOption
+                            key={option.id}
+                            $color={option.color}
+                            $selected={color === option.value}
+                            onClick={() => {
+                              field.onChange(option.value);
+                              setColorDropdownOpen(false);
+                            }}
+                          >
+                            <StyledColorSwatch $color={option.color} />
+                            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                              {option.label}
+                            </Text>
+                          </StyledColorOption>
+                        ))}
+                      </StyledColorGrid>
+                    </StyledDropdownList>
+                  </div>
+                </StyledDropdownContainer>
+              )}
+            />
+
+            <Controller
+              name="icon"
+              control={control}
+              render={({ field }) => (
+                <StyledDropdownContainer>
+                  <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+                    아이콘
+                  </Text>
+                  <div style={{ position: 'relative' }}>
+                    <StyledDropdownHeader
+                      $isOpen={iconDropdownOpen}
+                      onClick={() => {
+                        setIconDropdownOpen(!iconDropdownOpen);
+                        setColorDropdownOpen(false);
+                      }}
+                      aria-label="아이콘 선택"
+                      aria-expanded={iconDropdownOpen}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: tokens.spacing.medium,
+                        }}
+                      >
+                        <StyledIconContainer>
+                          <Icon
+                            name={selectedIcon.icon}
+                            variant="SM"
+                            color={tokens.colors.black}
+                            filled
+                            decorative
+                          />
+                        </StyledIconContainer>
+                        <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                          {selectedIcon.label}
+                        </Text>
+                      </div>
+                      <Icon
+                        name={iconDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                        variant="SM"
+                        color={tokens.colors.neutral[600]}
+                        decorative
+                      />
+                    </StyledDropdownHeader>
+
+                    <StyledDropdownList $isOpen={iconDropdownOpen}>
+                      <StyledIconGrid>
+                        {ICON_OPTIONS.map((option) => (
+                          <StyledIconOption
+                            key={option.id}
+                            $selected={icon === option.value}
+                            onClick={() => {
+                              field.onChange(option.value);
+                              setIconDropdownOpen(false);
+                            }}
+                          >
+                            <StyledIconContainer>
+                              <Icon
+                                name={option.icon}
+                                variant="SM"
+                                color={tokens.colors.black}
+                                filled
+                                decorative
+                              />
+                            </StyledIconContainer>
+                            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                              {option.label}
+                            </Text>
+                          </StyledIconOption>
+                        ))}
+                      </StyledIconGrid>
+                    </StyledDropdownList>
+                  </div>
+                </StyledDropdownContainer>
+              )}
+            />
+          </StyledStyleSelectors>
+        </StyledStyleContainer>
+      </StyledContent>
+
+      <StyledFormFooter>
+        <Button size="medium" variant="outlined" onClick={onPrevious} aria-label="이전 단계">
+          이전
+        </Button>
+        <Button
+          size="medium"
+          variant="contained"
+          onClick={onComplete}
+          disabled={!isValid}
+          aria-label="로드맵 생성 완료"
+        >
+          완료
+        </Button>
+      </StyledFormFooter>
+    </StyledFormContainer>
   );
 };
 

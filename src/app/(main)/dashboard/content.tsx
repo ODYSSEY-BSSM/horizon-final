@@ -1,7 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
+import type { RoadmapFormData } from '@/lib/validations/roadmap';
 import { tokens } from '@/shared/tokens';
+import RoadmapFormModal from './_forms/RoadmapFormModal';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
 import DashboardHeader from './_sections/DashboardHeader';
@@ -10,8 +13,17 @@ import InfoCardsGrid from './_sections/InfoCardsGrid';
 import RoadmapSection from './_sections/RoadmapSection';
 
 const DashboardContent = () => {
-  const { handleSearch, handleAddRoadmap } = useDashboard();
+  const { handleSearch } = useDashboard();
   const { userData, roadmapsData } = useDashboardData();
+  const { openModal } = useRoadmapFormFlow();
+
+  const handleAddRoadmap = () => {
+    openModal();
+  };
+
+  const handleRoadmapSubmit = (_data: RoadmapFormData) => {
+    // TODO: API call to create roadmap
+  };
 
   return (
     <StyledPageContainer>
@@ -29,6 +41,8 @@ const DashboardContent = () => {
 
         <RoadmapSection items={roadmapsData} onAddRoadmap={handleAddRoadmap} />
       </StyledContentContainer>
+
+      <RoadmapFormModal onSubmit={handleRoadmapSubmit} />
     </StyledPageContainer>
   );
 };

@@ -1,6 +1,6 @@
 export interface RoadmapFormData {
   folderId?: string;
-  folderName?: string; // For new folder creation
+  folderName?: string;
   teamId?: string;
   name: string;
   description: string;
@@ -9,13 +9,8 @@ export interface RoadmapFormData {
 }
 
 export interface FormStepProps {
-  data: Partial<RoadmapFormData>;
-  onUpdate: (updates: Partial<RoadmapFormData>) => void;
-  onNext: () => void;
-  onPrevious: () => void;
   onClose: () => void;
-  isFirstStep?: boolean;
-  isLastStep?: boolean;
+  onSubmit: (data: RoadmapFormData) => void;
 }
 
 export interface DropdownOption {
