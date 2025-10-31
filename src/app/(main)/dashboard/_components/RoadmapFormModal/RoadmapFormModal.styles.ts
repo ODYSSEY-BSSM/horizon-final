@@ -211,72 +211,90 @@ export const StyleSelectors = styled.div`
 `;
 
 export const ColorGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${tokens.spacing.small};
-  padding: ${tokens.spacing.medium};
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 `;
 
 export const ColorOption = styled.button<{ $color: string; $selected: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
-  padding: ${tokens.spacing.small};
+  height: 48px;
+  padding: ${tokens.spacing.small} ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
-  border: ${({ $selected }) =>
-    $selected
-      ? `2px solid ${tokens.colors.primary[500]}`
-      : `1px solid ${tokens.colors.neutral[200]}`};
-  border-radius: ${tokens.radius.medium};
+  border: none;
+  border-bottom: 1px solid ${tokens.colors.neutral[100]};
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: background-color 0.2s ease;
+  width: 100%;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    border-color: ${tokens.colors.primary[500]};
+    background-color: ${tokens.colors.neutral[100]};
   }
+
+  ${({ $selected }) =>
+    $selected &&
+    `
+    background-color: ${tokens.colors.primary[100]};
+    color: ${tokens.colors.primary[500]};
+  `}
 `;
 
 export const ColorSwatch = styled.div<{ $color: string }>`
   width: 32px;
   height: 32px;
-  border-radius: ${tokens.radius.small};
+  border-radius: 4px;
   background-color: ${({ $color }) => $color};
   flex-shrink: 0;
 `;
 
 export const IconGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${tokens.spacing.small};
-  padding: ${tokens.spacing.medium};
-  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  max-height: 264px;
   overflow-y: auto;
 `;
 
 export const IconOption = styled.button<{ $selected: boolean }>`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.medium};
-  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  gap: ${tokens.spacing.small};
+  height: 48px;
+  padding: ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
-  border: ${({ $selected }) =>
-    $selected
-      ? `2px solid ${tokens.colors.primary[500]}`
-      : `1px solid ${tokens.colors.neutral[200]}`};
-  border-radius: ${tokens.radius.medium};
+  border: none;
+  border-bottom: 1px solid ${tokens.colors.neutral[100]};
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: background-color 0.2s ease;
+  width: 100%;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    border-color: ${tokens.colors.primary[500]};
+    background-color: ${tokens.colors.neutral[100]};
   }
+
+  ${({ $selected }) =>
+    $selected &&
+    `
+    background-color: ${tokens.colors.primary[100]};
+    color: ${tokens.colors.primary[500]};
+  `}
 `;
 
 export const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
 `;

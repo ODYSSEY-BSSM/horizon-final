@@ -62,4 +62,19 @@ export const ICON_OPTIONS: IconOption[] = [
   { id: 'function', label: 'Function', value: 'function', icon: 'function' },
   { id: 'school', label: 'School', value: 'school', icon: 'school' },
   { id: 'extension', label: 'Extension', value: 'extension', icon: 'extension' },
+  { id: 'asterisk', label: 'Asterisk', value: 'asterisk', icon: 'asterisk' },
+  { id: 'deployed_code', label: 'Deployed Code', value: 'deployed_code', icon: 'deployed_code' },
+  { id: 'psychiatry', label: 'Psychiatry', value: 'psychiatry', icon: 'psychiatry' },
+  {
+    id: 'network_intelligence',
+    label: 'Network Intelligence',
+    value: 'network_intelligence',
+    icon: 'network_intelligence',
+  },
+  {
+    id: 'network_intel_node',
+    label: 'Network Intel Node',
+    value: 'network_intel_node',
+    icon: 'network_intel_node',
+  },
 ];
