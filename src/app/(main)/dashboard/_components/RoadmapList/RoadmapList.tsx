@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
+import type { RoadmapFormData } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import RoadmapCard from '../RoadmapCard/RoadmapCard';
+import RoadmapFormModal from '../RoadmapFormModal';
 import { FILTERS, ROADMAP_COLORS } from './RoadmapList.constants';
 import { useRoadmapList } from './RoadmapList.hooks';
 import {
@@ -203,6 +206,8 @@ const RoadmapList = ({
   onFilterChange,
   className,
 }: RoadmapListProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     currentView,
     currentFilter,
@@ -224,37 +229,58 @@ const RoadmapList = ({
     onFilterChange?.(filter);
   };
 
+  const handleAddRoadmapClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalSubmit = (_data: RoadmapFormData) => {
+    onAddRoadmap();
+    setIsModalOpen(false);
+  };
+
   return (
-    <ListContainer className={className} data-node-id="4510:1924">
-      <ListHeader
-        currentView={currentView}
-        onViewChange={handleViewChangeInternal}
-        onAddRoadmap={onAddRoadmap}
-      />
-      <FilterTap currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
-
-      {currentView === 'list' ? (
-        <ListItemsContainer>
-          {paginatedItems.map((item) => (
-            <RoadmapListItem key={item.id} item={item} />
-          ))}
-        </ListItemsContainer>
-      ) : (
-        <ThumbnailGridContainer data-node-id="4510:4092">
-          {paginatedItems.map((item) => (
-            <RoadmapCard key={item.id} item={item} />
-          ))}
-        </ThumbnailGridContainer>
-      )}
-
-      {totalPages > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+    <>
+      <ListContainer className={className} data-node-id="4510:1924">
+        <ListHeader
+          currentView={currentView}
+          onViewChange={handleViewChangeInternal}
+          onAddRoadmap={handleAddRoadmapClick}
         />
-      )}
-    </ListContainer>
+        <FilterTap currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
+
+        {currentView === 'list' ? (
+          <ListItemsContainer>
+            {paginatedItems.map((item) => (
+              <RoadmapListItem key={item.id} item={item} />
+            ))}
+          </ListItemsContainer>
+        ) : (
+          <ThumbnailGridContainer data-node-id="4510:4092">
+            {paginatedItems.map((item) => (
+              <RoadmapCard key={item.id} item={item} />
+            ))}
+          </ThumbnailGridContainer>
+        )}
+
+        {totalPages > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </ListContainer>
+
+      <RoadmapFormModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
+    </>
   );
 };
 
