@@ -16,31 +16,31 @@ export default function MainError({
   const router = useRouter();
 
   return (
-    <MainLayoutContainer>
-      <SidebarPlaceholder>
-        <SidebarContent>
+    <StyledMainLayoutContainer>
+      <StyledSidebarPlaceholder>
+        <StyledSidebarContent>
           <Text variant="H3" color={tokens.colors.primary[500]}>
             HORIZON
           </Text>
-        </SidebarContent>
-      </SidebarPlaceholder>
+        </StyledSidebarContent>
+      </StyledSidebarPlaceholder>
 
-      <ErrorContentArea>
-        <ErrorContainer>
-          <BrandingSection>
+      <StyledErrorContentArea>
+        <StyledErrorContainer>
+          <StyledBrandingSection>
             <Text variant="H2" color={tokens.colors.primary[500]}>
               HORIZON
             </Text>
             <Text variant="B1" color={tokens.colors.neutral[500]}>
               메인 페이지를 불러오는 중 문제가 발생했습니다
             </Text>
-          </BrandingSection>
+          </StyledBrandingSection>
 
-          <ErrorIconContainer>
+          <StyledErrorIconContainer>
             <Icon name="error_outline" variant="XL" color={tokens.colors.error[200]} decorative />
-          </ErrorIconContainer>
+          </StyledErrorIconContainer>
 
-          <ErrorMessageSection>
+          <StyledErrorMessageSection>
             <Text variant="H3" color={tokens.colors.neutral[900]}>
               페이지에 접근할 수 없습니다
             </Text>
@@ -54,47 +54,47 @@ export default function MainError({
                     : error.message || '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'}
             </Text>
             {process.env.NODE_ENV === 'development' && (
-              <DebugDetails>
-                <DebugSummary>기술적 세부사항</DebugSummary>
-                <DebugPre>{error.stack}</DebugPre>
-              </DebugDetails>
+              <StyledDebugDetails>
+                <StyledDebugSummary>기술적 세부사항</StyledDebugSummary>
+                <StyledDebugPre>{error.stack}</StyledDebugPre>
+              </StyledDebugDetails>
             )}
-          </ErrorMessageSection>
+          </StyledErrorMessageSection>
 
-          <ActionSection>
-            <RetryButton type="button" onClick={reset}>
+          <StyledActionSection>
+            <StyledRetryButton type="button" onClick={reset}>
               <Icon name="refresh" variant="SM" color={tokens.colors.white} decorative />
               <Text variant="ST" color={tokens.colors.white}>
                 다시 시도
               </Text>
-            </RetryButton>
+            </StyledRetryButton>
 
-            <SignInButton type="button" onClick={() => router.push('/signin')}>
+            <StyledSignInButton type="button" onClick={() => router.push('/signin')}>
               <Icon name="login" variant="SM" color={tokens.colors.neutral[700]} decorative />
               <Text variant="ST" color={tokens.colors.neutral[700]}>
                 다시 로그인
               </Text>
-            </SignInButton>
+            </StyledSignInButton>
 
-            <HomeButton type="button" onClick={() => router.push('/')}>
+            <StyledHomeButton type="button" onClick={() => router.push('/')}>
               <Text variant="O" color={tokens.colors.neutral[500]}>
                 홈으로 돌아가기
               </Text>
-            </HomeButton>
-          </ActionSection>
-        </ErrorContainer>
-      </ErrorContentArea>
-    </MainLayoutContainer>
+            </StyledHomeButton>
+          </StyledActionSection>
+        </StyledErrorContainer>
+      </StyledErrorContentArea>
+    </StyledMainLayoutContainer>
   );
 }
 
-const MainLayoutContainer = styled.div`
+const StyledMainLayoutContainer = styled.div`
   display: flex;
   width: 100%;
   min-height: 100vh;
 `;
 
-const SidebarPlaceholder = styled.div`
+const StyledSidebarPlaceholder = styled.div`
   width: 280px;
   background-color: ${tokens.colors.white};
   border-right: 1px solid ${tokens.colors.neutral[200]};
@@ -104,11 +104,11 @@ const SidebarPlaceholder = styled.div`
   padding: ${tokens.spacing.large};
 `;
 
-const SidebarContent = styled.div`
+const StyledSidebarContent = styled.div`
   padding-top: ${tokens.spacing.large};
 `;
 
-const ErrorContentArea = styled.div`
+const StyledErrorContentArea = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -119,7 +119,7 @@ const ErrorContentArea = styled.div`
   box-sizing: border-box;
 `;
 
-const ErrorContainer = styled.div`
+const StyledErrorContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,14 +128,14 @@ const ErrorContainer = styled.div`
   text-align: center;
 `;
 
-const BrandingSection = styled.div`
+const StyledBrandingSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 `;
 
-const ErrorIconContainer = styled.div`
+const StyledErrorIconContainer = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -145,25 +145,25 @@ const ErrorIconContainer = styled.div`
   justify-content: center;
 `;
 
-const ErrorMessageSection = styled.div`
+const StyledErrorMessageSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   align-items: center;
 `;
 
-const DebugDetails = styled.details`
+const StyledDebugDetails = styled.details`
   margin-top: 8px;
   max-width: 100%;
 `;
 
-const DebugSummary = styled.summary`
+const StyledDebugSummary = styled.summary`
   cursor: pointer;
   color: ${tokens.colors.neutral[500]};
   font-size: 12px;
 `;
 
-const DebugPre = styled.pre`
+const StyledDebugPre = styled.pre`
   font-size: 11px;
   color: ${tokens.colors.neutral[600]};
   background: ${tokens.colors.neutral[100]};
@@ -175,14 +175,14 @@ const DebugPre = styled.pre`
   max-width: 100%;
 `;
 
-const ActionSection = styled.div`
+const StyledActionSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
 `;
 
-const RetryButton = styled.button`
+const StyledRetryButton = styled.button`
   width: 100%;
   height: 48px;
   background-color: ${tokens.colors.primary[500]};
@@ -202,7 +202,7 @@ const RetryButton = styled.button`
   }
 `;
 
-const SignInButton = styled.button`
+const StyledSignInButton = styled.button`
   width: 100%;
   height: 48px;
   background-color: transparent;
@@ -222,7 +222,7 @@ const SignInButton = styled.button`
   }
 `;
 
-const HomeButton = styled.button`
+const StyledHomeButton = styled.button`
   background: none;
   border: none;
   color: ${tokens.colors.neutral[500]};

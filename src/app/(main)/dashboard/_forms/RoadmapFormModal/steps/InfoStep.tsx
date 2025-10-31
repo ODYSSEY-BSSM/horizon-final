@@ -1,9 +1,16 @@
 'use client';
 
+import styled from '@emotion/styled';
 import type { ChangeEvent } from 'react';
 import TextField from '@/components/common/TextField/TextField';
 import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
+
+const StyledFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.large};
+`;
 
 const InfoStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -14,14 +21,8 @@ const InfoStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
     onUpdate({ description: e.target.value });
   };
 
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: tokens.spacing.large,
-  };
-
   return (
-    <div style={containerStyle}>
+    <StyledFieldContainer>
       <TextField
         label="이름"
         value={data.name || ''}
@@ -37,7 +38,7 @@ const InfoStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
         placeholder="설명을 입력해주세요"
         aria-label="로드맵 설명"
       />
-    </div>
+    </StyledFieldContainer>
   );
 };
 

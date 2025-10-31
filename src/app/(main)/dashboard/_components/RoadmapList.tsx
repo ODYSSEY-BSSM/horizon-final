@@ -13,7 +13,6 @@ import Pagination from './Pagination';
 import RoadmapCard from './RoadmapCard';
 import RoadmapListItem from './RoadmapListItem';
 
-// Types
 export interface RoadmapListProps {
   className?: string;
   items?: RoadmapItem[];
@@ -22,33 +21,6 @@ export interface RoadmapListProps {
   onFilterChange?: (filter: FilterType) => void;
 }
 
-// Styled Components
-const ListContainer = styled.div`
-  width: 1080px;
-  border: 1px solid ${tokens.colors.neutral[100]};
-  border-radius: ${tokens.radius.large};
-  overflow: hidden;
-  box-shadow: ${tokens.shadow[0]};
-`;
-
-const ListItemsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.large};
-  padding: ${tokens.spacing.xxlarge};
-  background-color: ${tokens.colors.white};
-  max-height: 944px;
-`;
-
-const ThumbnailGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 246px);
-  gap: ${tokens.spacing.medium};
-  padding: ${tokens.spacing.xxlarge};
-  background-color: ${tokens.colors.white};
-`;
-
-// Hook
 export const useRoadmapList = (items: RoadmapItem[] = []) => {
   const [currentView, setCurrentView] = useState<ViewType>('list');
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
@@ -86,12 +58,12 @@ export const useRoadmapList = (items: RoadmapItem[] = []) => {
 
   const handleViewChange = (view: ViewType) => {
     setCurrentView(view);
-    setCurrentPage(1); // Reset to first page when view changes
+    setCurrentPage(1);
   };
 
   const handleFilterChange = (filter: FilterType) => {
     setCurrentFilter(filter);
-    setCurrentPage(1); // Reset to first page when filter changes
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
@@ -155,7 +127,7 @@ const RoadmapList = ({
 
   return (
     <>
-      <ListContainer className={className} data-node-id="4510:1924">
+      <StyledListContainer className={className}>
         <ListHeader
           currentView={currentView}
           onViewChange={handleViewChangeInternal}
@@ -164,17 +136,17 @@ const RoadmapList = ({
         <FilterTap currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
 
         {currentView === 'list' ? (
-          <ListItemsContainer>
+          <StyledListItemsContainer>
             {paginatedItems.map((item) => (
               <RoadmapListItem key={item.id} item={item} />
             ))}
-          </ListItemsContainer>
+          </StyledListItemsContainer>
         ) : (
-          <ThumbnailGridContainer data-node-id="4510:4092">
+          <StyledThumbnailGridContainer>
             {paginatedItems.map((item) => (
               <RoadmapCard key={item.id} item={item} />
             ))}
-          </ThumbnailGridContainer>
+          </StyledThumbnailGridContainer>
         )}
 
         {totalPages > 0 && (
@@ -184,7 +156,7 @@ const RoadmapList = ({
             onPageChange={handlePageChange}
           />
         )}
-      </ListContainer>
+      </StyledListContainer>
 
       <RoadmapFormModal
         isOpen={isModalOpen}
@@ -196,3 +168,28 @@ const RoadmapList = ({
 };
 
 export default RoadmapList;
+
+const StyledListContainer = styled.div`
+  width: 1080px;
+  border: 1px solid ${tokens.colors.neutral[100]};
+  border-radius: ${tokens.radius.large};
+  overflow: hidden;
+  box-shadow: ${tokens.shadow[0]};
+`;
+
+const StyledListItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.large};
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
+  max-height: 944px;
+`;
+
+const StyledThumbnailGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 246px);
+  gap: ${tokens.spacing.medium};
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
+`;

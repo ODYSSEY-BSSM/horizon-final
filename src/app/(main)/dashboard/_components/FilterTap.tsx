@@ -6,7 +6,7 @@ import type { FilterType } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { FILTERS } from '../_constants/RoadmapList.constants';
 
-export interface FilterTabProps {
+interface FilterTabProps {
   currentFilter: FilterType;
   onFilterChange: (filter: FilterType) => void;
 }

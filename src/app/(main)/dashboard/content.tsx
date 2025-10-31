@@ -2,36 +2,21 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import DashboardHeader from './_components/DashboardHeader';
-import GreetingSection from './_components/GreetingSection';
-import RoadmapSection from './_components/RoadmapSection';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
+import DashboardHeader from './_sections/DashboardHeader';
+import GreetingSection from './_sections/GreetingSection';
 import InfoCardsGrid from './_sections/InfoCardsGrid';
+import RoadmapSection from './_sections/RoadmapSection';
 
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${tokens.colors.white};
-  padding: 0 60px 80px;
-  box-sizing: border-box;
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.xxlarge};
-  width: 1080px;
-`;
-
-export default function DashboardContent() {
+const DashboardContent = () => {
   const { handleSearch, handleAddRoadmap } = useDashboard();
   const { userData, roadmapsData } = useDashboardData();
 
   return (
-    <PageContainer>
+    <StyledPageContainer>
       <DashboardHeader onSearch={handleSearch} />
-      <ContentContainer>
+      <StyledContentContainer>
         <GreetingSection userName={userData.name} />
 
         <InfoCardsGrid
@@ -43,7 +28,24 @@ export default function DashboardContent() {
         />
 
         <RoadmapSection items={roadmapsData} onAddRoadmap={handleAddRoadmap} />
-      </ContentContainer>
-    </PageContainer>
+      </StyledContentContainer>
+    </StyledPageContainer>
   );
-}
+};
+
+export default DashboardContent;
+
+const StyledPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${tokens.colors.white};
+  padding: 0 60px 80px;
+  box-sizing: border-box;
+`;
+
+const StyledContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.xxlarge};
+  width: 1080px;
+`;

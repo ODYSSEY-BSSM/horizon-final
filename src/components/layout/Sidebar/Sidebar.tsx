@@ -22,7 +22,6 @@ const MenuItem = ({ item, selected, onClick }: MenuItemProps) => {
       $selected={selected}
       onClick={onClick}
       aria-current={selected ? 'page' : undefined}
-      data-node-id="4452:883"
     >
       <MenuItemContent $selected={selected}>
         <Icon name={item.icon} variant="SM" filled={selected} decorative />
@@ -41,15 +40,15 @@ const Sidebar = (props: SidebarProps) => {
   const { selected, menuItems, handleMenuClick } = useSidebar(props);
 
   return (
-    <SidebarContainer data-node-id="4452:1035">
-      <LogoArea data-node-id="4452:857">
+    <SidebarContainer>
+      <LogoArea>
         <LogoImage aria-label="HORIZON 로고" role="img">
           <Image src="/logo.svg" alt="HORIZON Logo" width={40} height={40} priority />
         </LogoImage>
         <LogoText>HORIZON</LogoText>
       </LogoArea>
 
-      <MenuList data-node-id="4452:930">
+      <MenuList>
         {menuItems.map((item) => (
           <MenuItem
             key={item.id}

@@ -13,14 +13,14 @@ import {
   TOTAL_STEPS,
 } from '../../_constants/RoadmapFormModal.constants';
 import {
-  CloseButton,
-  Divider,
-  FormContent,
-  FormFooter,
-  FormHeader,
-  HeaderTop,
-  ModalBackdrop,
-  ModalContainer,
+  StyledCloseButton,
+  StyledDivider,
+  StyledFormContent,
+  StyledFormFooter,
+  StyledFormHeader,
+  StyledHeaderTop,
+  StyledModalBackdrop,
+  StyledModalContainer,
 } from './RoadmapFormModal.styles';
 import type { RoadmapFormModalProps } from './RoadmapFormModal.types';
 import FolderStep from './steps/FolderStep';
@@ -36,10 +36,6 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
     color: 'red',
     icon: 'language',
   });
-
-  if (!isOpen) {
-    return null;
-  }
 
   const handleUpdate = (updates: Partial<RoadmapFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -57,13 +53,6 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
     }
   };
 
-  const handleComplete = () => {
-    if (isFormValid()) {
-      onSubmit(formData as RoadmapFormData);
-      handleClose();
-    }
-  };
-
   const handleClose = () => {
     setCurrentStep(FORM_STEPS.FOLDER);
     setFormData({
@@ -78,6 +67,13 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
   const isFormValid = (): boolean => {
     const { name, description } = formData;
     return !!(name && description && name.trim() && description.trim());
+  };
+
+  const handleComplete = () => {
+    if (isFormValid()) {
+      onSubmit(formData as RoadmapFormData);
+      handleClose();
+    }
   };
 
   const canProceedToNext = (): boolean => {
@@ -98,7 +94,7 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
   const getModalHeight = () => {
     switch (currentStep) {
       case FORM_STEPS.INFO:
-        return '520px'; // Increased for TextField components
+        return '520px';
       case FORM_STEPS.STYLE:
         return '534px';
       default:
@@ -136,33 +132,37 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === TOTAL_STEPS;
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
-    <ModalBackdrop
+    <StyledModalBackdrop
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           handleClose();
         }
       }}
     >
-      <ModalContainer $height={getModalHeight()}>
-        <FormHeader>
-          <HeaderTop>
+      <StyledModalContainer $height={getModalHeight()}>
+        <StyledFormHeader>
+          <StyledHeaderTop>
             <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
               {title}
             </Text>
-            <CloseButton onClick={handleClose} aria-label="닫기">
+            <StyledCloseButton onClick={handleClose} aria-label="닫기">
               <Icon name="close" variant="LG" color={tokens.colors.neutral[400]} decorative />
-            </CloseButton>
-          </HeaderTop>
+            </StyledCloseButton>
+          </StyledHeaderTop>
           <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
             {description}
           </Text>
-          <Divider />
-        </FormHeader>
+          <StyledDivider />
+        </StyledFormHeader>
 
-        <FormContent>{renderCurrentStep()}</FormContent>
+        <StyledFormContent>{renderCurrentStep()}</StyledFormContent>
 
-        <FormFooter>
+        <StyledFormFooter>
           {!isFirstStep && (
             <Button
               size="medium"
@@ -194,9 +194,9 @@ const RoadmapFormModal: React.FC<RoadmapFormModalProps> = ({ isOpen, onClose, on
               완료
             </Button>
           )}
-        </FormFooter>
-      </ModalContainer>
-    </ModalBackdrop>
+        </StyledFormFooter>
+      </StyledModalContainer>
+    </StyledModalBackdrop>
   );
 };
 

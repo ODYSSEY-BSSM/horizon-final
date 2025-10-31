@@ -12,8 +12,48 @@ export interface RoadmapListItemProps {
   onDelete?: (id: string) => void;
 }
 
-// Styled Components
-const ItemContainer = styled.div`
+const RoadmapListItem = ({ item }: RoadmapListItemProps) => {
+  return (
+    <StyledItemContainer>
+      <StyledItemLeft>
+        <StyledLeadingIcon $color={item.color}>
+          <Icon
+            name={item.icon}
+            variant="SM"
+            color={ROADMAP_COLORS[item.color].icon}
+            filled
+            decorative
+          />
+        </StyledLeadingIcon>
+        <StyledItemInfo>
+          <StyledItemTitle>{item.title}</StyledItemTitle>
+          <StyledItemMeta>
+            <StyledMetaText>{item.category === 'personal' ? '개인' : '팀'}</StyledMetaText>
+            <StyledMetaSeparator>•</StyledMetaSeparator>
+            <StyledMetaText>{item.steps}단계</StyledMetaText>
+            <StyledMetaSeparator>•</StyledMetaSeparator>
+            <StyledMetaText>{item.status === 'in-progress' ? '진행중' : '완료'}</StyledMetaText>
+          </StyledItemMeta>
+        </StyledItemInfo>
+      </StyledItemLeft>
+      <StyledItemRight>
+        <StyledProgressContainer>
+          <StyledProgressText>{item.progress}%</StyledProgressText>
+          <StyledProgressBar>
+            <StyledProgressFill $progress={item.progress} />
+          </StyledProgressBar>
+        </StyledProgressContainer>
+        <StyledOverflowButton aria-label="더보기">
+          <Icon name="more_horiz" variant="SM" color={tokens.colors.neutral[500]} decorative />
+        </StyledOverflowButton>
+      </StyledItemRight>
+    </StyledItemContainer>
+  );
+};
+
+export default RoadmapListItem;
+
+const StyledItemContainer = styled.div`
   display: flex;
   align-items: center;
   height: 80px;
@@ -29,7 +69,7 @@ const ItemContainer = styled.div`
   }
 `;
 
-const ItemLeft = styled.div`
+const StyledItemLeft = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.large};
@@ -37,7 +77,7 @@ const ItemLeft = styled.div`
   min-width: 0;
 `;
 
-const LeadingIcon = styled.div<{ $color: RoadmapColor }>`
+const StyledLeadingIcon = styled.div<{ $color: RoadmapColor }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,14 +89,14 @@ const LeadingIcon = styled.div<{ $color: RoadmapColor }>`
   position: relative;
 `;
 
-const ItemInfo = styled.div`
+const StyledItemInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.xxsmall};
   min-width: 0;
 `;
 
-const ItemTitle = styled.h3`
+const StyledItemTitle = styled.h3`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
@@ -68,7 +108,7 @@ const ItemTitle = styled.h3`
   white-space: nowrap;
 `;
 
-const ItemMeta = styled.div`
+const StyledItemMeta = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.xxsmall};
@@ -79,21 +119,21 @@ const ItemMeta = styled.div`
   color: ${tokens.colors.neutral[500]};
 `;
 
-const MetaText = styled.span`
+const StyledMetaText = styled.span`
   white-space: nowrap;
 `;
 
-const MetaSeparator = styled.span`
+const StyledMetaSeparator = styled.span`
   margin: 0 ${tokens.spacing.xxsmall};
 `;
 
-const ItemRight = styled.div`
+const StyledItemRight = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
 `;
 
-const ProgressContainer = styled.div`
+const StyledProgressContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -101,7 +141,7 @@ const ProgressContainer = styled.div`
   width: 80px;
 `;
 
-const ProgressText = styled.span`
+const StyledProgressText = styled.span`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.regular};
@@ -110,7 +150,7 @@ const ProgressText = styled.span`
   text-align: right;
 `;
 
-const ProgressBar = styled.div`
+const StyledProgressBar = styled.div`
   width: 80px;
   height: 8px;
   background-color: ${tokens.colors.primary[100]};
@@ -118,7 +158,7 @@ const ProgressBar = styled.div`
   position: relative;
 `;
 
-const ProgressFill = styled.div<{ $progress: number }>`
+const StyledProgressFill = styled.div<{ $progress: number }>`
   position: absolute;
   left: 0;
   top: 0;
@@ -128,7 +168,7 @@ const ProgressFill = styled.div<{ $progress: number }>`
   border-radius: 9999px;
 `;
 
-const OverflowButton = styled.button`
+const StyledOverflowButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,44 +190,3 @@ const OverflowButton = styled.button`
     outline-offset: 2px;
   }
 `;
-
-const RoadmapListItem = ({ item }: RoadmapListItemProps) => {
-  return (
-    <ItemContainer data-node-id="4502:1387">
-      <ItemLeft>
-        <LeadingIcon $color={item.color} data-node-id="4488:637">
-          <Icon
-            name={item.icon}
-            variant="SM"
-            color={ROADMAP_COLORS[item.color].icon}
-            filled
-            decorative
-          />
-        </LeadingIcon>
-        <ItemInfo>
-          <ItemTitle>{item.title}</ItemTitle>
-          <ItemMeta>
-            <MetaText>{item.category === 'personal' ? '개인' : '팀'}</MetaText>
-            <MetaSeparator>•</MetaSeparator>
-            <MetaText>{item.steps}단계</MetaText>
-            <MetaSeparator>•</MetaSeparator>
-            <MetaText>{item.status === 'in-progress' ? '진행중' : '완료'}</MetaText>
-          </ItemMeta>
-        </ItemInfo>
-      </ItemLeft>
-      <ItemRight>
-        <ProgressContainer data-node-id="4461:545">
-          <ProgressText>{item.progress}%</ProgressText>
-          <ProgressBar>
-            <ProgressFill $progress={item.progress} />
-          </ProgressBar>
-        </ProgressContainer>
-        <OverflowButton aria-label="더보기" data-node-id="4461:600">
-          <Icon name="more_horiz" variant="SM" color={tokens.colors.neutral[500]} decorative />
-        </OverflowButton>
-      </ItemRight>
-    </ItemContainer>
-  );
-};
-
-export default RoadmapListItem;

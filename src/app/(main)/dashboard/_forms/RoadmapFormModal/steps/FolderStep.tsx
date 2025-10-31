@@ -8,11 +8,11 @@ import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import {
-  DropdownContainer,
-  DropdownHeader,
-  DropdownList,
-  DropdownOption,
-  NewOptionIcon,
+  StyledDropdownContainer,
+  StyledDropdownHeader,
+  StyledDropdownList,
+  StyledDropdownOption,
+  StyledNewOptionIcon,
 } from '../RoadmapFormModal.styles';
 
 const FolderStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
@@ -63,7 +63,7 @@ const FolderStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
   const hasSelection = !!(data.folderId || data.folderName);
 
   return (
-    <DropdownContainer>
+    <StyledDropdownContainer>
       <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
         폴더
       </Text>
@@ -84,13 +84,11 @@ const FolderStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
             setNewFolderName('');
           }}
           placeholder="새 폴더 이름을 입력하세요"
-          // autoFocus is needed for immediate user input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
         />
       ) : (
         <div style={{ position: 'relative' }}>
-          <DropdownHeader
+          <StyledDropdownHeader
             $isOpen={isOpen}
             onClick={() => setIsOpen(!isOpen)}
             aria-label="폴더 선택"
@@ -109,20 +107,20 @@ const FolderStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
               color={tokens.colors.neutral[400]}
               decorative
             />
-          </DropdownHeader>
+          </StyledDropdownHeader>
 
-          <DropdownList $isOpen={isOpen}>
-            <DropdownOption onClick={handleNewFolderClick}>
-              <NewOptionIcon>
+          <StyledDropdownList $isOpen={isOpen}>
+            <StyledDropdownOption onClick={handleNewFolderClick}>
+              <StyledNewOptionIcon>
                 <Icon name="add" variant="SM" color={tokens.colors.neutral[600]} decorative />
-              </NewOptionIcon>
+              </StyledNewOptionIcon>
               <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
                 새 폴더
               </Text>
-            </DropdownOption>
+            </StyledDropdownOption>
 
             {FOLDER_OPTIONS.map((option) => (
-              <DropdownOption
+              <StyledDropdownOption
                 key={option.id}
                 onClick={() => handleFolderSelect(option.id)}
                 $highlighted={data.folderId === option.id}
@@ -130,12 +128,12 @@ const FolderStep: React.FC<FormStepProps> = ({ data, onUpdate }) => {
                 <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
                   {option.label}
                 </Text>
-              </DropdownOption>
+              </StyledDropdownOption>
             ))}
-          </DropdownList>
+          </StyledDropdownList>
         </div>
       )}
-    </DropdownContainer>
+    </StyledDropdownContainer>
   );
 };
 

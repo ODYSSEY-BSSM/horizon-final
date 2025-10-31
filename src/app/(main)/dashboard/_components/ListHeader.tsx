@@ -7,14 +7,57 @@ import Text from '@/components/common/Text/Text';
 import type { ViewType } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 
-export interface ListHeaderProps {
+interface ListHeaderProps {
   currentView: ViewType;
   onViewChange: (view: ViewType) => void;
   onAddRoadmap: () => void;
 }
 
-// Styled Components
-const HeaderContainer = styled.div`
+const ListHeader = ({ currentView, onViewChange, onAddRoadmap }: ListHeaderProps) => {
+  return (
+    <StyledHeaderContainer>
+      <StyledHeaderTitle>로드맵 리스트</StyledHeaderTitle>
+      <StyledHeaderActions>
+        <StyledViewToggle>
+          <StyledViewButton
+            $active={currentView === 'list'}
+            onClick={() => onViewChange('list')}
+            aria-label="리스트 보기"
+          >
+            <Icon name="list" variant="MD" decorative />
+            <Text as="span" variant="B2" color={tokens.colors.neutral[700]}>
+              리스트
+            </Text>
+          </StyledViewButton>
+          <StyledViewButton
+            $active={currentView === 'thumbnail'}
+            onClick={() => onViewChange('thumbnail')}
+            aria-label="썸네일 보기"
+          >
+            <Icon name="calendar_view_month" variant="MD" decorative />
+            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
+              썸네일
+            </Text>
+          </StyledViewButton>
+        </StyledViewToggle>
+        <Button
+          size="medium"
+          variant="contained"
+          iconPosition="left"
+          iconName="add"
+          aria-label="새 로드맵"
+          onClick={onAddRoadmap}
+        >
+          새 로드맵
+        </Button>
+      </StyledHeaderActions>
+    </StyledHeaderContainer>
+  );
+};
+
+export default ListHeader;
+
+const StyledHeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -23,7 +66,7 @@ const HeaderContainer = styled.div`
   background-color: ${tokens.colors.white};
 `;
 
-const HeaderTitle = styled.h2`
+const StyledHeaderTitle = styled.h2`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[20]};
   font-weight: ${tokens.typos.fontWeight.bold};
@@ -34,13 +77,13 @@ const HeaderTitle = styled.h2`
   white-space: nowrap;
 `;
 
-const HeaderActions = styled.div`
+const StyledHeaderActions = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
 `;
 
-const ViewToggle = styled.div`
+const StyledViewToggle = styled.div`
   display: flex;
   align-items: center;
   padding: ${tokens.spacing.xxsmall};
@@ -48,7 +91,7 @@ const ViewToggle = styled.div`
   border-radius: ${tokens.radius.medium};
 `;
 
-const ViewButton = styled.button<{ $active: boolean }>`
+const StyledViewButton = styled.button<{ $active: boolean }>`
   display: flex;
   align-items: center;
   padding: ${tokens.spacing.xxsmall} ${tokens.spacing.small};
@@ -69,47 +112,3 @@ const ViewButton = styled.button<{ $active: boolean }>`
     outline-offset: 2px;
   }
 `;
-
-const ListHeader = ({ currentView, onViewChange, onAddRoadmap }: ListHeaderProps) => {
-  return (
-    <HeaderContainer data-node-id="4502:1437">
-      <HeaderTitle>로드맵 리스트</HeaderTitle>
-      <HeaderActions>
-        <ViewToggle data-node-id="4452:628">
-          <ViewButton
-            $active={currentView === 'list'}
-            onClick={() => onViewChange('list')}
-            aria-label="리스트 보기"
-          >
-            <Icon name="list" variant="MD" decorative />
-            <Text as="span" variant="B2" color={tokens.colors.neutral[700]}>
-              리스트
-            </Text>
-          </ViewButton>
-          <ViewButton
-            $active={currentView === 'thumbnail'}
-            onClick={() => onViewChange('thumbnail')}
-            aria-label="썸네일 보기"
-          >
-            <Icon name="calendar_view_month" variant="MD" decorative />
-            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-              썸네일
-            </Text>
-          </ViewButton>
-        </ViewToggle>
-        <Button
-          size="medium"
-          variant="contained"
-          iconPosition="left"
-          iconName="add"
-          aria-label="새 로드맵"
-          onClick={onAddRoadmap}
-        >
-          새 로드맵
-        </Button>
-      </HeaderActions>
-    </HeaderContainer>
-  );
-};
-
-export default ListHeader;

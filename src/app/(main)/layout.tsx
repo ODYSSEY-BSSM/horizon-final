@@ -3,13 +3,13 @@
 import styled from '@emotion/styled';
 import Sidebar from '@/components/layout/Sidebar/Sidebar';
 
-const MainLayoutContainer = styled.div`
+const StyledMainLayoutContainer = styled.div`
   display: flex;
   width: 100%;
   min-height: 100vh;
 `;
 
-const MainContent = styled.main`
+const StyledMainContent = styled.main`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -21,9 +21,9 @@ const MainContent = styled.main`
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <MainLayoutContainer>
+    <StyledMainLayoutContainer>
       <Sidebar selected="dashboard" />
-      <MainContent>{children}</MainContent>
-    </MainLayoutContainer>
+      <StyledMainContent>{children}</StyledMainContent>
+    </StyledMainLayoutContainer>
   );
 }

@@ -10,19 +10,13 @@ interface InfoCardsGridProps {
   connectedSchool: string;
 }
 
-const StyledInfoCardsGrid = styled.div`
-  display: flex;
-  gap: ${tokens.spacing.xxlarge};
-  width: 100%;
-`;
-
-export default function InfoCardsGrid({
+const InfoCardsGrid = ({
   myRoadmapsCount,
   myRoadmapsInProgress,
   teamRoadmapsCount,
   teamRoadmapsInProgress,
   connectedSchool,
-}: InfoCardsGridProps) {
+}: InfoCardsGridProps) => {
   return (
     <StyledInfoCardsGrid>
       <InfoCard
@@ -40,4 +34,12 @@ export default function InfoCardsGrid({
       <InfoCard category="connected-school" schoolName={connectedSchool} hasItem={true} />
     </StyledInfoCardsGrid>
   );
-}
+};
+
+export default InfoCardsGrid;
+
+const StyledInfoCardsGrid = styled.div`
+  display: flex;
+  gap: ${tokens.spacing.xxlarge};
+  width: 100%;
+`;
