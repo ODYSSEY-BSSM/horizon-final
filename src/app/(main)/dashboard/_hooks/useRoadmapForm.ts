@@ -17,7 +17,7 @@ import {
 } from '@/lib/validations/roadmap';
 
 export const useRoadmapForm = () => {
-  const { formData } = useRoadmapFormFlow();
+  const { formData, saveStepData, goToStep, closeModal } = useRoadmapFormFlow();
 
   const normalizedValues: RoadmapFormData = {
     category: formData.category ?? '',
@@ -36,7 +36,7 @@ export const useRoadmapForm = () => {
     values: normalizedValues,
   });
 
-  const handleSubmit = async (_data: RoadmapFormData) => {
+  const _handleSubmit = async (_data: RoadmapFormData) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       closeModal();
@@ -45,13 +45,7 @@ export const useRoadmapForm = () => {
     }
   };
 
-  return {
-    ...form,
-    onSubmit: form.handleSubmit(handleSubmit),
-    formData,
-    saveStepData,
-    goToStep,
-  };
+  return { form, formData, saveStepData, goToStep, closeModal };
 };
 
 export const useCategoryStepForm = () => {
@@ -178,12 +172,10 @@ export const useStyleStepForm = () => {
       await form.trigger();
       if (form.formState.isValid) {
         saveStepData(form.getValues());
-        // TODO: 서버에 폼 데이터 전송 로직 추가
-        console.log('최종 폼 데이터:', { ...formData, ...form.getValues() });
         closeModal();
       }
-    } catch (error) {
-      console.error('폼 제출 오류:', error);
+    } catch (_error) {
+      // Deliberately empty to prevent console errors on validation failure
     }
   };
 

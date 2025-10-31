@@ -7,9 +7,9 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { useDropdown } from '../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
-import { useDropdown } from '../../_hooks/useDropdown';
 
 const StyleStep = () => {
   const {
@@ -77,13 +77,18 @@ const StyleStep = () => {
                         setColorDropdownOpen(false);
                       }
                     }}
+                    role="group"
                   >
                     <StyledDropdownHeader
                       $isOpen={colorDropdownOpen}
                       onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
                       aria-label="색상 선택"
                       aria-expanded={colorDropdownOpen}
-                      aria-activedescendant={colorDropdownOpen && highlightedColorIndex !== -1 ? `color-option-${COLOR_OPTIONS[highlightedColorIndex].id}` : undefined}
+                      aria-activedescendant={
+                        colorDropdownOpen && highlightedColorIndex !== -1
+                          ? `color-option-${COLOR_OPTIONS[highlightedColorIndex].id}`
+                          : undefined
+                      }
                     >
                       <div
                         style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}
@@ -148,13 +153,18 @@ const StyleStep = () => {
                         setIconDropdownOpen(false);
                       }
                     }}
+                    role="group"
                   >
                     <StyledDropdownHeader
                       $isOpen={iconDropdownOpen}
                       onClick={() => setIconDropdownOpen(!iconDropdownOpen)}
                       aria-label="아이콘 선택"
                       aria-expanded={iconDropdownOpen}
-                      aria-activedescendant={iconDropdownOpen && highlightedIconIndex !== -1 ? `icon-option-${ICON_OPTIONS[highlightedIconIndex].id}` : undefined}
+                      aria-activedescendant={
+                        iconDropdownOpen && highlightedIconIndex !== -1
+                          ? `icon-option-${ICON_OPTIONS[highlightedIconIndex].id}`
+                          : undefined
+                      }
                     >
                       <div
                         style={{
@@ -337,7 +347,11 @@ const StyledColorGrid = styled.div`
   padding: 0;
 `;
 
-const StyledColorOption = styled.button.attrs({ type: 'button' })<{ $color: string; $selected: boolean; $highlighted: boolean }>`
+const StyledColorOption = styled.button.attrs({ type: 'button' })<{
+  $color: string;
+  $selected: boolean;
+  $highlighted: boolean;
+}>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -389,7 +403,10 @@ const StyledIconGrid = styled.div`
   overflow-y: auto;
 `;
 
-const StyledIconOption = styled.button.attrs({ type: 'button' })<{ $selected: boolean; $highlighted: boolean }>`
+const StyledIconOption = styled.button.attrs({ type: 'button' })<{
+  $selected: boolean;
+  $highlighted: boolean;
+}>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
