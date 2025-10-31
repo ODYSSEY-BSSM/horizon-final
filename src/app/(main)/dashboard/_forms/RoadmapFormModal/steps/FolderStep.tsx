@@ -8,9 +8,9 @@ import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { useDropdown } from '../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
-import { useDropdown } from '../../_hooks/useDropdown';
 
 const FolderStep = () => {
   const {
@@ -28,13 +28,7 @@ const FolderStep = () => {
     getDisplayText,
   } = useFolderStep();
   const FOLDER_OPTIONS_WITH_NEW = [{ id: 'new', label: '새 폴더' }, ...FOLDER_OPTIONS];
-  const {
-    isOpen,
-    setIsOpen,
-    dropdownRef,
-    highlightedIndex,
-    handleKeyDown,
-  } = useDropdown({
+  const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: FOLDER_OPTIONS_WITH_NEW.length,
     onSelect: (index) => {
       if (index === 0) {
@@ -67,13 +61,18 @@ const FolderStep = () => {
               style={{ position: 'relative' }}
               ref={dropdownRef}
               onKeyDown={handleKeyDown}
+              role="group"
             >
               <StyledDropdownHeader
                 $isOpen={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="폴더 선택"
                 aria-expanded={isOpen}
-                aria-activedescendant={isOpen && highlightedIndex !== -1 ? `folder-option-${FOLDER_OPTIONS_WITH_NEW[highlightedIndex].id}` : undefined}
+                aria-activedescendant={
+                  isOpen && highlightedIndex !== -1
+                    ? `folder-option-${FOLDER_OPTIONS_WITH_NEW[highlightedIndex].id}`
+                    : undefined
+                }
               >
                 <Text
                   as="span"
@@ -109,7 +108,12 @@ const FolderStep = () => {
                   >
                     {option.id === 'new' && (
                       <StyledNewOptionIcon>
-                        <Icon name="add" variant="SM" color={tokens.colors.neutral[600]} decorative />
+                        <Icon
+                          name="add"
+                          variant="SM"
+                          color={tokens.colors.neutral[600]}
+                          decorative
+                        />
                       </StyledNewOptionIcon>
                     )}
                     <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>

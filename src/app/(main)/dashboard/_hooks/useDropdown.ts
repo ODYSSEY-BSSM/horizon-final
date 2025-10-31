@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseDropdownProps {
   itemCount: number;
@@ -37,7 +37,9 @@ export const useDropdown = ({ itemCount, onSelect }: UseDropdownProps) => {
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (!isOpen) return;
+      if (!isOpen) {
+        return;
+      }
 
       switch (event.key) {
         case 'ArrowDown':

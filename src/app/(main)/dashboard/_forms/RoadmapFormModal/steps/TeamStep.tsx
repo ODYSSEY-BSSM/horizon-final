@@ -7,30 +7,16 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { useDropdown } from '../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
-import { useDropdown } from '../../_hooks/useDropdown';
 
 const TeamStep = () => {
-  const {
-    control,
-    errors,
-    isValid,
-    onNext,
-    onPrevious,
-    teamId,
-    hasSelection,
-    getDisplayText,
-  } = useTeamStep();
-  const {
-    isOpen,
-    setIsOpen,
-    dropdownRef,
-    highlightedIndex,
-    handleKeyDown,
-  } = useDropdown({
+  const { control, errors, isValid, onNext, onPrevious, teamId, hasSelection, getDisplayText } =
+    useTeamStep();
+  const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: TEAM_OPTIONS.length,
-    onSelect: (index) => {
+    onSelect: (_index) => {
       // `control` is not directly accessible here, so we call field.onChange inside the render prop
     },
   });
@@ -57,13 +43,18 @@ const TeamStep = () => {
                     setIsOpen(false);
                   }
                 }}
+                role="group"
               >
                 <StyledDropdownHeader
                   $isOpen={isOpen}
                   onClick={() => setIsOpen(!isOpen)}
                   aria-label="팀 선택"
                   aria-expanded={isOpen}
-                  aria-activedescendant={isOpen && highlightedIndex !== -1 ? `team-option-${TEAM_OPTIONS[highlightedIndex].id}` : undefined}
+                  aria-activedescendant={
+                    isOpen && highlightedIndex !== -1
+                      ? `team-option-${TEAM_OPTIONS[highlightedIndex].id}`
+                      : undefined
+                  }
                 >
                   <Text
                     as="span"
