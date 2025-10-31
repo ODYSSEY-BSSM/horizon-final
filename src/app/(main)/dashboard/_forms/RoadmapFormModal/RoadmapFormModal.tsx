@@ -7,7 +7,7 @@ import {
   STEP_TITLES,
 } from '../../_constants/RoadmapFormModal.constants';
 import FormLayout from './_components/FormLayout';
-import type { STEP_HEIGHTS } from './_constants/spacing';
+import { STEP_HEIGHTS } from './_constants/spacing';
 import CategoryStep from './steps/CategoryStep';
 import FolderStep from './steps/FolderStep';
 import InfoStep from './steps/InfoStep';

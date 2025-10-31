@@ -43,6 +43,11 @@ export const TEAM_OPTIONS: DropdownOption[] = [
   { id: 'team4', label: '마케팅팀', value: 'team4' },
 ];
 
+export const CATEGORY_OPTIONS = [
+  { id: 'personal', label: '개인 로드맵', value: 'personal' },
+  { id: 'team', label: '팀 로드맵', value: 'team' },
+];
+
 export const COLOR_OPTIONS: ColorOption[] = [
   { id: 'red', label: 'Red', value: 'red', color: '#dc2626' },
   { id: 'orange', label: 'Orange', value: 'orange', color: '#ea580c' },
