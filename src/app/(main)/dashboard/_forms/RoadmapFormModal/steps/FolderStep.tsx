@@ -15,7 +15,6 @@ const FolderStep = () => {
   const {
     isValid,
     onNext,
-    onPrevious,
     isOpen,
     setIsOpen,
     newFolderMode,
@@ -97,13 +96,7 @@ const FolderStep = () => {
         </StyledDropdownContainer>
       </StyledContent>
 
-      <FormFooter
-        onPrevious={onPrevious}
-        onNext={onNext}
-        isValid={isValid}
-        showPrevious={true}
-        isLastStep={false}
-      />
+      <FormFooter onNext={onNext} isValid={isValid} showPrevious={false} isLastStep={false} />
     </StyledFormContainer>
   );
 };
