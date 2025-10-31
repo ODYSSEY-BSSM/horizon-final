@@ -4,15 +4,12 @@ import styled from '@emotion/styled';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
 import { tokens } from '@/shared/tokens';
 import RoadmapFormModal from './_forms/RoadmapFormModal/RoadmapFormModal';
-import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
-import DashboardHeader from './_sections/DashboardHeader';
 import GreetingSection from './_sections/GreetingSection';
 import InfoCardsGrid from './_sections/InfoCardsGrid';
 import RoadmapSection from './_sections/RoadmapSection';
 
 const DashboardContent = () => {
-  const { handleSearch } = useDashboard();
   const { userData, roadmapsData } = useDashboardData();
   const { openModal } = useRoadmapFormFlow();
 
@@ -22,7 +19,6 @@ const DashboardContent = () => {
 
   return (
     <StyledPageContainer>
-      <DashboardHeader onSearch={handleSearch} />
       <StyledContentContainer>
         <GreetingSection userName={userData.name} />
 
@@ -48,7 +44,7 @@ const StyledPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${tokens.colors.white};
-  padding: 0 60px 80px;
+  padding: 40px 60px 80px;
   box-sizing: border-box;
 `;
 
@@ -57,5 +53,4 @@ const StyledContentContainer = styled.div`
   flex-direction: column;
   gap: ${tokens.spacing.xxlarge};
   width: 100%;
-  max-width: 1080px;
 `;
