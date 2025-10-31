@@ -7,7 +7,10 @@ export const spacing = {
   large: '16px',
   xlarge: '24px',
   xxlarge: '32px',
+  xxxlarge: '40px',
   huge: '48px',
+  xhuge: '60px',
+  xxhuge: '80px',
   gap: {
     small: '6px',
     medium: '8px',
