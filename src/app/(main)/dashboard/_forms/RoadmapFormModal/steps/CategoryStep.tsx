@@ -2,9 +2,10 @@
 
 import styled from '@emotion/styled';
 import { useCategoryStep } from '@/app/(main)/dashboard/_hooks/useCategoryStep';
-import Button from '@/components/common/Button/Button';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import FormFooter from '../_components/FormFooter';
+import { MODAL_SPACING } from '../_constants/spacing';
 
 const CategoryStep = () => {
   const { selectedCategory, handleCategorySelect, onNext, isValid } = useCategoryStep();
@@ -48,17 +49,7 @@ const CategoryStep = () => {
         </StyledCategoryContainer>
       </StyledContent>
 
-      <StyledFormFooter>
-        <Button
-          size="medium"
-          variant="contained"
-          onClick={onNext}
-          disabled={!isValid}
-          aria-label="다음 단계"
-        >
-          다음
-        </Button>
-      </StyledFormFooter>
+      <FormFooter onNext={onNext} isValid={isValid} showPrevious={false} isLastStep={false} />
     </StyledFormContainer>
   );
 };
@@ -72,7 +63,7 @@ const StyledFormContainer = styled.div`
 `;
 
 const StyledContent = styled.div`
-  padding: ${tokens.spacing.large};
+  padding: ${MODAL_SPACING.modal.padding};
   flex: 1;
   display: flex;
   align-items: center;
@@ -82,24 +73,29 @@ const StyledContent = styled.div`
 const StyledCategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.medium};
+  gap: ${tokens.spacing.large};
   width: 100%;
-  max-width: 400px;
 `;
 
 const StyledCategoryOptions = styled.div`
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${MODAL_SPACING.steps.category.button.gap};
   width: 100%;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: ${tokens.spacing.medium};
+  }
 `;
 
 const StyledCategoryOption = styled.button<{ $isSelected: boolean }>`
+  height: ${MODAL_SPACING.steps.category.button.height};
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80px;
-  padding: ${tokens.spacing.small};
-  flex: 1;
+  padding: ${tokens.spacing.large};
   background-color: ${({ $isSelected }) =>
     $isSelected ? tokens.colors.primary[100] : tokens.colors.white};
   border: ${({ $isSelected }) =>
@@ -119,10 +115,4 @@ const StyledCategoryOption = styled.button<{ $isSelected: boolean }>`
     outline: 2px solid ${tokens.colors.primary[500]};
     outline-offset: 2px;
   }
-`;
-
-const StyledFormFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: ${tokens.spacing.large};
 `;

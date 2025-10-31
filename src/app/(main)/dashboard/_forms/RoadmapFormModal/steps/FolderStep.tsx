@@ -8,8 +8,8 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
-
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { MODAL_SPACING } from '../_constants/spacing';
 
 const FolderStep = () => {
   const {
@@ -116,7 +116,7 @@ export default FolderStep;
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.medium};
+  gap: ${tokens.spacing.small};
   width: 100%;
   position: relative;
   z-index: 1;
@@ -128,7 +128,7 @@ const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 48px;
+  height: ${MODAL_SPACING.steps.dropdown.height};
   padding: ${tokens.spacing.small} ${tokens.spacing.medium};
   background-color: ${tokens.colors.white};
   border: ${({ $isOpen }) =>
@@ -159,7 +159,7 @@ const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   border-radius: ${tokens.radius.medium};
   box-shadow: ${tokens.shadow[0]};
   z-index: 1001;
-  max-height: 240px;
+  max-height: ${MODAL_SPACING.steps.dropdown.maxHeight};
   overflow-y: auto;
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
@@ -169,7 +169,7 @@ const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   align-items: center;
   gap: ${tokens.spacing.small};
   width: 100%;
-  height: 48px;
+  height: ${MODAL_SPACING.steps.dropdown.height};
   padding: ${tokens.spacing.small} ${tokens.spacing.medium};
   background-color: ${({ $highlighted }) =>
     $highlighted ? tokens.colors.neutral[100] : tokens.colors.white};
@@ -202,13 +202,13 @@ const StyledFormContainer = styled.div`
 `;
 
 const StyledContent = styled.div`
-  padding: ${tokens.spacing.large};
+  padding: ${MODAL_SPACING.modal.padding};
   flex: 1;
 `;
 
 const StyledFormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding: ${tokens.spacing.large};
+  padding: 0 ${MODAL_SPACING.modal.padding} ${MODAL_SPACING.modal.padding};
   margin-top: auto;
 `;
