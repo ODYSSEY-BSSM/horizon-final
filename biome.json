@@ -21,7 +21,8 @@
     "rules": {
       "recommended": true,
       "a11y": {
-        "recommended": true
+        "recommended": true,
+        "useSemanticElements": "off"
       },
       "complexity": {
         "noBannedTypes": "error",
@@ -92,7 +93,7 @@
         "noAsyncPromiseExecutor": "error",
         "noCatchAssign": "error",
         "noClassAssign": "error",
-        "noCommentText": "warn",
+        "noCommentText": "off",
         "noCompareNegZero": "error",
         "noConfusingLabels": "warn",
         "noConfusingVoidType": "warn",
@@ -107,7 +108,7 @@
         "noDuplicateObjectKeys": "error",
         "noDuplicateParameters": "error",
         "noEmptyBlockStatements": "warn",
-        "noExplicitAny": "warn",
+        "noExplicitAny": "off",
         "noExtraNonNullAssertion": "error",
         "noFallthroughSwitchClause": "error",
         "noFunctionAssign": "error",

@@ -10,13 +10,12 @@ import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
+import { useDropdown } from '../../_hooks/useDropdown';
 
 const FolderStep = () => {
   const {
     isValid,
     onNext,
-    isOpen,
-    setIsOpen,
     newFolderMode,
     newFolderName,
     setNewFolderName,
@@ -28,6 +27,23 @@ const FolderStep = () => {
     handleNewFolderBlur,
     getDisplayText,
   } = useFolderStep();
+  const FOLDER_OPTIONS_WITH_NEW = [{ id: 'new', label: '새 폴더' }, ...FOLDER_OPTIONS];
+  const {
+    isOpen,
+    setIsOpen,
+    dropdownRef,
+    highlightedIndex,
+    handleKeyDown,
+  } = useDropdown({
+    itemCount: FOLDER_OPTIONS_WITH_NEW.length,
+    onSelect: (index) => {
+      if (index === 0) {
+        handleNewFolderClick();
+      } else {
+        handleFolderSelect(FOLDER_OPTIONS_WITH_NEW[index].id);
+      }
+    },
+  });
 
   return (
     <StyledFormContainer>
@@ -47,12 +63,17 @@ const FolderStep = () => {
               autoFocus
             />
           ) : (
-            <div style={{ position: 'relative' }}>
+            <div
+              style={{ position: 'relative' }}
+              ref={dropdownRef}
+              onKeyDown={handleKeyDown}
+            >
               <StyledDropdownHeader
                 $isOpen={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="폴더 선택"
                 aria-expanded={isOpen}
+                aria-activedescendant={isOpen && highlightedIndex !== -1 ? `folder-option-${FOLDER_OPTIONS_WITH_NEW[highlightedIndex].id}` : undefined}
               >
                 <Text
                   as="span"
@@ -69,22 +90,28 @@ const FolderStep = () => {
                 />
               </StyledDropdownHeader>
 
-              <StyledDropdownList $isOpen={isOpen}>
-                <StyledDropdownOption onClick={handleNewFolderClick}>
-                  <StyledNewOptionIcon>
-                    <Icon name="add" variant="SM" color={tokens.colors.neutral[600]} decorative />
-                  </StyledNewOptionIcon>
-                  <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
-                    새 폴더
-                  </Text>
-                </StyledDropdownOption>
-
-                {FOLDER_OPTIONS.map((option) => (
+              <StyledDropdownList $isOpen={isOpen} role="listbox">
+                {FOLDER_OPTIONS_WITH_NEW.map((option, index) => (
                   <StyledDropdownOption
                     key={option.id}
-                    onClick={() => handleFolderSelect(option.id)}
-                    $highlighted={selectedFolder?.id === option.id}
+                    id={`folder-option-${option.id}`}
+                    onClick={() => {
+                      if (option.id === 'new') {
+                        handleNewFolderClick();
+                      } else {
+                        handleFolderSelect(option.id);
+                      }
+                      setIsOpen(false);
+                    }}
+                    $highlighted={highlightedIndex === index}
+                    role="option"
+                    aria-selected={selectedFolder?.id === option.id}
                   >
+                    {option.id === 'new' && (
+                      <StyledNewOptionIcon>
+                        <Icon name="add" variant="SM" color={tokens.colors.neutral[600]} decorative />
+                      </StyledNewOptionIcon>
+                    )}
                     <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
                       {option.label}
                     </Text>
@@ -113,7 +140,7 @@ const StyledDropdownContainer = styled.div`
   flex: 1;
 `;
 
-const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button.attrs({ type: 'button' })<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -154,7 +181,7 @@ const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
 
-const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
+const StyledDropdownOption = styled.button.attrs({ type: 'button' })<{ $highlighted?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};

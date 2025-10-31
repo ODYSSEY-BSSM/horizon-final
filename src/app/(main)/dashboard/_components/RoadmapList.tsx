@@ -86,6 +86,7 @@ const RoadmapList = ({
   onAddRoadmap = () => undefined,
   onViewChange,
   onFilterChange,
+  onPageChange,
   className,
 }: RoadmapListProps) => {
   const {
@@ -107,6 +108,11 @@ const RoadmapList = ({
   const handleFilterChangeInternal = (filter: typeof currentFilter) => {
     handleFilterChange(filter);
     onFilterChange?.(filter);
+  };
+
+  const handlePageChangeInternal = (page: number) => {
+    handlePageChange(page);
+    onPageChange?.(page);
   };
 
   const handleAddRoadmapClick = () => {
@@ -140,7 +146,7 @@ const RoadmapList = ({
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChange={handlePageChangeInternal}
         />
       )}
     </StyledRoadmapListContainer>

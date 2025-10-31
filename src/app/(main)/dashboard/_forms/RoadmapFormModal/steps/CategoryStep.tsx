@@ -4,33 +4,24 @@ import styled from '@emotion/styled';
 import { useCategoryStep } from '@/app/(main)/dashboard/_hooks/useCategoryStep';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import { CATEGORY_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
 const CategoryStep = () => {
   const { selectedCategory, handleCategorySelect, onNext, isValid } = useCategoryStep();
 
-  const categories = [
-    {
-      id: 'personal',
-      label: '개인 로드맵',
-    },
-    {
-      id: 'team',
-      label: '팀 로드맵',
-    },
-  ];
-
   return (
     <StyledFormContainer>
       <StyledContent>
         <StyledCategoryContainer>
           <StyledCategoryOptions>
-            {categories.map((category) => (
+            {CATEGORY_OPTIONS.map((category) => (
               <StyledCategoryOption
                 key={category.id}
                 $isSelected={selectedCategory === category.id}
                 onClick={() => handleCategorySelect(category.id)}
+                aria-pressed={selectedCategory === category.id}
               >
                 <Text
                   as="span"

@@ -38,11 +38,20 @@ export const styleStepSchema = z.object({
 });
 
 // Complete roadmap form validation
-export const roadmapFormSchema = categoryStepSchema
-  .merge(folderStepSchema)
-  .merge(teamStepSchema)
-  .merge(infoStepSchema)
-  .merge(styleStepSchema);
+export const roadmapFormSchema = z.object({
+  category: z.string().optional(),
+  folderId: z.string().optional(),
+  folderName: z.string().trim().min(1).optional(),
+  teamId: z.string().optional(),
+  name: z.string().trim().min(1, '이름을 입력해주세요').max(50, '이름은 50자 이내로 입력해주세요'),
+  description: z
+    .string()
+    .trim()
+    .min(1, '설명을 입력해주세요')
+    .max(200, '설명은 200자 이내로 입력해주세요'),
+  color: z.string(),
+  icon: z.string(),
+});
 
 // Type exports for form data
 export type CategoryStepFormData = z.infer<typeof categoryStepSchema>;

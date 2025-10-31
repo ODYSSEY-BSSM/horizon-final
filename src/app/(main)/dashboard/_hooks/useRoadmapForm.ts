@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
+import type { RoadmapFormData } from '@/lib/types/modal';
 import {
   type CategoryStepFormData,
   categoryStepSchema,
@@ -8,7 +9,6 @@ import {
   folderStepSchema,
   type InfoStepFormData,
   infoStepSchema,
-  type RoadmapFormData,
   roadmapFormSchema,
   type StyleStepFormData,
   styleStepSchema,
@@ -17,13 +17,23 @@ import {
 } from '@/lib/validations/roadmap';
 
 export const useRoadmapForm = () => {
-  const { formData, saveStepData, goToStep, closeModal } = useRoadmapFormFlow();
+  const { formData } = useRoadmapFormFlow();
+
+  const normalizedValues: RoadmapFormData = {
+    category: formData.category ?? '',
+    folderId: formData.folderId,
+    folderName: formData.folderName ?? '',
+    teamId: formData.teamId ?? '',
+    name: formData.name ?? '',
+    description: formData.description ?? '',
+    color: formData.color ?? 'red',
+    icon: formData.icon ?? 'language',
+  };
 
   const form = useForm<RoadmapFormData>({
     resolver: zodResolver(roadmapFormSchema),
     mode: 'onChange',
-    defaultValues: formData,
-    values: formData as RoadmapFormData,
+    values: normalizedValues,
   });
 
   const handleSubmit = async (_data: RoadmapFormData) => {
@@ -150,7 +160,7 @@ export const useInfoStepForm = () => {
 };
 
 export const useStyleStepForm = () => {
-  const { formData, saveStepData, goToStep } = useRoadmapFormFlow();
+  const { formData, saveStepData, goToStep, closeModal } = useRoadmapFormFlow();
 
   const form = useForm<StyleStepFormData>({
     resolver: zodResolver(styleStepSchema),
@@ -165,14 +175,15 @@ export const useStyleStepForm = () => {
     saveStepData(data);
 
     try {
-      // API call simulation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Close modal after successful submission
-      const { closeModal } = useRoadmapFormFlow.getState();
-      closeModal();
-    } catch (_error) {
-      // Error handled silently for now
+      await form.trigger();
+      if (form.formState.isValid) {
+        saveStepData(form.getValues());
+        // TODO: 서버에 폼 데이터 전송 로직 추가
+        console.log('최종 폼 데이터:', { ...formData, ...form.getValues() });
+        closeModal();
+      }
+    } catch (error) {
+      console.error('폼 제출 오류:', error);
     }
   };
 

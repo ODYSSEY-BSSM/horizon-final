@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { tokens } from '@/shared/tokens';
 import { MODAL_SPACING, STEP_HEIGHTS } from '../_constants/spacing';
 import FormHeader from './FormHeader';
@@ -15,6 +15,17 @@ interface FormLayoutProps {
 }
 
 const FormLayout = ({ title, description, children, currentStep, onClose }: FormLayoutProps) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
     <StyledModalBackdrop
       onClick={(e) => {

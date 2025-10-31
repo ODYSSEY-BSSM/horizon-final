@@ -9,6 +9,7 @@ import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
+import { useDropdown } from '../../_hooks/useDropdown';
 
 const StyleStep = () => {
   const {
@@ -16,18 +17,30 @@ const StyleStep = () => {
     isValid,
     onComplete,
     onPrevious,
-    colorDropdownOpen,
-    iconDropdownOpen,
-    setColorDropdownOpen,
-    setIconDropdownOpen,
     color,
     icon,
     selectedColor,
     selectedIcon,
     getGradient,
-    handleColorDropdownToggle,
-    handleIconDropdownToggle,
   } = useStyleStep();
+  const {
+    isOpen: colorDropdownOpen,
+    setIsOpen: setColorDropdownOpen,
+    dropdownRef: colorDropdownRef,
+    highlightedIndex: highlightedColorIndex,
+    handleKeyDown: handleColorKeyDown,
+  } = useDropdown({
+    itemCount: COLOR_OPTIONS.length,
+  });
+  const {
+    isOpen: iconDropdownOpen,
+    setIsOpen: setIconDropdownOpen,
+    dropdownRef: iconDropdownRef,
+    highlightedIndex: highlightedIconIndex,
+    handleKeyDown: handleIconKeyDown,
+  } = useDropdown({
+    itemCount: ICON_OPTIONS.length,
+  });
 
   return (
     <StyledFormContainer>
@@ -54,12 +67,23 @@ const StyleStep = () => {
                   <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
                     컬러
                   </Text>
-                  <div style={{ position: 'relative' }}>
+                  <div
+                    style={{ position: 'relative' }}
+                    ref={colorDropdownRef}
+                    onKeyDown={(e) => {
+                      handleColorKeyDown(e);
+                      if (e.key === 'Enter' && highlightedColorIndex !== -1) {
+                        field.onChange(COLOR_OPTIONS[highlightedColorIndex].value);
+                        setColorDropdownOpen(false);
+                      }
+                    }}
+                  >
                     <StyledDropdownHeader
                       $isOpen={colorDropdownOpen}
-                      onClick={handleColorDropdownToggle}
+                      onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
                       aria-label="색상 선택"
                       aria-expanded={colorDropdownOpen}
+                      aria-activedescendant={colorDropdownOpen && highlightedColorIndex !== -1 ? `color-option-${COLOR_OPTIONS[highlightedColorIndex].id}` : undefined}
                     >
                       <div
                         style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}
@@ -77,17 +101,21 @@ const StyleStep = () => {
                       />
                     </StyledDropdownHeader>
 
-                    <StyledDropdownList $isOpen={colorDropdownOpen}>
+                    <StyledDropdownList $isOpen={colorDropdownOpen} role="listbox">
                       <StyledColorGrid>
-                        {COLOR_OPTIONS.map((option) => (
+                        {COLOR_OPTIONS.map((option, index) => (
                           <StyledColorOption
                             key={option.id}
+                            id={`color-option-${option.id}`}
                             $color={option.color}
                             $selected={color === option.value}
                             onClick={() => {
                               field.onChange(option.value);
                               setColorDropdownOpen(false);
                             }}
+                            $highlighted={highlightedColorIndex === index}
+                            role="option"
+                            aria-selected={color === option.value}
                           >
                             <StyledColorSwatch $color={option.color} />
                             <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
@@ -110,12 +138,23 @@ const StyleStep = () => {
                   <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
                     아이콘
                   </Text>
-                  <div style={{ position: 'relative' }}>
+                  <div
+                    style={{ position: 'relative' }}
+                    ref={iconDropdownRef}
+                    onKeyDown={(e) => {
+                      handleIconKeyDown(e);
+                      if (e.key === 'Enter' && highlightedIconIndex !== -1) {
+                        field.onChange(ICON_OPTIONS[highlightedIconIndex].value);
+                        setIconDropdownOpen(false);
+                      }
+                    }}
+                  >
                     <StyledDropdownHeader
                       $isOpen={iconDropdownOpen}
-                      onClick={handleIconDropdownToggle}
+                      onClick={() => setIconDropdownOpen(!iconDropdownOpen)}
                       aria-label="아이콘 선택"
                       aria-expanded={iconDropdownOpen}
+                      aria-activedescendant={iconDropdownOpen && highlightedIconIndex !== -1 ? `icon-option-${ICON_OPTIONS[highlightedIconIndex].id}` : undefined}
                     >
                       <div
                         style={{
@@ -145,16 +184,20 @@ const StyleStep = () => {
                       />
                     </StyledDropdownHeader>
 
-                    <StyledDropdownList $isOpen={iconDropdownOpen}>
+                    <StyledDropdownList $isOpen={iconDropdownOpen} role="listbox">
                       <StyledIconGrid>
-                        {ICON_OPTIONS.map((option) => (
+                        {ICON_OPTIONS.map((option, index) => (
                           <StyledIconOption
                             key={option.id}
+                            id={`icon-option-${option.id}`}
                             $selected={icon === option.value}
                             onClick={() => {
                               field.onChange(option.value);
                               setIconDropdownOpen(false);
                             }}
+                            $highlighted={highlightedIconIndex === index}
+                            role="option"
+                            aria-selected={icon === option.value}
                           >
                             <StyledIconContainer>
                               <Icon
@@ -247,7 +290,7 @@ const StyledDropdownContainer = styled.div`
   flex: 1;
 `;
 
-const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button.attrs({ type: 'button' })<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -294,7 +337,7 @@ const StyledColorGrid = styled.div`
   padding: 0;
 `;
 
-const StyledColorOption = styled.button<{ $color: string; $selected: boolean }>`
+const StyledColorOption = styled.button.attrs({ type: 'button' })<{ $color: string; $selected: boolean; $highlighted: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -321,6 +364,13 @@ const StyledColorOption = styled.button<{ $color: string; $selected: boolean }>`
     background-color: ${tokens.colors.primary[100]};
     color: ${tokens.colors.primary[500]};
   `}
+
+  ${({ $highlighted }) =>
+    $highlighted &&
+    `
+    background-color: ${tokens.colors.primary[100]};
+    color: ${tokens.colors.primary[500]};
+  `}
 `;
 
 const StyledColorSwatch = styled.div<{ $color: string }>`
@@ -339,7 +389,7 @@ const StyledIconGrid = styled.div`
   overflow-y: auto;
 `;
 
-const StyledIconOption = styled.button<{ $selected: boolean }>`
+const StyledIconOption = styled.button.attrs({ type: 'button' })<{ $selected: boolean; $highlighted: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
@@ -362,6 +412,13 @@ const StyledIconOption = styled.button<{ $selected: boolean }>`
 
   ${({ $selected }) =>
     $selected &&
+    `
+    background-color: ${tokens.colors.primary[100]};
+    color: ${tokens.colors.primary[500]};
+  `}
+
+  ${({ $highlighted }) =>
+    $highlighted &&
     `
     background-color: ${tokens.colors.primary[100]};
     color: ${tokens.colors.primary[500]};
