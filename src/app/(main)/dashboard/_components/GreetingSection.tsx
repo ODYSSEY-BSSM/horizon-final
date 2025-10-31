@@ -1,4 +1,4 @@
-import { GreetingMessage } from '..';
+import GreetingMessage from './GreetingMessage';
 
 interface GreetingSectionProps {
   userName: string;

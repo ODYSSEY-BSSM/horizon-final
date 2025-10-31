@@ -2,7 +2,10 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import { DashboardHeader, GreetingSection, InfoCardsGrid, RoadmapSection } from './_components';
+import DashboardHeader from './_components/DashboardHeader';
+import GreetingSection from './_components/GreetingSection';
+import InfoCardsGrid from './_components/InfoCardsGrid';
+import RoadmapSection from './_components/RoadmapSection';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
 
