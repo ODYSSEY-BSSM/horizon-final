@@ -1,5 +1,5 @@
 export const CARD_CONFIGS = {
-  MY_ROADMAPS: {
+  'my-roadmaps': {
     icon: 'map',
     label: '내 로드맵',
     emptyMessage: '0',
