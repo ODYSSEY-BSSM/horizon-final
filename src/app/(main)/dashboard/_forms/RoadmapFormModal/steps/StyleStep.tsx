@@ -8,6 +8,7 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
+import { MODAL_SPACING } from '../_constants/spacing';
 
 const StyleStep = () => {
   const {
@@ -206,27 +207,27 @@ const StyledFormContainer = styled.div`
 `;
 
 const StyledContent = styled.div`
-  padding: ${tokens.spacing.large};
+  padding: ${MODAL_SPACING.modal.padding};
   flex: 1;
 `;
 
 const StyledFormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 20px;
-  padding: ${tokens.spacing.large};
+  gap: ${MODAL_SPACING.footer.buttonGap};
+  padding: 0 ${MODAL_SPACING.modal.padding} ${MODAL_SPACING.modal.padding};
   margin-top: auto;
 `;
 
 const StyledStyleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.large};
+  gap: ${MODAL_SPACING.steps.style.containerGap};
 `;
 
 const StyledThumbnailPreview = styled.div<{ $color: string }>`
   width: 100%;
-  height: 148px;
+  height: ${MODAL_SPACING.steps.style.thumbnail.height};
   border-radius: ${tokens.radius.medium};
   background: ${({ $color }) => $color};
   display: flex;
@@ -247,14 +248,14 @@ const StyledThumbnailIcon = styled.div`
 
 const StyledStyleSelectors = styled.div`
   display: flex;
-  gap: ${tokens.spacing.medium};
+  gap: ${MODAL_SPACING.steps.style.containerGap};
   width: 100%;
 `;
 
 const StyledDropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.medium};
+  gap: ${tokens.spacing.small};
   width: 100%;
   position: relative;
   z-index: 1;
@@ -266,7 +267,7 @@ const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 48px;
+  height: ${MODAL_SPACING.steps.dropdown.height};
   padding: ${tokens.spacing.small} ${tokens.spacing.medium};
   background-color: ${tokens.colors.white};
   border: ${({ $isOpen }) =>
@@ -296,8 +297,8 @@ const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   border: 1px solid ${tokens.colors.neutral[200]};
   border-radius: ${tokens.radius.medium};
   box-shadow: ${tokens.shadow[0]};
-  z-index: 1001;
-  max-height: 240px;
+  z-index: 10000;
+  max-height: ${MODAL_SPACING.steps.dropdown.maxHeight};
   overflow-y: auto;
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
@@ -312,7 +313,7 @@ const StyledColorOption = styled.button<{ $color: string; $selected: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
-  height: 48px;
+  height: ${MODAL_SPACING.steps.dropdown.height};
   padding: ${tokens.spacing.small} ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
   border: none;
@@ -349,7 +350,7 @@ const StyledIconGrid = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0;
-  max-height: 264px;
+  max-height: ${MODAL_SPACING.steps.dropdown.maxHeight};
   overflow-y: auto;
 `;
 
@@ -357,7 +358,7 @@ const StyledIconOption = styled.button<{ $selected: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
-  height: 48px;
+  height: ${MODAL_SPACING.steps.dropdown.height};
   padding: ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
   border: none;

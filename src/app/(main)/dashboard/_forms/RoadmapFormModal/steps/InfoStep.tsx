@@ -3,9 +3,9 @@
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
 import { useInfoStep } from '@/app/(main)/dashboard/_hooks/useInfoStep';
-import Button from '@/components/common/Button/Button';
 import TextField from '@/components/common/TextField/TextField';
-import { tokens } from '@/shared/tokens';
+import FormFooter from '../_components/FormFooter';
+import { MODAL_SPACING } from '../_constants/spacing';
 
 const InfoStep = () => {
   const { control, onNext, onPrevious, isValid } = useInfoStep();
@@ -44,33 +44,18 @@ const InfoStep = () => {
         />
       </StyledFieldContainer>
 
-      <StyledFormFooter>
-        <Button size="medium" variant="outlined" onClick={onPrevious} aria-label="이전 단계">
-          이전
-        </Button>
-        <Button
-          size="medium"
-          variant="contained"
-          onClick={onNext}
-          disabled={!isValid}
-          aria-label="다음 단계"
-        >
-          다음
-        </Button>
-      </StyledFormFooter>
+      <FormFooter
+        onPrevious={onPrevious}
+        onNext={onNext}
+        isValid={isValid}
+        showPrevious={true}
+        isLastStep={false}
+      />
     </StyledFormContainer>
   );
 };
 
 export default InfoStep;
-
-const StyledFieldContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.xlarge};
-  padding: ${tokens.spacing.large};
-  flex: 1;
-`;
 
 const StyledFormContainer = styled.div`
   display: flex;
@@ -78,9 +63,10 @@ const StyledFormContainer = styled.div`
   height: 100%;
 `;
 
-const StyledFormFooter = styled.div`
+const StyledFieldContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  padding: ${tokens.spacing.large};
-  gap: 20px;
+  flex-direction: column;
+  gap: ${MODAL_SPACING.steps.info.fieldGap};
+  padding: ${MODAL_SPACING.modal.padding};
+  flex: 1;
 `;
