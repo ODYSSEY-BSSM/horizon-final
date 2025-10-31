@@ -43,19 +43,26 @@ export const useDropdown = ({ itemCount, onSelect }: UseDropdownProps) => {
 
       switch (event.key) {
         case 'ArrowDown':
+          if (itemCount === 0) {
+            break;
+          }
           event.preventDefault();
           setHighlightedIndex((prev) => (prev + 1) % itemCount);
           break;
         case 'ArrowUp':
+          if (itemCount === 0) {
+            break;
+          }
           event.preventDefault();
           setHighlightedIndex((prev) => (prev - 1 + itemCount) % itemCount);
           break;
         case 'Enter':
           event.preventDefault();
-          if (highlightedIndex !== -1) {
-            onSelect?.(highlightedIndex);
-            closeDropdown();
+          if (itemCount === 0 || highlightedIndex === -1) {
+            break;
           }
+          onSelect?.(highlightedIndex);
+          closeDropdown();
           break;
         case 'Escape':
           closeDropdown();

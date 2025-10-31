@@ -18,6 +18,7 @@ const CategoryStep = () => {
           <StyledCategoryOptions>
             {CATEGORY_OPTIONS.map((category) => (
               <StyledCategoryOption
+                type="button"
                 key={category.id}
                 $isSelected={selectedCategory === category.id}
                 onClick={() => handleCategorySelect(category.id)}

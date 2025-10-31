@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useId } from 'react';
 
 import { useFolderStep } from '@/app/(main)/dashboard/_hooks/useFolderStep';
 import Icon from '@/components/common/Icon/Icon';
@@ -8,11 +9,14 @@ import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../_hooks/useDropdown';
+import { useDropdown } from '../../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
 const FolderStep = () => {
+  const labelId = useId();
+  const dropdownButtonId = `${labelId}-button`;
+  const newFolderInputId = `${labelId}-input`;
   const {
     isValid,
     onNext,
@@ -43,12 +47,20 @@ const FolderStep = () => {
     <StyledFormContainer>
       <StyledContent>
         <StyledDropdownContainer>
-          <Text as="label" variant="B1" color={tokens.colors.neutral[500]}>
+          <Text
+            as="label"
+            id={labelId}
+            htmlFor={newFolderMode ? newFolderInputId : dropdownButtonId}
+            variant="B1"
+            color={tokens.colors.neutral[500]}
+          >
             폴더
           </Text>
 
           {newFolderMode ? (
             <TextField
+              id={newFolderInputId}
+              aria-labelledby={labelId}
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={handleNewFolderSubmit}
@@ -64,6 +76,10 @@ const FolderStep = () => {
               role="group"
             >
               <StyledDropdownHeader
+                type="button"
+                id={dropdownButtonId}
+                aria-labelledby={labelId}
+                aria-haspopup="listbox"
                 $isOpen={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="폴더 선택"
@@ -92,6 +108,7 @@ const FolderStep = () => {
               <StyledDropdownList $isOpen={isOpen} role="listbox">
                 {FOLDER_OPTIONS_WITH_NEW.map((option, index) => (
                   <StyledDropdownOption
+                    type="button"
                     key={option.id}
                     id={`folder-option-${option.id}`}
                     onClick={() => {
@@ -144,7 +161,7 @@ const StyledDropdownContainer = styled.div`
   flex: 1;
 `;
 
-const StyledDropdownHeader = styled.button.attrs({ type: 'button' })<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -185,7 +202,7 @@ const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
 
-const StyledDropdownOption = styled.button.attrs({ type: 'button' })<{ $highlighted?: boolean }>`
+const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};

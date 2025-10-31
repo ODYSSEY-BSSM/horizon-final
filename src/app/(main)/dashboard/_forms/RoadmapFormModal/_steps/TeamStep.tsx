@@ -7,7 +7,7 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../_hooks/useDropdown';
+import { useDropdown } from '../../../_hooks/useDropdown';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
@@ -46,6 +46,7 @@ const TeamStep = () => {
                 role="group"
               >
                 <StyledDropdownHeader
+                  type="button"
                   $isOpen={isOpen}
                   onClick={() => setIsOpen(!isOpen)}
                   aria-label="팀 선택"
@@ -74,6 +75,7 @@ const TeamStep = () => {
                 <StyledDropdownList $isOpen={isOpen} role="listbox">
                   {TEAM_OPTIONS.map((option, index) => (
                     <StyledDropdownOption
+                      type="button"
                       key={option.id}
                       id={`team-option-${option.id}`}
                       onClick={() => {
@@ -124,7 +126,7 @@ const StyledDropdownContainer = styled.div`
   flex: 1;
 `;
 
-const StyledDropdownHeader = styled.button.attrs({ type: 'button' })<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -165,7 +167,7 @@ const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
 
-const StyledDropdownOption = styled.button.attrs({ type: 'button' })<{ $highlighted?: boolean }>`
+const StyledDropdownOption = styled.button<{ $highlighted?: boolean }>`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};

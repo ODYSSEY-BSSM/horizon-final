@@ -10,20 +10,22 @@ interface FormHeaderProps {
   title: string;
   description: string;
   onClose: () => void;
+  titleId: string;
+  descriptionId: string;
 }
 
-const FormHeader = ({ title, description, onClose }: FormHeaderProps) => {
+const FormHeader = ({ title, description, onClose, titleId, descriptionId }: FormHeaderProps) => {
   return (
     <StyledFormHeader>
       <StyledHeaderTop>
-        <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
+        <Text as="h2" variant="H2" color={tokens.colors.neutral[800]} id={titleId}>
           {title}
         </Text>
         <StyledCloseButton onClick={onClose} aria-label="닫기">
           <Icon name="close" variant="LG" color={tokens.colors.neutral[400]} decorative />
         </StyledCloseButton>
       </StyledHeaderTop>
-      <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
+      <Text as="p" variant="B1" color={tokens.colors.neutral[600]} id={descriptionId}>
         {description}
       </Text>
     </StyledFormHeader>
