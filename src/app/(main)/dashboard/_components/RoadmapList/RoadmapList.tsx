@@ -4,6 +4,7 @@ import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import RoadmapCard from '../RoadmapCard/RoadmapCard';
 import { FILTERS, ROADMAP_COLORS } from './RoadmapList.constants';
 import { useRoadmapList } from './RoadmapList.hooks';
 import {
@@ -33,6 +34,7 @@ import {
   ProgressContainer,
   ProgressFill,
   ProgressText,
+  ThumbnailGridContainer,
   ViewButton,
   ViewToggle,
 } from './RoadmapList.styles';
@@ -230,11 +232,21 @@ const RoadmapList = ({
         onAddRoadmap={onAddRoadmap}
       />
       <FilterTap currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
-      <ListItemsContainer>
-        {paginatedItems.map((item) => (
-          <RoadmapListItem key={item.id} item={item} />
-        ))}
-      </ListItemsContainer>
+
+      {currentView === 'list' ? (
+        <ListItemsContainer>
+          {paginatedItems.map((item) => (
+            <RoadmapListItem key={item.id} item={item} />
+          ))}
+        </ListItemsContainer>
+      ) : (
+        <ThumbnailGridContainer data-node-id="4510:4092">
+          {paginatedItems.map((item) => (
+            <RoadmapCard key={item.id} item={item} />
+          ))}
+        </ThumbnailGridContainer>
+      )}
+
       {totalPages > 0 && (
         <Pagination
           currentPage={currentPage}
