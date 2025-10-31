@@ -28,7 +28,7 @@ export default function DashboardError({
         </BrandingSection>
 
         <ErrorIconContainer>
-          <Icon name="dashboard" variant="XL" color={tokens.colors.error[500]} decorative />
+          <Icon name="dashboard" variant="XL" color={tokens.colors.error[200]} decorative />
         </ErrorIconContainer>
 
         <ErrorMessageSection>

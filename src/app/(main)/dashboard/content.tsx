@@ -2,11 +2,9 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import { DashboardHeader, GreetingSection } from './_components';
+import { DashboardHeader, GreetingSection, InfoCardsGrid, RoadmapSection } from './_components';
 import { useDashboard } from './_hooks/useDashboard';
 import { useDashboardData } from './_hooks/useDashboardData';
-import InfoCardsGrid from './_sections/InfoCardsGrid';
-import RoadmapSection from './_sections/RoadmapSection';
 
 const PageContainer = styled.div`
   display: flex;
