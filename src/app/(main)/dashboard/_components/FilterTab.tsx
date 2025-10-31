@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 
-import { Typography } from '@/components/common';
-import { tokens } from '@/styles/tokens';
-
-import type { FilterType } from '../../_types/filter.type';
-import { FILTER_OPTIONS } from '../_constants/filter.constants';
+import Text from '@/components/common/Text/Text';
+import type { FilterType } from '@/lib/types/dashboard';
+import { tokens } from '@/shared/tokens';
+import { FILTER_OPTIONS } from '../_constants/FilterTab.constants';
 
 interface FilterTabProps {
   currentFilter: FilterType;
@@ -20,7 +19,7 @@ const FilterTab = ({ currentFilter, onFilterChange }: FilterTabProps) => {
           $isSelected={currentFilter === key}
           onClick={() => onFilterChange(key as FilterType)}
         >
-          <Typography variant="B2_M">{value}</Typography>
+          <Text variant="B2">{value}</Text>
         </StyledTabItem>
       ))}
     </StyledFilterTab>

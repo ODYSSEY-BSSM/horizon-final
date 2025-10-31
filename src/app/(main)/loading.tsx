@@ -34,7 +34,16 @@ export default function MainLoading() {
 
             <StyledContentArea>
               <Skeleton height={32} width={250} />
-              <Skeleton height={136} width="100%" />
+              <StyledInfoCardsGridSkeleton>
+                {Array.from({ length: 3 }, (_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
+                  <StyledInfoCardSkeleton key={i}>
+                    <Skeleton height={20} width={120} />
+                    <Skeleton height={40} width={80} />
+                    <Skeleton height={16} width={100} />
+                  </StyledInfoCardSkeleton>
+                ))}
+              </StyledInfoCardsGridSkeleton>
               <StyledContentGrid>
                 {Array.from({ length: 6 }, (_, i) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
@@ -119,6 +128,23 @@ const StyledContentArea = styled.div`
   flex-direction: column;
   gap: ${tokens.spacing.xxlarge};
   width: 1080px;
+`;
+
+const StyledInfoCardsGridSkeleton = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${tokens.spacing.large};
+`;
+
+const StyledInfoCardSkeleton = styled.div`
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[200]};
+  border-radius: ${tokens.radius.large};
+  padding: ${tokens.spacing.large};
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+  height: 136px;
 `;
 
 const StyledContentGrid = styled.div`
