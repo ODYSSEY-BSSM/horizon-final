@@ -5,6 +5,7 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import type { RoadmapCategory } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
+import { CARD_CONFIGS } from '../_constants/InfoCard.constants';
 
 interface InfoCardProps {
   className?: string;
@@ -15,27 +16,6 @@ interface InfoCardProps {
   hasItem?: boolean;
 }
 
-const CARD_CONFIGS = {
-  'my-roadmaps': {
-    icon: 'map',
-    label: '내 로드맵',
-    emptyMessage: '0',
-    subLabel: (count: number) => `${count}개 로드맵 진행중`,
-  },
-  'team-roadmaps': {
-    icon: 'group',
-    label: '팀 로드맵',
-    emptyMessage: '0',
-    subLabel: (count: number) => `${count}개 팀 참여중`,
-  },
-  'connected-school': {
-    icon: 'school',
-    label: '연결된 학교',
-    emptyMessage: '연결되지 않았습니다.',
-    subLabel: () => '연결된 학교가 없습니다',
-  },
-} as const;
-
 const InfoCard = ({
   category,
   count = 0,
@@ -44,17 +24,12 @@ const InfoCard = ({
   hasItem = false,
   className,
 }: InfoCardProps) => {
-  const config = CARD_CONFIGS[category] as {
-    icon: string;
-    label: string;
-    emptyMessage: string;
-    subLabel: (count: number) => string;
-  };
+  const config = CARD_CONFIGS[category as keyof typeof CARD_CONFIGS];
   const isSchoolCard = category === 'connected-school';
   const hasSchool = isSchoolCard && hasItem && schoolName;
 
   return (
-    <CardContainer className={className} data-node-id="4452:681">
+    <StyledCardContainer className={className}>
       <CardContent>
         <LabelSection>
           <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
@@ -107,11 +82,11 @@ const InfoCard = ({
           decorative
         />
       </IconContainer>
-    </CardContainer>
+    </StyledCardContainer>
   );
 };
 
-const CardContainer = styled.div`
+const StyledCardContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -23,30 +23,30 @@ const GreetingMessage = ({ userName = '홍길동', date, className }: GreetingMe
   const displayDate = date || currentDate;
 
   return (
-    <Container className={className} data-node-id="4510:2271">
+    <StyledGreetingMessageContainer className={className}>
       <Text as="span" variant="ST" color={tokens.colors.neutral[600]}>
         {displayDate}
       </Text>
-      <GreetingContainer>
+      <StyledGreetingContainer>
         <Text as="span" variant="H2" color={tokens.colors.black}>
           &gt;
         </Text>
         <Text as="span" variant="H2" color={tokens.colors.black}>
           {userName}님, 돌아오셨군요!
         </Text>
-      </GreetingContainer>
-    </Container>
+      </StyledGreetingContainer>
+    </StyledGreetingMessageContainer>
   );
 };
 
-const Container = styled.div`
+const StyledGreetingMessageContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
 `;
 
-const GreetingContainer = styled.div`
+const StyledGreetingContainer = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
