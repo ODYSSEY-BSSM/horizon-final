@@ -8,6 +8,7 @@ export const ListContainer = styled.div`
   border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};
   overflow: hidden;
+  box-shadow: ${tokens.shadow[0]};
 `;
 
 // ListHeader Styles
@@ -334,6 +335,15 @@ export const ListItemsContainer = styled.div`
   padding: ${tokens.spacing.xxlarge};
   background-color: ${tokens.colors.white};
   max-height: 944px;
+`;
+
+// Thumbnail Grid Container
+export const ThumbnailGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 246px);
+  gap: ${tokens.spacing.medium};
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
 `;
 
 // Pagination Styles

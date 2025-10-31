@@ -12,6 +12,7 @@ export const CardContainer = styled.div`
   border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};
   box-sizing: border-box;
+  box-shadow: ${tokens.shadow[0]};
 `;
 
 export const CardContent = styled.div`

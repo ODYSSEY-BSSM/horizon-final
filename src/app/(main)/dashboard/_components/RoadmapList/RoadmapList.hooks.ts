@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
-import { ITEMS_PER_PAGE } from './RoadmapList.constants';
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from './RoadmapList.constants';
 
 export const useRoadmapList = (items: RoadmapItem[] = []) => {
   const [currentView, setCurrentView] = useState<ViewType>('list');
@@ -28,16 +28,18 @@ export const useRoadmapList = (items: RoadmapItem[] = []) => {
     });
   }, [items, currentFilter]);
 
-  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+  const itemsPerPage = currentView === 'thumbnail' ? ITEMS_PER_PAGE_THUMBNAIL : ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   const paginatedItems = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
     return filteredItems.slice(startIndex, endIndex);
-  }, [filteredItems, currentPage]);
+  }, [filteredItems, currentPage, itemsPerPage]);
 
   const handleViewChange = (view: ViewType) => {
     setCurrentView(view);
+    setCurrentPage(1); // Reset to first page when view changes
   };
 
   const handleFilterChange = (filter: FilterType) => {
