@@ -5,7 +5,7 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
-import { TEAM_OPTIONS } from '../RoadmapFormModal.constants';
+import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import {
   DropdownContainer,
   DropdownHeader,

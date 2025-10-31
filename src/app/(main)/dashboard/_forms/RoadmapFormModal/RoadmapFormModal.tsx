@@ -11,7 +11,7 @@ import {
   STEP_DESCRIPTIONS,
   STEP_TITLES,
   TOTAL_STEPS,
-} from './RoadmapFormModal.constants';
+} from '../../_constants/RoadmapFormModal.constants';
 import {
   CloseButton,
   Divider,

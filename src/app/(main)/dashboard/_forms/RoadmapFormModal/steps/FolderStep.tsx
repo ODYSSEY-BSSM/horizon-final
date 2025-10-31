@@ -6,7 +6,7 @@ import Text from '@/components/common/Text/Text';
 import TextField from '@/components/common/TextField/TextField';
 import type { FormStepProps } from '@/lib/types/modal';
 import { tokens } from '@/shared/tokens';
-import { FOLDER_OPTIONS } from '../RoadmapFormModal.constants';
+import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import {
   DropdownContainer,
   DropdownHeader,
