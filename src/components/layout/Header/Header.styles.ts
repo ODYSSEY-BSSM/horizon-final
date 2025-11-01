@@ -7,16 +7,16 @@ export const HeaderContainer = styled.header`
   align-items: center;
   justify-content: space-between;
   height: ${HEADER_HEIGHT};
-  padding: ${tokens.spacing.xlarge} 60px;
   background-color: ${tokens.colors.white};
   box-sizing: border-box;
   width: 100%;
+  padding: 24px 60px;
 `;
 
 export const BreadcrumbNav = styled.nav`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.xxsmall};
+  gap: ${tokens.spacing.xxlarge};
 `;
 
 export const BreadcrumbItem = styled.span`
@@ -50,7 +50,7 @@ export const SearchBarContainer = styled.div`
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
   border-radius: 20px;
-  padding: 6px 6px 6px 18px;
+  padding: 6px 8px 6px 18px;
   box-sizing: border-box;
 `;
 
@@ -79,7 +79,8 @@ export const SearchIconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${tokens.spacing.xxsmall};
+  width: 32px;
+  height: 32px;
   background-color: ${tokens.colors.neutral[200]};
   border: none;
   border-radius: 14px;
