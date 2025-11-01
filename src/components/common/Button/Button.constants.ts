@@ -117,4 +117,4 @@ export const buttonStyles = {
   },
 } as const;
 
-export const BLOCKED_PROPS = new Set(['size', 'variant', 'iconPosition', 'rounded']);
+export const BLOCKED_PROPS = new Set(['size', 'variant', 'iconPosition', 'rounded', 'active']);

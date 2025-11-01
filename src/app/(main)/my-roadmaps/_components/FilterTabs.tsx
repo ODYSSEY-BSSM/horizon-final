@@ -1,26 +1,12 @@
 'use client';
 
+import { FILTER_TABS } from '../_constants/FilterTabs.constants';
 import { FilterTab, FilterTabButton, FilterTabsContainer } from './FilterTabs.styles';
-import type { FilterTabsProps, FilterTab as TFilterTab } from './FilterTabs.types';
-
-const TABS: TFilterTab[] = [
-  {
-    value: 'latest',
-    label: '최신순',
-  },
-  {
-    value: 'progress',
-    label: '진행률',
-  },
-  {
-    value: 'name',
-    label: '이름순',
-  },
-];
+import type { FilterTabsProps } from './FilterTabs.types';
 
 const FilterTabs = ({ activeTab, onTabClick }: FilterTabsProps) => (
   <FilterTabsContainer>
-    {TABS.map((tab) => (
+    {FILTER_TABS.map((tab) => (
       <FilterTab key={tab.value} active={activeTab === tab.value}>
         <FilterTabButton
           variant="outlined"
