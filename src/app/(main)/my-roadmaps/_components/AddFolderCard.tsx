@@ -48,7 +48,7 @@ const StyledAddFolderCard = styled.div`
 
   &:hover {
     border-color: ${tokens.colors.neutral[400]};
-    background-color: ${tokens.colors.neutral[50]};
+    background-color: ${tokens.colors.neutral[100]};
   }
 `;
 
