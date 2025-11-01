@@ -41,7 +41,7 @@ const Sidebar = ({ className, ...restProps }: SidebarProps) => {
 
   return (
     <SidebarContainer className={className}>
-      <LogoArea>
+      <LogoArea href="/">
         <LogoImage>
           <Image src="/logo.svg" alt="HORIZON Logo" width={40} height={40} priority />
         </LogoImage>

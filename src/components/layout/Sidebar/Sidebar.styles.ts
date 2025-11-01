@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import Link from 'next/link';
 import { tokens } from '@/shared/tokens';
 import { SIDEBAR_WIDTH } from './Sidebar.constants';
 
@@ -15,13 +16,14 @@ export const SidebarContainer = styled.aside`
   flex-shrink: 0;
 `;
 
-export const LogoArea = styled.div`
+export const LogoArea = styled(Link)`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
   padding: ${tokens.spacing.small} ${tokens.spacing.xsmall};
   height: 64px;
   box-sizing: border-box;
+  text-decoration: none;
 `;
 
 export const LogoImage = styled.div`

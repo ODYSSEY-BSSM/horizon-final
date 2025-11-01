@@ -21,7 +21,7 @@ const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
       {items.map((item, index) => (
-        <span key={item}>
+        <span key={index}>
           {index > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
           <Text as="span" variant="ST" color={tokens.colors.neutral[700]}>
             {item}
@@ -48,7 +48,13 @@ const SearchBar = ({ onSearch, placeholder = DEFAULT_SEARCH_PLACEHOLDER }: Searc
           aria-label="로드맵 검색"
         />
         <SearchIconButton type="button" onClick={handleSearchClick} aria-label="검색">
-          <Icon name="search" variant="SM" color={tokens.colors.neutral[400]} decorative />
+          <Icon
+            name="search"
+            variant="SM"
+            color={tokens.colors.neutral[400]}
+            size={20}
+            decorative
+          />
         </SearchIconButton>
       </SearchBarContainer>
     </form>
