@@ -30,7 +30,7 @@ const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: ${tokens.spacing.large} 0;
+  padding: 0;
 `;
 
 const StyledCreateButton = styled.button`
