@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
@@ -77,7 +78,7 @@ const FolderCard = ({ folder }: FolderCardProps) => {
               {folder.lastRoadmap}
             </StyledRoadmapName>
           </StyledLastRoadmapInfo>
-          <StyledContinueLink as="span" variant="B1" color={tokens.colors.primary[500]}>
+          <StyledContinueLink variant="outlined" size="medium">
             계속하기
           </StyledContinueLink>
         </StyledLastRoadmap>
@@ -186,11 +187,20 @@ const StyledRoadmapName = styled(Text)`
   max-width: 144px;
 `;
 
-const StyledContinueLink = styled(Text)`
+const StyledContinueLink = styled(Button)`
   cursor: pointer;
   flex-shrink: 0;
-  
+  padding: 0;
+  border: none;
+  outline: none;
+
   &:hover {
-    opacity: 0.8;
+    background-color: transparent;
+    color: ${tokens.colors.primary[500]};
+  }
+
+  &:active {
+    background-color: transparent;
+    color: ${tokens.colors.primary[500]};
   }
 `;
