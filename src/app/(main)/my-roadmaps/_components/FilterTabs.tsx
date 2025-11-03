@@ -5,6 +5,11 @@ import Button from '@/components/common/Button/Button';
 import { tokens } from '@/shared/tokens';
 import { FILTER_TABS } from '../_constants/FilterTabs.constants';
 
+export interface FilterTab {
+  value: string;
+  label: string;
+}
+
 interface FilterTabsProps {
   activeTab: string;
   onTabClick: (value: string) => void;
@@ -63,7 +68,7 @@ const StyledUnderlinedButton = styled(Button)<{ active?: boolean }>`
   outline: none;
   height: 52px;
   padding: 10px 4px;
-  color: ${({ active, theme }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
+  color: ${({ active }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
 
   &:hover {
     background-color: transparent;

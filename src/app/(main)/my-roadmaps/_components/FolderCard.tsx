@@ -11,7 +11,7 @@ export interface Folder {
   id: number;
   name: string;
   description: string;
-  progress: number;
+  progress: number; // 0-100 범위
   roadmapCount: number;
   completedCount: number;
   lastRoadmap: string;
@@ -104,7 +104,7 @@ const StyledFolderItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.medium};
-  width: 333.33px;
+  width: 336px;
   box-sizing: border-box;
 `;
 
@@ -152,7 +152,7 @@ const StyledProgressBar = styled.div`
 `;
 
 const StyledProgressFill = styled.div<{ $progress: number }>`
-  width: ${({ $progress }) => $progress}%;
+  width: ${({ $progress }) => Math.min(100, Math.max(0, $progress))}%;
   height: 100%;
   background-color: ${tokens.colors.primary[500]};
   transition: width 0.3s ease;

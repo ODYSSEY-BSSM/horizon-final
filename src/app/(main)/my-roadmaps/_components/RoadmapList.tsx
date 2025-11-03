@@ -4,12 +4,25 @@ import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import FilterTabs from './FilterTabs';
 
 export interface RoadmapListProps {
   className?: string;
+  viewMode?: 'list' | 'thumbnail';
+  onViewModeChange?: (mode: 'list' | 'thumbnail') => void;
+  onCreateRoadmap?: () => void;
+  activeTab: string;
+  onTabClick: (value: string) => void;
 }
 
-const RoadmapList = ({ className }: RoadmapListProps) => {
+const RoadmapList = ({
+  className,
+  viewMode = 'list',
+  onViewModeChange,
+  onCreateRoadmap,
+  activeTab,
+  onTabClick,
+}: RoadmapListProps) => {
   return (
     <StyledContainer className={className}>
       <StyledHeader>
@@ -18,20 +31,49 @@ const RoadmapList = ({ className }: RoadmapListProps) => {
             로드맵 리스트
           </StyledTitle>
           <StyledViewToggle>
-            <StyledToggleItem $active>
-              <Icon name="list" variant="MD" color={tokens.colors.black} decorative />
-              <Text as="span" variant="B1" color={tokens.colors.neutral[700]}>
+            <StyledToggleItem
+              $active={viewMode === 'list'}
+              onClick={() => onViewModeChange?.('list')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && onViewModeChange?.('list')}
+            >
+              <Icon
+                name="list"
+                variant="MD"
+                color={viewMode === 'list' ? tokens.colors.black : tokens.colors.neutral[500]}
+                decorative
+              />
+              <Text
+                as="span"
+                variant="B1"
+                color={
+                  viewMode === 'list' ? tokens.colors.neutral[700] : tokens.colors.neutral[500]
+                }
+              >
                 리스트
               </Text>
             </StyledToggleItem>
-            <StyledToggleItem>
+            <StyledToggleItem
+              $active={viewMode === 'thumbnail'}
+              onClick={() => onViewModeChange?.('thumbnail')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && onViewModeChange?.('thumbnail')}
+            >
               <Icon
                 name="calendar_view_month"
                 variant="MD"
-                color={tokens.colors.neutral[500]}
+                color={viewMode === 'thumbnail' ? tokens.colors.black : tokens.colors.neutral[500]}
                 decorative
               />
-              <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
+              <Text
+                as="span"
+                variant="B1"
+                color={
+                  viewMode === 'thumbnail' ? tokens.colors.neutral[700] : tokens.colors.neutral[500]
+                }
+              >
                 썸네일
               </Text>
             </StyledToggleItem>
@@ -39,39 +81,18 @@ const RoadmapList = ({ className }: RoadmapListProps) => {
         </StyledHeaderContent>
       </StyledHeader>
 
-      <StyledFilterTabs>
-        <StyledFilterTab $active>
-          <Text as="span" variant="B1" color={tokens.colors.primary[500]}>
-            전체
-          </Text>
-        </StyledFilterTab>
-        <StyledFilterTab>
-          <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
-            내 로드맵
-          </Text>
-        </StyledFilterTab>
-        <StyledFilterTab>
-          <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
-            팀 로드맵
-          </Text>
-        </StyledFilterTab>
-        <StyledFilterTab>
-          <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
-            학습 완료
-          </Text>
-        </StyledFilterTab>
-        <StyledFilterTab>
-          <Text as="span" variant="B1" color={tokens.colors.neutral[500]}>
-            학습 진행중
-          </Text>
-        </StyledFilterTab>
-      </StyledFilterTabs>
+      <FilterTabs activeTab={activeTab} onTabClick={onTabClick} />
 
       <StyledEmptyState>
         <Text as="p" variant="ST" color={tokens.colors.neutral[600]}>
           아직 로드맵이 없습니다.
         </Text>
-        <StyledCreateLink as="p" variant="B1" color={tokens.colors.primary[500]}>
+        <StyledCreateLink
+          as="button"
+          variant="B1"
+          color={tokens.colors.primary[500]}
+          onClick={onCreateRoadmap}
+        >
           새 로드맵 만들기
         </StyledCreateLink>
       </StyledEmptyState>
@@ -124,14 +145,14 @@ const StyledToggleItem = styled.div<{ $active?: boolean }>`
   cursor: pointer;
 `;
 
-const StyledFilterTabs = styled.div`
+const _StyledFilterTabs = styled.div`
   display: flex;
   gap: ${tokens.spacing.large};
   padding: 0 ${tokens.spacing.large};
   border-bottom: 1px solid ${tokens.colors.neutral[100]};
 `;
 
-const StyledFilterTab = styled.div<{ $active?: boolean }>`
+const _StyledFilterTab = styled.div<{ $active?: boolean }>`
   padding: ${tokens.spacing.small} ${tokens.spacing.xxsmall};
   border-bottom: 2px solid ${({ $active }) => ($active ? tokens.colors.primary[500] : 'transparent')};
   cursor: pointer;
@@ -152,4 +173,13 @@ const StyledEmptyState = styled.div`
 
 const StyledCreateLink = styled(Text)`
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
+  }
 `;

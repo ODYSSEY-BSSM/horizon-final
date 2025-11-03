@@ -1,4 +1,4 @@
-import type { FilterTab } from '../_components/FilterTabs.types';
+import type { FilterTab } from '../_components/FilterTabs';
 
 export const FILTER_TABS: FilterTab[] = [
   {

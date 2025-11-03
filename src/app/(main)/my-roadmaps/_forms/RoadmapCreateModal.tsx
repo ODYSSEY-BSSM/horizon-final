@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
@@ -9,7 +9,7 @@ import { tokens } from '@/shared/tokens';
 export interface RoadmapCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { title: string; description: string }) => void;
+  onSubmit: (data: { title: string; description: string }) => void | Promise<void>;
 }
 
 const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalProps) => {
@@ -17,6 +17,33 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
     title: '',
     description: '',
   });
+  const titleRef = useRef<HTMLTextAreaElement>(null);
+  const modalTitleId = useId();
+
+  useEffect(() => {
+    if (!isOpen) {
+      setFormData({ title: '', description: '' });
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      titleRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;
@@ -24,8 +51,14 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData({ title: '', description: '' });
+    Promise.resolve(onSubmit(formData))
+      .then(() => {
+        setFormData({ title: '', description: '' });
+        onClose();
+      })
+      .catch(() => {
+        // NOTE: 실패 시 별도 에러 처리는 기획상 불필요하여 비워둠
+      });
   };
 
   const handleChange =
@@ -35,10 +68,15 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
 
   return (
     <StyledOverlay onClick={onClose}>
-      <StyledModal onClick={(e) => e.stopPropagation()}>
+      <StyledModal
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={modalTitleId}
+      >
         <StyledHeader>
           <StyledHeaderTop>
-            <Text as="h2" variant="H3" color={tokens.colors.neutral[800]}>
+            <Text as="h2" variant="H3" color={tokens.colors.neutral[800]} id={modalTitleId}>
               로드맵 생성
             </Text>
             <StyledCloseButton onClick={onClose}>
@@ -54,7 +92,6 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
             </Text>
           </StyledHeaderContent>
         </StyledHeader>
-
         <StyledForm onSubmit={handleSubmit}>
           <StyledFormFields>
             <StyledTextField>
@@ -64,6 +101,7 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
                 </Text>
               </StyledLabel>
               <StyledTextArea
+                ref={titleRef}
                 value={formData.title}
                 onChange={handleChange('title')}
                 placeholder="로드맵 제목을 입력하세요"
@@ -75,7 +113,7 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
             <StyledTextField>
               <StyledLabel>
                 <Text as="label" variant="B1" color={tokens.colors.neutral[700]}>
-                  설명
+                  설명 (선택)
                 </Text>
               </StyledLabel>
               <StyledInput
@@ -86,7 +124,6 @@ const RoadmapCreateModal = ({ isOpen, onClose, onSubmit }: RoadmapCreateModalPro
               />
             </StyledTextField>
           </StyledFormFields>
-
           <StyledActions>
             <StyledSubmitButton type="submit">
               <Text as="span" variant="B1" color={tokens.colors.white}>

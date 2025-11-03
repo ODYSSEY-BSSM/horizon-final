@@ -7,7 +7,6 @@ import { tokens } from '@/shared/tokens';
 
 interface AddFolderCardProps {
   onClick: () => void;
-  key: string;
 }
 
 const AddFolderCard = ({ onClick }: AddFolderCardProps) => {
