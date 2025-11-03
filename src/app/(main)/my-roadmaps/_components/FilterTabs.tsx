@@ -15,9 +15,14 @@ const FilterTabs = ({ activeTab, onTabClick }: FilterTabsProps) => {
     <StyledFilterTabsContainer>
       {FILTER_TABS.map((tab) => (
         <StyledFilterTab key={tab.value} active={activeTab === tab.value}>
-          <Button variant="outlined" size="small" onClick={() => onTabClick(tab.value)}>
+          <StyledUnderlinedButton
+            variant="outlined"
+            size="small"
+            onClick={() => onTabClick(tab.value)}
+            active={activeTab === tab.value}
+          >
             {tab.label}
-          </Button>
+          </StyledUnderlinedButton>
         </StyledFilterTab>
       ))}
     </StyledFilterTabsContainer>
@@ -47,5 +52,26 @@ const StyledFilterTab = styled.div<{ active?: boolean }>`
     height: 2px;
     background-color: ${tokens.colors.primary[500]};
     display: ${({ active }) => (active ? 'block' : 'none')};
+  }
+`;
+
+const StyledUnderlinedButton = styled(Button)<{ active?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  height: 52px;
+  padding: 10px 4px;
+  color: ${({ active, theme }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
+
+  &:hover {
+    background-color: transparent;
+    color: ${tokens.colors.primary[500]};
+  }
+
+  &:active {
+    background-color: transparent;
+    color: ${tokens.colors.primary[500]};
   }
 `;
