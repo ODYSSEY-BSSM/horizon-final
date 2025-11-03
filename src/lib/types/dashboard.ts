@@ -5,6 +5,7 @@ export interface MenuItem {
   icon: string;
   label: string;
   checked?: boolean;
+  path: string;
 }
 
 export type RoadmapCategory = 'my-roadmaps' | 'team-roadmaps' | 'connected-school';

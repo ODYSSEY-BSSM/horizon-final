@@ -37,7 +37,7 @@ export const TEXT_VARIANTS = {
   },
   C: {
     fontSize: 12 as const,
-    fontWeight: 'light' as const,
+    fontWeight: 'medium' as const,
     lineHeight: 18 as const,
     letterSpacing: 1 as const,
   },

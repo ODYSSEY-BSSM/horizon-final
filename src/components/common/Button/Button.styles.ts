@@ -77,8 +77,14 @@ export const getPadding = (size: ButtonSize, iconPosition: IconPosition) => {
   return `${VERTICAL_PADDING} ${horizontal}`;
 };
 
-export const getButtonStyle = (variant: ButtonVariant, disabled: boolean) => {
-  return buttonStyles[variant][disabled ? 'disabled' : 'default'];
+export const getButtonStyle = (variant: ButtonVariant, disabled: boolean, active: boolean) => {
+  if (disabled) {
+    return buttonStyles[variant].disabled;
+  }
+  if (active) {
+    return buttonStyles[variant].active ?? buttonStyles[variant].default;
+  }
+  return buttonStyles[variant].default;
 };
 
 const shouldForwardProp = (prop: string): boolean => {
@@ -115,7 +121,7 @@ export const StyledButton = styled('button', { shouldForwardProp })<StyledButton
   padding: ${({ size, iconPosition }) => getPadding(size, iconPosition)};
   border-radius: ${({ rounded }) => (rounded ? radius.xlarge : radius.medium)};
   
-  ${({ variant, disabled }) => getButtonStyle(variant, disabled)}
+  ${({ variant, disabled, active }) => getButtonStyle(variant, disabled, active ?? false)}
   ${({ variant }) => getFocusStyles(variant)}
 `;
 

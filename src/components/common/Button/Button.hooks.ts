@@ -16,6 +16,7 @@ export const useButton = <T extends React.ElementType = 'button'>(
     disabled = false,
     type = 'button',
     'aria-label': ariaLabel,
+    active = false,
     ...restProps
   } = props;
 
@@ -29,6 +30,7 @@ export const useButton = <T extends React.ElementType = 'button'>(
     iconPosition,
     rounded,
     disabled,
+    active,
   };
 
   const ariaProps = {
