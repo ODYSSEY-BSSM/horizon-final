@@ -64,6 +64,11 @@ export const buttonStyles = {
         background-color: ${colors.primary[900]};
       }
     `,
+    active: css`
+      background-color: ${colors.primary[900]};
+      color: ${colors.white};
+      border: none;
+    `,
     disabled: css`
       cursor: not-allowed;
       background-color: ${colors.neutral[300]};
@@ -87,6 +92,11 @@ export const buttonStyles = {
         color: ${colors.white};
       }
     `,
+    active: css`
+      background-color: ${colors.primary[900]};
+      color: ${colors.white};
+      border: 1px solid ${colors.primary[500]};
+    `,
     disabled: css`
       cursor: not-allowed;
       background-color: transparent;
@@ -108,6 +118,11 @@ export const buttonStyles = {
         background-color: ${colors.primary[100]};
       }
     `,
+    active: css`
+      background-color: ${colors.primary[100]};
+      border: none;
+      color: ${colors.primary[500]};
+    `,
     disabled: css`
       cursor: not-allowed;
       background-color: transparent;
@@ -117,4 +132,4 @@ export const buttonStyles = {
   },
 } as const;
 
-export const BLOCKED_PROPS = new Set(['size', 'variant', 'iconPosition', 'rounded', 'active']);
+export const BLOCKED_PROPS = new Set(['size', 'variant', 'iconPosition', 'rounded']);

@@ -6,6 +6,22 @@ import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 
+function getErrorMessage(error: Error): string {
+  const message = error.message || '';
+
+  if (message.includes('네트워크') || message.includes('network')) {
+    return '네트워크 연결을 확인해주세요.';
+  }
+  if (message.includes('권한') || message.includes('auth')) {
+    return '로그인이 만료되었습니다. 다시 로그인해주세요.';
+  }
+  if (message.includes('서버') || message.includes('server')) {
+    return '서버에 일시적인 문제가 발생했습니다.';
+  }
+
+  return message || '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+}
+
 export default function MyRoadmapsError({
   error,
   reset,
@@ -36,15 +52,9 @@ export default function MyRoadmapsError({
             내 로드맵에 접근할 수 없습니다
           </Text>
           <Text variant="B2" color={tokens.colors.neutral[600]}>
-            {error.message?.includes('네트워크') || error.message?.includes('network')
-              ? '네트워크 연결을 확인해주세요.'
-              : error.message?.includes('권한') || error.message?.includes('auth')
-                ? '로그인이 만료되었습니다. 다시 로그인해주세요.'
-                : error.message?.includes('서버') || error.message?.includes('server')
-                  ? '서버에 일시적인 문제가 발생했습니다.'
-                  : error.message || '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'}
+            {getErrorMessage(error)}
           </Text>
-          {process.env.NODE_ENV === 'development' && (
+          {process.env.NODE_ENV === 'development' && error.stack && (
             <StyledDebugDetails>
               <StyledDebugSummary>기술적 세부사항</StyledDebugSummary>
               <StyledDebugPre>{error.stack}</StyledDebugPre>

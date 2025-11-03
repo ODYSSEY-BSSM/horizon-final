@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import type React from 'react';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
@@ -10,8 +11,21 @@ interface AddFolderCardProps {
 }
 
 const AddFolderCard = ({ onClick }: AddFolderCardProps) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <StyledAddFolderCard onClick={onClick}>
+    <StyledAddFolderCard
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      aria-label="새 폴더 생성"
+    >
       <StyledAddFolderContent>
         <StyledAddIcon>
           <Icon name="add" variant="MD" color={tokens.colors.neutral[400]} decorative />
@@ -36,7 +50,7 @@ const StyledAddFolderCard = styled.div`
   border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.white};
   height: 226px;
-  width: 333px;
+  width: 336px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,6 +62,11 @@ const StyledAddFolderCard = styled.div`
   &:hover {
     border-color: ${tokens.colors.neutral[400]};
     background-color: ${tokens.colors.neutral[100]};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
   }
 `;
 
