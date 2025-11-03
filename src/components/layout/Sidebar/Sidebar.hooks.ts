@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { MenuItemType } from '@/lib/types/dashboard';
 import { MENU_ITEMS } from './Sidebar.constants';
@@ -5,10 +6,16 @@ import type { SidebarProps } from './Sidebar.types';
 
 export const useSidebar = ({ selected: initialSelected, onMenuSelect }: SidebarProps) => {
   const [selected, setSelected] = useState<MenuItemType>(initialSelected || 'dashboard');
+  const router = useRouter();
 
   const handleMenuClick = (id: MenuItemType) => {
     setSelected(id);
     onMenuSelect?.(id);
+
+    const menuItem = MENU_ITEMS.find((item) => item.id === id);
+    if (menuItem?.path) {
+      router.push(menuItem.path);
+    }
   };
 
   return {

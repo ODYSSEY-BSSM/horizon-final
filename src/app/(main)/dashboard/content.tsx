@@ -44,7 +44,7 @@ const StyledPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${tokens.colors.white};
-  padding: 40px 60px 80px;
+  padding: 0 60px 80px;
   box-sizing: border-box;
 `;
 
