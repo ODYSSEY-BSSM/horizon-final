@@ -63,7 +63,7 @@ const StyledUnderlinedButton = styled(Button)<{ active?: boolean }>`
   outline: none;
   height: 52px;
   padding: 10px 4px;
-  color: ${({ active, theme }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
+  color: ${({ active }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
 
   &:hover {
     background-color: transparent;
