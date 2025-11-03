@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
@@ -21,6 +22,12 @@ interface FolderCardProps {
 }
 
 const FolderCard = ({ folder }: FolderCardProps) => {
+  const router = useRouter();
+
+  const handleContinueClick = () => {
+    router.push(`/my-roadmaps/${folder.id}`);
+  };
+
   return (
     <StyledFolderItem>
       <StyledFolderHeader>
@@ -78,7 +85,7 @@ const FolderCard = ({ folder }: FolderCardProps) => {
               {folder.lastRoadmap}
             </StyledRoadmapName>
           </StyledLastRoadmapInfo>
-          <StyledContinueLink variant="outlined" size="medium">
+          <StyledContinueLink variant="outlined" size="medium" onClick={handleContinueClick}>
             계속하기
           </StyledContinueLink>
         </StyledLastRoadmap>
