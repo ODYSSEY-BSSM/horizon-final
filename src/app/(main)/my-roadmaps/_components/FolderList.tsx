@@ -133,7 +133,8 @@ const StyledFolderGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${tokens.spacing.medium};
-  width: 1032px;
+  width: 100%;
+  max-width: 1032px;
 `;
 
 const StyledPaginationWrapper = styled.div`

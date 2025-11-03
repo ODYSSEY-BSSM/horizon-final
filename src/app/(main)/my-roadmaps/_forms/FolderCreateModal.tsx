@@ -26,6 +26,7 @@ const FolderCreateModal = ({ isOpen, onClose, onSubmit }: FolderCreateModalProps
     e.preventDefault();
     onSubmit(formData);
     setFormData({ name: '', description: '' });
+    onClose();
   };
 
   const handleChange =

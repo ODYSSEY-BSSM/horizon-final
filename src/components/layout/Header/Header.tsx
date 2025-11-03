@@ -21,7 +21,7 @@ const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
       {items.map((item, index) => (
-        <span key={index}>
+        <span key={item}>
           {index > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
           <Text as="span" variant="ST" color={tokens.colors.neutral[700]}>
             {item}

@@ -90,7 +90,10 @@ const StyleSettingModal = ({ isOpen, onClose, onSubmit }: StyleSettingModalProps
 
         <StyledForm onSubmit={handleSubmit}>
           <StyledPreviewSection>
-            <RoadmapThumbnail />
+            <RoadmapThumbnail
+              gradient={colorOptions.find((c) => c.value === selectedColor)?.gradient}
+              iconName={selectedIcon}
+            />
           </StyledPreviewSection>
 
           <StyledStyleOptions>

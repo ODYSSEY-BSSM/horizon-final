@@ -18,6 +18,7 @@ export interface ButtonProps<T extends React.ElementType = 'button'> {
   'aria-label'?: string;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
+  active?: boolean;
 }
 
 export interface StyledButtonProps {
@@ -26,4 +27,5 @@ export interface StyledButtonProps {
   iconPosition: IconPosition;
   rounded: boolean;
   disabled: boolean;
+  active?: boolean;
 }
