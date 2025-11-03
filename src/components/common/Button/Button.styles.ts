@@ -78,10 +78,13 @@ export const getPadding = (size: ButtonSize, iconPosition: IconPosition) => {
 };
 
 export const getButtonStyle = (variant: ButtonVariant, disabled: boolean, active: boolean) => {
+  if (disabled) {
+    return buttonStyles[variant].disabled;
+  }
   if (active) {
     return buttonStyles[variant].active ?? buttonStyles[variant].default;
   }
-  return buttonStyles[variant][disabled ? 'disabled' : 'default'];
+  return buttonStyles[variant].default;
 };
 
 const shouldForwardProp = (prop: string): boolean => {
