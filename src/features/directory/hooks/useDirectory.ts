@@ -9,7 +9,7 @@ import {
   updateTeamDirectory as updateTeamDirectoryApi,
 } from '../api/directoryApi';
 import { useDirectoryStore } from '../store/directoryStore';
-import type { CreateDirectoryRequest, UpdateDirectoryRequest } from './types';
+import type { CreateDirectoryRequest, UpdateDirectoryRequest } from '../types';
 
 export const useDirectory = () => {
   const queryClient = useQueryClient();

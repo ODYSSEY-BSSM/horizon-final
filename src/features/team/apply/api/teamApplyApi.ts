@@ -3,7 +3,7 @@ import type {
   ApplyToTeamResponse,
   ApproveApplicationResponse,
   RejectApplicationResponse,
-} from './types';
+} from '../types';
 
 export const applyToTeam = async (teamId: number): Promise<ApplyToTeamResponse> => {
   const response = await axiosInstance.post<ApplyToTeamResponse>(`/apply/${teamId}`);

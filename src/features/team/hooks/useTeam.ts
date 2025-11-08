@@ -5,7 +5,7 @@ import {
   getTeam as getTeamApi,
 } from '../api/teamApi';
 import { useTeamStore } from '../store/teamStore';
-import type { CreateTeamRequest } from './types';
+import type { CreateTeamRequest } from '../types';
 
 export const useTeam = () => {
   const queryClient = useQueryClient();

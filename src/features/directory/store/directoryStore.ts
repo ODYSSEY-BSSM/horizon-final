@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Directory } from './types';
+import type { Directory } from '../types';
 
 interface DirectoryStore {
   directories: Directory[];

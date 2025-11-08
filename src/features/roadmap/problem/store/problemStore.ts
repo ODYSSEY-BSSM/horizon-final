@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Problem } from './types';
+import type { Problem } from '../types';
 
 interface ProblemStore {
   problemsByRoadmap: Record<number, Problem[]>;

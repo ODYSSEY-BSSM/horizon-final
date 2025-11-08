@@ -1,5 +1,5 @@
 import axiosInstance from '@/shared/api/instance';
-import type { ApiResponse, CreateNodeRequest, Node, UpdateNodeRequest } from './types';
+import type { ApiResponse, CreateNodeRequest, Node, UpdateNodeRequest } from '../types';
 
 const NODE_API_URL = (roadmapId: number) => `/roadmap/${roadmapId}/nodes`;
 

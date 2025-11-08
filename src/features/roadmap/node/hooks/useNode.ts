@@ -12,7 +12,7 @@ import type {
   Node,
   UpdateNodeRequest,
   UserCursor,
-} from './types';
+} from '../types';
 
 export const useNode = (roadmapId: number) => {
   const _queryClient = useQueryClient();

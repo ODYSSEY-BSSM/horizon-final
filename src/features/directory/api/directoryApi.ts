@@ -8,7 +8,7 @@ import type {
   UpdateDirectoryRequest,
   UpdateDirectoryResponse,
   UpdateTeamDirectoryResponse,
-} from './types';
+} from '../types';
 
 // Personal Directory API
 export const getDirectories = async (): Promise<GetDirectoriesResponse> => {

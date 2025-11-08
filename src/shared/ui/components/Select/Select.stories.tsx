@@ -51,95 +51,93 @@ const basicOptions: SelectOption[] = [
 ];
 
 export const Default: Story = {
-  render: () => {
+  args: {
+    options: basicOptions,
+  },
+  render: (args) => {
     const [value, setValue] = useState<string>();
-    return <Select options={basicOptions} value={value} onChange={setValue} />;
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const WithLabel: Story = {
-  render: () => {
+  args: {
+    label: '카테고리 선택',
+    options: basicOptions,
+    placeholder: '카테고리를 선택하세요',
+  },
+  render: (args) => {
     const [value, setValue] = useState<string>();
-    return (
-      <Select
-        label="카테고리 선택"
-        options={basicOptions}
-        value={value}
-        onChange={setValue}
-        placeholder="카테고리를 선택하세요"
-      />
-    );
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const WithHelperText: Story = {
-  render: () => {
+  args: {
+    label: '프로그래밍 언어',
+    options: [
+      { value: 'js', label: 'JavaScript' },
+      { value: 'ts', label: 'TypeScript' },
+      { value: 'py', label: 'Python' },
+      { value: 'java', label: 'Java' },
+    ],
+    helperText: '가장 선호하는 언어를 선택하세요',
+  },
+  render: (args) => {
     const [value, setValue] = useState<string>();
-    return (
-      <Select
-        label="프로그래밍 언어"
-        options={[
-          { value: 'js', label: 'JavaScript' },
-          { value: 'ts', label: 'TypeScript' },
-          { value: 'py', label: 'Python' },
-          { value: 'java', label: 'Java' },
-        ]}
-        value={value}
-        onChange={setValue}
-        helperText="가장 선호하는 언어를 선택하세요"
-      />
-    );
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const WithNewBadge: Story = {
-  render: () => {
-    const [value, setValue] = useState<string>();
-    const options: SelectOption[] = [
+  args: {
+    label: '요금제 선택',
+    options: [
       { value: 'basic', label: '기본 플랜' },
       { value: 'pro', label: '프로 플랜', isNew: true },
       { value: 'enterprise', label: '엔터프라이즈 플랜', isNew: true },
-    ];
-    return (
-      <Select
-        label="요금제 선택"
-        options={options}
-        value={value}
-        onChange={setValue}
-        placeholder="요금제를 선택하세요"
-      />
-    );
+    ],
+    placeholder: '요금제를 선택하세요',
+  },
+  render: (args) => {
+    const [value, setValue] = useState<string>();
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const ErrorState: Story = {
-  render: () => {
+  args: {
+    label: '필수 선택',
+    options: basicOptions,
+    error: true,
+    errorMessage: '항목을 선택해주세요',
+  },
+  render: (args) => {
     const [value, setValue] = useState<string>();
     return (
       <div style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <Select
-          label="필수 선택"
-          options={basicOptions}
-          value={value}
-          onChange={setValue}
-          error
-          errorMessage="항목을 선택해주세요"
-        />
+        <Select {...args} value={value} onChange={setValue} />
       </div>
     );
   },
 };
 
 export const DisabledState: Story = {
-  render: () => (
+  args: {
+    label: '비활성화',
+    options: basicOptions,
+    placeholder: '선택할 수 없습니다',
+    disabled: true,
+  },
+  render: (args) => (
     <div style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Select label="비활성화" options={basicOptions} placeholder="선택할 수 없습니다" disabled />
-      <Select label="비활성화 (값 있음)" options={basicOptions} value="1" disabled />
+      <Select {...args} />
+      <Select {...args} label="비활성화 (값 있음)" value="1" />
     </div>
   ),
 };
 
-export const RealWorldExamples: Story = {
+export const RealWorldExamples: any = {
   render: () => {
     const [country, setCountry] = useState<string>();
     const [difficulty, setDifficulty] = useState<string>();
@@ -189,69 +187,58 @@ export const RealWorldExamples: Story = {
 };
 
 export const ManyOptions: Story = {
-  render: () => {
-    const [value, setValue] = useState<string>();
-    const manyOptions: SelectOption[] = Array.from({ length: 20 }, (_, i) => ({
+  args: {
+    label: '많은 옵션',
+    options: Array.from({ length: 20 }, (_, i) => ({
       value: `${i + 1}`,
       label: `옵션 ${i + 1}`,
-    }));
-
-    return (
-      <Select
-        label="많은 옵션"
-        options={manyOptions}
-        value={value}
-        onChange={setValue}
-        placeholder="스크롤 가능한 목록"
-      />
-    );
+    })),
+    placeholder: '스크롤 가능한 목록',
+  },
+  render: (args) => {
+    const [value, setValue] = useState<string>();
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const RoadmapCategories: Story = {
-  render: () => {
-    const [value, setValue] = useState<string>();
-    const options: SelectOption[] = [
+  args: {
+    label: '로드맵 카테고리',
+    options: [
       { value: 'frontend', label: '프론트엔드' },
       { value: 'backend', label: '백엔드' },
       { value: 'devops', label: 'DevOps', isNew: true },
       { value: 'mobile', label: '모바일' },
       { value: 'ai', label: 'AI/ML', isNew: true },
       { value: 'design', label: '디자인' },
-    ];
-
-    return (
-      <Select
-        label="로드맵 카테고리"
-        options={options}
-        value={value}
-        onChange={setValue}
-        placeholder="학습하고 싶은 분야를 선택하세요"
-        helperText="NEW 태그가 있는 카테고리는 최근 추가된 항목입니다"
-      />
-    );
+    ],
+    placeholder: '학습하고 싶은 분야를 선택하세요',
+    helperText: 'NEW 태그가 있는 카테고리는 최근 추가된 항목입니다',
+  },
+  render: (args) => {
+    const [value, setValue] = useState<string>();
+    return <Select {...args} value={value} onChange={setValue} />;
   },
 };
 
 export const FullWidth: Story = {
-  render: () => {
+  args: {
+    label: '전체 너비 선택',
+    options: basicOptions,
+    fullWidth: true,
+    helperText: '부모 요소의 전체 너비를 차지합니다',
+  },
+  render: (args) => {
     const [value, setValue] = useState<string>();
     return (
       <div style={{ width: '100%', maxWidth: '600px' }}>
-        <Select
-          label="전체 너비 선택"
-          options={basicOptions}
-          value={value}
-          onChange={setValue}
-          fullWidth
-          helperText="부모 요소의 전체 너비를 차지합니다"
-        />
+        <Select {...args} value={value} onChange={setValue} />
       </div>
     );
   },
 };
 
-export const FormIntegration: Story = {
+export const FormIntegration: any = {
   render: () => {
     const [category, setCategory] = useState<string>();
     const [level, setLevel] = useState<string>();

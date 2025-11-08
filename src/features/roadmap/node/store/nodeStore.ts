@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Node, UserCursor } from './types';
+import type { Node, UserCursor } from '../types';
 
 interface NodeStore {
   nodes: Record<number, Node[]>;

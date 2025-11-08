@@ -4,7 +4,7 @@ import type {
   CreateTeamResponse,
   DeleteTeamResponse,
   GetTeamResponse,
-} from './types';
+} from '../types';
 
 export const createTeam = async (data: CreateTeamRequest): Promise<CreateTeamResponse> => {
   const response = await axiosInstance.post<CreateTeamResponse>('/teams', data);

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Team } from './types';
+import type { Team } from '../types';
 
 interface TeamStore {
   teams: Record<number, Team>;

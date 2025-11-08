@@ -40,8 +40,10 @@ export const Headers: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Text variant="H1">H1 - 메인 헤더 (32px, Heavy)</Text>
-      <Text variant="H2">H2 - 서브 헤더 (24px, ExtraBold)</Text>
+      <Text variant="H2">H2 - 서브 헤더 (24px, Bold)</Text>
       <Text variant="H3">H3 - 섹션 헤더 (20px, Bold)</Text>
+      <Text variant="H4">H4 - 콘텐츠 헤더 (18px, Bold)</Text>
+      <Text variant="H5">H5 - 작은 헤더 (18px, Bold)</Text>
     </div>
   ),
 };
@@ -108,4 +110,12 @@ export const WithDifferentTags: Story = {
       </Text>
     </div>
   ),
+};
+
+export const AsProp: Story = {
+  args: {
+    variant: 'H3',
+    as: 'h1',
+    children: '이것은 H3 스타일을 가진 h1 태그입니다.',
+  },
 };
