@@ -30,14 +30,16 @@ const SelectWrapper = styled.div<{ $fullWidth: boolean }>`
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
 `;
 
-const StyledTrigger = styled(SelectPrimitive.Trigger)<{ $error: boolean }>`
+const StyledTrigger = styled(SelectPrimitive.Trigger)<{
+  $error: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: ${spacing[2]};
   padding: ${spacing[3]} ${spacing[4]};
   background-color: ${colors.white};
-  border: 1px solid ${({ $error }) => ($error ? colors.error.main : colors.gray[300])};
+  border: 1px solid transparent;
   border-radius: ${borderRadius.lg};
   font-family: ${typography.fontFamily.suit.join(', ')};
   font-size: ${typography.textStyles.body.b1.fontSize};
@@ -47,15 +49,25 @@ const StyledTrigger = styled(SelectPrimitive.Trigger)<{ $error: boolean }>`
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
+  box-shadow: inset 0 0 0 1px ${({ $error }) => ($error ? colors.error.main : colors.gray[300])};
+
+  &:not([data-placeholder]) {
+    box-shadow: inset 0 0 0 1px
+      ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
+  }
+
   &:hover:not(:disabled) {
-    border-color: ${({ $error }) => ($error ? colors.error.dark : colors.gray[400])};
+    box-shadow: inset 0 0 0 1px ${({ $error }) => ($error ? colors.error.dark : colors.gray[400])};
+  }
+
+  &:hover:not(:disabled):not([data-placeholder]) {
+    box-shadow: inset 0 0 0 1px
+      ${({ $error }) => ($error ? colors.error.dark : colors.primary[600])};
   }
 
   &:focus {
     outline: none;
-    border-color: ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
-    box-shadow: 0 0 0 3px ${({ $error }) =>
-      $error ? `${colors.error.main}20` : `${colors.primary[500]}20`};
+    box-shadow: inset 0 0 0 2px ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
   }
 
   &:disabled {

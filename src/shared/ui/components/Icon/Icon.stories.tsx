@@ -41,6 +41,11 @@ export const Default: Story = {
 };
 
 export const Sizes: Story = {
+  args: {
+    name: 'star',
+    size: 'MD',
+    fill: false,
+  },
   render: () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
       <div style={{ textAlign: 'center' }}>
@@ -68,6 +73,11 @@ export const Sizes: Story = {
 };
 
 export const StrokeVsFill: Story = {
+  args: {
+    name: 'star',
+    size: 'LG',
+    fill: false,
+  },
   render: () => (
     <div style={{ display: 'flex', gap: '40px' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
@@ -89,6 +99,11 @@ export const StrokeVsFill: Story = {
 };
 
 export const CommonIcons: Story = {
+  args: {
+    name: 'star',
+    size: 'MD',
+    fill: false,
+  },
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '24px' }}>
       {[
@@ -128,6 +143,11 @@ export const CommonIcons: Story = {
 };
 
 export const WithColors: Story = {
+  args: {
+    name: 'star',
+    size: 'LG',
+    fill: false,
+  },
   render: () => (
     <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
       <Icon name="favorite" size="LG" fill color="#F44336" />
@@ -140,6 +160,11 @@ export const WithColors: Story = {
 };
 
 export const Interactive: Story = {
+  args: {
+    name: 'star',
+    size: 'MD',
+    fill: false,
+  },
   render: () => (
     <div style={{ display: 'flex', gap: '16px' }}>
       <Icon name="thumb_up" size="MD" onClick={() => alert('좋아요!')} />

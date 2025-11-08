@@ -22,26 +22,42 @@ const InputWrapper = styled.div<{ $fullWidth: boolean }>`
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
 `;
 
-const InputContainer = styled.div<{ $error: boolean; $disabled: boolean }>`
+const InputContainer = styled.div<{
+  $error: boolean;
+  $disabled: boolean;
+}>`
   position: relative;
   display: flex;
   align-items: center;
   gap: ${spacing[2]};
   padding: ${spacing[3]} ${spacing[4]};
   background-color: ${colors.white};
-  border: 1px solid ${({ $error }) => ($error ? colors.error.main : colors.gray[300])};
+  border: 1px solid transparent;
   border-radius: ${borderRadius.lg};
   transition: all 0.2s ease-in-out;
 
+  box-shadow: inset 0 0 0 1px ${({ $error }) => ($error ? colors.error.main : colors.gray[300])};
+
+  &:has(input:not(:placeholder-shown)) {
+    box-shadow: inset 0 0 0 1px
+      ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
+  }
+
   &:hover:not(:focus-within) {
-    border-color: ${({ $error, $disabled }) =>
-      $disabled ? colors.gray[300] : $error ? colors.error.dark : colors.gray[400]};
+    box-shadow: inset 0 0 0 1px
+      ${({ $error, $disabled }) =>
+        $disabled ? colors.gray[300] : $error ? colors.error.dark : colors.gray[400]};
+  }
+
+  &:hover:not(:focus-within):has(input:not(:placeholder-shown)) {
+    box-shadow: inset 0 0 0 1px
+      ${({ $error, $disabled }) =>
+        $disabled ? colors.gray[300] : $error ? colors.error.dark : colors.primary[600]};
   }
 
   &:focus-within {
-    border-color: ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
-    box-shadow: 0 0 0 3px ${({ $error }) =>
-      $error ? `${colors.error.main}20` : `${colors.primary[500]}20`};
+    box-shadow: inset 0 0 0 2px
+      ${({ $error }) => ($error ? colors.error.main : colors.primary[500])};
   }
 
   ${({ $disabled }) =>
