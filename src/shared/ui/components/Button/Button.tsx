@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
-import { borderRadius, colors, shadows, typography } from '../tokens';
-import { Icon } from './Icon';
+import { borderRadius, colors, shadows, typography } from '@/shared/ui/tokens';
+import Icon from '../Icon/Icon';
 
 type ButtonSize = 'small' | 'medium' | 'large';
 type ButtonVariant = 'contained' | 'outlined' | 'text';
@@ -175,7 +175,7 @@ const StyledButton = styled.button<{
   }}
 `;
 
-export const Button = ({
+const Button = ({
   children,
   size = 'medium',
   variant = 'contained',
@@ -232,3 +232,5 @@ export const Button = ({
     </StyledButton>
   );
 };
+
+export default Button;

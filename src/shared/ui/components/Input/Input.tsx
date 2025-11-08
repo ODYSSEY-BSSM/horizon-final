@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import type { InputHTMLAttributes } from 'react';
 import { useState } from 'react';
-import { borderRadius, colors, spacing, typography } from '../tokens';
-import { Icon } from './Icon';
-import { Text } from './Text';
+import { borderRadius, colors, spacing, typography } from '@/shared/ui/tokens';
+import Icon from '../Icon/Icon';
+import Text from '../Text/Text';
 
 type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   label?: string;
@@ -93,7 +93,7 @@ const IconButton = styled.button`
   }
 `;
 
-export const Input = ({
+const Input = ({
   label,
   helperText,
   error = false,
@@ -143,3 +143,5 @@ export const Input = ({
     </InputWrapper>
   );
 };
+
+export default Input;

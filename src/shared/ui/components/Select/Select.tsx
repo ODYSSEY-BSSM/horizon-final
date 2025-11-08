@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { borderRadius, colors, shadows, spacing, typography } from '../tokens';
-import { Icon } from './Icon';
-import { Text } from './Text';
+import { borderRadius, colors, shadows, spacing, typography } from '../../tokens';
+import Icon from '../Icon/Icon';
+import Text from '../Text/Text';
 
 export type SelectOption = {
   value: string;
@@ -126,7 +126,7 @@ const NewBadge = styled.span`
   font-weight: ${typography.textStyles.caption.c.fontWeight};
 `;
 
-export const Select = ({
+const Select = ({
   options,
   value,
   onChange,
@@ -181,3 +181,5 @@ export const Select = ({
     </SelectWrapper>
   );
 };
+
+export default Select;

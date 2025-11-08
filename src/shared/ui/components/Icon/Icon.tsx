@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { typography } from '../tokens';
+import { typography } from '@/shared/ui/tokens';
 
 type IconSize = 'XS' | 'SM' | 'MD' | 'LG' | 'XL';
 
@@ -37,10 +37,12 @@ const StyledIcon = styled.span<{
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
 `;
 
-export const Icon = ({ name, size = 'MD', fill = false, color, className, onClick }: IconProps) => {
+const Icon = ({ name, size = 'MD', fill = false, color, className, onClick }: IconProps) => {
   return (
     <StyledIcon $size={size} $fill={fill} $color={color} className={className} onClick={onClick}>
       {name}
     </StyledIcon>
   );
 };
+
+export default Icon;

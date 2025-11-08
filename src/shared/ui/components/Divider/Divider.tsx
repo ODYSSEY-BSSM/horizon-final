@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { colors, spacing } from '../tokens';
+import { colors, spacing } from '../../tokens';
 
 type DividerOrientation = 'horizontal' | 'vertical';
 
@@ -37,7 +37,7 @@ const StyledDivider = styled.hr<{
       `}
 `;
 
-export const Divider = ({
+const Divider = ({
   orientation = 'horizontal',
   spacing: spacingProp,
   color,
@@ -54,3 +54,5 @@ export const Divider = ({
     />
   );
 };
+
+export default Divider;

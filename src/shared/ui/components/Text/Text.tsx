@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
-import { typography } from '../tokens';
+import { typography } from '../../tokens';
 
 type TextVariant =
   | 'H1'
@@ -20,7 +20,7 @@ type TextProps = {
   children: ReactNode;
   color?: string;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: string;
 };
 
 const getTextStyle = (variant: TextVariant) => {
@@ -63,10 +63,12 @@ const StyledText = styled.span<{ $variant: TextVariant; $color?: string }>`
   padding: 0;
 `;
 
-export const Text = ({ variant = 'B1', children, color, className, as }: TextProps) => {
+const Text = ({ variant = 'B1', children, color, className, as }: TextProps) => {
   return (
-    <StyledText as={as} $variant={variant} $color={color} className={className}>
+    <StyledText as={as as any} $variant={variant} $color={color} className={className}>
       {children}
     </StyledText>
   );
 };
+
+export default Text;
