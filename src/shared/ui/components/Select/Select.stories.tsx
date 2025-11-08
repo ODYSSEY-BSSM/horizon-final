@@ -137,7 +137,10 @@ export const DisabledState: Story = {
   ),
 };
 
-export const RealWorldExamples: any = {
+export const RealWorldExamples: Story = {
+  args: {
+    options: [],
+  },
   render: () => {
     const [country, setCountry] = useState<string>();
     const [difficulty, setDifficulty] = useState<string>();
@@ -238,7 +241,10 @@ export const FullWidth: Story = {
   },
 };
 
-export const FormIntegration: any = {
+export const FormIntegration: Story = {
+  args: {
+    options: [],
+  },
   render: () => {
     const [category, setCategory] = useState<string>();
     const [level, setLevel] = useState<string>();

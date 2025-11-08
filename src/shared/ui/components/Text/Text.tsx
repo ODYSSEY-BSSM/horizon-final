@@ -6,6 +6,8 @@ type TextVariant =
   | 'H1'
   | 'H2'
   | 'H3'
+  | 'H4'
+  | 'H5'
   | 'ST'
   | 'B1'
   | 'B2'
@@ -31,6 +33,10 @@ const getTextStyle = (variant: TextVariant) => {
       return typography.textStyles.header.h2;
     case 'H3':
       return typography.textStyles.header.h3;
+    case 'H4':
+      return typography.textStyles.header.h4;
+    case 'H5':
+      return typography.textStyles.header.h5;
     case 'ST':
       return typography.textStyles.subtitle.st;
     case 'B1':

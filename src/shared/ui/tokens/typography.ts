@@ -24,6 +24,18 @@ export const typography = {
         lineHeight: 1.35,
         letterSpacing: '0',
       },
+      h4: {
+        fontSize: '1.125rem',
+        fontWeight: 700,
+        lineHeight: 1.4,
+        letterSpacing: '0',
+      },
+      h5: {
+        fontSize: '1.125rem',
+        fontWeight: 600,
+        lineHeight: 1.4,
+        letterSpacing: '0',
+      },
     },
     subtitle: {
       st: {

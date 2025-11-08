@@ -37,6 +37,9 @@ export const Default: Story = {
 };
 
 export const Headers: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Text variant="H1">H1 - 메인 헤더 (32px, Heavy)</Text>
@@ -49,6 +52,9 @@ export const Headers: Story = {
 };
 
 export const BodyText: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <Text variant="ST">ST - 서브타이틀 (18px, SemiBold)</Text>
@@ -59,6 +65,9 @@ export const BodyText: Story = {
 };
 
 export const SmallText: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <Text variant="C">C - 캡션 텍스트 (12px, Medium)</Text>
@@ -68,6 +77,9 @@ export const SmallText: Story = {
 };
 
 export const ButtonText: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <Text variant="BTN_LRG">버튼 텍스트 Large (16px)</Text>
@@ -78,6 +90,9 @@ export const ButtonText: Story = {
 };
 
 export const WithColors: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <Text variant="H3" color="#2196F3">
@@ -97,6 +112,9 @@ export const WithColors: Story = {
 };
 
 export const WithDifferentTags: Story = {
+  args: {
+    children: null,
+  },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <Text variant="H1" as="h1">
