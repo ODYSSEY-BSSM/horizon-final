@@ -3,8 +3,8 @@ import {
   applyToTeam as applyToTeamApi,
   approveApplication as approveApplicationApi,
   rejectApplication as rejectApplicationApi,
-} from '../api/teamApplyApi';
-import { useTeamApplyStore } from '../store/teamApplyStore';
+} from './api/teamApplyApi';
+import { useTeamApplyStore } from './store/teamApplyStore';
 
 export const useTeamApply = () => {
   const queryClient = useQueryClient();

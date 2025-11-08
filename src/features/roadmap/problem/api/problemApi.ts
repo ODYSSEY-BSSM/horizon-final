@@ -4,7 +4,7 @@ import type {
   CreateProblemResponse,
   SolveProblemRequest,
   SolveProblemResponse,
-} from '../types';
+} from './types';
 
 export const createProblem = async (
   roadmapId: number,
