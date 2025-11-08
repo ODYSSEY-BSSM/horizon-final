@@ -114,13 +114,13 @@ export const Input = ({
   return (
     <InputWrapper $fullWidth={fullWidth}>
       {label && (
-        <Text variant="C_M_12" color={colors.text.secondary}>
+        <Text variant="C" color={colors.text.secondary}>
           {label}
         </Text>
       )}
 
       <InputContainer $error={error} $disabled={!!disabled}>
-        {icon && <Icon name={icon} variant="ICON_STROKE_SM" color={colors.gray[600]} />}
+        {icon && <Icon name={icon} size="SM" color={colors.gray[600]} />}
 
         <StyledInput type={inputType} disabled={disabled} {...props} />
 
@@ -130,13 +130,13 @@ export const Input = ({
             onClick={() => setShowPassword(!showPassword)}
             disabled={disabled}
           >
-            <Icon name={showPassword ? 'visibility_off' : 'visibility'} variant="ICON_STROKE_SM" />
+            <Icon name={showPassword ? 'visibility_off' : 'visibility'} size="SM" />
           </IconButton>
         )}
       </InputContainer>
 
       {(helperText || displayError) && (
-        <Text variant="C_M_12" color={displayError ? colors.error.main : colors.text.secondary}>
+        <Text variant="C" color={displayError ? colors.error.main : colors.text.secondary}>
           {displayError ? errorMessage : helperText}
         </Text>
       )}

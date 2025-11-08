@@ -3,17 +3,17 @@ import type { ReactNode } from 'react';
 import { typography } from '../tokens';
 
 type TextVariant =
-  | 'H1_H_32'
-  | 'H2_EB_24'
-  | 'H3_B_20'
-  | 'ST_SB_18'
-  | 'B1_R_16'
-  | 'B2_R_14'
-  | 'C_M_12'
-  | 'O_M_11'
-  | 'BTN_SML_13'
-  | 'BTN_MED_14'
-  | 'BTN_LRG_16';
+  | 'H1'
+  | 'H2'
+  | 'H3'
+  | 'ST'
+  | 'B1'
+  | 'B2'
+  | 'C'
+  | 'O'
+  | 'BTN_SML'
+  | 'BTN_MED'
+  | 'BTN_LRG';
 
 type TextProps = {
   variant?: TextVariant;
@@ -25,27 +25,27 @@ type TextProps = {
 
 const getTextStyle = (variant: TextVariant) => {
   switch (variant) {
-    case 'H1_H_32':
+    case 'H1':
       return typography.textStyles.header.h1;
-    case 'H2_EB_24':
+    case 'H2':
       return typography.textStyles.header.h2;
-    case 'H3_B_20':
+    case 'H3':
       return typography.textStyles.header.h3;
-    case 'ST_SB_18':
+    case 'ST':
       return typography.textStyles.subtitle.st;
-    case 'B1_R_16':
+    case 'B1':
       return typography.textStyles.body.b1;
-    case 'B2_R_14':
+    case 'B2':
       return typography.textStyles.body.b2;
-    case 'C_M_12':
+    case 'C':
       return typography.textStyles.caption.c;
-    case 'O_M_11':
+    case 'O':
       return typography.textStyles.overline.o;
-    case 'BTN_SML_13':
+    case 'BTN_SML':
       return typography.textStyles.button.sml;
-    case 'BTN_MED_14':
+    case 'BTN_MED':
       return typography.textStyles.button.med;
-    case 'BTN_LRG_16':
+    case 'BTN_LRG':
       return typography.textStyles.button.lrg;
     default:
       return typography.textStyles.body.b1;
@@ -63,7 +63,7 @@ const StyledText = styled.span<{ $variant: TextVariant; $color?: string }>`
   padding: 0;
 `;
 
-export const Text = ({ variant = 'B1_R_16', children, color, className, as }: TextProps) => {
+export const Text = ({ variant = 'B1', children, color, className, as }: TextProps) => {
   return (
     <StyledText as={as} $variant={variant} $color={color} className={className}>
       {children}
