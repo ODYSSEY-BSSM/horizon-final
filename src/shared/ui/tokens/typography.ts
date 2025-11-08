@@ -1,8 +1,7 @@
 export const typography = {
   fontFamily: {
-    primary:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-    mono: '"SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace',
+    suit: ['SUIT Variable', 'sans-serif'],
+    icon: ['Material Symbols Rounded', 'monospace'],
   },
 
   fontSize: {
