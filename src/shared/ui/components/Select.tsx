@@ -143,7 +143,7 @@ export const Select = ({
   return (
     <SelectWrapper $fullWidth={fullWidth}>
       {label && (
-        <Text variant="caption" color={colors.text.secondary}>
+        <Text variant="C_M_12" color={colors.text.secondary}>
           {label}
         </Text>
       )}
@@ -152,7 +152,7 @@ export const Select = ({
         <StyledTrigger $error={error}>
           <SelectPrimitive.Value placeholder={placeholder} />
           <SelectPrimitive.Icon>
-            <Icon name="expand_more" size="sm" />
+            <Icon name="expand_more" variant="ICON_STROKE_SM" />
           </SelectPrimitive.Icon>
         </StyledTrigger>
 
@@ -164,7 +164,7 @@ export const Select = ({
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                   {option.isNew && <NewBadge>NEW</NewBadge>}
                   <SelectPrimitive.ItemIndicator>
-                    <Icon name="check" size="xs" />
+                    <Icon name="check" variant="ICON_STROKE_XS" />
                   </SelectPrimitive.ItemIndicator>
                 </StyledItem>
               ))}
@@ -174,7 +174,7 @@ export const Select = ({
       </SelectPrimitive.Root>
 
       {(helperText || displayError) && (
-        <Text variant="caption" color={displayError ? colors.error.main : colors.text.secondary}>
+        <Text variant="C_M_12" color={displayError ? colors.error.main : colors.text.secondary}>
           {displayError ? errorMessage : helperText}
         </Text>
       )}

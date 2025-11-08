@@ -65,14 +65,14 @@ const getButtonTextStyle = (size: ButtonSize) => {
   }
 };
 
-const getIconSize = (size: ButtonSize): 'xs' | 'sm' | 'md' | 'lg' | 'xl' => {
+const getIconVariant = (size: ButtonSize): 'ICN_SML_16' | 'ICN_MED_20' | 'ICN_LRG_24' => {
   switch (size) {
     case 'small':
-      return 'xs';
+      return 'ICN_SML_16';
     case 'medium':
-      return 'sm';
+      return 'ICN_MED_20';
     case 'large':
-      return 'md';
+      return 'ICN_LRG_24';
   }
 };
 
@@ -188,7 +188,7 @@ export const Button = ({
   className,
   type = 'button',
 }: ButtonProps) => {
-  const iconSize = getIconSize(size);
+  const iconVariant = getIconVariant(size);
 
   const renderContent = () => {
     if (!icon) {
@@ -196,13 +196,13 @@ export const Button = ({
     }
 
     if (iconPosition === 'only') {
-      return <Icon name={icon} size={iconSize} />;
+      return <Icon name={icon} variant={iconVariant} />;
     }
 
     if (iconPosition === 'left') {
       return (
         <>
-          <Icon name={icon} size={iconSize} />
+          <Icon name={icon} variant={iconVariant} />
           {children}
         </>
       );
@@ -211,7 +211,7 @@ export const Button = ({
     return (
       <>
         {children}
-        <Icon name={icon} size={iconSize} />
+        <Icon name={icon} variant={iconVariant} />
       </>
     );
   };
