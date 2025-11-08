@@ -1,27 +1,34 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite';
+import type { StorybookConfig } from '@storybook/nextjs';
 
 const config: StorybookConfig = {
-  stories: ['../src/shared/ui/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-a11y',
+  ],
   framework: {
-    name: '@storybook/nextjs-vite',
-    options: {
-      builder: {
-        viteConfigPath: undefined,
-      },
-    },
+    name: '@storybook/nextjs',
+    options: {},
   },
-  viteFinal: async (config) => {
-    config.optimizeDeps = {
-      ...config.optimizeDeps,
-      include: [...(config.optimizeDeps?.include ?? []), '@emotion/react'],
+  docs: {
+    autodocs: 'tag',
+  },
+  webpackFinal: async (config) => {
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
     };
-
     return config;
   },
+  features: {
+    storyStoreV7: true,
+  },
   typescript: {
-    check: false,
-    reactDocgen: false,
+    reactDocgen: 'react-docgen-typescript',
   },
 };
 export default config;

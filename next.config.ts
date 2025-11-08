@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   compiler: {
     emotion: true,
   },
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
