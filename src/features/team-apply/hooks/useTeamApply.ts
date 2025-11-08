@@ -1,10 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   applyToTeam as applyToTeamApi,
   approveApplication as approveApplicationApi,
   rejectApplication as rejectApplicationApi,
-} from "../api/teamApplyApi";
-import { useTeamApplyStore } from "../store/teamApplyStore";
+} from '../api/teamApplyApi';
+import { useTeamApplyStore } from '../store/teamApplyStore';
 
 export const useTeamApply = () => {
   const queryClient = useQueryClient();
@@ -14,7 +14,7 @@ export const useTeamApply = () => {
     return useMutation({
       mutationFn: (teamId: number) => applyToTeamApi(teamId),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["applications"] });
+        queryClient.invalidateQueries({ queryKey: ['applications'] });
       },
     });
   };
@@ -24,7 +24,7 @@ export const useTeamApply = () => {
       mutationFn: (applyId: number) => approveApplicationApi(applyId),
       onSuccess: (response) => {
         updateApplication(response.data);
-        queryClient.invalidateQueries({ queryKey: ["applications"] });
+        queryClient.invalidateQueries({ queryKey: ['applications'] });
       },
     });
   };
@@ -32,10 +32,10 @@ export const useTeamApply = () => {
   const useRejectApplication = () => {
     return useMutation({
       mutationFn: (applyId: number) => rejectApplicationApi(applyId),
-      onSuccess: (response, applyId) => {
+      onSuccess: (_response, _applyId) => {
         // Assuming the app needs to be updated or removed from the list
         // This part might need adjustment based on actual UI/UX requirements
-        queryClient.invalidateQueries({ queryKey: ["applications"] });
+        queryClient.invalidateQueries({ queryKey: ['applications'] });
       },
     });
   };

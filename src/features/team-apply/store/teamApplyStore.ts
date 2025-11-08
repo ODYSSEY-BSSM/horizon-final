@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import type { TeamApply } from "./types";
+import { create } from 'zustand';
+import type { TeamApply } from './types';
 
 interface TeamApplyStore {
   applications: TeamApply[];

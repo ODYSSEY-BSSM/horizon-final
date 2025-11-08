@@ -1,4 +1,4 @@
-export type ApplyStatus = "SUBMITTED" | "APPROVED" | "REJECTED";
+export type ApplyStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
 
 export interface TeamApply {
   id: number;

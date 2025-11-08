@@ -1,9 +1,11 @@
 import axiosInstance from '@/shared/api/instance';
+import type { ApiResponse } from '@/shared/types';
 import type {
   GetUserInfoResponse,
   SignUpRequest,
   SignUpResponse,
   UpdatePasswordRequest,
+  UserInfo,
   VerificationConfirmRequest,
   VerificationRequest,
 } from '../types';
@@ -28,4 +30,9 @@ export const getUserInfo = async (): Promise<GetUserInfoResponse> => {
 
 export const updatePassword = async (data: UpdatePasswordRequest) => {
   return axiosInstance.put('/users', data);
+};
+
+export const connectSchool = async (): Promise<ApiResponse<UserInfo>> => {
+  const response = await axiosInstance.put<ApiResponse<UserInfo>>('/users/school');
+  return response.data;
 };

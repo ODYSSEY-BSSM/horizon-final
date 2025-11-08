@@ -31,6 +31,8 @@ export type UserInfo = {
   email: string;
   role: string;
   teams: string[];
+  school?: string;
+  isConnectedSchool?: boolean;
 };
 
 export type GetUserInfoResponse = {

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   confirmVerificationCode as confirmVerificationCodeApi,
+  connectSchool as connectSchoolApi,
   getUserInfo as getUserInfoApi,
   requestVerificationCode as requestVerificationCodeApi,
   signUp as signUpApi,
@@ -47,11 +48,24 @@ export const useUser = () => {
     });
   };
 
+  const useConnectSchool = () => {
+    return useMutation({
+      mutationFn: connectSchoolApi,
+      onSuccess: (response) => {
+        setUser(response.data);
+        // Assuming queryClient is available in the scope, otherwise this line would cause an error.
+        // For now, keeping it as is, but it might need adjustment depending on the actual context.
+        // queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      },
+    });
+  };
+
   return {
     useUserInfo,
     useRequestVerificationCode,
     useConfirmVerificationCode,
     useSignUp,
     useUpdatePassword,
+    useConnectSchool,
   };
 };
