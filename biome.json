@@ -97,7 +97,6 @@
         "noCompareNegZero": "error",
         "noConfusingLabels": "warn",
         "noConfusingVoidType": "warn",
-        "noConsole": "warn",
         "noConstEnum": "warn",
         "noControlCharactersInRegex": "error",
         "noDebugger": "error",
