@@ -74,6 +74,33 @@ export const colors = {
     disabled: 'rgba(0, 0, 0, 0.38)',
     hint: 'rgba(0, 0, 0, 0.38)',
   },
+
+  roadmap: {
+    red: {
+      start: '#DC2626',
+      end: '#FEE2E2',
+    },
+    orange: {
+      start: '#EA580C',
+      end: '#FFEDD5',
+    },
+    yellow: {
+      start: '#E6C200',
+      end: '#F9FFA6',
+    },
+    green: {
+      start: '#16A34A',
+      end: '#DCFCE7',
+    },
+    blue: {
+      start: '#2666DC',
+      end: '#DBEAFE',
+    },
+    purple: {
+      start: '#A826DC',
+      end: '#F3E8FF',
+    },
+  },
 } as const;
 
 export type Colors = typeof colors;

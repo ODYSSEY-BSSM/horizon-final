@@ -4,46 +4,107 @@ export const typography = {
     icon: ['Material Symbols Rounded', 'monospace'],
   },
 
-  fontSize: {
-    xs: '0.75rem',
-    sm: '0.875rem',
-    base: '1rem',
-    lg: '1.125rem',
-    xl: '1.25rem',
-    '2xl': '1.5rem',
-    '3xl': '1.875rem',
-    '4xl': '2.25rem',
-    '5xl': '3rem',
-    '6xl': '3.75rem',
+  textStyles: {
+    header: {
+      h1: {
+        fontSize: '2rem',
+        fontWeight: 900,
+        lineHeight: 1.25,
+        letterSpacing: '-0.02em',
+      },
+      h2: {
+        fontSize: '1.5rem',
+        fontWeight: 800,
+        lineHeight: 1.3,
+        letterSpacing: '-0.01em',
+      },
+      h3: {
+        fontSize: '1.25rem',
+        fontWeight: 700,
+        lineHeight: 1.35,
+        letterSpacing: '0',
+      },
+    },
+    subtitle: {
+      st: {
+        fontSize: '1.125rem',
+        fontWeight: 600,
+        lineHeight: 1.4,
+        letterSpacing: '0',
+      },
+    },
+    body: {
+      b1: {
+        fontSize: '1rem',
+        fontWeight: 400,
+        lineHeight: 1.5,
+        letterSpacing: '0',
+      },
+      b2: {
+        fontSize: '0.875rem',
+        fontWeight: 300,
+        lineHeight: 1.5,
+        letterSpacing: '0',
+      },
+    },
+    caption: {
+      c: {
+        fontSize: '0.75rem',
+        fontWeight: 500,
+        lineHeight: 1.4,
+        letterSpacing: '0.01em',
+      },
+    },
+    overline: {
+      o: {
+        fontSize: '0.6875rem',
+        fontWeight: 500,
+        lineHeight: 1.4,
+        letterSpacing: '0.05em',
+      },
+    },
+    button: {
+      sml: {
+        fontSize: '0.8125rem',
+        fontWeight: 600,
+        lineHeight: 1.2,
+        letterSpacing: '0',
+      },
+      med: {
+        fontSize: '0.875rem',
+        fontWeight: 600,
+        lineHeight: 1.2,
+        letterSpacing: '0',
+      },
+      lrg: {
+        fontSize: '1rem',
+        fontWeight: 600,
+        lineHeight: 1.2,
+        letterSpacing: '0',
+      },
+    },
   },
 
-  fontWeight: {
-    thin: 100,
-    light: 300,
-    regular: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
-    extrabold: 800,
-    black: 900,
-  },
-
-  lineHeight: {
-    none: 1,
-    tight: 1.25,
-    snug: 1.375,
-    normal: 1.5,
-    relaxed: 1.625,
-    loose: 2,
-  },
-
-  letterSpacing: {
-    tighter: '-0.05em',
-    tight: '-0.025em',
-    normal: '0',
-    wide: '0.025em',
-    wider: '0.05em',
-    widest: '0.1em',
+  icon: {
+    button: {
+      sml: '1rem',
+      med: '1.25rem',
+      lrg: '1.5rem',
+    },
+    stroke: {
+      xs: '1rem',
+      sm: '1.25rem',
+      md: '1.5rem',
+      lg: '2rem',
+      xl: '2.5rem',
+    },
+    fill: {
+      xs: '1rem',
+      sm: '1.25rem',
+      md: '1.5rem',
+      lg: '2rem',
+      xl: '2.5rem',
+    },
   },
 } as const;
 
