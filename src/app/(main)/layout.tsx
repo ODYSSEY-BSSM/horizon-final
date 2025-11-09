@@ -29,6 +29,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     if (pathname?.includes('/my-roadmaps')) {
       return 'my-roadmaps';
     }
+    if (pathname?.includes('/school-connect')) {
+      return 'school-connect';
+    }
     if (pathname?.includes('/dashboard')) {
       return 'dashboard';
     }
@@ -45,6 +48,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         return ['My Roadmaps', `Folder${folderId}`];
       }
       return ['My Roadmaps'];
+    }
+    if (pathname?.includes('/school-connect')) {
+      return ['School Connect'];
     }
     if (pathname?.includes('/dashboard')) {
       return ['Dashboard'];
