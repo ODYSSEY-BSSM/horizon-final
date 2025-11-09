@@ -5,7 +5,6 @@ import { icons } from '@/shared/tokens/icon/icon';
 import { radius } from '@/shared/tokens/radius/radius';
 import { typos } from '@/shared/tokens/typo/typo';
 import {
-  BLOCKED_PROPS,
   BUTTON_ICON_CONFIGS,
   BUTTON_TEXT_CONFIGS,
   buttonStyles,
@@ -15,6 +14,8 @@ import {
   VERTICAL_PADDING,
 } from './Button.constants';
 import type { ButtonSize, ButtonVariant, IconPosition, StyledButtonProps } from './Button.types';
+
+const transientProps = ['active', 'iconPosition', 'variant', 'rounded', 'size'];
 
 const makeTextStyle = (
   fontSize: keyof typeof typos.fontSize,
@@ -87,10 +88,6 @@ export const getButtonStyle = (variant: ButtonVariant, disabled: boolean, active
   return buttonStyles[variant].default;
 };
 
-const shouldForwardProp = (prop: string): boolean => {
-  return !BLOCKED_PROPS.has(prop);
-};
-
 const baseButtonStyles = css`
   display: inline-flex;
   align-items: center;
@@ -113,7 +110,9 @@ const getFocusStyles = (variant: ButtonVariant) => css`
   }
 `;
 
-export const StyledButton = styled('button', { shouldForwardProp })<StyledButtonProps>`
+export const StyledButton = styled('button', {
+  shouldForwardProp: (prop) => !transientProps.includes(prop as string),
+})<StyledButtonProps>`
   ${baseButtonStyles}
   
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
