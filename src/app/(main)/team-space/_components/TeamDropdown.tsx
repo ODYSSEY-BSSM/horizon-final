@@ -3,7 +3,6 @@
 import styled from '@emotion/styled';
 import { useId, useState } from 'react';
 import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
 import type { Team } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 
@@ -27,18 +26,15 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange }: TeamDropdownProps) =>
         id={buttonId}
         aria-labelledby={labelId}
         aria-haspopup="listbox"
-        $isOpen={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="팀 선택"
         aria-expanded={isOpen}
       >
-        <Text as="span" variant="H3" color={tokens.colors.neutral[800]}>
-          {selectedTeam ? selectedTeam.name : '팀 선택'}
-        </Text>
+        <StyledTeamName>{selectedTeam ? selectedTeam.name : '팀 선택'}</StyledTeamName>
         <Icon
-          name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-          variant="SM"
-          color={tokens.colors.neutral[600]}
+          name={isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+          variant="LG"
+          color={tokens.colors.neutral[900]}
           decorative
         />
       </StyledDropdownHeader>
@@ -57,9 +53,7 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange }: TeamDropdownProps) =>
               role="option"
               aria-selected={selectedTeamId === team.id}
             >
-              <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                {team.name}
-              </Text>
+              {team.name}
             </StyledTeamOption>
           ))}
         </StyledDropdownList>
@@ -75,36 +69,42 @@ const StyledContainer = styled.div`
   z-index: 10;
 `;
 
-const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
+const StyledDropdownHeader = styled.button`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.small};
-  height: 34px;
-  padding: 0 ${tokens.spacing.small};
-  background-color: ${tokens.colors.white};
-  border: ${({ $isOpen }) =>
-    $isOpen
-      ? `2px solid ${tokens.colors.primary[500]}`
-      : `1px solid ${tokens.colors.neutral[300]}`};
-  border-radius: ${tokens.radius.medium};
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  color: ${tokens.colors.neutral[900]};
+  white-space: nowrap;
 
   &:hover {
-    border-color: ${tokens.colors.primary[500]};
+    opacity: 0.8;
   }
 
   &:focus-visible {
-    outline: none;
-    border-color: ${tokens.colors.primary[500]};
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
+    border-radius: 4px;
   }
+`;
+
+const StyledTeamName = styled.span`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[24]};
+  font-weight: ${tokens.typos.fontWeight.extrabold};
+  line-height: ${tokens.typos.lineHeight[34]};
+  letter-spacing: -0.015em;
+  color: ${tokens.colors.neutral[900]};
 `;
 
 const StyledDropdownList = styled.div`
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 8px);
   left: 0;
-  min-width: 145px;
+  min-width: 200px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
   border-radius: ${tokens.radius.medium};
@@ -119,7 +119,7 @@ const StyledDropdownList = styled.div`
 const StyledTeamOption = styled.button<{ $selected: boolean }>`
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 44px;
   padding: ${tokens.spacing.small} ${tokens.spacing.medium};
   background-color: ${({ $selected }) =>
     $selected ? tokens.colors.primary[100] : tokens.colors.white};
@@ -129,6 +129,12 @@ const StyledTeamOption = styled.button<{ $selected: boolean }>`
   transition: background-color 0.2s ease;
   width: 100%;
   text-align: left;
+  
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[16]};
+  font-weight: ${tokens.typos.fontWeight.regular};
+  line-height: ${tokens.typos.lineHeight[24]};
+  color: ${tokens.colors.neutral[800]};
 
   &:last-child {
     border-bottom: none;
