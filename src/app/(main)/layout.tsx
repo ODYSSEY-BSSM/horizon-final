@@ -38,6 +38,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   // Generate breadcrumbs based on current path
   const getBreadcrumbs = () => {
     if (pathname?.includes('/my-roadmaps')) {
+      // Check if it's a folder detail page
+      const match = pathname?.match(/\/my-roadmaps\/([^/]+)/);
+      if (match) {
+        const folderId = match[1];
+        return ['My Roadmaps', `Folder${folderId}`];
+      }
       return ['My Roadmaps'];
     }
     if (pathname?.includes('/dashboard')) {

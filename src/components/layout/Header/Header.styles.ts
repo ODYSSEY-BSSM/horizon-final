@@ -16,7 +16,8 @@ export const HeaderContainer = styled.header`
 export const BreadcrumbNav = styled.nav`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.xxlarge};
+  gap: ${tokens.spacing.xxsmall};
+  white-space: nowrap;
 `;
 
 export const BreadcrumbItem = styled.span`
@@ -33,8 +34,8 @@ export const BreadcrumbSeparator = styled.span`
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: ${tokens.typos.lineHeight[26]};
-  color: ${tokens.colors.neutral[400]};
-  margin: 0 ${tokens.spacing.xxsmall};
+  color: ${tokens.colors.neutral[500]};
+  margin: 0;
 `;
 
 export const HeaderActions = styled.div`
