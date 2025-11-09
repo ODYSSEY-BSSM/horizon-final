@@ -69,7 +69,4 @@ const StyledUnderlinedButton = styled(Button)<{ active?: boolean }>`
   height: 52px;
   padding: 10px 4px;
   color: ${({ active }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
-
-  
-
 `;
