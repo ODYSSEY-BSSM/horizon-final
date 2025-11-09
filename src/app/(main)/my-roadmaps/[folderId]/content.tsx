@@ -6,14 +6,15 @@ import { useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
-
+import type { ColorOption } from '../_components/ColorDropdown';
+import type { IconOption } from '../_components/IconDropdown';
 import RoadmapCreateModal from '../_forms/RoadmapCreateModal';
-import StyleSettingModal from '../_forms/StyleSettingModal';
+import RoadmapStyleModal from '../_forms/RoadmapStyleModal';
 import RoadmapListSection from './_sections/RoadmapListSection';
 
 type ModalState = {
   roadmapCreate: boolean;
-  styleSetting: boolean;
+  roadmapStyle: boolean;
 };
 
 const FolderDetailContent = () => {
@@ -22,7 +23,7 @@ const FolderDetailContent = () => {
 
   const [modals, setModals] = useState<ModalState>({
     roadmapCreate: false,
-    styleSetting: false,
+    roadmapStyle: false,
   });
 
   const openModal = (modal: keyof ModalState) => {
@@ -39,12 +40,18 @@ const FolderDetailContent = () => {
 
   const handleRoadmapSubmit = (_data: { title: string; description: string }) => {
     closeModal('roadmapCreate');
-    // Open style setting modal for next step
-    openModal('styleSetting');
+    // Open style modal for next step
+    openModal('roadmapStyle');
   };
 
-  const handleStyleSubmit = (_data: { color: string; icon: string }) => {
-    closeModal('styleSetting');
+  const handleStyleSubmit = (_data: { color: ColorOption; icon: IconOption }) => {
+    closeModal('roadmapStyle');
+    // TODO: Save roadmap with style
+  };
+
+  const handleStyleBack = () => {
+    closeModal('roadmapStyle');
+    openModal('roadmapCreate');
   };
 
   return (
@@ -73,10 +80,11 @@ const FolderDetailContent = () => {
         onSubmit={handleRoadmapSubmit}
       />
 
-      <StyleSettingModal
-        isOpen={modals.styleSetting}
-        onClose={() => closeModal('styleSetting')}
+      <RoadmapStyleModal
+        isOpen={modals.roadmapStyle}
+        onClose={() => closeModal('roadmapStyle')}
         onSubmit={handleStyleSubmit}
+        onBack={handleStyleBack}
       />
     </StyledPageContainer>
   );

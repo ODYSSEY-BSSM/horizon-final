@@ -1,49 +1,37 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@/components/common/Button/Button';
 import Icon from '@/components/common/Icon/Icon';
 import Text from '@/components/common/Text/Text';
-import TextField from '@/components/common/TextField/TextField';
 import { tokens } from '@/shared/tokens';
+import ColorDropdown, { type ColorOption } from '../_components/ColorDropdown';
+import IconDropdown, { type IconOption } from '../_components/IconDropdown';
+import RoadmapThumbnail from '../_components/RoadmapThumbnail';
 
-export interface FolderCreateModalProps {
+export interface RoadmapStyleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { name: string; description: string }) => void;
+  onSubmit: (data: { color: ColorOption; icon: IconOption }) => void;
+  onBack: () => void;
 }
 
-const FolderCreateModal = ({ isOpen, onClose, onSubmit }: FolderCreateModalProps) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+const RoadmapStyleModal = ({ isOpen, onClose, onSubmit, onBack }: RoadmapStyleModalProps) => {
+  const [formData, setFormData] = useState<{ color: ColorOption; icon: IconOption }>({
+    color: 'red',
+    icon: 'language',
   });
-  const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
-      setFormData({ name: '', description: '' });
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen) {
-      nameRef.current?.focus();
+      setFormData({ color: 'red', icon: 'language' });
     }
   }, [isOpen]);
 
   if (!isOpen) {
     return null;
   }
-
-  const handleChange =
-    (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: e.target.value,
-      }));
-    };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,46 +44,40 @@ const FolderCreateModal = ({ isOpen, onClose, onSubmit }: FolderCreateModalProps
         <StyledHeader>
           <StyledHeaderTop>
             <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
-              폴더 정보
+              로드맵 스타일
             </Text>
             <StyledCloseButton onClick={onClose} type="button">
               <Icon name="close" variant="LG" color={tokens.colors.neutral[400]} decorative />
             </StyledCloseButton>
           </StyledHeaderTop>
           <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
-            추가할 폴더의 정보를 입력해주세요.
+            로드맵 스타일을 지정해주세요.
           </Text>
         </StyledHeader>
 
         <StyledDivider />
 
         <StyledForm onSubmit={handleSubmit}>
-          <StyledFormFields>
-            <TextField
-              ref={nameRef}
-              label="이름"
-              type="text"
-              value={formData.name}
-              onChange={handleChange('name')}
-              placeholder="폴더 이름을 작성해주세요"
-              required
+          <StyledPreviewSection>
+            <RoadmapThumbnail color={formData.color} icon={formData.icon} />
+          </StyledPreviewSection>
+
+          <StyledDropdownRow>
+            <ColorDropdown
+              value={formData.color}
+              onChange={(color) => setFormData((prev) => ({ ...prev, color }))}
             />
-            <TextField
-              label="설명"
-              type="text"
-              value={formData.description}
-              onChange={handleChange('description')}
-              placeholder="폴더 설명을 작성해주세요"
+            <IconDropdown
+              value={formData.icon}
+              onChange={(icon) => setFormData((prev) => ({ ...prev, icon }))}
             />
-          </StyledFormFields>
+          </StyledDropdownRow>
 
           <StyledActions>
-            <Button
-              type="submit"
-              variant="contained"
-              size="medium"
-              disabled={!formData.name.trim()}
-            >
+            <Button type="button" variant="outlined" size="medium" onClick={onBack}>
+              이전
+            </Button>
+            <Button type="submit" variant="contained" size="medium">
               완료
             </Button>
           </StyledActions>
@@ -105,7 +87,7 @@ const FolderCreateModal = ({ isOpen, onClose, onSubmit }: FolderCreateModalProps
   );
 };
 
-export default FolderCreateModal;
+export default RoadmapStyleModal;
 
 const StyledOverlay = styled.div`
   position: fixed;
@@ -123,7 +105,7 @@ const StyledModal = styled.div`
   width: 560px;
   max-width: 90vw;
   max-height: 90vh;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
 `;
@@ -166,16 +148,23 @@ const StyledForm = styled.form`
   padding: ${tokens.spacing.xlarge};
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.xlarge};
+  gap: ${tokens.spacing.large};
+  overflow: visible;
 `;
 
-const StyledFormFields = styled.div`
+const StyledPreviewSection = styled.div`
+  width: 100%;
+`;
+
+const StyledDropdownRow = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.large};
+  gap: ${tokens.spacing.medium};
+  width: 100%;
+  overflow: visible;
 `;
 
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: ${tokens.spacing.medium};
 `;

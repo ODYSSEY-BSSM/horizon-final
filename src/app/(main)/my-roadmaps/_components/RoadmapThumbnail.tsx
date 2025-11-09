@@ -3,44 +3,48 @@
 import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
 import { tokens } from '@/shared/tokens';
+import type { ColorOption } from './ColorDropdown';
+import type { IconOption } from './IconDropdown';
 
-export interface RoadmapThumbnailProps {
-  className?: string;
-  gradient?: string;
-  iconName?: string;
+interface RoadmapThumbnailProps {
+  color: ColorOption;
+  icon: IconOption;
 }
 
-const RoadmapThumbnail = ({
-  className,
-  gradient = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)',
-  iconName = 'language',
-}: RoadmapThumbnailProps) => {
+const COLOR_GRADIENTS: Record<ColorOption, string> = {
+  red: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+  orange: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+  yellow: 'linear-gradient(135deg, #EAB308 0%, #E6C200 100%)',
+  green: 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)',
+  blue: 'linear-gradient(135deg, #3B82F6 0%, #2666DC 100%)',
+  purple: 'linear-gradient(135deg, #A855F7 0%, #A826DC 100%)',
+};
+
+const RoadmapThumbnail = ({ color, icon }: RoadmapThumbnailProps) => {
   return (
-    <StyledThumbnailContainer className={className} gradient={gradient}>
-      <StyledIconContainer>
-        <Icon name={iconName} variant="LG" color={tokens.colors.white} filled decorative />
-      </StyledIconContainer>
-    </StyledThumbnailContainer>
+    <StyledThumbnail $gradient={COLOR_GRADIENTS[color]}>
+      <StyledIconWrapper>
+        <Icon name={icon} variant="LG" color={tokens.colors.white} filled decorative />
+      </StyledIconWrapper>
+    </StyledThumbnail>
   );
 };
 
 export default RoadmapThumbnail;
 
-const StyledThumbnailContainer = styled.div<{ gradient?: string }>`
-  width: 480px;
+const StyledThumbnail = styled.div<{ $gradient: string }>`
+  width: 100%;
   height: 148px;
-  background: ${({ gradient }) => gradient || 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'};
+  background: ${({ $gradient }) => $gradient};
   border-radius: ${tokens.radius.medium};
-  overflow: hidden;
-  position: relative;
   display: flex;
   align-items: flex-end;
-  padding: ${tokens.spacing.medium};
+  padding: ${tokens.spacing.large};
   box-sizing: border-box;
 `;
 
-const StyledIconContainer = styled.div`
-  width: 32px;
-  height: 32px;
-  color: ${tokens.colors.white};
+const StyledIconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
