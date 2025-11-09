@@ -21,7 +21,7 @@ const FilterTabs = ({ activeTab, onTabClick }: FilterTabsProps) => {
       {FILTER_TABS.map((tab) => (
         <StyledFilterTab key={tab.value} active={activeTab === tab.value}>
           <StyledUnderlinedButton
-            variant="outlined"
+            variant="text"
             size="small"
             onClick={() => onTabClick(tab.value)}
             active={activeTab === tab.value}
@@ -70,13 +70,6 @@ const StyledUnderlinedButton = styled(Button)<{ active?: boolean }>`
   padding: 10px 4px;
   color: ${({ active }) => (active ? tokens.colors.primary[500] : tokens.colors.neutral[500])};
 
-  &:hover {
-    background-color: transparent;
-    color: ${tokens.colors.primary[500]};
-  }
+  
 
-  &:active {
-    background-color: transparent;
-    color: ${tokens.colors.primary[500]};
-  }
 `;
