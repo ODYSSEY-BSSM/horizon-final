@@ -1,11 +1,12 @@
 'use client';
 
+import { Fragment } from 'react';
 import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 import { DEFAULT_SEARCH_PLACEHOLDER } from './Header.constants';
 import { useHeader } from './Header.hooks';
 import {
+  BreadcrumbItem,
   BreadcrumbNav,
   BreadcrumbSeparator,
   HeaderActions,
@@ -21,12 +22,19 @@ const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
       {items.map((item, index) => (
-        <span key={item}>
+        <Fragment key={item}>
           {index > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
-          <Text as="span" variant="ST" color={tokens.colors.neutral[700]}>
+          <BreadcrumbItem
+            style={{
+              color:
+                index === items.length - 1
+                  ? tokens.colors.neutral[700]
+                  : tokens.colors.neutral[500],
+            }}
+          >
             {item}
-          </Text>
-        </span>
+          </BreadcrumbItem>
+        </Fragment>
       ))}
     </BreadcrumbNav>
   );

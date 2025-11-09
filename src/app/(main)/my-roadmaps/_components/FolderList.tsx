@@ -116,6 +116,7 @@ const StyledContainer = styled.div`
   background-color: ${tokens.colors.white};
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const StyledMainContent = styled.div`
