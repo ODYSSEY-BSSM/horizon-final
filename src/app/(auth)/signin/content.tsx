@@ -117,6 +117,9 @@ const StyledPageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 60px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 `;
 
 const StyledHeaderWrapper = styled.div`
