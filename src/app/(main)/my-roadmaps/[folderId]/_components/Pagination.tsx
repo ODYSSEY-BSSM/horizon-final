@@ -2,7 +2,6 @@
 
 import styled from '@emotion/styled';
 import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
 
 interface PaginationProps {
@@ -12,116 +11,112 @@ interface PaginationProps {
 }
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  const handlePrevClick = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
+  if (totalPages < 1) {
+    return null;
+  }
 
-  const handleNextClick = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
+  const canGoPrev = currentPage > 1;
+  const canGoNext = currentPage < totalPages;
 
   return (
-    <StyledContainer>
-      <StyledNavButton onClick={handlePrevClick} disabled={currentPage === 1}>
+    <StyledPaginationContainer>
+      <StyledPageButton
+        $disabled={!canGoPrev}
+        onClick={() => canGoPrev && onPageChange(currentPage - 1)}
+        aria-label="이전 페이지"
+        disabled={!canGoPrev}
+      >
         <Icon
           name="chevron_left"
           variant="SM"
-          color={currentPage === 1 ? tokens.colors.neutral[300] : tokens.colors.neutral[800]}
+          color={canGoPrev ? tokens.colors.neutral[700] : tokens.colors.neutral[300]}
           decorative
         />
-      </StyledNavButton>
-      <StyledPagesContainer>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <StyledPageItem
-            key={page}
-            $active={page === currentPage}
-            onClick={() => onPageChange(page)}
-          >
-            <Text
-              variant="B1"
-              color={page === currentPage ? tokens.colors.neutral[800] : tokens.colors.neutral[600]}
-            >
-              {page}
-            </Text>
-          </StyledPageItem>
-        ))}
-      </StyledPagesContainer>
-      <StyledNavButton onClick={handleNextClick} disabled={currentPage === totalPages}>
+      </StyledPageButton>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <StyledPageNumberButton
+          key={page}
+          $active={currentPage === page}
+          onClick={() => onPageChange(page)}
+          aria-label={`${page}페이지`}
+          aria-current={currentPage === page ? 'page' : undefined}
+        >
+          <StyledPageNumber>{page}</StyledPageNumber>
+        </StyledPageNumberButton>
+      ))}
+
+      <StyledPageButton
+        $disabled={!canGoNext}
+        onClick={() => canGoNext && onPageChange(currentPage + 1)}
+        aria-label="다음 페이지"
+        disabled={!canGoNext}
+      >
         <Icon
           name="chevron_right"
           variant="SM"
-          color={
-            currentPage === totalPages ? tokens.colors.neutral[300] : tokens.colors.neutral[800]
-          }
+          color={canGoNext ? tokens.colors.neutral[700] : tokens.colors.neutral[300]}
           decorative
         />
-      </StyledNavButton>
-    </StyledContainer>
+      </StyledPageButton>
+    </StyledPaginationContainer>
   );
 };
 
 export default Pagination;
 
-const StyledContainer = styled.div`
+const StyledPaginationContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0;
+  padding: ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
 `;
 
-const StyledNavButton = styled.button<{ disabled?: boolean }>`
+const StyledPageButton = styled.button<{ $active?: boolean; $disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: ${tokens.colors.white};
+  background: transparent;
   border: none;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  padding: 0;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
+  position: relative;
 
   &:hover:not(:disabled) {
-    background-color: ${tokens.colors.neutral[100]};
-    border-radius: ${tokens.radius.small};
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
   }
 `;
 
-const StyledPagesContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0;
-`;
-
-const StyledPageItem = styled.button<{ $active?: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: ${tokens.colors.white};
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-
+const StyledPageNumberButton = styled(StyledPageButton)`
   &::before {
     content: '';
     position: absolute;
-    inset: 4px;
-    background-color: ${({ $active }) =>
-      $active ? tokens.colors.primary[200] : tokens.colors.white};
-    border-radius: ${tokens.radius.medium};
+    left: 4px;
+    top: 4px;
+    width: 24px;
+    height: 24px;
+    background-color: ${({ $active }) => ($active ? tokens.colors.primary[200] : 'transparent')};
+    border-radius: ${tokens.radius.large};
     z-index: 0;
   }
+`;
 
-  span {
-    position: relative;
-    z-index: 1;
-    font-weight: ${tokens.typos.fontWeight.semibold};
-    font-size: ${tokens.typos.fontSize[14]};
-    line-height: ${tokens.typos.lineHeight[20]};
-  }
+const StyledPageNumber = styled.span`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[14]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  line-height: ${tokens.typos.lineHeight[20]};
+  color: ${tokens.colors.neutral[800]};
+  text-align: center;
+  position: relative;
+  z-index: 1;
 `;
