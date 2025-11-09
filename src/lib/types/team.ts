@@ -17,4 +17,23 @@ export type TeamFolder = {
   lastRoadmapName?: string;
 };
 
-export type FilterTab = 'recent' | 'progress' | 'name';
+export type Roadmap = {
+  id: string;
+  folderId: string;
+  name: string;
+  description: string;
+  progress?: number;
+  totalSteps?: number;
+  completedSteps?: number;
+  type?: 'personal' | 'team';
+  status?: 'in-progress' | 'completed';
+  icon?: string;
+  color?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type FilterTab = {
+  label: string;
+  value: string;
+};

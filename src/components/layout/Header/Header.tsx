@@ -22,7 +22,7 @@ const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
       {items.map((item, index) => (
-        <Fragment key={item}>
+        <Fragment key={`${item}-${index}`}>
           {index > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
           <BreadcrumbItem
             style={{
