@@ -1,1 +1,1 @@
-export { ROADMAP_COLORS, ROADMAP_COLOR_OPTIONS } from './colors';
+export { ROADMAP_COLOR_OPTIONS, ROADMAP_COLORS } from './colors';

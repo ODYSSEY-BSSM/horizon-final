@@ -2,12 +2,10 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Button } from '@/shared/ui';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
-import { ColorDropdown, IconDropdown, RoadmapThumbnail } from '@/feature/roadmap';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
+import { ColorDropdown, IconDropdown, RoadmapThumbnail } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Button, Icon, Text } from '@/shared/ui';
 
 export interface RoadmapStyleModalProps {
   isOpen: boolean;

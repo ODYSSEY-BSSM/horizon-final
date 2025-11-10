@@ -1,3 +1,5 @@
+'use client';
+
 import type React from 'react';
 import { useButton } from './Button.hooks';
 import { StyledButton, StyledButtonIcon, StyledButtonText } from './Button.styles';

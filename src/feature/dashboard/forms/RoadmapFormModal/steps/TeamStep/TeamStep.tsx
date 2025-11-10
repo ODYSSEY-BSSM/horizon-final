@@ -3,11 +3,10 @@
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
 import { useTeamStep } from '@/feature/dashboard/hooks/useTeamStep';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
-import { TEAM_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { useDropdown } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
+import { TEAM_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { FormFooter } from '../../components/FormFooter';
 import { MODAL_SPACING } from '../../constants/spacing';
 

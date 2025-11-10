@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 
 interface MyRoadmapsHeaderProps {
   onAddFolder: () => void;

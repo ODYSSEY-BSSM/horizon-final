@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/team';
 import { FormModal } from '@/shared/ui';
-import { EmptyTeamState, useTeamSpaceData } from '@/feature/team';
 
 type ModalState = {
   teamCreate: boolean;
@@ -39,11 +39,10 @@ const TeamSpaceContent = () => {
     openModal('teamCreate');
   };
 
-  const handleTeamCreateSubmit = (data: { name: string; description: string }) => {
-    const newTeam = addTeam(data);
-    closeModal('teamCreate');
-    // 새로 생성한 팀으로 이동
+  const handleTeamCreate = ({ name }: { name: string }) => {
+    const newTeam = addTeam({ name, description: '' });
     router.push(`/team-space/${newTeam.id}`);
+    return newTeam;
   };
 
   const handleJoinTeam = () => {
@@ -66,17 +65,10 @@ const TeamSpaceContent = () => {
     <StyledPageContainer>
       <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleJoinTeam} />
 
-      <FormModal
+      <CreateTeamModal
         isOpen={modals.teamCreate}
         onClose={() => closeModal('teamCreate')}
-        onSubmit={handleTeamCreateSubmit}
-        title="팀 정보"
-        description="생성할 팀의 정보를 입력해주세요."
-        fields={[
-          { name: 'name', label: '팀 이름', placeholder: '팀 이름을 작성해주세요', required: true },
-          { name: 'description', label: '팀 설명', placeholder: '팀 설명을 작성해주세요' },
-        ]}
-        submitText="완료"
+        onCreate={handleTeamCreate}
       />
       <FormModal
         isOpen={modals.teamJoin}
@@ -85,7 +77,12 @@ const TeamSpaceContent = () => {
         title="팀 참여하기"
         description="초대코드를 입력하여 팀에 참여하세요."
         fields={[
-          { name: 'inviteCode', label: '초대 코드', placeholder: '초대 코드를 입력해주세요', required: true },
+          {
+            name: 'inviteCode',
+            label: '초대 코드',
+            placeholder: '초대 코드를 입력해주세요',
+            required: true,
+          },
         ]}
         submitText="참여하기"
       />

@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 import { useSidebar } from './Sidebar.hooks';
 import {
   LogoArea,

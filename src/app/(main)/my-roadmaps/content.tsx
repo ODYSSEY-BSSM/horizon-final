@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { FormModal } from '@/shared/ui';
 import { FolderSection, MyRoadmapsHeader } from '@/feature/roadmap';
+import { FormModal } from '@/shared/ui';
 
 type ModalState = {
   folderCreate: boolean;

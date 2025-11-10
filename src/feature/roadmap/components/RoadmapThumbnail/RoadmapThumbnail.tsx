@@ -1,9 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Icon } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 interface RoadmapThumbnailProps {
   color: ColorOption;

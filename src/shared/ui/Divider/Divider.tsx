@@ -1,3 +1,5 @@
+'use client';
+
 import { StyledHorizontalDivider, StyledVerticalDivider } from './Divider.styles';
 import type { DividerProps } from './Divider.types';
 

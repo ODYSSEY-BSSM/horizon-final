@@ -2,11 +2,10 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/shared/ui';
-import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import { Modal } from './Modal';
+import { Button, TextField } from '@/shared/ui';
 import type { FormModalProps } from './FormModal.types';
+import { Modal } from './Modal';
 
 export const FormModal = <T extends Record<string, string>>({
   isOpen,

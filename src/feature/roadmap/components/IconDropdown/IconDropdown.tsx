@@ -2,10 +2,9 @@
 
 import styled from '@emotion/styled';
 import { useId } from 'react';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
 import { useDropdown } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 
 export type IconOption =
   | 'language'

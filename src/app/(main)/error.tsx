@@ -2,9 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 
 export default function MainError({
   error,

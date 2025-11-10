@@ -1,9 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Text } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
 import type { SchoolNode } from '@/feature/school';
+import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 
 interface SchoolNodeListItemProps {
   node: SchoolNode;

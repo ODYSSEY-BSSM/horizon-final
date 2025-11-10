@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { tokens } from '@/shared/tokens';
 import { InfoCard } from '@/feature/dashboard';
+import { tokens } from '@/shared/tokens';
 
 interface InfoCardsGridProps {
   myRoadmapsCount: number;
@@ -20,18 +20,25 @@ const InfoCardsGrid = ({
   return (
     <StyledInfoCardsGrid>
       <InfoCard
+        key="my-roadmaps"
         category="my-roadmaps"
         count={myRoadmapsCount}
         subCount={myRoadmapsInProgress}
         hasItem={true}
       />
       <InfoCard
+        key="team-roadmaps"
         category="team-roadmaps"
         count={teamRoadmapsCount}
         subCount={teamRoadmapsInProgress}
         hasItem={true}
       />
-      <InfoCard category="connected-school" schoolName={connectedSchool} hasItem={true} />
+      <InfoCard
+        key="connected-school"
+        category="connected-school"
+        schoolName={connectedSchool}
+        hasItem={true}
+      />
     </StyledInfoCardsGrid>
   );
 };

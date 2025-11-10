@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Button } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Button } from '@/shared/ui';
 
 interface EmptyTeamStateProps {
   onCreateTeam: () => void;

@@ -1,10 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Button } from '@/shared/ui';
+import { TeamDropdown } from '@/feature/team';
 import type { Team } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
-import { TeamDropdown } from '@/feature/team';
+import { Button } from '@/shared/ui';
 
 interface TeamSpaceHeaderProps {
   teams: Team[];

@@ -1,25 +1,25 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Icon, Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 import { ROADMAP_COLORS } from '../../constants';
 import type { RoadmapListItemProps } from './RoadmapListItem.types';
 
-const RoadmapListItem = ({ roadmap, onClick, onEdit, onDelete, showActions = true }: RoadmapListItemProps) => {
+const RoadmapListItem = ({
+  roadmap,
+  onClick,
+  onEdit,
+  onDelete,
+  showActions = true,
+}: RoadmapListItemProps) => {
   const colors = ROADMAP_COLORS[roadmap.color];
 
   return (
     <StyledContainer onClick={onClick}>
       <StyledLeftSection>
         <StyledIconBox $bgColor={colors.bg}>
-          <Icon
-            name={roadmap.icon}
-            variant="SM"
-            filled
-            color={colors.icon}
-            decorative
-          />
+          <Icon name={roadmap.icon} variant="SM" filled color={colors.icon} decorative />
         </StyledIconBox>
         <StyledInfoSection>
           <Text variant="ST" color={tokens.colors.neutral[800]}>
@@ -35,7 +35,11 @@ const RoadmapListItem = ({ roadmap, onClick, onEdit, onDelete, showActions = tru
             </Text>
             <StyledBullet>•</StyledBullet>
             <Text variant="B2" color={tokens.colors.neutral[500]}>
-              {roadmap.status === 'in-progress' ? '진행중' : roadmap.status === 'completed' ? '완료' : '시작 전'}
+              {roadmap.status === 'in-progress'
+                ? '진행중'
+                : roadmap.status === 'completed'
+                  ? '완료'
+                  : '시작 전'}
             </Text>
           </StyledMetaData>
         </StyledInfoSection>
@@ -52,12 +56,24 @@ const RoadmapListItem = ({ roadmap, onClick, onEdit, onDelete, showActions = tru
         {showActions && (
           <StyledActionsContainer>
             {onEdit && (
-              <StyledActionButton onClick={(e) => { e.stopPropagation(); onEdit(); }} aria-label="편집">
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+                aria-label="편집"
+              >
                 <Icon name="edit" variant="SM" color={tokens.colors.neutral[500]} decorative />
               </StyledActionButton>
             )}
             {onDelete && (
-              <StyledActionButton onClick={(e) => { e.stopPropagation(); onDelete(); }} aria-label="삭제">
+              <StyledActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                aria-label="삭제"
+              >
                 <Icon name="delete" variant="SM" color={tokens.colors.neutral[500]} decorative />
               </StyledActionButton>
             )}
@@ -141,14 +157,14 @@ const StyledProgressContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: ${tokens.spacing.xsmall};
-  min-width: 100px;
+  min-width: 80px;
 `;
 
 const StyledProgressBar = styled.div`
-  width: 100px;
-  height: 6px;
+  width: 80px;
+  height: 8px;
   background-color: ${tokens.colors.neutral[100]};
-  border-radius: ${tokens.radius.full};
+  border-radius: 9999px;
   overflow: hidden;
 `;
 
@@ -156,7 +172,7 @@ const StyledProgressFill = styled.div<{ $progress: number; $color: string }>`
   width: ${({ $progress }) => $progress}%;
   height: 100%;
   background-color: ${({ $color }) => $color};
-  border-radius: ${tokens.radius.full};
+  border-radius: 9999px;
   transition: width 0.3s ease;
 `;
 

@@ -1,10 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Button } from '@/shared/ui';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Button, Icon, Text } from '@/shared/ui';
 
 export interface TeamFolderDeleteModalProps {
   isOpen: boolean;

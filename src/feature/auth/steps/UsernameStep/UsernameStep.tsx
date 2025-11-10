@@ -1,9 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Text } from '@/shared/ui';
-import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text, TextField } from '@/shared/ui';
 import { useUsernameForm } from '../../hooks/signup/useUsernameForm';
 
 const UsernameStep = () => {

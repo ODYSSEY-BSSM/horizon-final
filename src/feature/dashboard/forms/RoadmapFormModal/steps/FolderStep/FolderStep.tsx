@@ -4,12 +4,10 @@ import styled from '@emotion/styled';
 import { useId } from 'react';
 
 import { useFolderStep } from '@/feature/dashboard/hooks/useFolderStep';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
-import { TextField } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
-import { FOLDER_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { useDropdown } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Icon, Text, TextField } from '@/shared/ui';
+import { FOLDER_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { FormFooter } from '../../components/FormFooter';
 import { MODAL_SPACING } from '../../constants/spacing';
 
