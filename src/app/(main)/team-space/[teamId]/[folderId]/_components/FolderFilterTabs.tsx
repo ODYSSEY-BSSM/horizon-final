@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Text from '@/components/common/Text/Text';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_FILTER_TABS } from '../_constants/FilterTabs.constants';
 

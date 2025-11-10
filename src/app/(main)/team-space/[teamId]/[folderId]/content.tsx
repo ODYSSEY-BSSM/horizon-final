@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useParams } from 'next/navigation';
-import Button from '@/components/common/Button/Button';
+import { Button } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { useTeamSpaceData } from '../../_hooks/useTeamSpaceData';
 import RoadmapListSection from './_sections/RoadmapListSection';

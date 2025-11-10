@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useId, useState } from 'react';
-import Icon from '@/components/common/Icon/Icon';
+import { Icon } from '@/shared/ui';
 import type { Team } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 

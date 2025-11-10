@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Icon from '@/components/common/Icon/Icon';
+import { Icon } from '@/shared/ui';
 import type { RoadmapColor, RoadmapItem } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_COLORS } from '../_constants/RoadmapList.constants';

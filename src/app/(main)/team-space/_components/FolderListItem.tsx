@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import Icon from '@/components/common/Icon/Icon';
+import { Icon } from '@/shared/ui';
 import type { TeamFolder } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 

@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';

@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from '@/components/common/Button/Button';
+import { Button } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import FolderGrid from '../_components/FolderGrid';
 import TeamDropdown from '../_components/TeamDropdown';

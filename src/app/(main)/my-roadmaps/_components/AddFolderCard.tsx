@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import type React from 'react';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 
 interface AddFolderCardProps {

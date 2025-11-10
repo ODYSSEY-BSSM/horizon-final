@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
-import Text from '@/components/common/Text/Text';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 
 interface GreetingMessageProps {

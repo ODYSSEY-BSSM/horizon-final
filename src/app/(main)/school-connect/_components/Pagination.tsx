@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Icon from '@/components/common/Icon/Icon';
+import { Icon } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 
 interface PaginationProps {

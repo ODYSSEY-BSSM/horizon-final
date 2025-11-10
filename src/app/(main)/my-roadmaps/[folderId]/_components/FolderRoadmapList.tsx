@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import RoadmapCard from '@/app/(main)/dashboard/_components/RoadmapCard';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import type { RoadmapItem } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import type { MockRoadmap } from '../_data/mockData';

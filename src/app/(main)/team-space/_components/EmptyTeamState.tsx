@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Button from '@/components/common/Button/Button';
+import { Button } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 
 interface EmptyTeamStateProps {

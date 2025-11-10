@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
-import Text from '@/components/common/Text/Text';
-import TextField from '@/components/common/TextField/TextField';
+import { Text } from '@/shared/ui';
+import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import SecondaryAction from '../_components/SecondaryAction';
 import { useEmailForm } from '../_hooks/useEmailForm';

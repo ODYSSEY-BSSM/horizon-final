@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Text from '@/components/common/Text/Text';
-import TextField from '@/components/common/TextField/TextField';
+import { Text } from '@/shared/ui';
+import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { useUsernameForm } from '../_hooks/useUsernameForm';
 

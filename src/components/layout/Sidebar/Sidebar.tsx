@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { useSidebar } from './Sidebar.hooks';
 import {

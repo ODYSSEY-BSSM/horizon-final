@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import type { Roadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_FILTER_TABS } from '../_constants/RoadmapFilterTabs.constants';

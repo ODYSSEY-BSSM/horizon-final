@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
 import { useTeamStep } from '@/app/(main)/dashboard/_hooks/useTeamStep';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import { useDropdown } from '../../../_hooks/useDropdown';

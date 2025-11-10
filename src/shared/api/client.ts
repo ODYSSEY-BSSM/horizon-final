@@ -1,4 +1,4 @@
-import { tokenStore } from '../auth/tokenStore';
+import { tokenStore } from '@/lib/auth/tokenStore';
 import type { ApiResponse } from './types';
 
 // Base API configuration

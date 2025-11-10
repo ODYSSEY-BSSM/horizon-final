@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 import { useId } from 'react';
 
 import { useFolderStep } from '@/app/(main)/dashboard/_hooks/useFolderStep';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
-import TextField from '@/components/common/TextField/TextField';
+import { Icon } from '@/shared/ui';
+import { Text } from '@/shared/ui';
+import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
 import { useDropdown } from '../../../_hooks/useDropdown';
