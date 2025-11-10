@@ -5,7 +5,7 @@ import type { TeamFolder } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_FILTER_TABS } from '../_constants/FilterTabs.constants';
 import AddFolderCard from './AddFolderCard';
-import FilterTabs from './FilterTabs';
+import { FilterTabs } from '@/feature/roadmap';
 import FolderListItem from './FolderListItem';
 
 interface FolderGridProps {

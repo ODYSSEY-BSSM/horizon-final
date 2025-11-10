@@ -4,7 +4,8 @@ import styled from '@emotion/styled';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import FilterTabs from './FilterTabs';
+import { FilterTabs } from '@/feature/roadmap';
+import { FILTER_TABS } from '../_constants/FilterTabs.constants';
 
 export interface RoadmapListProps {
   className?: string;
@@ -81,7 +82,7 @@ const RoadmapList = ({
         </StyledHeaderContent>
       </StyledHeader>
 
-      <FilterTabs activeTab={activeTab} onTabClick={onTabClick} />
+      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
 
       <StyledEmptyState>
         <Text as="p" variant="ST" color={tokens.colors.neutral[600]}>

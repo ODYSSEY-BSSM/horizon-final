@@ -7,10 +7,9 @@ import { Text } from '@/shared/ui';
 import type { RoadmapItem } from '@/lib/types/dashboard';
 import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
-import FolderFilterTabs from './FolderFilterTabs';
-import { Pagination } from '@/feature/roadmap';
-import { RoadmapListItem } from '@/feature/roadmap';
+import { Pagination, RoadmapListItem, FilterTabs } from '@/feature/roadmap';
 import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
+import { ROADMAP_FILTER_TABS } from '../_constants/FilterTabs.constants';
 
 export interface FolderRoadmapListProps {
   className?: string;
@@ -97,7 +96,7 @@ const FolderRoadmapList = ({
         </StyledHeaderContent>
       </StyledHeader>
 
-      <FolderFilterTabs activeTab={activeTab} onTabClick={onTabClick} />
+      <FilterTabs tabs={ROADMAP_FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
 
       {hasRoadmaps ? (
         <StyledContentSection>

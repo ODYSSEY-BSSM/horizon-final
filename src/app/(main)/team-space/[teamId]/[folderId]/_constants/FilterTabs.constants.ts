@@ -1,4 +1,4 @@
-import type { FilterTab } from '@/lib/types/team';
+import type { FilterTab } from '@/feature/roadmap';
 
 export const ROADMAP_FILTER_TABS: FilterTab[] = [
   { label: '전체', value: 'all' },
