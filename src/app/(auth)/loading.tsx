@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { ClipLoader } from 'react-spinners';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 
 export default function AuthLoading() {
   return (

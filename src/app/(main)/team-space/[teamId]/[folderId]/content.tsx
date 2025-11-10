@@ -1,16 +1,25 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useParams } from 'next/navigation';
-import Button from '@/components/common/Button/Button';
+import { notFound, useParams } from 'next/navigation';
+import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
 import { tokens } from '@/shared/tokens';
-import { useTeamSpaceData } from '../../_hooks/useTeamSpaceData';
-import RoadmapListSection from './_sections/RoadmapListSection';
+import { Button } from '@/shared/ui';
 
 const FolderRoadmapsContent = () => {
   const params = useParams();
-  const teamId = params.teamId as string;
-  const folderId = params.folderId as string;
+
+  if (
+    !params?.teamId ||
+    Array.isArray(params.teamId) ||
+    !params?.folderId ||
+    Array.isArray(params.folderId)
+  ) {
+    notFound();
+  }
+
+  const teamId = params.teamId;
+  const folderId = params.folderId;
 
   const { teams, folders } = useTeamSpaceData();
 
@@ -53,7 +62,7 @@ const FolderRoadmapsContent = () => {
         </Button>
       </StyledHeader>
 
-      <RoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
+      <TeamFolderRoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
     </StyledContainer>
   );
 };

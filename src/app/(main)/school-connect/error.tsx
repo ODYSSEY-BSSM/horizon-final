@@ -2,9 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
-import Button from '@/components/common/Button/Button';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import { Button, Text } from '@/shared/ui';
 
 export default function SchoolConnectError({
   error,

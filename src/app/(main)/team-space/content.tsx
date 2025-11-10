@@ -3,10 +3,9 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import EmptyTeamState from './_components/EmptyTeamState';
-import TeamCreateModal from './_forms/TeamCreateModal';
-import TeamJoinModal from './_forms/TeamJoinModal';
-import { useTeamSpaceData } from './_hooks/useTeamSpaceData';
+import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/team';
+import type { Team } from '@/feature/team/types/team';
+import { FormModal } from '@/shared/ui';
 
 type ModalState = {
   teamCreate: boolean;
@@ -41,19 +40,21 @@ const TeamSpaceContent = () => {
     openModal('teamCreate');
   };
 
-  const handleTeamCreateSubmit = (data: { name: string; description: string }) => {
-    const newTeam = addTeam(data);
-    closeModal('teamCreate');
-    // 새로 생성한 팀으로 이동
-    router.push(`/team-space/${newTeam.id}`);
+  const handleTeamCreate = ({ name }: { name: string }) => {
+    const newTeam = addTeam({ name, description: '' });
+    return newTeam;
+  };
+
+  const handleTeamCreateComplete = (team: Team) => {
+    router.push(`/team-space/${team.id}`);
   };
 
   const handleJoinTeam = () => {
     openModal('teamJoin');
   };
 
-  const handleTeamJoinSubmit = (inviteCode: string) => {
-    const result = joinTeam(inviteCode);
+  const handleTeamJoinSubmit = (data: { inviteCode: string }) => {
+    const result = joinTeam(data.inviteCode);
     if (result.success && result.team) {
       closeModal('teamJoin');
       // 참여한 팀으로 이동
@@ -68,15 +69,27 @@ const TeamSpaceContent = () => {
     <StyledPageContainer>
       <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleJoinTeam} />
 
-      <TeamCreateModal
+      <CreateTeamModal
         isOpen={modals.teamCreate}
         onClose={() => closeModal('teamCreate')}
-        onSubmit={handleTeamCreateSubmit}
+        onCreate={handleTeamCreate}
+        onComplete={handleTeamCreateComplete}
       />
-      <TeamJoinModal
+      <FormModal
         isOpen={modals.teamJoin}
         onClose={() => closeModal('teamJoin')}
         onSubmit={handleTeamJoinSubmit}
+        title="팀 참여하기"
+        description="초대코드를 입력하여 팀에 참여하세요."
+        fields={[
+          {
+            name: 'inviteCode',
+            label: '초대 코드',
+            placeholder: '초대 코드를 입력해주세요',
+            required: true,
+          },
+        ]}
+        submitText="참여하기"
       />
     </StyledPageContainer>
   );
