@@ -7,8 +7,7 @@ import { Text } from '@/shared/ui';
 import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_FILTER_TABS } from '../_constants/RoadmapFilterTabs.constants';
-import FilterTabs from './FilterTabs';
-import { RoadmapListItem } from '@/feature/roadmap';
+import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';
 import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 
 interface RoadmapListContainerProps {

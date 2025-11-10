@@ -1,4 +1,4 @@
-import type { FilterTab } from '@/lib/types/team';
+import type { FilterTab } from '@/feature/roadmap';
 
 export const FOLDER_FILTER_TABS: FilterTab[] = [
   { value: 'recent', label: '최신순' },

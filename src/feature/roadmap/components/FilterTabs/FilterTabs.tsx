@@ -3,22 +3,22 @@
 import styled from '@emotion/styled';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import { ROADMAP_FILTER_TABS } from '../_constants/FilterTabs.constants';
+import type { FilterTabsProps } from './FilterTabs.types';
 
-interface FolderFilterTabsProps {
-  activeTab: string;
-  onTabClick: (value: string) => void;
-}
-
-const FolderFilterTabs = ({ activeTab, onTabClick }: FolderFilterTabsProps) => {
+/**
+ * Unified FilterTabs component for roadmap filtering
+ * Consolidates 4 duplicate implementations from my-roadmaps and team-space
+ */
+const FilterTabs = ({ tabs, activeTab, onTabClick, className }: FilterTabsProps) => {
   return (
-    <StyledFilterTabsContainer>
-      {ROADMAP_FILTER_TABS.map((tab) => (
+    <StyledFilterTabsContainer className={className}>
+      {tabs.map((tab) => (
         <StyledFilterTab key={tab.value} $active={activeTab === tab.value}>
           <StyledTabButton
             type="button"
             onClick={() => onTabClick(tab.value)}
             $active={activeTab === tab.value}
+            aria-current={activeTab === tab.value ? 'page' : undefined}
           >
             <Text
               variant="B1"
@@ -35,7 +35,7 @@ const FolderFilterTabs = ({ activeTab, onTabClick }: FolderFilterTabsProps) => {
   );
 };
 
-export default FolderFilterTabs;
+export default FilterTabs;
 
 const StyledFilterTabsContainer = styled.div`
   display: flex;
@@ -71,7 +71,7 @@ const StyledTabButton = styled.button<{ $active?: boolean }>`
   height: 52px;
   padding: 10px 4px;
   cursor: pointer;
-  font-weight: ${({ $active }) => ($active ? tokens.typos.fontWeight.semibold : tokens.typos.fontWeight.semibold)};
+  font-weight: ${tokens.typos.fontWeight.semibold};
   transition: none;
 
   &:hover {
@@ -80,5 +80,10 @@ const StyledTabButton = styled.button<{ $active?: boolean }>`
 
   &:active {
     background: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: 2px;
   }
 `;

@@ -1,4 +1,4 @@
-import type { FilterTab } from '../_components/FilterTabs';
+import type { FilterTab } from '@/feature/roadmap';
 
 export const FILTER_TABS: FilterTab[] = [
   {

@@ -3,6 +3,8 @@ export { Pagination } from './components/Pagination';
 export type { PaginationProps } from './components/Pagination';
 export { RoadmapListItem } from './components/RoadmapListItem';
 export type { RoadmapListItemProps } from './components/RoadmapListItem';
+export { FilterTabs } from './components/FilterTabs';
+export type { FilterTab, FilterTabsProps } from './components/FilterTabs';
 
 // Hooks
 export { useDropdown } from './hooks/useDropdown';

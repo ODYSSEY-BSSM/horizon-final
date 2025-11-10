@@ -2,10 +2,10 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Pagination } from '@/feature/roadmap';
+import { Pagination, FilterTabs } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import AddFolderCard from './AddFolderCard';
-import FilterTabs from './FilterTabs';
+import { FILTER_TABS } from '../_constants/FilterTabs.constants';
 import type { Folder } from './FolderCard';
 import FolderCard from './FolderCard';
 
@@ -85,7 +85,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   return (
     <StyledContainer className={className}>
-      <FilterTabs activeTab={activeTab} onTabClick={setActiveTab} />
+      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>
