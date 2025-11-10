@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import EmptyTeamState from './_components/EmptyTeamState';
+import { EmptyTeamState } from '@/feature/team';
 import TeamCreateModal from './_forms/TeamCreateModal';
 import TeamJoinModal from './_forms/TeamJoinModal';
 import { useTeamSpaceData } from './_hooks/useTeamSpaceData';

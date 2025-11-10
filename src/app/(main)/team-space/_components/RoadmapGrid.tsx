@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
-import AddRoadmapCard from './AddRoadmapCard';
+import { AddRoadmapCard } from '@/feature/team';
 import { RoadmapListItem } from '@/feature/roadmap';
 import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 

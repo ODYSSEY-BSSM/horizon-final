@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { Button } from '@/shared/ui';
 import type { Team } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
-import TeamDropdown from '../_components/TeamDropdown';
+import { TeamDropdown } from '@/feature/team';
 
 interface TeamSpaceHeaderProps {
   teams: Team[];

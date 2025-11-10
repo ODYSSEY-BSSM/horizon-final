@@ -129,7 +129,7 @@ const StyledTeamOption = styled.button<{ $selected: boolean }>`
   transition: background-color 0.2s ease;
   width: 100%;
   text-align: left;
-  
+
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.regular};
