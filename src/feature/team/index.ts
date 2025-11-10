@@ -15,11 +15,6 @@ export * from './constants/RoadmapFilterTabs.constants';
 export * from './constants/TeamFilterTabs.constants';
 export * from './constants/TeamFolderFilterTabs.constants';
 
-// Data
-export * from './data/mockRoadmaps';
-export * from './data/mockTeamFolders';
-export * from './data/mockTeams';
-
 // Forms
 export { TeamFolderDeleteModal } from './forms/TeamFolderDeleteModal';
 

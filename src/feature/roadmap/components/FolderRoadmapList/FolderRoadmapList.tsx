@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { RoadmapCard } from '@/feature/dashboard';
 import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import { FilterTabs, FOLDER_FILTER_TABS, Pagination, RoadmapListItem } from '@/feature/roadmap';
-import type { MockRoadmap } from '@/feature/roadmap/data/mockData';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 
@@ -15,7 +14,7 @@ export interface FolderRoadmapListProps {
   onCreateRoadmap?: () => void;
   activeTab: string;
   onTabClick: (value: string) => void;
-  roadmaps?: MockRoadmap[];
+  roadmaps?: RoadmapItem[];
   currentPage?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
@@ -107,10 +106,10 @@ const FolderRoadmapList = ({
                     name: roadmap.title,
                     icon: roadmap.icon,
                     color: roadmap.color,
-                    type: roadmap.type === 'my' ? 'personal' : 'team',
-                    totalSteps: Math.floor(Math.random() * 20) + 5,
-                    completedSteps: Math.floor(((Math.random() * 20 + 5) * roadmap.progress) / 100),
-                    status: roadmap.progress === 100 ? 'completed' : 'in-progress',
+                    type: roadmap.category,
+                    totalSteps: roadmap.steps,
+                    completedSteps: Math.floor((roadmap.steps * roadmap.progress) / 100),
+                    status: roadmap.status,
                     progress: roadmap.progress,
                   }}
                 />
@@ -124,9 +123,9 @@ const FolderRoadmapList = ({
                   title: roadmap.title,
                   icon: roadmap.icon,
                   color: roadmap.color,
-                  category: roadmap.type === 'my' ? 'personal' : 'team',
-                  steps: 0,
-                  status: roadmap.progress === 100 ? 'completed' : 'in-progress',
+                  category: roadmap.category,
+                  steps: roadmap.steps,
+                  status: roadmap.status,
                   progress: roadmap.progress,
                 };
                 return <RoadmapCard key={roadmap.id} item={roadmapItem} />;

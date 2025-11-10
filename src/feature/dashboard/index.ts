@@ -11,8 +11,6 @@ export * from './constants/FilterTab.constants';
 export { CARD_CONFIGS } from './constants/InfoCard.constants';
 export * from './constants/RoadmapFormModal.constants';
 export * from './constants/RoadmapList.constants';
-// Data
-export * from './data/mockData';
 export { FormFooter } from './forms/RoadmapFormModal/components/FormFooter';
 export { FormHeader } from './forms/RoadmapFormModal/components/FormHeader';
 export { FormLayout } from './forms/RoadmapFormModal/components/FormLayout';

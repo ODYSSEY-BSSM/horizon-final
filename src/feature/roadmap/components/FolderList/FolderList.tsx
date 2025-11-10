@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { AddFolderCard } from '@/feature/folder';
+import { useFolders } from '@/feature/folder/hooks/useFolderQueries';
 import type { Folder } from '@/feature/roadmap';
 import { FOLDER_FILTER_TABS as FILTER_TABS, FilterTabs, FolderCard, Pagination } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
@@ -12,61 +13,30 @@ export interface FolderListProps {
   onAddFolderClick: () => void;
 }
 
-const mockFolders: Folder[] = [
-  {
-    id: 1,
-    name: 'React Study',
-    description: '리액트 공부 폴더',
-    progress: 50,
-    roadmapCount: 10,
-    completedCount: 5,
-    lastRoadmap: 'React Hooks',
-  },
-  {
-    id: 2,
-    name: 'Algorithm',
-    description: '알고리즘 문제 풀이',
-    progress: 75,
-    roadmapCount: 8,
-    completedCount: 6,
-    lastRoadmap: 'Dynamic Programming',
-  },
-  {
-    id: 3,
-    name: 'Next.js Project',
-    description: 'Next.js로 사이드 프로젝트',
-    progress: 30,
-    roadmapCount: 12,
-    completedCount: 3,
-    lastRoadmap: 'Authentication',
-  },
-  {
-    id: 4,
-    name: 'Design System',
-    description: '회사 디자인 시스템 구축',
-    progress: 100,
-    roadmapCount: 15,
-    completedCount: 15,
-    lastRoadmap: 'Component Documentation',
-  },
-  {
-    id: 5,
-    name: 'Vue.js Intro',
-    description: 'Vue.js 기초 다지기',
-    progress: 10,
-    roadmapCount: 5,
-    completedCount: 0,
-    lastRoadmap: 'Vue Router',
-  },
-];
-
 const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 1; // TODO: 실제 데이터에 따라 동적으로 계산
   const [activeTab, setActiveTab] = useState('latest');
 
+  // 실제 API 데이터 가져오기
+  const { data: foldersData, isLoading, error } = useFolders();
+
+  // API 데이터를 UI 타입으로 변환
+  const folders: Folder[] = useMemo(() => {
+    if (!foldersData) return [];
+
+    return foldersData.map((folder) => ({
+      id: folder.uuid,
+      name: folder.name,
+      description: '', // API에서 제공하지 않으면 빈 문자열
+      progress: 0, // TODO: 진행률 계산 로직 필요
+      roadmapCount: 0, // TODO: 로드맵 개수 API 호출 필요
+      completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
+      lastRoadmap: '', // TODO: 마지막 로드맵 이름 가져오기
+    }));
+  }, [foldersData]);
+
   const sortedFolders = useMemo(() => {
-    return [...mockFolders].sort((a, b) => {
+    return [...folders].sort((a, b) => {
       if (activeTab === 'progress') {
         return b.progress - a.progress;
       }
@@ -75,7 +45,37 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
       }
       return b.id - a.id;
     });
-  }, [activeTab]);
+  }, [folders, activeTab]);
+
+  const totalPages = 1; // TODO: 페이지네이션 로직 추가 필요
+
+  // 로딩 상태 표시
+  if (isLoading) {
+    return (
+      <StyledContainer className={className}>
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <StyledMainContent>
+          <StyledContent>
+            <StyledLoadingText>폴더를 불러오는 중...</StyledLoadingText>
+          </StyledContent>
+        </StyledMainContent>
+      </StyledContainer>
+    );
+  }
+
+  // 에러 상태 표시
+  if (error) {
+    return (
+      <StyledContainer className={className}>
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <StyledMainContent>
+          <StyledContent>
+            <StyledErrorText>폴더를 불러오는데 실패했습니다.</StyledErrorText>
+          </StyledContent>
+        </StyledMainContent>
+      </StyledContainer>
+    );
+  }
 
   return (
     <StyledContainer className={className}>
@@ -137,8 +137,26 @@ const StyledPaginationWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  
+
   > div {
     padding: 0;
   }
+`;
+
+const StyledLoadingText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  color: ${tokens.colors.neutral[600]};
+  font-size: 16px;
+`;
+
+const StyledErrorText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  color: ${tokens.colors.error[200]};
+  font-size: 16px;
 `;

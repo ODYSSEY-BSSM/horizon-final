@@ -1,31 +1,53 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { MOCK_ROADMAPS } from '@/feature/roadmap/data/mockData';
+import { useFolderContent } from '@/feature/folder/hooks/useFolderQueries';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 
 const ITEMS_PER_PAGE = 10;
 
-const useFolderDetail = (_folderId: string) => {
+const useFolderDetail = (folderId: string) => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  // 실제 API로 폴더 컨텐츠 조회
+  const { data: folderContent, isLoading } = useFolderContent(Number(folderId));
+
+  // 로드맵 데이터 가져오기 (폴더 컨텐츠에서 로드맵만 필터링)
+  const roadmaps = useMemo(() => {
+    if (!folderContent?.items) return [];
+
+    return folderContent.items
+      .filter((item) => item.type === 'roadmap')
+      .map((item) => ({
+        id: item.uuid.toString(),
+        title: item.name,
+        icon: item.icon.toLowerCase(),
+        color: item.color.toLowerCase() as RoadmapColor,
+        category: 'personal' as 'personal' | 'team',
+        steps: 0, // TODO: API에서 단계 정보를 제공하면 업데이트 필요
+        status: 'in-progress' as 'in-progress' | 'completed',
+        progress: 0,
+      }));
+  }, [folderContent]);
+
   const filteredRoadmaps = useMemo(() => {
-    return MOCK_ROADMAPS.filter((roadmap) => {
+    return roadmaps.filter((roadmap) => {
       switch (activeFilter) {
         case 'my':
-          return roadmap.type === 'my';
         case 'team':
-          return roadmap.type === 'team';
+          // 개인 폴더에서는 항상 personal 로드맵만 있으므로 my/team 필터는 모두 표시
+          return true;
         case 'completed':
-          return roadmap.progress === 100;
+          return roadmap.status === 'completed';
         case 'inProgress':
-          return roadmap.progress > 0 && roadmap.progress < 100;
+          return roadmap.status === 'in-progress';
         default:
           return true;
       }
     });
-  }, [activeFilter]);
+  }, [roadmaps, activeFilter]);
 
   const totalPages = Math.ceil(filteredRoadmaps.length / ITEMS_PER_PAGE);
 
@@ -53,6 +75,7 @@ const useFolderDetail = (_folderId: string) => {
     currentPage,
     totalPages,
     onPageChange: handlePageChange,
+    isLoading,
   };
 };
 
