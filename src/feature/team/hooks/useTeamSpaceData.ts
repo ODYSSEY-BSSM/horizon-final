@@ -1,118 +1,80 @@
-import { useState } from 'react';
-import { mockRoadmaps } from '@/feature/team/data/mockRoadmaps';
-import { mockTeamFolders } from '@/feature/team/data/mockTeamFolders';
-import { mockTeams } from '@/feature/team/data/mockTeams';
-import type { Roadmap, Team, TeamFolder } from '@/feature/team/types/team';
+import { useMemo } from 'react';
+import { useTeams } from './useTeamQueries';
+import { useTeamFolders } from '@/feature/folder/hooks/useFolderQueries';
+import type { Team, TeamFolder } from '@/feature/team/types/team';
 
 export const useTeamSpaceData = () => {
-  const [teams, setTeams] = useState<Team[]>(mockTeams);
-  const [folders, setFolders] = useState<TeamFolder[]>(mockTeamFolders);
-  const [roadmaps, setRoadmaps] = useState<Roadmap[]>(mockRoadmaps);
+  // 실제 API로 팀 목록 조회
+  const { data: teamsData, isLoading: isLoadingTeams } = useTeams();
+
+  // UI 타입으로 변환
+  const teams: Team[] = useMemo(() => {
+    if (!teamsData) return [];
+
+    return teamsData.map((team) => ({
+      id: team.uuid.toString(),
+      name: team.name,
+      description: team.description || '',
+      memberCount: team.memberCount,
+      createdAt: team.createdAt,
+    }));
+  }, [teamsData]);
 
   const getTeamFolders = (teamId: string | null, filterTab?: string): TeamFolder[] => {
-    if (!teamId) {
-      return [];
-    }
-
-    const teamFolders = folders.filter((folder) => folder.teamId === teamId);
-
-    // 필터 탭에 따라 정렬
-    const sortedFolders = [...teamFolders].sort((a, b) => {
-      switch (filterTab) {
-        case 'progress':
-          return b.progress - a.progress;
-        case 'name':
-          return a.name.localeCompare(b.name);
-        default:
-          return b.id.localeCompare(a.id); // ID 기준 역순 (최신순)
-      }
-    });
-
-    return sortedFolders;
+    // TODO: 팀별 폴더 조회 API 연동 필요
+    // const { data: foldersData } = useTeamFolders(teamId);
+    // 현재는 빈 배열 반환
+    return [];
   };
 
-  const addTeam = (teamData: { name: string; description: string }) => {
-    const newTeam: Team = {
-      id: `team-${String(teams.length + 1).padStart(3, '0')}`,
-      name: teamData.name,
-      description: teamData.description,
+  const getFolderRoadmaps = (folderId: string) => {
+    // TODO: 폴더별 로드맵 조회 API 연동 필요
+    return [];
+  };
+
+  const addFolder = (data: { teamId: string; name: string; description: string }) => {
+    // TODO: 폴더 생성 API 연동 필요
+    console.warn('폴더 생성 API가 아직 구현되지 않았습니다:', data);
+  };
+
+  const addTeam = (data: { name: string; description: string }): Team => {
+    // TODO: 팀 생성 API 연동 필요
+    console.warn('팀 생성 API가 아직 구현되지 않았습니다:', data);
+    // 임시로 더미 팀 반환
+    return {
+      id: Date.now().toString(),
+      name: data.name,
+      description: data.description,
       memberCount: 1,
       createdAt: new Date().toISOString(),
     };
-    setTeams((prev) => [...prev, newTeam]);
-    return newTeam;
   };
 
-  const joinTeam = (inviteCode: string) => {
-    // 실제로는 API로 초대코드 검증 후 팀에 참여
-    // 목업에서는 기존 팀 중 하나를 반환
-    const team = teams.find((t) => t.id === inviteCode);
-    if (team) {
-      return { success: true, team };
-    }
-    return { success: false, team: null };
-  };
-
-  const addFolder = (folderData: { teamId: string; name: string; description: string }) => {
-    const newFolder: TeamFolder = {
-      id: `folder-${String(folders.length + 1).padStart(3, '0')}`,
-      teamId: folderData.teamId,
-      name: folderData.name,
-      description: folderData.description,
-      progress: 0,
-      roadmapCount: 0,
-      createdRoadmapCount: 0,
-      lastRoadmapName: undefined,
+  const joinTeam = (inviteCode: string): { success: boolean; team?: Team } => {
+    // TODO: 팀 참여 API 연동 필요
+    console.warn('팀 참여 API가 아직 구현되지 않았습니다:', inviteCode);
+    // 임시로 성공 응답 반환
+    return {
+      success: true,
+      team: {
+        id: Date.now().toString(),
+        name: '참여한 팀',
+        description: '',
+        memberCount: 2,
+        createdAt: new Date().toISOString(),
+      },
     };
-    setFolders((prev) => [...prev, newFolder]);
-    return newFolder;
-  };
-
-  const updateFolder = (folderId: string, folderData: { name: string; description: string }) => {
-    setFolders((prev) =>
-      prev.map((folder) =>
-        folder.id === folderId
-          ? { ...folder, name: folderData.name, description: folderData.description }
-          : folder,
-      ),
-    );
-  };
-
-  const deleteFolder = (folderId: string) => {
-    setFolders((prev) => prev.filter((folder) => folder.id !== folderId));
-  };
-
-  const getFolderRoadmaps = (folderId: string): Roadmap[] => {
-    return roadmaps.filter((roadmap) => roadmap.folderId === folderId);
-  };
-
-  const addRoadmap = (roadmapData: { folderId: string; name: string; description: string }) => {
-    const newRoadmap: Roadmap = {
-      id: `roadmap-${String(roadmaps.length + 1).padStart(3, '0')}`,
-      folderId: roadmapData.folderId,
-      name: roadmapData.name,
-      description: roadmapData.description,
-      progress: 0,
-      totalSteps: 0,
-      completedSteps: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setRoadmaps((prev) => [...prev, newRoadmap]);
-    return newRoadmap;
   };
 
   return {
     teams,
-    folders,
-    roadmaps,
+    folders: [] as TeamFolder[], // TODO: 팀 폴더 API 연동 필요
+    roadmaps: [], // TODO: 팀 로드맵 API 연동 필요
     getTeamFolders,
     getFolderRoadmaps,
+    addFolder,
     addTeam,
     joinTeam,
-    addFolder,
-    updateFolder,
-    deleteFolder,
-    addRoadmap,
+    isLoading: isLoadingTeams,
   };
 };
