@@ -6,7 +6,7 @@ import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
 import FilterTab from './FilterTab';
-import ListHeader from './ListHeader';
+import { ListHeader } from '@/feature/dashboard';
 import { Pagination } from '@/feature/roadmap';
 import RoadmapCard from './RoadmapCard';
 import { RoadmapListItem } from '@/feature/roadmap';
