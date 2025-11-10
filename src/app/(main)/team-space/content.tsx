@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormModal } from '@/shared/ui';
-import { EmptyTeamState } from '@/feature/team';
-import { useTeamSpaceData } from './_hooks/useTeamSpaceData';
+import { EmptyTeamState, useTeamSpaceData } from '@/feature/team';
 
 type ModalState = {
   teamCreate: boolean;

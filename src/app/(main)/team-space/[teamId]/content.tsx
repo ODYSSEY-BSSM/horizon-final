@@ -5,9 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button, FormModal } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import FolderGrid from '../_components/FolderGrid';
-import { TeamDropdown } from '@/feature/team';
-import { useTeamSpaceData } from '../_hooks/useTeamSpaceData';
+import { FolderGrid, TeamDropdown, useTeamSpaceData } from '@/feature/team';
 
 const TeamFoldersContent = () => {
   const params = useParams();
