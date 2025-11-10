@@ -1,8 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useId, useState } from 'react';
+import { useId, useMemo } from 'react';
 import type { Team } from '@/feature/team/types/team';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon } from '@/shared/ui';
 
@@ -16,9 +17,18 @@ interface TeamDropdownProps {
 const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDropdownProps) => {
   const labelId = useId();
   const buttonId = `${labelId}-button`;
-  const [isOpen, setIsOpen] = useState(false);
 
-  const selectedTeam = teams.find((team) => team.id === selectedTeamId);
+  const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
+    itemCount: teams.length,
+    onSelect: (index) => {
+      onChange(teams[index].id);
+    },
+  });
+
+  const selectedTeam = useMemo(
+    () => teams.find((team) => team.id === selectedTeamId),
+    [teams, selectedTeamId],
+  );
 
   const handleCreateTeam = () => {
     setIsOpen(false);
@@ -26,15 +36,19 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
   };
 
   return (
-    <StyledContainer>
+    <StyledContainer ref={dropdownRef} onKeyDown={handleKeyDown}>
       <StyledDropdownHeader
         type="button"
         id={buttonId}
         aria-labelledby={labelId}
         aria-haspopup="listbox"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="팀 선택"
         aria-expanded={isOpen}
+        aria-activedescendant={
+          isOpen && highlightedIndex > -1
+            ? `${buttonId}-option-${teams[highlightedIndex].id}`
+            : undefined
+        }
       >
         <StyledTeamName id={labelId}>{selectedTeam ? selectedTeam.name : '팀 선택'}</StyledTeamName>
         <StyledIconWrapper>
@@ -50,11 +64,13 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
       {isOpen && (
         <StyledDropdownContent>
           <StyledDropdownList role="listbox">
-            {teams.map((team) => (
+            {teams.map((team, index) => (
               <StyledTeamOption
                 type="button"
                 key={team.id}
+                id={`${buttonId}-option-${team.id}`}
                 $selected={selectedTeamId === team.id}
+                $highlighted={highlightedIndex === index}
                 onClick={() => {
                   onChange(team.id);
                   setIsOpen(false);
@@ -130,7 +146,7 @@ const StyledDropdownContent = styled.div`
   left: 0;
   width: 240px;
   background-color: ${tokens.colors.white};
-  border: 1px solid #cdd5e1;
+  border: 1px solid ${tokens.colors.neutral[300]};
   border-radius: ${tokens.radius.medium};
   box-shadow: ${tokens.shadow[0]};
   z-index: 10000;
@@ -174,12 +190,17 @@ const StyledCreateTeamOption = styled.button`
   }
 `;
 
-const StyledTeamOption = styled.button<{ $selected: boolean }>`
+const StyledTeamOption = styled.button<{ $selected: boolean; $highlighted: boolean }>`
   display: flex;
   align-items: center;
   height: 48px;
   padding: 0 12px;
-  background-color: ${tokens.colors.white};
+  background-color: ${({ $highlighted, $selected }) =>
+    $highlighted
+      ? tokens.colors.neutral[100]
+      : $selected
+        ? tokens.colors.neutral[200]
+        : tokens.colors.white};
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
