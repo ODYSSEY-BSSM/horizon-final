@@ -5,11 +5,12 @@ import RoadmapCard from '@/app/(main)/dashboard/_components/RoadmapCard';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import type { RoadmapItem } from '@/lib/types/dashboard';
-import type { Roadmap } from '@/lib/types/team';
+import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import FolderFilterTabs from './FolderFilterTabs';
 import { Pagination } from '@/feature/roadmap';
-import RoadmapListItem from './RoadmapListItem';
+import { RoadmapListItem } from '@/feature/roadmap';
+import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 
 export interface FolderRoadmapListProps {
   className?: string;
@@ -18,7 +19,7 @@ export interface FolderRoadmapListProps {
   onCreateRoadmap?: () => void;
   activeTab: string;
   onTabClick: (value: string) => void;
-  roadmaps?: Roadmap[];
+  roadmaps?: TeamRoadmap[];
   currentPage?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
@@ -102,9 +103,24 @@ const FolderRoadmapList = ({
         <StyledContentSection>
           {viewMode === 'list' ? (
             <StyledRoadmapList>
-              {roadmaps.map((roadmap) => (
-                <RoadmapListItem key={roadmap.id} roadmap={roadmap} />
-              ))}
+              {roadmaps.map((roadmap) => {
+                const unifiedRoadmap: Roadmap = {
+                  id: roadmap.id,
+                  name: roadmap.name,
+                  description: roadmap.description,
+                  icon: roadmap.icon || 'deployed_code',
+                  color: (roadmap.color as RoadmapColor) || 'blue',
+                  type: roadmap.type || 'team',
+                  totalSteps: roadmap.totalSteps || 0,
+                  completedSteps: roadmap.completedSteps || 0,
+                  status: roadmap.status || 'in-progress',
+                  progress: roadmap.progress || 0,
+                  folderId: roadmap.folderId,
+                  createdAt: roadmap.createdAt,
+                  updatedAt: roadmap.updatedAt,
+                };
+                return <RoadmapListItem key={roadmap.id} roadmap={unifiedRoadmap} />;
+              })}
             </StyledRoadmapList>
           ) : (
             <StyledThumbnailGrid>
