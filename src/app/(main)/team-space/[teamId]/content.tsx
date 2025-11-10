@@ -3,11 +3,10 @@
 import styled from '@emotion/styled';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/shared/ui';
+import { Button, FormModal } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import FolderGrid from '../_components/FolderGrid';
 import { TeamDropdown } from '@/feature/team';
-import TeamFolderModal from '../_forms/TeamFolderModal';
 import { useTeamSpaceData } from '../_hooks/useTeamSpaceData';
 
 const TeamFoldersContent = () => {
@@ -75,11 +74,18 @@ const TeamFoldersContent = () => {
         onAddFolder={handleAddFolder}
       />
 
-      <TeamFolderModal
+      <FormModal
         isOpen={showFolderModal}
         mode="create"
         onClose={() => setShowFolderModal(false)}
         onSubmit={handleFolderCreate}
+        title="폴더 생성"
+        description="생성할 폴더의 정보를 입력해주세요."
+        fields={[
+          { name: 'name', label: '폴더 이름', placeholder: '폴더 이름을 작성해주세요', required: true },
+          { name: 'description', label: '폴더 설명', placeholder: '폴더 설명을 작성해주세요' },
+        ]}
+        submitText="생성"
       />
     </StyledContainer>
   );

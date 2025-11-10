@@ -21,3 +21,14 @@ export type { DividerProps } from './Divider/Divider.types';
 // SkeletonView
 export { default as SkeletonView } from './SkeletonView/SkeletonView';
 export type { SkeletonViewProps } from './SkeletonView/SkeletonView.types';
+
+// Modal
+export { Modal, FormModal, ConfirmModal } from './Modal';
+export type {
+  ModalProps,
+  ModalWidth,
+  FormModalProps,
+  FormField,
+  ConfirmModalProps,
+  ConfirmModalVariant,
+} from './Modal';
