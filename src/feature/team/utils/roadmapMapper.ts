@@ -1,3 +1,4 @@
+import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import type { Roadmap } from '@/feature/roadmap';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import type { RoadmapColor } from '@/shared/types/roadmap';
@@ -24,5 +25,18 @@ export const mapTeamRoadmapToRoadmap = (teamRoadmap: TeamRoadmap): Roadmap => {
     folderId: teamRoadmap.folderId,
     createdAt: teamRoadmap.createdAt,
     updatedAt: teamRoadmap.updatedAt,
+  };
+};
+
+export const mapTeamRoadmapToRoadmapItem = (teamRoadmap: TeamRoadmap): RoadmapItem => {
+  return {
+    id: teamRoadmap.id,
+    title: teamRoadmap.name,
+    icon: teamRoadmap.icon || 'deployed_code',
+    color: teamRoadmap.color && isValidRoadmapColor(teamRoadmap.color) ? teamRoadmap.color : 'blue',
+    category: teamRoadmap.type === 'personal' ? 'personal' : 'team',
+    steps: teamRoadmap.totalSteps || 0,
+    status: teamRoadmap.status || 'in-progress',
+    progress: teamRoadmap.progress || 0,
   };
 };

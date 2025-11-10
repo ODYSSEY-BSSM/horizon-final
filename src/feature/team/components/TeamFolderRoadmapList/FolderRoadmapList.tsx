@@ -2,11 +2,13 @@
 
 import styled from '@emotion/styled';
 import { RoadmapCard } from '@/feature/dashboard';
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
-import type { Roadmap } from '@/feature/roadmap';
 import { FilterTabs, Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { TEAM_FOLDER_ROADMAP_FILTER_TABS } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
+import {
+  mapTeamRoadmapToRoadmap,
+  mapTeamRoadmapToRoadmapItem,
+} from '@/feature/team/utils/roadmapMapper';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 
@@ -105,40 +107,15 @@ const FolderRoadmapList = ({
         <StyledContentSection>
           {viewMode === 'list' ? (
             <StyledRoadmapList>
-              {roadmaps.map((roadmap) => {
-                const unifiedRoadmap: Roadmap = {
-                  id: roadmap.id,
-                  name: roadmap.name,
-                  description: roadmap.description,
-                  icon: roadmap.icon || 'deployed_code',
-                  color: roadmap.color || 'blue',
-                  type: roadmap.type || 'team',
-                  totalSteps: roadmap.totalSteps || 0,
-                  completedSteps: roadmap.completedSteps || 0,
-                  status: roadmap.status || 'in-progress',
-                  progress: roadmap.progress || 0,
-                  folderId: roadmap.folderId,
-                  createdAt: roadmap.createdAt,
-                  updatedAt: roadmap.updatedAt,
-                };
-                return <RoadmapListItem key={roadmap.id} roadmap={unifiedRoadmap} />;
-              })}
+              {roadmaps.map((roadmap) => (
+                <RoadmapListItem key={roadmap.id} roadmap={mapTeamRoadmapToRoadmap(roadmap)} />
+              ))}
             </StyledRoadmapList>
           ) : (
             <StyledThumbnailGrid>
-              {roadmaps.map((roadmap) => {
-                const roadmapItem: RoadmapItem = {
-                  id: roadmap.id,
-                  title: roadmap.name,
-                  icon: roadmap.icon || 'deployed_code',
-                  color: roadmap.color || 'blue',
-                  category: roadmap.type === 'personal' ? 'personal' : 'team',
-                  steps: 0,
-                  status: roadmap.status || 'in-progress',
-                  progress: roadmap.progress || 0,
-                };
-                return <RoadmapCard key={roadmap.id} item={roadmapItem} />;
-              })}
+              {roadmaps.map((roadmap) => (
+                <RoadmapCard key={roadmap.id} item={mapTeamRoadmapToRoadmapItem(roadmap)} />
+              ))}
             </StyledThumbnailGrid>
           )}
           <StyledPaginationWrapper>

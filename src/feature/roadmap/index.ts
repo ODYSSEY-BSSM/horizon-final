@@ -18,8 +18,8 @@ export { RoadmapListItem } from './components/RoadmapListItem';
 export { RoadmapThumbnail } from './components/RoadmapThumbnail';
 // Constants
 export { ROADMAP_COLOR_OPTIONS, ROADMAP_COLORS } from './constants';
-export * from './constants/FolderFilter.constants';
-export * from './constants/MyRoadmapsFilter.constants';
+export { FOLDER_FILTER_TABS } from './constants/FolderFilter.constants';
+export { FILTER_TABS as MY_ROADMAPS_FILTER_TABS } from './constants/MyRoadmapsFilter.constants';
 // Forms
 export { RoadmapStyleModal } from './forms/RoadmapStyleModal';
 // Hooks
