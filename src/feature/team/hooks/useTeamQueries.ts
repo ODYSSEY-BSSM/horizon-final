@@ -17,9 +17,6 @@ export const teamKeys = {
 // Team Queries
 // ===================================
 
-/**
- * 팀 전체 조회 (내가 속한 팀 목록)
- */
 export function useTeams() {
   return useQuery({
     queryKey: teamKeys.list(),
@@ -27,9 +24,6 @@ export function useTeams() {
   });
 }
 
-/**
- * 팀 단일 조회
- */
 export function useTeam(teamName: string) {
   return useQuery({
     queryKey: teamKeys.detail(teamName),
@@ -38,9 +32,6 @@ export function useTeam(teamName: string) {
   });
 }
 
-/**
- * 팀 멤버 조회
- */
 export function useTeamMembers(teamName: string) {
   return useQuery({
     queryKey: teamKeys.members(teamName),
@@ -49,9 +40,6 @@ export function useTeamMembers(teamName: string) {
   });
 }
 
-/**
- * 팀 신청 목록 조회
- */
 export function useTeamApplications(teamName: string) {
   return useQuery({
     queryKey: teamKeys.applications(teamName),
@@ -64,9 +52,6 @@ export function useTeamApplications(teamName: string) {
 // Team Mutations
 // ===================================
 
-/**
- * 팀 생성
- */
 export function useCreateTeam() {
   const queryClient = useQueryClient();
 
@@ -78,9 +63,6 @@ export function useCreateTeam() {
   });
 }
 
-/**
- * 팀 수정
- */
 export function useUpdateTeam(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -93,9 +75,6 @@ export function useUpdateTeam(teamName: string) {
   });
 }
 
-/**
- * 팀 삭제
- */
 export function useDeleteTeam() {
   const queryClient = useQueryClient();
 
@@ -107,9 +86,6 @@ export function useDeleteTeam() {
   });
 }
 
-/**
- * 팀 멤버 삭제 (추방)
- */
 export function useRemoveTeamMember(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -126,24 +102,17 @@ export function useRemoveTeamMember(teamName: string) {
 // Team Apply Mutations
 // ===================================
 
-/**
- * 팀 신청 (초대 코드로 가입 신청)
- */
 export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: TeamApplyRequest) => teamApi.applyToTeam(data),
     onSuccess: () => {
-      // 팀 목록이 변경될 수 있으므로 갱신
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
   });
 }
 
-/**
- * 팀 신청 수락
- */
 export function useApproveTeamApplication(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -157,9 +126,6 @@ export function useApproveTeamApplication(teamName: string) {
   });
 }
 
-/**
- * 팀 신청 거절
- */
 export function useRejectTeamApplication(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -171,9 +137,6 @@ export function useRejectTeamApplication(teamName: string) {
   });
 }
 
-/**
- * 팀 신청 삭제 (신청 취소)
- */
 export function useDeleteTeamApplication(teamName: string) {
   const queryClient = useQueryClient();
 

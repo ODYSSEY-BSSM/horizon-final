@@ -15,9 +15,6 @@ export const nodeKeys = {
 // Node Queries
 // ===================================
 
-/**
- * 노드 전체 조회 (로드맵별)
- */
 export function useNodes(roadmapUuid: number) {
   return useQuery({
     queryKey: nodeKeys.list(roadmapUuid),
@@ -26,9 +23,6 @@ export function useNodes(roadmapUuid: number) {
   });
 }
 
-/**
- * 단일 노드 조회
- */
 export function useNode(nodeUuid: number) {
   return useQuery({
     queryKey: nodeKeys.detail(nodeUuid),
@@ -41,9 +35,6 @@ export function useNode(nodeUuid: number) {
 // Node Mutations
 // ===================================
 
-/**
- * 노드 생성
- */
 export function useCreateNode(roadmapUuid: number) {
   const queryClient = useQueryClient();
 
@@ -55,9 +46,6 @@ export function useCreateNode(roadmapUuid: number) {
   });
 }
 
-/**
- * 교육과정 노드 전환
- */
 export function useConvertEducationNode(roadmapUuid: number) {
   const queryClient = useQueryClient();
 
@@ -75,9 +63,6 @@ export function useConvertEducationNode(roadmapUuid: number) {
   });
 }
 
-/**
- * 노드 수정
- */
 export function useUpdateNode() {
   const queryClient = useQueryClient();
 
@@ -91,9 +76,6 @@ export function useUpdateNode() {
   });
 }
 
-/**
- * 노드 삭제
- */
 export function useDeleteNode(roadmapUuid: number) {
   const queryClient = useQueryClient();
 

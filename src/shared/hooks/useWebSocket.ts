@@ -7,107 +7,25 @@ import {
 } from '@/shared/api/websocket';
 
 export interface UseWebSocketOptions {
-  /**
-   * 자동으로 연결할지 여부 (기본값: true)
-   */
   autoConnect?: boolean;
-
-  /**
-   * 컴포넌트 언마운트 시 연결 해제할지 여부 (기본값: true)
-   */
   autoDisconnect?: boolean;
-
-  /**
-   * 연결 성공 콜백
-   */
   onOpen?: () => void;
-
-  /**
-   * 연결 해제 콜백
-   */
   onClose?: () => void;
-
-  /**
-   * 에러 콜백
-   */
   onError?: (error: Event) => void;
-
-  /**
-   * 메시지 수신 콜백 (모든 메시지)
-   */
   onMessage?: (message: WebSocketMessage) => void;
 }
 
 export interface UseWebSocketReturn {
-  /**
-   * WebSocket 클라이언트 인스턴스
-   */
   client: WebSocketClient | null;
-
-  /**
-   * 연결 상태
-   */
   isConnected: boolean;
-
-  /**
-   * 연결 중 상태
-   */
   isConnecting: boolean;
-
-  /**
-   * 수동 연결
-   */
   connect: () => void;
-
-  /**
-   * 연결 해제
-   */
   disconnect: () => void;
-
-  /**
-   * 메시지 전송
-   */
   send: <T>(type: string, data: T) => void;
-
-  /**
-   * 메시지 핸들러 등록
-   */
   subscribe: (messageType: string, handler: (data: WebSocketMessage) => void) => void;
-
-  /**
-   * 메시지 핸들러 제거
-   */
   unsubscribe: (messageType: string, handler: (data: WebSocketMessage) => void) => void;
 }
 
-/**
- * WebSocket Hook
- *
- * @param endpoint WebSocket 엔드포인트 (예: '/ws/notifications')
- * @param options 옵션
- * @returns WebSocket 상태 및 제어 함수
- *
- * @example
- * ```tsx
- * const { isConnected, send, subscribe, unsubscribe } = useWebSocket('/ws/notifications', {
- *   onOpen: () => console.log('Connected'),
- *   onMessage: (message) => console.log('Message:', message),
- * });
- *
- * useEffect(() => {
- *   const handler = (message) => {
- *     console.log('Notification:', message.data);
- *   };
- *
- *   subscribe('notification', handler);
- *   return () => unsubscribe('notification', handler);
- * }, [subscribe, unsubscribe]);
- *
- * const handleSend = () => {
- *   send('chat', { text: 'Hello!' });
- * };
- * ```
- */
 export function useWebSocket(
   endpoint: string,
   options: UseWebSocketOptions = {},

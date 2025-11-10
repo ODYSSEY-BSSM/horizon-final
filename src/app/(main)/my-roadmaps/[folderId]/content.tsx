@@ -74,7 +74,6 @@ const FolderDetailContent = () => {
 
       <RoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
 
-      {/* Modals */}
       <FormModal
         isOpen={modals.roadmapCreate}
         onClose={() => closeModal('roadmapCreate')}

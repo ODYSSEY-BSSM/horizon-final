@@ -34,7 +34,6 @@ const SchoolConnectContent = () => {
         <EmptyState onConnect={handleConnect} />
       )}
 
-      {/* Modals */}
       <ConfirmModal
         isOpen={modals.connectFail}
         onClose={() => closeModal('connectFail')}

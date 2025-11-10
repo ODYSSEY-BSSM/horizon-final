@@ -8,7 +8,6 @@ import { Text } from '@/shared/ui';
 export default function AuthLoading() {
   return (
     <StyledContainer>
-      {/* 브랜딩 */}
       <StyledBrandingSection>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
@@ -18,7 +17,6 @@ export default function AuthLoading() {
         </Text>
       </StyledBrandingSection>
 
-      {/* React Spinners */}
       <ClipLoader
         color={tokens.colors.primary[500]}
         size={40}
@@ -28,7 +26,6 @@ export default function AuthLoading() {
         }}
       />
 
-      {/* 설명 텍스트 */}
       <Text variant="O" color={tokens.colors.neutral[400]}>
         페이지를 준비하고 있습니다
       </Text>

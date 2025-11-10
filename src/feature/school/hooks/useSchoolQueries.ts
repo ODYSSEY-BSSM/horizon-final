@@ -14,9 +14,6 @@ export const schoolKeys = {
 // School Connect Queries
 // ===================================
 
-/**
- * 학교 연동 정보 조회
- */
 export function useConnectedSchool() {
   return useQuery({
     queryKey: schoolKeys.connect(),
@@ -25,9 +22,6 @@ export function useConnectedSchool() {
   });
 }
 
-/**
- * 교육과정 노드 목록 조회
- */
 export function useEducationNodes() {
   return useQuery({
     queryKey: schoolKeys.educationNodes(),
@@ -35,9 +29,6 @@ export function useEducationNodes() {
   });
 }
 
-/**
- * 특정 교육과정 노드 조회
- */
 export function useEducationNode(educationUuid: number) {
   return useQuery({
     queryKey: schoolKeys.educationNode(educationUuid),
@@ -50,9 +41,6 @@ export function useEducationNode(educationUuid: number) {
 // School Connect Mutations
 // ===================================
 
-/**
- * 학교 연동
- */
 export function useConnectSchool() {
   const queryClient = useQueryClient();
 
@@ -65,9 +53,6 @@ export function useConnectSchool() {
   });
 }
 
-/**
- * 학교 연동 해제
- */
 export function useDisconnectSchool() {
   const queryClient = useQueryClient();
 
