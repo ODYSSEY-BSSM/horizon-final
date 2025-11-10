@@ -3,12 +3,11 @@
 import styled from '@emotion/styled';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/shared/ui';
+import { Button, FormModal } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import type { ColorOption } from '../_components/ColorDropdown';
 import type { IconOption } from '../_components/IconDropdown';
-import RoadmapCreateModal from '../_forms/RoadmapCreateModal';
 import RoadmapStyleModal from '../_forms/RoadmapStyleModal';
 import RoadmapListSection from './_sections/RoadmapListSection';
 
@@ -74,10 +73,17 @@ const FolderDetailContent = () => {
       <RoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
 
       {/* Modals */}
-      <RoadmapCreateModal
+      <FormModal
         isOpen={modals.roadmapCreate}
         onClose={() => closeModal('roadmapCreate')}
         onSubmit={handleRoadmapSubmit}
+        title="로드맵 정보"
+        description="로드맵 정보를 작성해주세요."
+        fields={[
+          { name: 'title', label: '이름', placeholder: '이름을 입력해주세요', required: true },
+          { name: 'description', label: '설명', placeholder: '설명을 입력해주세요' },
+        ]}
+        submitText="다음"
       />
 
       <RoadmapStyleModal

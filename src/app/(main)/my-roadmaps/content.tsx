@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { FormModal } from '@/shared/ui';
 
-import FolderCreateModal from './_forms/FolderCreateModal';
 import FolderSection from './_sections/FolderSection';
 import MyRoadmapsHeader from './_sections/MyRoadmapsHeader';
 
@@ -38,10 +38,17 @@ const MyRoadmapsContent = () => {
       <FolderSection onAddFolderClick={handleAddFolder} />
 
       {/* Modals */}
-      <FolderCreateModal
+      <FormModal
         isOpen={modals.folderCreate}
         onClose={() => closeModal('folderCreate')}
         onSubmit={handleFolderSubmit}
+        title="폴더 정보"
+        description="추가할 폴더의 정보를 입력해주세요."
+        fields={[
+          { name: 'name', label: '이름', placeholder: '폴더 이름을 작성해주세요', required: true },
+          { name: 'description', label: '설명', placeholder: '폴더 설명을 작성해주세요' },
+        ]}
+        submitText="완료"
       />
     </StyledPageContainer>
   );

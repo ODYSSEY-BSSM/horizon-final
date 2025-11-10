@@ -4,32 +4,49 @@ import styled from '@emotion/styled';
 import { Button } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import type { ConfirmModalProps } from './ConfirmModal.types';
 
-interface ConnectFailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const ConnectFailModal = ({ isOpen, onClose }: ConnectFailModalProps) => {
+export const ConfirmModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  description,
+  confirmText = '확인',
+  cancelText = '취소',
+  variant = 'confirm',
+}: ConfirmModalProps) => {
   if (!isOpen) {
     return null;
   }
 
+  const handleConfirm = () => {
+    onConfirm?.();
+    onClose();
+  };
+
+  const isAlertMode = variant === 'alert' || !onConfirm;
+
   return (
     <StyledOverlay onClick={onClose}>
-      <StyledModal onClick={(e) => e.stopPropagation()}>
+      <StyledModal onClick={(e) => e.stopPropagation()} $isAlertMode={isAlertMode}>
         <StyledContent>
           <StyledTextContent>
             <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
-              연결에 실패했습니다.
+              {title}
             </Text>
             <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
-              본인의 학교가 지원되는지 확인한 후, 학교에서 지급한 구글 계정으로 회원가입해주세요.
+              {description}
             </Text>
           </StyledTextContent>
-          <StyledActions>
-            <Button variant="contained" size="large" onClick={onClose}>
-              확인
+          <StyledActions $isAlertMode={isAlertMode}>
+            {!isAlertMode && (
+              <Button variant="outlined" size="large" onClick={onClose}>
+                {cancelText}
+              </Button>
+            )}
+            <Button variant="contained" size="large" onClick={handleConfirm}>
+              {confirmText}
             </Button>
           </StyledActions>
         </StyledContent>
@@ -37,8 +54,6 @@ const ConnectFailModal = ({ isOpen, onClose }: ConnectFailModalProps) => {
     </StyledOverlay>
   );
 };
-
-export default ConnectFailModal;
 
 const StyledOverlay = styled.div`
   position: fixed;
@@ -50,10 +65,10 @@ const StyledOverlay = styled.div`
   z-index: 1000;
 `;
 
-const StyledModal = styled.div`
+const StyledModal = styled.div<{ $isAlertMode: boolean }>`
   background-color: ${tokens.colors.white};
   border-radius: ${tokens.radius.large};
-  width: 440px;
+  width: ${({ $isAlertMode }) => ($isAlertMode ? '440px' : '400px')};
   max-width: 90vw;
   overflow: hidden;
 `;
@@ -72,8 +87,9 @@ const StyledTextContent = styled.div`
   text-align: left;
 `;
 
-const StyledActions = styled.div`
+const StyledActions = styled.div<{ $isAlertMode: boolean }>`
   display: flex;
-  justify-content: center;
+  gap: ${tokens.spacing.medium};
   width: 100%;
+  justify-content: ${({ $isAlertMode }) => ($isAlertMode ? 'center' : 'flex-start')};
 `;
