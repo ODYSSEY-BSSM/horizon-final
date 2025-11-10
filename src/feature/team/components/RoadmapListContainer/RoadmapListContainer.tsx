@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
+import type { Roadmap } from '@/feature/roadmap';
 import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';
 import { ROADMAP_FILTER_TABS } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';

@@ -1,36 +1,31 @@
 export const getSelectedSidebarItem = (path: string) => {
-  if (path.includes('/my-roadmaps')) {
+  if (path.startsWith('/my-roadmaps')) {
     return 'my-roadmaps';
   }
-  if (path.includes('/team-space')) {
+  if (path.startsWith('/team-space')) {
     return 'team-space';
   }
-  if (path.includes('/school-connect')) {
+  if (path.startsWith('/school-connect')) {
     return 'school-connect';
-  }
-  if (path.includes('/dashboard')) {
-    return 'dashboard';
   }
   return 'dashboard';
 };
 
 export const getBreadcrumbs = (path: string): string[] => {
-  if (path.includes('/my-roadmaps')) {
+  if (path.startsWith('/my-roadmaps')) {
     const match = path.match(/\/my-roadmaps\/([^/]+)/);
     if (match) {
       const folderId = match[1];
-      return ['My Roadmaps', `Folder${folderId}`];
+      // TODO: Fetch actual folder name from API/store instead of using ID
+      return ['My Roadmaps', folderId];
     }
     return ['My Roadmaps'];
   }
-  if (path.includes('/team-space')) {
+  if (path.startsWith('/team-space')) {
     return ['Team Space'];
   }
-  if (path.includes('/school-connect')) {
+  if (path.startsWith('/school-connect')) {
     return ['School Connect'];
-  }
-  if (path.includes('/dashboard')) {
-    return ['Dashboard'];
   }
   return ['Dashboard'];
 };
