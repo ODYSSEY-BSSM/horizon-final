@@ -3,9 +3,9 @@
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import type { Team } from '@/feature/team/types/team';
+import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
-import { generateInviteCode } from '../../utils/inviteCode';
 
 interface CreateTeamModalProps {
   isOpen: boolean;

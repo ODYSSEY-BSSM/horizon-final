@@ -1,4 +1,4 @@
-import type { RoadmapColor } from '@/feature/roadmap';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export type Team = {
   id: string;

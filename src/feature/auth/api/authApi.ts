@@ -1,11 +1,11 @@
-import { apiClient } from '@/shared/api';
 import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   TokenRefreshResponse,
   UserInfoResponse,
-} from '../types/auth';
+} from '@/feature/auth/types/auth';
+import { apiClient } from '@/shared/api';
 
 export const authApi = {
   // 로그인

@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { MOCK_SCHOOL_INFO, MOCK_SCHOOL_NODES } from '../constants/schoolConnect.constants';
+import {
+  MOCK_SCHOOL_INFO,
+  MOCK_SCHOOL_NODES,
+} from '@/feature/school/constants/schoolConnect.constants';
 import type { ModalState, SchoolConnectState } from '../types/schoolConnect.types';
 
 export const useSchoolConnect = () => {

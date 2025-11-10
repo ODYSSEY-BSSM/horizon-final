@@ -1,4 +1,4 @@
-import type { Roadmap } from '../../types';
+import type { Roadmap } from '@/feature/roadmap/types';
 
 export interface RoadmapListItemProps {
   roadmap: Roadmap;

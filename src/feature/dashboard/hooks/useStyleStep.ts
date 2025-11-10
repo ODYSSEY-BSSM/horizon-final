@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import type { RoadmapColor } from '@/feature/roadmap';
+import {
+  COLOR_OPTIONS,
+  ICON_OPTIONS,
+} from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { tokens } from '@/shared/tokens';
-import { COLOR_OPTIONS, ICON_OPTIONS } from '../constants/RoadmapFormModal.constants';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 import { useStyleStepForm } from './useRoadmapForm';
 
 export const useStyleStep = () => {

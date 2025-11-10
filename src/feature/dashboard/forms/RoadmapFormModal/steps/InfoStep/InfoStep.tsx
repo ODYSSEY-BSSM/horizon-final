@@ -2,10 +2,10 @@
 
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
+import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
+import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { useInfoStep } from '@/feature/dashboard/hooks/useInfoStep';
 import { TextField } from '@/shared/ui';
-import { FormFooter } from '../../components/FormFooter';
-import { MODAL_SPACING } from '../../constants/spacing';
 
 const InfoStep = () => {
   const { control, onNext, onPrevious, isValid } = useInfoStep();

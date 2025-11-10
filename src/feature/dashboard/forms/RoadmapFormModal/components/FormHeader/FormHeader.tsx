@@ -1,9 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
-import { MODAL_SPACING } from '../../constants/spacing';
 
 interface FormHeaderProps {
   title: string;

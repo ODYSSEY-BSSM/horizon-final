@@ -2,12 +2,11 @@
 
 import styled from '@emotion/styled';
 import { useId } from 'react';
-
+import { FOLDER_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { useFolderStep } from '@/feature/dashboard/hooks/useFolderStep';
 import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text, TextField } from '@/shared/ui';
-import { FOLDER_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { FormFooter } from '../../components/FormFooter';
 import { MODAL_SPACING } from '../../constants/spacing';
 

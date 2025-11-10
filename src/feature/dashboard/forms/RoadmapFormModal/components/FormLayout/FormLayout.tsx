@@ -2,8 +2,11 @@
 
 import styled from '@emotion/styled';
 import { type ReactNode, useEffect, useId } from 'react';
+import {
+  MODAL_SPACING,
+  STEP_HEIGHTS,
+} from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { tokens } from '@/shared/tokens';
-import { MODAL_SPACING, STEP_HEIGHTS } from '../../constants/spacing';
 import { FormHeader } from '../FormHeader';
 
 interface FormLayoutProps {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { MOCK_ROADMAPS } from '../data/mockData';
+import { MOCK_ROADMAPS } from '@/feature/dashboard/data/mockData';
 
 export const useDashboardData = () => {
   // TODO: API 연동 시 실제 데이터 fetching 로직으로 교체

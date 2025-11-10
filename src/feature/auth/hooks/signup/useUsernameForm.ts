@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useRegister } from '@/feature/auth/hooks/useSignUp';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type UsernameFormData, usernameSchema } from '@/feature/auth/validations/signup';
-import { useRegister } from '../useSignUp';
 
 export const useUsernameForm = () => {
   const router = useRouter();

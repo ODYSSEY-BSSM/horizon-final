@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ITEMS_PER_PAGE } from '../constants/schoolConnect.constants';
+import { ITEMS_PER_PAGE } from '@/feature/school/constants/schoolConnect.constants';
 import type { SchoolNode } from '../types/schoolConnect.types';
 
 export const useSchoolNodeList = (nodes: SchoolNode[]) => {

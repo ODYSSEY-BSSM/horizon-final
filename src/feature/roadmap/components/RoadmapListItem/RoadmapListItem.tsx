@@ -1,9 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { ROADMAP_COLORS } from '@/feature/roadmap/constants';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
-import { ROADMAP_COLORS } from '../../constants';
 import type { RoadmapListItemProps } from './RoadmapListItem.types';
 
 const RoadmapListItem = ({
