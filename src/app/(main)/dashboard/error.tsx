@@ -2,9 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
 import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 
 export default function DashboardError({
   error,

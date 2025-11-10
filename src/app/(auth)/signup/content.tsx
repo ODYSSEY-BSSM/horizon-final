@@ -2,15 +2,12 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import Icon from '@/components/common/Icon/Icon';
-import Text from '@/components/common/Text/Text';
-import { useSignupFlow } from '@/lib/stores/signupFlow';
+import { EmailStep, PasswordStep, UsernameStep, VerificationStep } from '@/feature/auth';
+import { useSignupFlow } from '@/feature/auth/store/signupFlow';
+// TODO: SignUpStep 타입을 @/feature/auth/types로 이전해야 합니다.
 import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';
-import EmailStep from './_steps/EmailStep';
-import PasswordStep from './_steps/PasswordStep';
-import UsernameStep from './_steps/UsernameStep';
-import VerificationStep from './_steps/VerificationStep';
+import { Icon, Text } from '@/shared/ui';
 
 export default function SignUpContent() {
   const { currentStep, completedData, goToStep } = useSignupFlow();

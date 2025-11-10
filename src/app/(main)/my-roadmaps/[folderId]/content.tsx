@@ -1,16 +1,12 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { useState } from 'react';
-import Button from '@/components/common/Button/Button';
-import Text from '@/components/common/Text/Text';
+import type { ColorOption, IconOption } from '@/feature/roadmap';
+import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
-import type { ColorOption } from '../_components/ColorDropdown';
-import type { IconOption } from '../_components/IconDropdown';
-import RoadmapCreateModal from '../_forms/RoadmapCreateModal';
-import RoadmapStyleModal from '../_forms/RoadmapStyleModal';
-import RoadmapListSection from './_sections/RoadmapListSection';
+import { Button, FormModal, Text } from '@/shared/ui';
 
 type ModalState = {
   roadmapCreate: boolean;
@@ -19,7 +15,12 @@ type ModalState = {
 
 const FolderDetailContent = () => {
   const params = useParams();
-  const folderId = params?.folderId as string;
+
+  if (!params?.folderId || Array.isArray(params.folderId)) {
+    notFound();
+  }
+
+  const folderId = params.folderId;
 
   const [modals, setModals] = useState<ModalState>({
     roadmapCreate: false,
@@ -74,10 +75,17 @@ const FolderDetailContent = () => {
       <RoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
 
       {/* Modals */}
-      <RoadmapCreateModal
+      <FormModal
         isOpen={modals.roadmapCreate}
         onClose={() => closeModal('roadmapCreate')}
         onSubmit={handleRoadmapSubmit}
+        title="로드맵 정보"
+        description="로드맵 정보를 작성해주세요."
+        fields={[
+          { name: 'title', label: '이름', placeholder: '이름을 입력해주세요', required: true },
+          { name: 'description', label: '설명', placeholder: '설명을 입력해주세요' },
+        ]}
+        submitText="다음"
       />
 
       <RoadmapStyleModal

@@ -1,13 +1,15 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
+import {
+  GreetingMessage as GreetingSection,
+  InfoCardsGrid,
+  RoadmapFormModal,
+  RoadmapSection,
+  useDashboardData,
+} from '@/feature/dashboard';
+import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
 import { tokens } from '@/shared/tokens';
-import RoadmapFormModal from './_forms/RoadmapFormModal/RoadmapFormModal';
-import { useDashboardData } from './_hooks/useDashboardData';
-import GreetingSection from './_sections/GreetingSection';
-import InfoCardsGrid from './_sections/InfoCardsGrid';
-import RoadmapSection from './_sections/RoadmapSection';
 
 const DashboardContent = () => {
   const { userData, roadmapsData } = useDashboardData();

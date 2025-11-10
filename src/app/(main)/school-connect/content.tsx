@@ -1,14 +1,15 @@
 'use client';
 
 import styled from '@emotion/styled';
-import EmptyState from './_components/EmptyState';
-import { useSchoolConnect } from './_hooks/useSchoolConnect';
-import { useSchoolNodeList } from './_hooks/useSchoolNodeList';
-import ConnectFailModal from './_modals/ConnectFailModal';
-import DisconnectConfirmModal from './_modals/DisconnectConfirmModal';
-import SchoolConnectHeader from './_sections/SchoolConnectHeader';
-import SchoolInfoSection from './_sections/SchoolInfoSection';
-import SchoolNodeListSection from './_sections/SchoolNodeListSection';
+import {
+  EmptyState,
+  SchoolConnectHeader,
+  SchoolInfoSection,
+  SchoolNodeListSection,
+  useSchoolConnect,
+  useSchoolNodeList,
+} from '@/feature/school';
+import { ConfirmModal } from '@/shared/ui';
 
 const SchoolConnectContent = () => {
   const { state, modals, handleConnect, handleDisconnectClick, handleDisconnect, closeModal } =
@@ -34,11 +35,20 @@ const SchoolConnectContent = () => {
       )}
 
       {/* Modals */}
-      <ConnectFailModal isOpen={modals.connectFail} onClose={() => closeModal('connectFail')} />
-      <DisconnectConfirmModal
+      <ConfirmModal
+        isOpen={modals.connectFail}
+        onClose={() => closeModal('connectFail')}
+        title="연결에 실패했습니다."
+        description="본인의 학교가 지원되는지 확인한 후, 학교에서 지급한 구글 계정으로 회원가입해주세요."
+        variant="alert"
+      />
+      <ConfirmModal
         isOpen={modals.disconnectConfirm}
         onClose={() => closeModal('disconnectConfirm')}
         onConfirm={handleDisconnect}
+        title="연동을 해제하시겠습니까?"
+        description="연동을 해제해도 기존에 사용한 학교 노드와 내용은 유지됩니다."
+        variant="confirm"
       />
     </StyledPageContainer>
   );

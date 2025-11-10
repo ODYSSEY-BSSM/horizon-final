@@ -2,8 +2,10 @@
 
 import styled from '@emotion/styled';
 import { usePathname } from 'next/navigation';
-import Header from '@/components/layout/Header/Header';
-import Sidebar from '@/components/layout/Sidebar/Sidebar';
+import { useMemo } from 'react';
+import Header from '@/shared/layout/Header/Header';
+import Sidebar from '@/shared/layout/Sidebar/Sidebar';
+import { getBreadcrumbs, getSelectedSidebarItem } from '@/shared/utils/navigation';
 
 const StyledMainLayoutContainer = styled.div`
   display: flex;
@@ -24,51 +26,15 @@ const StyledMainContent = styled.main`
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Determine the selected sidebar item based on the current path
-  const getSelectedSidebarItem = () => {
-    if (pathname?.includes('/my-roadmaps')) {
-      return 'my-roadmaps';
-    }
-    if (pathname?.includes('/team-space')) {
-      return 'team-space';
-    }
-    if (pathname?.includes('/school-connect')) {
-      return 'school-connect';
-    }
-    if (pathname?.includes('/dashboard')) {
-      return 'dashboard';
-    }
-    return 'dashboard'; // default
-  };
+  const selectedSidebarItem = useMemo(() => getSelectedSidebarItem(pathname ?? ''), [pathname]);
 
-  // Generate breadcrumbs based on current path
-  const getBreadcrumbs = () => {
-    if (pathname?.includes('/my-roadmaps')) {
-      // Check if it's a folder detail page
-      const match = pathname?.match(/\/my-roadmaps\/([^/]+)/);
-      if (match) {
-        const folderId = match[1];
-        return ['My Roadmaps', `Folder${folderId}`];
-      }
-      return ['My Roadmaps'];
-    }
-    if (pathname?.includes('/team-space')) {
-      return ['Team Space'];
-    }
-    if (pathname?.includes('/school-connect')) {
-      return ['School Connect'];
-    }
-    if (pathname?.includes('/dashboard')) {
-      return ['Dashboard'];
-    }
-    return ['Dashboard']; // default
-  };
+  const breadcrumbs = useMemo(() => getBreadcrumbs(pathname ?? ''), [pathname]);
 
   return (
     <StyledMainLayoutContainer>
-      <Sidebar selected={getSelectedSidebarItem()} />
+      <Sidebar selected={selectedSidebarItem} />
       <StyledMainContent>
-        <Header breadcrumbs={getBreadcrumbs()} />
+        <Header breadcrumbs={breadcrumbs} />
         {children}
       </StyledMainContent>
     </StyledMainLayoutContainer>
