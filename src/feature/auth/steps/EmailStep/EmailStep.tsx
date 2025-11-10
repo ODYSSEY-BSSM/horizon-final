@@ -5,8 +5,8 @@ import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import SecondaryAction from '../_components/SecondaryAction';
-import { useEmailForm } from '../_hooks/useEmailForm';
+import { SecondaryAction } from '../../components/signup/SecondaryAction';
+import { useEmailForm } from '../../hooks/signup/useEmailForm';
 
 interface EmailStepProps {
   onGoogleSignUp: () => void;

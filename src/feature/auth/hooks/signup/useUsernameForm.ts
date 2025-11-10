@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import { type UsernameFormData, usernameSchema } from '@/lib/validations/signup';
-import { useRegister } from './useSignUp';
+import { useRegister } from '../useSignUp';
 
 export const useUsernameForm = () => {
   const router = useRouter();

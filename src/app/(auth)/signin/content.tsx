@@ -7,8 +7,7 @@ import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
 import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import SecondaryAction from './_components/SecondaryAction';
-import { useLogin } from './_hooks/useSignIn';
+import { SignInSecondaryAction as SecondaryAction, useLogin } from '@/feature/auth';
 
 export default function SignInContent() {
   const [email, setEmail] = useState('');

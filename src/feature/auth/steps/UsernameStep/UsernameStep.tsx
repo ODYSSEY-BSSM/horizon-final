@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import { useUsernameForm } from '../_hooks/useUsernameForm';
+import { useUsernameForm } from '../../hooks/signup/useUsernameForm';
 
 const UsernameStep = () => {
   const {

@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import PasswordValidation from '../_components/PasswordValidation';
-import { usePasswordForm } from '../_hooks/usePasswordForm';
+import { PasswordValidation } from '../../components/signup/PasswordValidation';
+import { usePasswordForm } from '../../hooks/signup/usePasswordForm';
 
 const PasswordStep = () => {
   const {
