@@ -7,7 +7,7 @@ import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../_constants/RoadmapList.constants';
 import FilterTab from './FilterTab';
 import ListHeader from './ListHeader';
-import Pagination from './Pagination';
+import { Pagination } from '@/feature/roadmap';
 import RoadmapCard from './RoadmapCard';
 import RoadmapListItem from './RoadmapListItem';
 

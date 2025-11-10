@@ -3,12 +3,7 @@
 import styled from '@emotion/styled';
 import { Icon } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
+import type { PaginationProps } from './Pagination.types';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   if (totalPages < 1) {

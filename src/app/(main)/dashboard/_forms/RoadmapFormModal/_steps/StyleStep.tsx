@@ -8,7 +8,7 @@ import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../../_hooks/useDropdown';
+import { useDropdown } from '@/feature/roadmap';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 

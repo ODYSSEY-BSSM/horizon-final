@@ -8,7 +8,7 @@ import type { RoadmapItem } from '@/lib/types/dashboard';
 import type { Roadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import FolderFilterTabs from './FolderFilterTabs';
-import Pagination from './Pagination';
+import { Pagination } from '@/feature/roadmap';
 import RoadmapListItem from './RoadmapListItem';
 
 export interface FolderRoadmapListProps {

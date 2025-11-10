@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import Pagination from '@/app/(main)/dashboard/_components/Pagination';
+import { Pagination } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import AddFolderCard from './AddFolderCard';
 import FilterTabs from './FilterTabs';
