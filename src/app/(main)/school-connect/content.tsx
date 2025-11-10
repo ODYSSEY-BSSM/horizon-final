@@ -2,12 +2,14 @@
 
 import styled from '@emotion/styled';
 import { ConfirmModal } from '@/shared/ui';
-import EmptyState from './_components/EmptyState';
-import { useSchoolConnect } from './_hooks/useSchoolConnect';
-import { useSchoolNodeList } from './_hooks/useSchoolNodeList';
-import SchoolConnectHeader from './_sections/SchoolConnectHeader';
-import SchoolInfoSection from './_sections/SchoolInfoSection';
-import SchoolNodeListSection from './_sections/SchoolNodeListSection';
+import {
+  EmptyState,
+  useSchoolConnect,
+  useSchoolNodeList,
+  SchoolConnectHeader,
+  SchoolInfoSection,
+  SchoolNodeListSection,
+} from '@/feature/school';
 
 const SchoolConnectContent = () => {
   const { state, modals, handleConnect, handleDisconnectClick, handleDisconnect, closeModal } =
