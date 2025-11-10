@@ -7,10 +7,12 @@ import { Text } from '@/shared/ui';
 import { useSignupFlow } from '@/lib/stores/signupFlow';
 import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';
-import EmailStep from './_steps/EmailStep';
-import PasswordStep from './_steps/PasswordStep';
-import UsernameStep from './_steps/UsernameStep';
-import VerificationStep from './_steps/VerificationStep';
+import {
+  EmailStep,
+  PasswordStep,
+  UsernameStep,
+  VerificationStep,
+} from '@/feature/auth';
 
 export default function SignUpContent() {
   const { currentStep, completedData, goToStep } = useSignupFlow();

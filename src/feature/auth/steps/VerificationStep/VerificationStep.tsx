@@ -3,9 +3,9 @@
 import styled from '@emotion/styled';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import SecondaryAction from '../_components/SecondaryAction';
-import VerificationInput from '../_components/VerificationInput';
-import { useVerificationForm } from '../_hooks/useVerificationForm';
+import { SecondaryAction } from '../../components/signup/SecondaryAction';
+import { VerificationInput } from '../../components/signup/VerificationInput';
+import { useVerificationForm } from '../../hooks/signup/useVerificationForm';
 
 const VerificationStep = () => {
   const {
