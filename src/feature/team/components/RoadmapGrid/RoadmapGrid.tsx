@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { RoadmapListItem } from '@/feature/roadmap';
 import { AddRoadmapCard } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
-import { mapTeamRoadmapToRoadmap } from '../utils/roadmapMapper';
+import { mapTeamRoadmapToRoadmap } from '../../utils/roadmapMapper';
 
 interface RoadmapGridProps {
   roadmaps: TeamRoadmap[];
