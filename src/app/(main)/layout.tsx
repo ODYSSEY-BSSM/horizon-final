@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { usePathname } from 'next/navigation';
-import Header from '@/components/layout/Header/Header';
-import Sidebar from '@/components/layout/Sidebar/Sidebar';
+import Header from '@/shared/layout/Header/Header';
+import Sidebar from '@/shared/layout/Sidebar/Sidebar';
 
 const StyledMainLayoutContainer = styled.div`
   display: flex;

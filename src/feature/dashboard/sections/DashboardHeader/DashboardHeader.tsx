@@ -1,4 +1,4 @@
-import Header from '@/components/layout/Header/Header';
+import Header from '@/shared/layout/Header/Header';
 
 interface DashboardHeaderProps {
   onSearch: (query: string) => void;
