@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { mockRoadmaps } from '@/feature/team/data/mockRoadmaps';
+import { mockTeamFolders } from '@/feature/team/data/mockTeamFolders';
+import { mockTeams } from '@/feature/team/data/mockTeams';
 import type { Roadmap, Team, TeamFolder } from '@/feature/team/types/team';
-import { mockRoadmaps } from '../data/mockRoadmaps';
-import { mockTeamFolders } from '../data/mockTeamFolders';
-import { mockTeams } from '../data/mockTeams';
 
 export const useTeamSpaceData = () => {
   const [teams, setTeams] = useState<Team[]>(mockTeams);

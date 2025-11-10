@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { RoadmapCard } from '@/feature/dashboard';
 import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
-import type { MockRoadmap } from '@/feature/roadmap';
 import { FilterTabs, FOLDER_FILTER_TABS, Pagination, RoadmapListItem } from '@/feature/roadmap';
+import type { MockRoadmap } from '@/feature/roadmap/data/mockData';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 

@@ -1,4 +1,4 @@
-import type { SchoolInfo, SchoolNode } from '../types/schoolConnect.types';
+import type { SchoolInfo, SchoolNode } from '@/feature/school/types/schoolConnect.types';
 
 export const ITEMS_PER_PAGE = 5;
 

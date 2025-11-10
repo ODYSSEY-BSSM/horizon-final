@@ -1,10 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { PasswordValidation } from '@/feature/auth/components/signup/PasswordValidation';
+import { usePasswordForm } from '@/feature/auth/hooks/signup/usePasswordForm';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
-import { PasswordValidation } from '../../components/signup/PasswordValidation';
-import { usePasswordForm } from '../../hooks/signup/usePasswordForm';
 
 const PasswordStep = () => {
   const {

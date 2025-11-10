@@ -1,5 +1,5 @@
 import { type KeyboardEvent, useState } from 'react';
-import { FOLDER_OPTIONS } from '../constants/RoadmapFormModal.constants';
+import { FOLDER_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { useFolderStepForm } from './useRoadmapForm';
 
 export const useFolderStep = () => {

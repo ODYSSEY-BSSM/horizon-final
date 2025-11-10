@@ -3,10 +3,13 @@
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { ListHeader } from '@/feature/dashboard';
+import {
+  ITEMS_PER_PAGE,
+  ITEMS_PER_PAGE_THUMBNAIL,
+} from '@/feature/dashboard/constants/RoadmapList.constants';
 import type { FilterType, RoadmapItem, ViewType } from '@/feature/dashboard/types/dashboard';
 import { Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
-import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../../constants/RoadmapList.constants';
 import { FilterTab } from '../FilterTab';
 import { RoadmapCard } from '../RoadmapCard';
 

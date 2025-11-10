@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
+import { FILTER_OPTIONS } from '@/feature/dashboard/constants/FilterTab.constants';
 import type { FilterType } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
-import { FILTER_OPTIONS } from '../../constants/FilterTab.constants';
 
 interface FilterTabProps {
   currentFilter: FilterType;

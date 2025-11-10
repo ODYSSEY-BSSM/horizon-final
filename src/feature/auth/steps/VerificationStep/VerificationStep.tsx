@@ -1,11 +1,11 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
+import { VerificationInput } from '@/feature/auth/components/signup/VerificationInput';
+import { useVerificationForm } from '@/feature/auth/hooks/signup/useVerificationForm';
 import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
-import { SecondaryAction } from '../../components/signup/SecondaryAction';
-import { VerificationInput } from '../../components/signup/VerificationInput';
-import { useVerificationForm } from '../../hooks/signup/useVerificationForm';
 
 const VerificationStep = () => {
   const {

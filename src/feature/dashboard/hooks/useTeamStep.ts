@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TEAM_OPTIONS } from '../constants/RoadmapFormModal.constants';
+import { TEAM_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { useTeamStepForm } from './useRoadmapForm';
 
 export const useTeamStep = () => {

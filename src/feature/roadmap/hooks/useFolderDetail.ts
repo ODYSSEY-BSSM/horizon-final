@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { MOCK_ROADMAPS } from '@/feature/roadmap';
+import { MOCK_ROADMAPS } from '@/feature/roadmap/data/mockData';
 
 const ITEMS_PER_PAGE = 10;
 

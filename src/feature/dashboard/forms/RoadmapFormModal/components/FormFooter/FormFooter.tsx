@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { Button } from '@/shared/ui';
-import { MODAL_SPACING } from '../../constants/spacing';
 
 interface FormFooterProps {
   onPrevious?: () => void;

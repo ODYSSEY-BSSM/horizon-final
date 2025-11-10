@@ -2,10 +2,10 @@
 
 import styled from '@emotion/styled';
 import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
+import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
+import { useEmailForm } from '@/feature/auth/hooks/signup/useEmailForm';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
-import { SecondaryAction } from '../../components/signup/SecondaryAction';
-import { useEmailForm } from '../../hooks/signup/useEmailForm';
 
 interface EmailStepProps {
   onGoogleSignUp: () => void;
