@@ -36,13 +36,10 @@ const TeamFoldersContent = () => {
   const currentTeam = teams.find((team) => team.id === teamId);
   const teamName = currentTeam?.name || '';
 
-  // 팀 폴더 조회
   const { data: teamFoldersData } = useTeamFolders(teamName);
 
-  // 팀 폴더 생성 mutation
   const createFolderMutation = useCreateTeamFolder(teamName);
 
-  // API 데이터를 UI 타입으로 변환
   const folders: TeamFolder[] = useMemo(() => {
     if (!teamFoldersData) return [];
 
@@ -69,8 +66,8 @@ const TeamFoldersContent = () => {
     createFolderMutation.mutate(
       {
         name: data.name,
-        color: Color.BLUE, // 기본 색상
-        icon: Icon.FOLDER, // 기본 아이콘
+        color: Color.BLUE,
+        icon: Icon.FOLDER,
       },
       {
         onSuccess: () => {

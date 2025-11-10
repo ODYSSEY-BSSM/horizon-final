@@ -11,10 +11,8 @@ const useFolderDetail = (folderId: string) => {
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // 실제 API로 폴더 컨텐츠 조회
   const { data: folderContent, isLoading } = useFolderContent(Number(folderId));
 
-  // 로드맵 데이터 가져오기 (폴더 컨텐츠에서 로드맵만 필터링)
   const roadmaps = useMemo(() => {
     if (!folderContent?.items) return [];
 
@@ -37,7 +35,6 @@ const useFolderDetail = (folderId: string) => {
       switch (activeFilter) {
         case 'my':
         case 'team':
-          // 개인 폴더에서는 항상 personal 로드맵만 있으므로 my/team 필터는 모두 표시
           return true;
         case 'completed':
           return roadmap.status === 'completed';
@@ -63,7 +60,7 @@ const useFolderDetail = (folderId: string) => {
 
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
-    setCurrentPage(1); // Reset to first page when filter changes
+    setCurrentPage(1);
   };
 
   return {
