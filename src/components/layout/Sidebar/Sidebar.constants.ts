@@ -1,4 +1,4 @@
-import type { MenuItem } from '@/lib/types/dashboard';
+import type { MenuItem } from '@/feature/dashboard/types/dashboard';
 
 export const MENU_ITEMS: MenuItem[] = [
   {

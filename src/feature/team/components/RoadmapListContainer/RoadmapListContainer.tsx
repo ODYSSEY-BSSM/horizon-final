@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
-import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
+import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_FILTER_TABS } from '@/feature/team';
 import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';

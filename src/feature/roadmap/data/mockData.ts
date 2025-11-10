@@ -1,4 +1,4 @@
-import type { RoadmapColor } from '@/lib/types/dashboard';
+import type { RoadmapColor } from '@/feature/dashboard/types/dashboard';
 
 export interface MockRoadmap {
   id: string;

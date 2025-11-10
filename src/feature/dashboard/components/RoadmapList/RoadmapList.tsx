@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
-import type { FilterType, RoadmapItem, ViewType } from '@/lib/types/dashboard';
+import type { FilterType, RoadmapItem, ViewType } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../../constants/RoadmapList.constants';
 import { FilterTab } from '../FilterTab';

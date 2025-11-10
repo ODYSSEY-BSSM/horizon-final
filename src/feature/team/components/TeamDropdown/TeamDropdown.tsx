@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useId, useState } from 'react';
 import { Icon } from '@/shared/ui';
-import type { Team } from '@/lib/types/team';
+import type { Team } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
 
 interface TeamDropdownProps {

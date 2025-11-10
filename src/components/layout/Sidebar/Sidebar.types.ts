@@ -1,4 +1,4 @@
-import type { MenuItem, MenuItemType } from '@/lib/types/dashboard';
+import type { MenuItem, MenuItemType } from '@/feature/dashboard/types/dashboard';
 
 export interface SidebarProps {
   className?: string;

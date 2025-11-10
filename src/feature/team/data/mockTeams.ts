@@ -1,4 +1,4 @@
-import type { Team } from '@/lib/types/team';
+import type { Team } from '@/feature/team/types/team';
 
 export const mockTeams: Team[] = [
   {

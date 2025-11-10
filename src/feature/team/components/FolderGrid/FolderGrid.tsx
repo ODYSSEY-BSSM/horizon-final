@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import type { TeamFolder } from '@/lib/types/team';
+import type { TeamFolder } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_FILTER_TABS, FolderListItem } from '@/feature/team';
 import { AddFolderCard } from '@/feature/folder';

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
-import type { RoadmapFormData } from '@/lib/types/modal';
+import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
+import type { RoadmapFormData } from '@/shared/types/modal';
 import {
   type CategoryStepFormData,
   categoryStepSchema,
@@ -14,7 +14,7 @@ import {
   styleStepSchema,
   type TeamStepFormData,
   teamStepSchema,
-} from '@/lib/validations/roadmap';
+} from '@/feature/roadmap/validations/roadmap';
 
 export const useRoadmapForm = () => {
   const { formData, saveStepData, goToStep, closeModal } = useRoadmapFormFlow();

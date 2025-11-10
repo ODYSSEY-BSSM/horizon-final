@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import type { MenuItemType } from '@/lib/types/dashboard';
+import type { MenuItemType } from '@/feature/dashboard/types/dashboard';
 import { MENU_ITEMS } from './Sidebar.constants';
 import type { SidebarProps } from './Sidebar.types';
 

@@ -1,4 +1,4 @@
-import type { Roadmap } from '@/lib/types/team';
+import type { Roadmap } from '@/feature/team/types/team';
 
 export const mockRoadmaps: Roadmap[] = [
   {

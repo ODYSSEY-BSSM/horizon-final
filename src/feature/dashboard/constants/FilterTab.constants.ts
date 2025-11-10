@@ -1,4 +1,4 @@
-import type { FilterType } from '@/lib/types/dashboard';
+import type { FilterType } from '@/feature/dashboard/types/dashboard';
 
 export const FILTER_OPTIONS: Record<FilterType, string> = {
   all: '전체',
