@@ -1,4 +1,4 @@
-import GreetingMessage from '../_components/GreetingMessage';
+import { GreetingMessage } from '@/feature/dashboard';
 
 interface GreetingSectionProps {
   userName: string;

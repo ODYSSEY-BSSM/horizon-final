@@ -1,5 +1,5 @@
 // Export all API modules
-export { authApi as userApi } from './auth';
+export { authApi as userApi } from '@/feature/auth';
 export { apiClient } from '@/shared/api';
 
 // Export types
