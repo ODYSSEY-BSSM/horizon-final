@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import RoadmapCard from '@/app/(main)/dashboard/_components/RoadmapCard';
+import { RoadmapCard } from '@/feature/dashboard';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import type { RoadmapItem } from '@/lib/types/dashboard';
