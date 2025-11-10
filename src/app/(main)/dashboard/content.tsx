@@ -3,11 +3,13 @@
 import styled from '@emotion/styled';
 import { useRoadmapFormFlow } from '@/lib/stores/roadmapFormFlow';
 import { tokens } from '@/shared/tokens';
-import RoadmapFormModal from './_forms/RoadmapFormModal/RoadmapFormModal';
-import { useDashboardData } from './_hooks/useDashboardData';
-import GreetingSection from './_sections/GreetingSection';
-import InfoCardsGrid from './_sections/InfoCardsGrid';
-import RoadmapSection from './_sections/RoadmapSection';
+import {
+  RoadmapFormModal,
+  useDashboardData,
+  GreetingMessage as GreetingSection,
+  InfoCardsGrid,
+  RoadmapSection,
+} from '@/feature/dashboard';
 
 const DashboardContent = () => {
   const { userData, roadmapsData } = useDashboardData();
