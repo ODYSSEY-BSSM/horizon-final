@@ -12,6 +12,22 @@ export {
   ColorHexMap,
   IconMap,
 } from './types';
+
+// STOMP WebSocket
+export { getStompClient, destroyStompClient, StompWebSocketClient } from './stompWebSocket';
+export type { StompMessageHandler } from './stompWebSocket';
+export type {
+  TeamDirectoryMessage,
+  RoadmapNodeMessage,
+  NodeUpdateMessage,
+  CursorSendMessage,
+  CursorReceiveMessage,
+  DeleteMessage,
+  NodeType as WsNodeType,
+  NodeCategory,
+} from './stompTypes';
+
+// Legacy WebSocket (deprecated - use STOMP instead)
 export {
   getWebSocketClient,
   removeWebSocketClient,
