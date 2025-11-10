@@ -3,12 +3,17 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
+import type { SkeletonViewProps } from './SkeletonView.types';
 
-export interface SkeletonViewProps {
-  className?: string;
-}
-
-const SkeletonView = ({ className }: SkeletonViewProps) => {
+/**
+ * Unified SkeletonView component
+ * Consolidates 2 duplicate implementations from my-roadmaps
+ */
+const SkeletonView = ({
+  cardCount = 3,
+  className,
+  showContentBorder = true
+}: SkeletonViewProps) => {
   return (
     <StyledContainer className={className}>
       <StyledHeader>
@@ -16,14 +21,14 @@ const SkeletonView = ({ className }: SkeletonViewProps) => {
         <StyledSkeletonButton />
       </StyledHeader>
 
-      <StyledContent>
+      <StyledContent $showBorder={showContentBorder}>
         <StyledSkeletonTitleSection>
           <StyledSkeletonTitle />
           <StyledSkeletonSubtitle />
         </StyledSkeletonTitleSection>
 
         <StyledSkeletonCardsGrid>
-          {Array.from({ length: 3 }, (_, index) => ({ id: `skeleton-${index}` })).map((item) => (
+          {Array.from({ length: cardCount }, (_, index) => ({ id: `skeleton-${index}` })).map((item) => (
             <StyledSkeletonCard key={item.id}>
               <StyledSkeletonCardIcon />
               <StyledSkeletonCardContent>
@@ -69,7 +74,12 @@ const StyledHeader = styled.div`
 `;
 
 const StyledSkeletonBase = styled.div`
-  background: linear-gradient(90deg, ${tokens.colors.neutral[100]} 25%, ${tokens.colors.neutral[200]} 50%, ${tokens.colors.neutral[100]} 75%);
+  background: linear-gradient(
+    90deg,
+    ${tokens.colors.neutral[100]} 25%,
+    ${tokens.colors.neutral[200]} 50%,
+    ${tokens.colors.neutral[100]} 75%
+  );
   background-size: 200px 100%;
   animation: ${shimmer} 1.5s infinite;
   border-radius: ${tokens.radius.small};
@@ -86,11 +96,20 @@ const StyledSkeletonButton = styled(StyledSkeletonBase)`
   border-radius: ${tokens.radius.medium};
 `;
 
-const StyledContent = styled.div`
-  background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[100]};
-  border-radius: ${tokens.radius.large};
-  padding: ${tokens.spacing.large};
+const StyledContent = styled.div<{ $showBorder: boolean }>`
+  ${({ $showBorder }) =>
+    $showBorder
+      ? `
+    background-color: ${tokens.colors.white};
+    border: 1px solid ${tokens.colors.neutral[100]};
+    border-radius: ${tokens.radius.large};
+    padding: ${tokens.spacing.large};
+  `
+      : `
+    display: flex;
+    flex-direction: column;
+    gap: ${tokens.spacing.large};
+  `}
 `;
 
 const StyledSkeletonTitleSection = styled.div`
@@ -106,7 +125,7 @@ const StyledSkeletonTitle = styled(StyledSkeletonBase)`
 `;
 
 const StyledSkeletonSubtitle = styled(StyledSkeletonBase)`
-  width: 464px;
+  width: 280px;
   height: 20px;
 `;
 

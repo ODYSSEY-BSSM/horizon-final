@@ -1,5 +1,5 @@
-import SkeletonView from './_components/SkeletonView';
+import { SkeletonView } from '@/shared/ui';
 
 export default function Loading() {
-  return <SkeletonView />;
+  return <SkeletonView cardCount={3} />;
 }

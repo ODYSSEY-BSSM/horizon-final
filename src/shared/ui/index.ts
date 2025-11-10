@@ -17,3 +17,7 @@ export type { TextFieldProps } from './TextField/TextField.types';
 // Divider
 export { default as Divider } from './Divider/Divider';
 export type { DividerProps } from './Divider/Divider.types';
+
+// SkeletonView
+export { default as SkeletonView } from './SkeletonView/SkeletonView';
+export type { SkeletonViewProps } from './SkeletonView/SkeletonView.types';
