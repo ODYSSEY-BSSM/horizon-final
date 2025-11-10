@@ -19,8 +19,10 @@ import type { BreadcrumbNavigationProps, HeaderProps, SearchBarProps } from './H
 const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
-      {items.map((item) => (
-        <BreadcrumbItem key={item}>{item}</BreadcrumbItem>
+      {items.map((item, index) => (
+        <BreadcrumbItem key={item} $isLast={index === items.length - 1}>
+          {item}
+        </BreadcrumbItem>
       ))}
     </BreadcrumbNav>
   );

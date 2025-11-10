@@ -25,7 +25,6 @@ export * from './data/mockData';
 // Forms
 export { RoadmapStyleModal } from './forms/RoadmapStyleModal';
 // Hooks
-export { useDropdown } from './hooks/useDropdown';
 export { useFolderDetail } from './hooks/useFolderDetail';
 export { useMyRoadmaps } from './hooks/useMyRoadmaps';
 // Sections
@@ -36,7 +35,6 @@ export { RoadmapListSection } from './sections/RoadmapListSection';
 export type {
   CreateRoadmapRequest,
   Roadmap,
-  RoadmapColor,
   RoadmapFilter,
   RoadmapFolder,
   RoadmapStatus,

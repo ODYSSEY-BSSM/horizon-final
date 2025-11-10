@@ -1,7 +1,6 @@
 export type {
   CreateRoadmapRequest,
   Roadmap,
-  RoadmapColor,
   RoadmapFilter,
   RoadmapFolder,
   RoadmapStatus,

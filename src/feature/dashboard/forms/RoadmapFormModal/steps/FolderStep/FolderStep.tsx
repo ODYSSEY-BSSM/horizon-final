@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useId } from 'react';
 
 import { useFolderStep } from '@/feature/dashboard/hooks/useFolderStep';
-import { useDropdown } from '@/feature/roadmap';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text, TextField } from '@/shared/ui';
 import { FOLDER_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';

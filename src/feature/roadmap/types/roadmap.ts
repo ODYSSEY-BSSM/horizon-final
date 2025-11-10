@@ -1,4 +1,4 @@
-export type RoadmapColor = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export type RoadmapStatus = 'not-started' | 'in-progress' | 'completed';
 

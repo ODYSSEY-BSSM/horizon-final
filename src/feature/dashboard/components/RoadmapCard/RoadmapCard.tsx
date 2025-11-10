@@ -1,9 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
-import type { RoadmapColor, RoadmapItem } from '@/feature/dashboard/types/dashboard';
+import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { gradients } from '@/shared/tokens/gradient/gradient';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 import { Icon, Text } from '@/shared/ui';
 
 export interface RoadmapCardProps {

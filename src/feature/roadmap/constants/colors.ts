@@ -1,4 +1,4 @@
-import type { RoadmapColor } from '../types';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 
 /**
  * 로드맵 색상 팔레트

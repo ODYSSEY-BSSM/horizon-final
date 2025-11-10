@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/team';
+import type { Team } from '@/feature/team/types/team';
 import { FormModal } from '@/shared/ui';
 
 type ModalState = {
@@ -41,8 +42,11 @@ const TeamSpaceContent = () => {
 
   const handleTeamCreate = ({ name }: { name: string }) => {
     const newTeam = addTeam({ name, description: '' });
-    router.push(`/team-space/${newTeam.id}`);
     return newTeam;
+  };
+
+  const handleTeamCreateComplete = (team: Team) => {
+    router.push(`/team-space/${team.id}`);
   };
 
   const handleJoinTeam = () => {
@@ -69,6 +73,7 @@ const TeamSpaceContent = () => {
         isOpen={modals.teamCreate}
         onClose={() => closeModal('teamCreate')}
         onCreate={handleTeamCreate}
+        onComplete={handleTeamCreateComplete}
       />
       <FormModal
         isOpen={modals.teamJoin}

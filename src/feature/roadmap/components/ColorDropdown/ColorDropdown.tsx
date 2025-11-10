@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useId } from 'react';
-import { useDropdown } from '@/feature/roadmap';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 

@@ -10,6 +10,7 @@ import {
   TeamDropdown,
   useTeamSpaceData,
 } from '@/feature/team';
+import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -55,17 +56,7 @@ const TeamFoldersContent = () => {
   };
 
   const inviteCode = useMemo(() => {
-    if (!currentTeam) {
-      return undefined;
-    }
-
-    const normalizedId = currentTeam.id.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-
-    if (normalizedId.length >= 8) {
-      return normalizedId.slice(0, 8);
-    }
-
-    return `${normalizedId}1Q2W3E4R`.slice(0, 8);
+    return currentTeam ? generateInviteCode(currentTeam.id) : undefined;
   }, [currentTeam]);
 
   const handleInviteComplete = () => {

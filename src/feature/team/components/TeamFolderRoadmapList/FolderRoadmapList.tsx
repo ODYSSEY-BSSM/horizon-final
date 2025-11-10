@@ -3,11 +3,12 @@
 import styled from '@emotion/styled';
 import { RoadmapCard } from '@/feature/dashboard';
 import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
-import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
+import type { Roadmap } from '@/feature/roadmap';
 import { FilterTabs, Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { TEAM_FOLDER_ROADMAP_FILTER_TABS } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 import { Icon, Text } from '@/shared/ui';
 
 export interface FolderRoadmapListProps {

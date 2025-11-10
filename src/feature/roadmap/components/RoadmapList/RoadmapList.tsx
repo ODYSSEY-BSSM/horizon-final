@@ -1,12 +1,14 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { FILTER_TABS, FilterTabs } from '@/feature/roadmap';
+import type { Roadmap } from '@/feature/roadmap';
+import { FILTER_TABS, FilterTabs, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 
 export interface RoadmapListProps {
   className?: string;
+  roadmaps: Roadmap[];
   viewMode?: 'list' | 'thumbnail';
   onViewModeChange?: (mode: 'list' | 'thumbnail') => void;
   onCreateRoadmap?: () => void;
@@ -16,6 +18,7 @@ export interface RoadmapListProps {
 
 const RoadmapList = ({
   className,
+  roadmaps,
   viewMode = 'list',
   onViewModeChange,
   onCreateRoadmap,
@@ -82,19 +85,27 @@ const RoadmapList = ({
 
       <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
 
-      <StyledEmptyState>
-        <Text as="p" variant="ST" color={tokens.colors.neutral[600]}>
-          아직 로드맵이 없습니다.
-        </Text>
-        <StyledCreateLink
-          as="button"
-          variant="B1"
-          color={tokens.colors.primary[500]}
-          onClick={onCreateRoadmap}
-        >
-          새 로드맵 만들기
-        </StyledCreateLink>
-      </StyledEmptyState>
+      {roadmaps.length > 0 ? (
+        <StyledRoadmapList>
+          {roadmaps.map((roadmap) => (
+            <RoadmapListItem key={roadmap.id} roadmap={roadmap} />
+          ))}
+        </StyledRoadmapList>
+      ) : (
+        <StyledEmptyState>
+          <Text as="p" variant="ST" color={tokens.colors.neutral[600]}>
+            아직 로드맵이 없습니다.
+          </Text>
+          <StyledCreateLink
+            as="button"
+            variant="B1"
+            color={tokens.colors.primary[500]}
+            onClick={onCreateRoadmap}
+          >
+            새 로드맵 만들기
+          </StyledCreateLink>
+        </StyledEmptyState>
+      )}
     </StyledContainer>
   );
 };
@@ -107,6 +118,11 @@ const StyledContainer = styled.div`
   border-radius: ${tokens.radius.large};
   overflow: hidden;
   background-color: ${tokens.colors.white};
+`;
+
+const StyledRoadmapList = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const StyledHeader = styled.div`
@@ -142,23 +158,6 @@ const StyledToggleItem = styled.div<{ $active?: boolean }>`
   border-radius: ${tokens.radius.small};
   background-color: ${({ $active }) => ($active ? tokens.colors.white : 'transparent')};
   cursor: pointer;
-`;
-
-const _StyledFilterTabs = styled.div`
-  display: flex;
-  gap: ${tokens.spacing.large};
-  padding: 0 ${tokens.spacing.large};
-  border-bottom: 1px solid ${tokens.colors.neutral[100]};
-`;
-
-const _StyledFilterTab = styled.div<{ $active?: boolean }>`
-  padding: ${tokens.spacing.small} ${tokens.spacing.xxsmall};
-  border-bottom: 2px solid ${({ $active }) => ($active ? tokens.colors.primary[500] : 'transparent')};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 52px;
 `;
 
 const StyledEmptyState = styled.div`

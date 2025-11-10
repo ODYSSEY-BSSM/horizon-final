@@ -1,11 +1,11 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AddFolderCard } from '@/feature/folder';
+import type { Folder } from '@/feature/roadmap';
 import { FILTER_TABS, FilterTabs, FolderCard, Pagination } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
-import type { Folder } from '../FolderCard/FolderCard';
 
 export interface FolderListProps {
   className?: string;
@@ -63,22 +63,18 @@ const mockFolders: Folder[] = [
 const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 1; // TODO: 실제 데이터에 따라 동적으로 계산
-  const [sortedFolders, setSortedFolders] = useState<Folder[]>([]);
   const [activeTab, setActiveTab] = useState('latest');
 
-  useEffect(() => {
-    const foldersToSort = [...mockFolders];
-    const sorted = foldersToSort.sort((a, b) => {
+  const sortedFolders = useMemo(() => {
+    return [...mockFolders].sort((a, b) => {
       if (activeTab === 'progress') {
         return b.progress - a.progress;
       }
       if (activeTab === 'name') {
         return a.name.localeCompare(b.name);
       }
-      // "latest" is the default
       return b.id - a.id;
     });
-    setSortedFolders(sorted);
   }, [activeTab]);
 
   return (

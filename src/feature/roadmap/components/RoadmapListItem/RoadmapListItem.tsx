@@ -13,7 +13,7 @@ const RoadmapListItem = ({
   onDelete,
   showActions = true,
 }: RoadmapListItemProps) => {
-  const colors = ROADMAP_COLORS[roadmap.color];
+  const colors = ROADMAP_COLORS[roadmap.color] ?? ROADMAP_COLORS.blue;
 
   return (
     <StyledContainer onClick={onClick}>
@@ -77,6 +77,7 @@ const RoadmapListItem = ({
                 <Icon name="delete" variant="SM" color={tokens.colors.neutral[500]} decorative />
               </StyledActionButton>
             )}
+            {/* TODO: 더보기 메뉴 기능 구현 */}
             <StyledActionButton aria-label="더보기">
               <Icon name="more_horiz" variant="SM" color={tokens.colors.neutral[500]} decorative />
             </StyledActionButton>
