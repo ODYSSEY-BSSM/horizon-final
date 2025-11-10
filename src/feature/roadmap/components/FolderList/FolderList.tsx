@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { AddFolderCard } from '@/feature/folder';
 import type { Folder } from '@/feature/roadmap';
-import { FILTER_TABS, FilterTabs, FolderCard, Pagination } from '@/feature/roadmap';
+import { FilterTabs, FolderCard, MY_ROADMAPS_FILTER_TABS, Pagination } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 
 export interface FolderListProps {
@@ -79,7 +79,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   return (
     <StyledContainer className={className}>
-      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+      <FilterTabs tabs={MY_ROADMAPS_FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>
