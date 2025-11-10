@@ -3,13 +3,16 @@
 import styled from '@emotion/styled';
 import { useId } from 'react';
 import { Controller } from 'react-hook-form';
+import {
+  COLOR_OPTIONS,
+  ICON_OPTIONS,
+} from '@/feature/dashboard/constants/RoadmapFormModal.constants';
+import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
+import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { useStyleStep } from '@/feature/dashboard/hooks/useStyleStep';
-import { useDropdown } from '@/feature/roadmap';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
-import { COLOR_OPTIONS, ICON_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
-import { FormFooter } from '../../components/FormFooter';
-import { MODAL_SPACING } from '../../constants/spacing';
 
 const StyleStep = () => {
   const colorLabelId = useId();

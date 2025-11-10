@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import type { Team } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
+import { generateInviteCode } from '../../utils/inviteCode';
 
 interface CreateTeamModalProps {
   isOpen: boolean;
@@ -14,26 +15,6 @@ interface CreateTeamModalProps {
 }
 
 type Step = 1 | 2;
-
-const DEFAULT_INVITE_CODE = '1Q2W3E4R';
-
-const createInviteCode = (source?: string) => {
-  if (!source) {
-    return DEFAULT_INVITE_CODE;
-  }
-
-  const normalized = source.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-
-  if (!normalized) {
-    return DEFAULT_INVITE_CODE;
-  }
-
-  if (normalized.length >= 8) {
-    return normalized.slice(0, 8);
-  }
-
-  return (normalized + DEFAULT_INVITE_CODE).slice(0, 8);
-};
 
 export const CreateTeamModal = ({
   isOpen,
@@ -47,18 +28,19 @@ export const CreateTeamModal = ({
   const [teamName, setTeamName] = useState('');
   const [createdTeam, setCreatedTeam] = useState<Team | null>(null);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const trimmedName = useMemo(() => teamName.trim(), [teamName]);
   const isSubmitDisabled = trimmedName.length === 0;
 
   const resolvedInviteCode = useMemo(() => {
     if (createdTeam?.id) {
-      return createInviteCode(createdTeam.id);
+      return generateInviteCode(createdTeam.id);
     }
     if (createdTeam?.name) {
-      return createInviteCode(createdTeam.name);
+      return generateInviteCode(createdTeam.name);
     }
-    return createInviteCode(trimmedName);
+    return generateInviteCode(trimmedName);
   }, [createdTeam, trimmedName]);
 
   const resetState = useCallback(() => {
@@ -81,14 +63,21 @@ export const CreateTeamModal = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitDisabled) {
+    if (isSubmitDisabled || isSubmitting) {
       return;
     }
 
-    const result = await Promise.resolve(onCreate({ name: trimmedName }));
-    setCreatedTeam(result);
-    setCopyState('idle');
-    setStep(2);
+    try {
+      setIsSubmitting(true);
+      const result = await Promise.resolve(onCreate({ name: trimmedName }));
+      setCreatedTeam(result);
+      setCopyState('idle');
+      setStep(2);
+    } catch (_error) {
+      // TODO: 에러 토스트 또는 경고 추가
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCopy = async () => {
@@ -152,8 +141,12 @@ export const CreateTeamModal = ({
               />
             </StyledFields>
             <StyledActions>
-              <StyledNextButton type="submit" size="medium" disabled={isSubmitDisabled}>
-                다음
+              <StyledNextButton
+                type="submit"
+                size="medium"
+                disabled={isSubmitDisabled || isSubmitting}
+              >
+                {isSubmitting ? '생성 중...' : '다음'}
               </StyledNextButton>
             </StyledActions>
           </StyledForm>

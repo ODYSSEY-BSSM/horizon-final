@@ -1,3 +1,5 @@
+import type { RoadmapColor } from '@/shared/types/roadmap';
+
 export type MenuItemType = 'dashboard' | 'my-roadmaps' | 'team-space' | 'school-connect';
 
 export interface MenuItem {
@@ -17,8 +19,6 @@ export interface InfoCardData {
   schoolName?: string;
   hasItem: boolean;
 }
-
-export type RoadmapColor = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
 
 export type RoadmapStatus = 'in-progress' | 'completed';
 

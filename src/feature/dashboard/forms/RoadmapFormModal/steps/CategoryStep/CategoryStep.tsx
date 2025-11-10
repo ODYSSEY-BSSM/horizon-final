@@ -1,12 +1,12 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { CATEGORY_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
+import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
+import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { useCategoryStep } from '@/feature/dashboard/hooks/useCategoryStep';
 import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
-import { CATEGORY_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
-import { FormFooter } from '../../components/FormFooter';
-import { MODAL_SPACING } from '../../constants/spacing';
 
 const CategoryStep = () => {
   const { selectedCategory, handleCategorySelect, onNext, isValid } = useCategoryStep();
@@ -24,17 +24,13 @@ const CategoryStep = () => {
                 onClick={() => handleCategorySelect(category.id)}
                 aria-pressed={selectedCategory === category.id}
               >
-                <Text
+                <StyledCategoryText
                   as="span"
                   variant="ST"
-                  color={
-                    selectedCategory === category.id
-                      ? tokens.colors.primary[500]
-                      : tokens.colors.neutral[500]
-                  }
+                  $isSelected={selectedCategory === category.id}
                 >
                   {category.label}
-                </Text>
+                </StyledCategoryText>
               </StyledCategoryOption>
             ))}
           </StyledCategoryOptions>
@@ -107,4 +103,9 @@ const StyledCategoryOption = styled.button<{ $isSelected: boolean }>`
     outline: 2px solid ${tokens.colors.primary[500]};
     outline-offset: 2px;
   }
+`;
+
+const StyledCategoryText = styled(Text)<{ $isSelected: boolean }>`
+  color: ${({ $isSelected }) =>
+    $isSelected ? tokens.colors.primary[500] : tokens.colors.neutral[500]};
 `;

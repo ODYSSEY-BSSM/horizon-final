@@ -48,29 +48,31 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
       </StyledDropdownHeader>
 
       {isOpen && (
-        <StyledDropdownList role="listbox">
+        <StyledDropdownContent>
+          <StyledDropdownList role="listbox">
+            {teams.map((team) => (
+              <StyledTeamOption
+                type="button"
+                key={team.id}
+                $selected={selectedTeamId === team.id}
+                onClick={() => {
+                  onChange(team.id);
+                  setIsOpen(false);
+                }}
+                role="option"
+                aria-selected={selectedTeamId === team.id}
+              >
+                {team.name}
+              </StyledTeamOption>
+            ))}
+          </StyledDropdownList>
           {onCreateTeam && (
             <StyledCreateTeamOption type="button" onClick={handleCreateTeam}>
               <Icon name="add" size={20} color={tokens.colors.neutral[600]} decorative />
               <span>팀 생성</span>
             </StyledCreateTeamOption>
           )}
-          {teams.map((team) => (
-            <StyledTeamOption
-              type="button"
-              key={team.id}
-              $selected={selectedTeamId === team.id}
-              onClick={() => {
-                onChange(team.id);
-                setIsOpen(false);
-              }}
-              role="option"
-              aria-selected={selectedTeamId === team.id}
-            >
-              {team.name}
-            </StyledTeamOption>
-          ))}
-        </StyledDropdownList>
+        </StyledDropdownContent>
       )}
     </StyledContainer>
   );
@@ -122,7 +124,7 @@ const StyledTeamName = styled.span`
   color: ${tokens.colors.neutral[800]};
 `;
 
-const StyledDropdownList = styled.div`
+const StyledDropdownContent = styled.div`
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
@@ -133,9 +135,14 @@ const StyledDropdownList = styled.div`
   box-shadow: ${tokens.shadow[0]};
   z-index: 10000;
   max-height: 336px;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+`;
+
+const StyledDropdownList = styled.div`
+  overflow-y: auto;
+  flex-grow: 1;
 `;
 
 const StyledCreateTeamOption = styled.button`
@@ -144,10 +151,9 @@ const StyledCreateTeamOption = styled.button`
   gap: 8px;
   height: 48px;
   padding: 0 12px;
-  background-color: ${tokens.colors.neutral[100]};
+  background-color: ${tokens.colors.white};
   border: none;
   border-top: 1px solid ${tokens.colors.neutral[200]};
-  border-bottom: 1px solid ${tokens.colors.neutral[200]};
   cursor: pointer;
   width: 100%;
   text-align: left;
