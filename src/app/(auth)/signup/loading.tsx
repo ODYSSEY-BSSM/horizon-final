@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 
 export default function SignUpLoading() {
   return (

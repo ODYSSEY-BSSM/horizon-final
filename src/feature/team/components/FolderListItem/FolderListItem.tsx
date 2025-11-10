@@ -2,9 +2,9 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { Icon } from '@/shared/ui';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 interface FolderListItemProps {
   folder: TeamFolder;

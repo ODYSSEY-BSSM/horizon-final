@@ -2,13 +2,12 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
+import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
+import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';
+import { ROADMAP_FILTER_TABS } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
-import { ROADMAP_FILTER_TABS } from '@/feature/team';
-import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';
-import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
+import { Icon, Text } from '@/shared/ui';
 
 interface RoadmapListContainerProps {
   roadmaps: TeamRoadmap[];
@@ -103,7 +102,13 @@ const RoadmapListContainer = ({
                 createdAt: roadmap.createdAt,
                 updatedAt: roadmap.updatedAt,
               };
-              return <RoadmapListItem key={roadmap.id} roadmap={unifiedRoadmap} onClick={() => onRoadmapClick(roadmap)} />;
+              return (
+                <RoadmapListItem
+                  key={roadmap.id}
+                  roadmap={unifiedRoadmap}
+                  onClick={() => onRoadmapClick(roadmap)}
+                />
+              );
             })}
           </StyledRoadmapList>
         </StyledContent>

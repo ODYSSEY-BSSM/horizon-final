@@ -1,9 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { tokens } from '@/shared/tokens';
-import { SchoolCard } from '@/feature/school';
 import type { SchoolInfo } from '@/feature/school';
+import { SchoolCard } from '@/feature/school';
+import { tokens } from '@/shared/tokens';
 
 interface SchoolInfoSectionProps {
   school: SchoolInfo;

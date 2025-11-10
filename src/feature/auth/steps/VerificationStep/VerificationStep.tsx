@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 import { SecondaryAction } from '../../components/signup/SecondaryAction';
 import { VerificationInput } from '../../components/signup/VerificationInput';
 import { useVerificationForm } from '../../hooks/signup/useVerificationForm';

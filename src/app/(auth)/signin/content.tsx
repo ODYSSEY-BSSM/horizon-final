@@ -3,11 +3,10 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
-import { Text } from '@/shared/ui';
-import { TextField } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
 import { SignInSecondaryAction as SecondaryAction, useLogin } from '@/feature/auth';
+import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
+import { tokens } from '@/shared/tokens';
+import { Text, TextField } from '@/shared/ui';
 
 export default function SignInContent() {
   const [email, setEmail] = useState('');

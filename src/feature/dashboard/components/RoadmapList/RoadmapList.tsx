@@ -2,14 +2,13 @@
 
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
+import { ListHeader } from '@/feature/dashboard';
 import type { FilterType, RoadmapItem, ViewType } from '@/feature/dashboard/types/dashboard';
+import { Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_THUMBNAIL } from '../../constants/RoadmapList.constants';
 import { FilterTab } from '../FilterTab';
-import { ListHeader } from '@/feature/dashboard';
-import { Pagination } from '@/feature/roadmap';
 import { RoadmapCard } from '../RoadmapCard';
-import { RoadmapListItem } from '@/feature/roadmap';
 
 export interface RoadmapListProps {
   className?: string;
@@ -140,7 +139,7 @@ const RoadmapList = ({
                 color: item.color,
                 type: item.category,
                 totalSteps: item.steps,
-                completedSteps: Math.round(item.steps * item.progress / 100),
+                completedSteps: Math.round((item.steps * item.progress) / 100),
                 status: item.status,
                 progress: item.progress,
               }}

@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 import type { FilterTabsProps } from './FilterTabs.types';
 
 /**

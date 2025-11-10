@@ -12,7 +12,7 @@ import type { SkeletonViewProps } from './SkeletonView.types';
 const SkeletonView = ({
   cardCount = 3,
   className,
-  showContentBorder = true
+  showContentBorder = true,
 }: SkeletonViewProps) => {
   return (
     <StyledContainer className={className}>
@@ -28,22 +28,24 @@ const SkeletonView = ({
         </StyledSkeletonTitleSection>
 
         <StyledSkeletonCardsGrid>
-          {Array.from({ length: cardCount }, (_, index) => ({ id: `skeleton-${index}` })).map((item) => (
-            <StyledSkeletonCard key={item.id}>
-              <StyledSkeletonCardIcon />
-              <StyledSkeletonCardContent>
-                <StyledSkeletonCardTitle />
-                <StyledSkeletonCardDescription />
-              </StyledSkeletonCardContent>
-              <StyledSkeletonCardFooter>
-                <StyledSkeletonCardStats>
-                  <StyledSkeletonStat />
-                  <StyledSkeletonStat />
-                </StyledSkeletonCardStats>
-                <StyledSkeletonCardAction />
-              </StyledSkeletonCardFooter>
-            </StyledSkeletonCard>
-          ))}
+          {Array.from({ length: cardCount }, (_, index) => ({ id: `skeleton-${index}` })).map(
+            (item) => (
+              <StyledSkeletonCard key={item.id}>
+                <StyledSkeletonCardIcon />
+                <StyledSkeletonCardContent>
+                  <StyledSkeletonCardTitle />
+                  <StyledSkeletonCardDescription />
+                </StyledSkeletonCardContent>
+                <StyledSkeletonCardFooter>
+                  <StyledSkeletonCardStats>
+                    <StyledSkeletonStat />
+                    <StyledSkeletonStat />
+                  </StyledSkeletonCardStats>
+                  <StyledSkeletonCardAction />
+                </StyledSkeletonCardFooter>
+              </StyledSkeletonCard>
+            ),
+          )}
         </StyledSkeletonCardsGrid>
       </StyledContent>
     </StyledContainer>

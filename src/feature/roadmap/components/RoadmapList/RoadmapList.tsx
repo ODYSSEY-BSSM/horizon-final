@@ -1,10 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
+import { FILTER_TABS, FilterTabs } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
-import { FilterTabs, FILTER_TABS } from '@/feature/roadmap';
+import { Icon, Text } from '@/shared/ui';
 
 export interface RoadmapListProps {
   className?: string;

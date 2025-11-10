@@ -1,10 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { tokens } from '@/shared/tokens';
 import { Pagination } from '@/feature/roadmap';
-import { SchoolNodeListItem } from '@/feature/school';
 import type { SchoolNode } from '@/feature/school';
+import { SchoolNodeListItem } from '@/feature/school';
+import { tokens } from '@/shared/tokens';
 
 interface SchoolNodeListSectionProps {
   nodes: SchoolNode[];

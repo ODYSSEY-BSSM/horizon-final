@@ -2,10 +2,9 @@
 
 import styled from '@emotion/styled';
 import Image from 'next/image';
-import { Button } from '@/shared/ui';
-import { Text } from '@/shared/ui';
-import { tokens } from '@/shared/tokens';
 import type { SchoolInfo } from '@/feature/school';
+import { tokens } from '@/shared/tokens';
+import { Button, Text } from '@/shared/ui';
 
 interface SchoolCardProps {
   school: SchoolInfo;

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { MenuItemType } from '@/feature/dashboard/types/dashboard';
 import { MENU_ITEMS } from './Sidebar.constants';
 import type { SidebarProps } from './Sidebar.types';
@@ -7,6 +7,10 @@ import type { SidebarProps } from './Sidebar.types';
 export const useSidebar = ({ selected: initialSelected, onMenuSelect }: SidebarProps) => {
   const [selected, setSelected] = useState<MenuItemType>(initialSelected || 'dashboard');
   const router = useRouter();
+
+  useEffect(() => {
+    setSelected(initialSelected || 'dashboard');
+  }, [initialSelected]);
 
   const handleMenuClick = (id: MenuItemType) => {
     setSelected(id);

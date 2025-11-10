@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 
 export default function AuthError({
   error,

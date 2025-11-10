@@ -2,17 +2,11 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
+import { EmailStep, PasswordStep, UsernameStep, VerificationStep } from '@/feature/auth';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';
-import {
-  EmailStep,
-  PasswordStep,
-  UsernameStep,
-  VerificationStep,
-} from '@/feature/auth';
+import { Icon, Text } from '@/shared/ui';
 
 export default function SignUpContent() {
   const { currentStep, completedData, goToStep } = useSignupFlow();

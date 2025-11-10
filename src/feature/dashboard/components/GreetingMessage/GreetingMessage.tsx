@@ -3,9 +3,8 @@
 import styled from '@emotion/styled';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 
 interface GreetingMessageProps {
   className?: string;

@@ -2,8 +2,8 @@
 
 import styled from '@emotion/styled';
 import { useCategoryStep } from '@/feature/dashboard/hooks/useCategoryStep';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 import { CATEGORY_OPTIONS } from '../../../../constants/RoadmapFormModal.constants';
 import { FormFooter } from '../../components/FormFooter';
 import { MODAL_SPACING } from '../../constants/spacing';

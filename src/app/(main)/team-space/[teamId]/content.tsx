@@ -2,19 +2,27 @@
 
 import styled from '@emotion/styled';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Button, FormModal } from '@/shared/ui';
+import { useMemo, useState } from 'react';
+import {
+  CreateTeamModal,
+  FolderGrid,
+  InviteTeamModal,
+  TeamDropdown,
+  useTeamSpaceData,
+} from '@/feature/team';
 import { tokens } from '@/shared/tokens';
-import { FolderGrid, TeamDropdown, useTeamSpaceData } from '@/feature/team';
+import { Button, FormModal } from '@/shared/ui';
 
 const TeamFoldersContent = () => {
   const params = useParams();
   const router = useRouter();
   const teamId = params.teamId as string;
 
-  const { teams, getTeamFolders, addFolder } = useTeamSpaceData();
+  const { teams, getTeamFolders, addFolder, addTeam } = useTeamSpaceData();
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
   const currentTeam = teams.find((team) => team.id === teamId);
   const folders = getTeamFolders(teamId);
@@ -32,8 +40,36 @@ const TeamFoldersContent = () => {
     setShowFolderModal(false);
   };
 
+  const handleCreateTeam = () => {
+    setShowCreateTeamModal(true);
+  };
+
+  const handleTeamCreate = ({ name }: { name: string }) => {
+    const newTeam = addTeam({ name, description: '' });
+    router.push(`/team-space/${newTeam.id}`);
+    return newTeam;
+  };
+
   const handleInviteTeam = () => {
-    alert('팀 초대 기능은 준비중입니다');
+    setShowInviteModal(true);
+  };
+
+  const inviteCode = useMemo(() => {
+    if (!currentTeam) {
+      return undefined;
+    }
+
+    const normalizedId = currentTeam.id.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+
+    if (normalizedId.length >= 8) {
+      return normalizedId.slice(0, 8);
+    }
+
+    return `${normalizedId}1Q2W3E4R`.slice(0, 8);
+  }, [currentTeam]);
+
+  const handleInviteComplete = () => {
+    setShowInviteModal(false);
   };
 
   if (!currentTeam) {
@@ -47,7 +83,12 @@ const TeamFoldersContent = () => {
   return (
     <StyledContainer>
       <StyledHeader>
-        <TeamDropdown teams={teams} selectedTeamId={teamId} onChange={handleTeamChange} />
+        <TeamDropdown
+          teams={teams}
+          selectedTeamId={teamId}
+          onChange={handleTeamChange}
+          onCreateTeam={handleCreateTeam}
+        />
         <StyledButtonGroup>
           <Button
             variant="contained"
@@ -80,10 +121,29 @@ const TeamFoldersContent = () => {
         title="폴더 생성"
         description="생성할 폴더의 정보를 입력해주세요."
         fields={[
-          { name: 'name', label: '폴더 이름', placeholder: '폴더 이름을 작성해주세요', required: true },
+          {
+            name: 'name',
+            label: '폴더 이름',
+            placeholder: '폴더 이름을 작성해주세요',
+            required: true,
+          },
           { name: 'description', label: '폴더 설명', placeholder: '폴더 설명을 작성해주세요' },
         ]}
         submitText="생성"
+      />
+
+      <CreateTeamModal
+        isOpen={showCreateTeamModal}
+        onClose={() => setShowCreateTeamModal(false)}
+        onCreate={handleTeamCreate}
+      />
+
+      <InviteTeamModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        teamName={currentTeam?.name}
+        inviteCode={inviteCode}
+        onComplete={handleInviteComplete}
       />
     </StyledContainer>
   );

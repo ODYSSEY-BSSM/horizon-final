@@ -1,9 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Button } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import { Button, Text } from '@/shared/ui';
 
 interface EmptyStateProps {
   onConnect: () => void;

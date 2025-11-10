@@ -2,12 +2,11 @@
 
 import styled from '@emotion/styled';
 import { RoadmapCard } from '@/feature/dashboard';
-import { Icon } from '@/shared/ui';
-import { Text } from '@/shared/ui';
 import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
-import { tokens } from '@/shared/tokens';
-import { Pagination, RoadmapListItem, FilterTabs, FOLDER_FILTER_TABS } from '@/feature/roadmap';
 import type { MockRoadmap } from '@/feature/roadmap';
+import { FilterTabs, FOLDER_FILTER_TABS, Pagination, RoadmapListItem } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
+import { Icon, Text } from '@/shared/ui';
 
 export interface FolderRoadmapListProps {
   className?: string;
@@ -110,7 +109,7 @@ const FolderRoadmapList = ({
                     color: roadmap.color,
                     type: roadmap.type === 'my' ? 'personal' : 'team',
                     totalSteps: Math.floor(Math.random() * 20) + 5,
-                    completedSteps: Math.floor((Math.random() * 20 + 5) * roadmap.progress / 100),
+                    completedSteps: Math.floor(((Math.random() * 20 + 5) * roadmap.progress) / 100),
                     status: roadmap.progress === 100 ? 'completed' : 'in-progress',
                     progress: roadmap.progress,
                   }}

@@ -1,15 +1,15 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { ConfirmModal } from '@/shared/ui';
 import {
   EmptyState,
-  useSchoolConnect,
-  useSchoolNodeList,
   SchoolConnectHeader,
   SchoolInfoSection,
   SchoolNodeListSection,
+  useSchoolConnect,
+  useSchoolNodeList,
 } from '@/feature/school';
+import { ConfirmModal } from '@/shared/ui';
 
 const SchoolConnectContent = () => {
   const { state, modals, handleConnect, handleDisconnectClick, handleDisconnect, closeModal } =
@@ -48,7 +48,6 @@ const SchoolConnectContent = () => {
         onConfirm={handleDisconnect}
         title="연동을 해제하시겠습니까?"
         description="연동을 해제해도 기존에 사용한 학교 노드와 내용은 유지됩니다."
-        confirmText="해제하기"
         variant="confirm"
       />
     </StyledPageContainer>

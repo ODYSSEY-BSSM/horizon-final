@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import Header from '@/shared/layout/Header/Header';
 import Sidebar from '@/shared/layout/Sidebar/Sidebar';
 
@@ -21,54 +22,60 @@ const StyledMainContent = styled.main`
   -webkit-overflow-scrolling: touch;
 `;
 
+const getSelectedSidebarItem = (path: string) => {
+  if (path.includes('/my-roadmaps')) {
+    return 'my-roadmaps';
+  }
+  if (path.includes('/team-space')) {
+    return 'team-space';
+  }
+  if (path.includes('/school-connect')) {
+    return 'school-connect';
+  }
+  if (path.includes('/dashboard')) {
+    return 'dashboard';
+  }
+  return 'dashboard';
+};
+
+const getBreadcrumbs = (path: string): string[] => {
+  if (path.includes('/my-roadmaps')) {
+    const match = path.match(/\/my-roadmaps\/([^/]+)/);
+    if (match) {
+      const folderId = match[1];
+      return ['My Roadmaps', `Folder${folderId}`];
+    }
+    return ['My Roadmaps'];
+  }
+  if (path.includes('/team-space')) {
+    return ['Team Space'];
+  }
+  if (path.includes('/school-connect')) {
+    return ['School Connect'];
+  }
+  if (path.includes('/dashboard')) {
+    return ['Dashboard'];
+  }
+  return ['Dashboard'];
+};
+
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [currentPath, setCurrentPath] = useState('');
 
-  // Determine the selected sidebar item based on the current path
-  const getSelectedSidebarItem = () => {
-    if (pathname?.includes('/my-roadmaps')) {
-      return 'my-roadmaps';
-    }
-    if (pathname?.includes('/team-space')) {
-      return 'team-space';
-    }
-    if (pathname?.includes('/school-connect')) {
-      return 'school-connect';
-    }
-    if (pathname?.includes('/dashboard')) {
-      return 'dashboard';
-    }
-    return 'dashboard'; // default
-  };
+  useEffect(() => {
+    setCurrentPath(pathname ?? '');
+  }, [pathname]);
 
-  // Generate breadcrumbs based on current path
-  const getBreadcrumbs = () => {
-    if (pathname?.includes('/my-roadmaps')) {
-      // Check if it's a folder detail page
-      const match = pathname?.match(/\/my-roadmaps\/([^/]+)/);
-      if (match) {
-        const folderId = match[1];
-        return ['My Roadmaps', `Folder${folderId}`];
-      }
-      return ['My Roadmaps'];
-    }
-    if (pathname?.includes('/team-space')) {
-      return ['Team Space'];
-    }
-    if (pathname?.includes('/school-connect')) {
-      return ['School Connect'];
-    }
-    if (pathname?.includes('/dashboard')) {
-      return ['Dashboard'];
-    }
-    return ['Dashboard']; // default
-  };
+  const selectedSidebarItem = useMemo(() => getSelectedSidebarItem(currentPath), [currentPath]);
+
+  const breadcrumbs = useMemo(() => getBreadcrumbs(currentPath), [currentPath]);
 
   return (
     <StyledMainLayoutContainer>
-      <Sidebar selected={getSelectedSidebarItem()} />
+      <Sidebar selected={selectedSidebarItem} />
       <StyledMainContent>
-        <Header breadcrumbs={getBreadcrumbs()} />
+        <Header breadcrumbs={breadcrumbs} />
         {children}
       </StyledMainContent>
     </StyledMainLayoutContainer>
