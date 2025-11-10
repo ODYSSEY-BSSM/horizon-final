@@ -1,4 +1,4 @@
-import type { FilterType, RoadmapColor } from '@/lib/types/dashboard';
+import type { FilterType, RoadmapColor } from '@/feature/dashboard/types/dashboard';
 
 interface FilterConfig {
   id: FilterType;

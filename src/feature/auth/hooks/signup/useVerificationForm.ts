@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useSignupFlow } from '@/lib/stores/signupFlow';
-import { type VerificationFormData, verificationSchema } from '@/lib/validations/signup';
+import { useSignupFlow } from '@/feature/auth/store/signupFlow';
+import { type VerificationFormData, verificationSchema } from '@/feature/auth/validations/signup';
 
 export const useVerificationForm = () => {
   const { goToStep, saveStepData } = useSignupFlow();

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { RoadmapFormData } from '@/lib/types/modal';
+import type { RoadmapFormData } from '@/shared/types/modal';
 
 export type RoadmapFormStep = 'category' | 'folder' | 'team' | 'info' | 'style';
 

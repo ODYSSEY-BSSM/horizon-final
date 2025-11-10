@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import ContinueWithGoogle from '@/components/auth/ContinueWithGoogle';
+import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
 import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';

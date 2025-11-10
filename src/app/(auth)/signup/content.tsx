@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
-import { useSignupFlow } from '@/lib/stores/signupFlow';
+import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import type { SignUpStep } from '@/lib/types';
 import { tokens } from '@/shared/tokens';
 import {

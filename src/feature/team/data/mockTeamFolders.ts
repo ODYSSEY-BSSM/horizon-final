@@ -1,4 +1,4 @@
-import type { TeamFolder } from '@/lib/types/team';
+import type { TeamFolder } from '@/feature/team/types/team';
 
 export const mockTeamFolders: TeamFolder[] = [
   // 프론트엔드 스터디 팀의 폴더들

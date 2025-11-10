@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { Button } from '@/shared/ui';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
-import type { ViewType } from '@/lib/types/dashboard';
+import type { ViewType } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 
 interface ListHeaderProps {

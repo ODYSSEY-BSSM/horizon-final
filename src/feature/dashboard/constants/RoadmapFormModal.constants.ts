@@ -1,4 +1,4 @@
-import type { ColorOption, DropdownOption, IconOption } from '@/lib/types/modal';
+import type { ColorOption, DropdownOption, IconOption } from '@/shared/types/modal';
 
 export const FORM_STEPS = {
   CATEGORY: 1,

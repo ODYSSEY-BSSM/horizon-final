@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import type { Roadmap } from '@/lib/types/team';
+import type { Roadmap } from '@/feature/team/types/team';
 import { useTeamSpaceData } from '@/feature/team';
 
 const ITEMS_PER_PAGE = 10;

@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
-import type { RoadmapCategory } from '@/lib/types/dashboard';
+import type { RoadmapCategory } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { CARD_CONFIGS } from '../../constants/InfoCard.constants';
 
