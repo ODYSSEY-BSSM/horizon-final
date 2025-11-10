@@ -20,8 +20,6 @@ export { RoadmapThumbnail } from './components/RoadmapThumbnail';
 export { ROADMAP_COLOR_OPTIONS, ROADMAP_COLORS } from './constants';
 export * from './constants/FolderFilter.constants';
 export * from './constants/MyRoadmapsFilter.constants';
-// Data
-export * from './data/mockData';
 // Forms
 export { RoadmapStyleModal } from './forms/RoadmapStyleModal';
 // Hooks

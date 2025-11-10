@@ -36,7 +36,7 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
         aria-label="팀 선택"
         aria-expanded={isOpen}
       >
-        <StyledTeamName>{selectedTeam ? selectedTeam.name : '팀 선택'}</StyledTeamName>
+        <StyledTeamName id={labelId}>{selectedTeam ? selectedTeam.name : '팀 선택'}</StyledTeamName>
         <StyledIconWrapper>
           <Icon
             name={isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
