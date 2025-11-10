@@ -4,20 +4,16 @@ import { useMemo } from 'react';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
-  // 사용자 프로필 조회
   const { data: userProfile, isLoading: isLoadingUser, error: userError } = useUserProfile();
 
-  // 개인 로드맵 조회
   const { data: roadmapsData, isLoading: isLoadingRoadmaps, error: roadmapsError } = useRoadmaps();
 
-  // 사용자 데이터 가공
   const userData = useMemo(() => {
     if (!userProfile) return null;
 
-    // 로드맵 통계 계산
     const myRoadmapsCount = roadmapsData?.length || 0;
     const myRoadmapsInProgress = roadmapsData?.filter(
-      (roadmap) => roadmap.isFavorite // 진행 중 판단 기준은 프로젝트 요구사항에 맞게 수정 필요
+      (roadmap) => roadmap.isFavorite
     ).length || 0;
 
     return {
@@ -30,7 +26,6 @@ export const useDashboardData = () => {
     };
   }, [userProfile, roadmapsData]);
 
-  // 로드맵 데이터를 UI 타입으로 변환
   const roadmaps = useMemo(() => {
     if (!roadmapsData) return [];
 

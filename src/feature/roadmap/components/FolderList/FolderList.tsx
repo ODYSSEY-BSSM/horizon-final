@@ -17,17 +17,15 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('latest');
 
-  // 실제 API 데이터 가져오기
   const { data: foldersData, isLoading, error } = useFolders();
 
-  // API 데이터를 UI 타입으로 변환
   const folders: Folder[] = useMemo(() => {
     if (!foldersData) return [];
 
     return foldersData.map((folder) => ({
       id: folder.uuid,
       name: folder.name,
-      description: '', // API에서 제공하지 않으면 빈 문자열
+      description: '',
       progress: 0, // TODO: 진행률 계산 로직 필요
       roadmapCount: 0, // TODO: 로드맵 개수 API 호출 필요
       completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
@@ -49,7 +47,6 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   const totalPages = 1; // TODO: 페이지네이션 로직 추가 필요
 
-  // 로딩 상태 표시
   if (isLoading) {
     return (
       <StyledContainer className={className}>
@@ -63,7 +60,6 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
     );
   }
 
-  // 에러 상태 표시
   if (error) {
     return (
       <StyledContainer className={className}>
