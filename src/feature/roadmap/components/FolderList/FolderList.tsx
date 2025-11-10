@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { AddFolderCard } from '@/feature/folder';
 import type { Folder } from '@/feature/roadmap';
-import { FILTER_TABS, FilterTabs, FolderCard, Pagination } from '@/feature/roadmap';
+import { FOLDER_FILTER_TABS as FILTER_TABS, FilterTabs, FolderCard, Pagination } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 
 export interface FolderListProps {

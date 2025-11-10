@@ -56,6 +56,8 @@ export interface PasswordChangeRequest {
 
 // User Profile
 export interface UserInfoResponse {
+  id: string; // For backward compatibility with existing code
+  uuid?: number; // From API spec
   username: string;
   email: string;
   role: UserRole;
