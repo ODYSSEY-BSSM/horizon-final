@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { apiClient } from '@/shared/api';
-import { tokenStore } from './tokenStore';
+import { tokenStore } from '../../store/tokenStore';
 
 /**
  * 토큰 초기화 컴포넌트
