@@ -4,10 +4,6 @@ export type RoadmapStatus = 'not-started' | 'in-progress' | 'completed';
 
 export type RoadmapType = 'personal' | 'team';
 
-/**
- * 통합된 로드맵 타입
- * dashboard, my-roadmaps, team-space에서 모두 사용
- */
 export interface Roadmap {
   id: string;
   name: string;
@@ -24,9 +20,6 @@ export interface Roadmap {
   updatedAt?: string;
 }
 
-/**
- * 로드맵 폴더 타입
- */
 export interface RoadmapFolder {
   id: string;
   name: string;
@@ -39,9 +32,6 @@ export interface RoadmapFolder {
   updatedAt?: string;
 }
 
-/**
- * 로드맵 생성 요청
- */
 export interface CreateRoadmapRequest {
   name: string;
   description?: string;
@@ -52,9 +42,6 @@ export interface CreateRoadmapRequest {
   totalSteps?: number;
 }
 
-/**
- * 로드맵 수정 요청
- */
 export interface UpdateRoadmapRequest extends Partial<CreateRoadmapRequest> {
   id: string;
   completedSteps?: number;
@@ -62,12 +49,6 @@ export interface UpdateRoadmapRequest extends Partial<CreateRoadmapRequest> {
   progress?: number;
 }
 
-/**
- * 필터 타입
- */
 export type RoadmapFilter = 'all' | 'personal' | 'team' | 'in-progress' | 'completed';
 
-/**
- * 뷰 타입
- */
 export type ViewType = 'list' | 'thumbnail';

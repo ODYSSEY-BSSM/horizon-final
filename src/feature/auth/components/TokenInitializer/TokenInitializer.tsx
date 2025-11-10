@@ -4,12 +4,6 @@ import { useEffect } from 'react';
 import { tokenStore } from '@/feature/auth/store/tokenStore';
 import { apiClient } from '@/shared/api';
 
-/**
- * 토큰 초기화 컴포넌트
- *
- * 페이지 로드 시 sessionStorage에 저장된 refreshToken을 사용하여
- * accessToken을 자동으로 복구합니다.
- */
 export function TokenInitializer() {
   useEffect(() => {
     const initializeAuth = async () => {

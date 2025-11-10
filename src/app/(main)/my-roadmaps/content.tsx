@@ -35,7 +35,6 @@ const MyRoadmapsContent = () => {
       <MyRoadmapsHeader onAddFolder={handleAddFolder} />
       <FolderSection onAddFolderClick={handleAddFolder} />
 
-      {/* Modals */}
       <FormModal
         isOpen={modals.folderCreate}
         onClose={() => closeModal('folderCreate')}

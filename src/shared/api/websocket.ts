@@ -32,9 +32,6 @@ export class WebSocketClient {
     this.url = `${WS_BASE_URL}${endpoint}`;
   }
 
-  /**
-   * WebSocket 연결
-   */
   connect(): void {
     if (this.ws?.readyState === WebSocket.OPEN || this.isConnecting) {
       console.warn('[WebSocket] Already connected or connecting');
@@ -62,9 +59,6 @@ export class WebSocketClient {
     }
   }
 
-  /**
-   * WebSocket 연결 해제
-   */
   disconnect(): void {
     this.isManualClose = true;
     this.clearReconnectTimeout();
@@ -78,9 +72,6 @@ export class WebSocketClient {
     this.isConnecting = false;
   }
 
-  /**
-   * 메시지 전송
-   */
   send<T>(type: string, data: T): void {
     if (this.ws?.readyState !== WebSocket.OPEN) {
       console.error('[WebSocket] Cannot send message: WebSocket is not open');
@@ -96,18 +87,12 @@ export class WebSocketClient {
     this.ws.send(JSON.stringify(message));
   }
 
-  /**
-   * 특정 메시지 타입에 대한 핸들러 등록
-   */
   on(messageType: string, handler: MessageHandler): void {
     const handlers = this.messageHandlers.get(messageType) || [];
     handlers.push(handler);
     this.messageHandlers.set(messageType, handlers);
   }
 
-  /**
-   * 메시지 핸들러 제거
-   */
   off(messageType: string, handler: MessageHandler): void {
     const handlers = this.messageHandlers.get(messageType);
     if (handlers) {
@@ -120,18 +105,12 @@ export class WebSocketClient {
     }
   }
 
-  /**
-   * WebSocket 이벤트 핸들러 등록
-   */
   addEventListener(event: WebSocketEventType, handler: EventHandler): void {
     const handlers = this.eventHandlers.get(event) || [];
     handlers.push(handler);
     this.eventHandlers.set(event, handlers);
   }
 
-  /**
-   * WebSocket 이벤트 핸들러 제거
-   */
   removeEventListener(event: WebSocketEventType, handler: EventHandler): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
@@ -144,16 +123,10 @@ export class WebSocketClient {
     }
   }
 
-  /**
-   * 연결 상태 확인
-   */
   isConnected(): boolean {
     return this.ws?.readyState === WebSocket.OPEN;
   }
 
-  /**
-   * 연결 상태 반환
-   */
   getReadyState(): number | null {
     return this.ws?.readyState ?? null;
   }
@@ -265,9 +238,6 @@ export class WebSocketClient {
 
 const wsClients: Map<string, WebSocketClient> = new Map();
 
-/**
- * WebSocket 클라이언트 인스턴스 생성 또는 가져오기
- */
 export function getWebSocketClient(endpoint: string): WebSocketClient {
   if (!wsClients.has(endpoint)) {
     wsClients.set(endpoint, new WebSocketClient(endpoint));
@@ -275,9 +245,6 @@ export function getWebSocketClient(endpoint: string): WebSocketClient {
   return wsClients.get(endpoint)!;
 }
 
-/**
- * WebSocket 클라이언트 제거
- */
 export function removeWebSocketClient(endpoint: string): void {
   const client = wsClients.get(endpoint);
   if (client) {
@@ -286,9 +253,6 @@ export function removeWebSocketClient(endpoint: string): void {
   }
 }
 
-/**
- * 모든 WebSocket 연결 해제
- */
 export function disconnectAllWebSockets(): void {
   wsClients.forEach((client) => client.disconnect());
   wsClients.clear();

@@ -7,10 +7,6 @@ const WS_ENDPOINT = '/ws';
 
 export type StompMessageHandler<T = unknown> = (message: T) => void;
 
-/**
- * STOMP WebSocket Client
- * STOMP over WebSocket을 사용하여 실시간 통신을 제공합니다.
- */
 export class StompWebSocketClient {
   private client: Client;
   private subscriptions: Map<string, StompSubscription> = new Map();
@@ -33,9 +29,6 @@ export class StompWebSocketClient {
     this.client.onStompError = this.onError.bind(this);
   }
 
-  /**
-   * WebSocket 연결
-   */
   connect(): void {
     if (this.isConnected || this.client.active) {
       console.warn('[STOMP] Already connected or connecting');
@@ -58,9 +51,6 @@ export class StompWebSocketClient {
     this.client.activate();
   }
 
-  /**
-   * WebSocket 연결 해제
-   */
   disconnect(): void {
     if (!this.client.active) {
       return;
@@ -79,12 +69,6 @@ export class StompWebSocketClient {
     this.isConnected = false;
   }
 
-  /**
-   * 토픽 구독
-   * @param destination 구독할 토픽 경로 (예: /topic/directory/team/1/created)
-   * @param handler 메시지 핸들러
-   * @returns 구독 ID
-   */
   subscribe<T>(destination: string, handler: StompMessageHandler<T>): string {
     if (!this.isConnected) {
       console.error('[STOMP] Cannot subscribe: not connected');
@@ -106,10 +90,6 @@ export class StompWebSocketClient {
     return subscription.id;
   }
 
-  /**
-   * 구독 해제
-   * @param destination 구독 해제할 토픽 경로
-   */
   unsubscribe(destination: string): void {
     const subscription = this.subscriptions.get(destination);
     if (subscription) {
@@ -119,11 +99,6 @@ export class StompWebSocketClient {
     }
   }
 
-  /**
-   * 메시지 전송
-   * @param destination 전송할 경로 (예: /app/roadmap/1/cursor)
-   * @param body 메시지 내용
-   */
   send<T>(destination: string, body: T): void {
     if (!this.isConnected) {
       console.error('[STOMP] Cannot send: not connected');
@@ -138,9 +113,6 @@ export class StompWebSocketClient {
     console.log('[STOMP] Sent message to:', destination);
   }
 
-  /**
-   * 연결 상태 확인
-   */
   getIsConnected(): boolean {
     return this.isConnected;
   }
@@ -183,9 +155,6 @@ export class StompWebSocketClient {
 
 let stompClient: StompWebSocketClient | null = null;
 
-/**
- * STOMP WebSocket 클라이언트 인스턴스 가져오기
- */
 export function getStompClient(): StompWebSocketClient {
   if (!stompClient) {
     stompClient = new StompWebSocketClient();
@@ -193,9 +162,6 @@ export function getStompClient(): StompWebSocketClient {
   return stompClient;
 }
 
-/**
- * STOMP WebSocket 연결 해제 및 인스턴스 제거
- */
 export function destroyStompClient(): void {
   if (stompClient) {
     stompClient.disconnect();

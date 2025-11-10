@@ -26,9 +26,6 @@ export const folderKeys = {
 // Personal Directory Queries
 // ===================================
 
-/**
- * 개인 디렉토리 전체 조회
- */
 export function useFolders() {
   return useQuery({
     queryKey: folderKeys.list(),
@@ -36,9 +33,6 @@ export function useFolders() {
   });
 }
 
-/**
- * 개인 디렉토리 단일 조회
- */
 export function useFolder(directoryUuid: number) {
   return useQuery({
     queryKey: folderKeys.detail(directoryUuid),
@@ -47,9 +41,6 @@ export function useFolder(directoryUuid: number) {
   });
 }
 
-/**
- * 개인 디렉토리 컨텐츠 조회
- */
 export function useFolderContent(directoryUuid: number) {
   return useQuery({
     queryKey: folderKeys.content(directoryUuid),
@@ -62,9 +53,6 @@ export function useFolderContent(directoryUuid: number) {
 // Personal Directory Mutations
 // ===================================
 
-/**
- * 개인 디렉토리 생성
- */
 export function useCreateFolder() {
   const queryClient = useQueryClient();
 
@@ -76,9 +64,6 @@ export function useCreateFolder() {
   });
 }
 
-/**
- * 개인 디렉토리 수정
- */
 export function useUpdateFolder() {
   const queryClient = useQueryClient();
 
@@ -97,9 +82,6 @@ export function useUpdateFolder() {
   });
 }
 
-/**
- * 개인 디렉토리 삭제
- */
 export function useDeleteFolder() {
   const queryClient = useQueryClient();
 
@@ -115,9 +97,6 @@ export function useDeleteFolder() {
 // Team Directory Queries
 // ===================================
 
-/**
- * 팀 디렉토리 전체 조회
- */
 export function useTeamFolders(teamName: string) {
   return useQuery({
     queryKey: folderKeys.teamList(teamName),
@@ -126,9 +105,6 @@ export function useTeamFolders(teamName: string) {
   });
 }
 
-/**
- * 팀 디렉토리 단일 조회
- */
 export function useTeamFolder(teamName: string, directoryUuid: number) {
   return useQuery({
     queryKey: folderKeys.teamDetail(teamName, directoryUuid),
@@ -137,9 +113,6 @@ export function useTeamFolder(teamName: string, directoryUuid: number) {
   });
 }
 
-/**
- * 팀 디렉토리 컨텐츠 조회
- */
 export function useTeamFolderContent(teamName: string, directoryUuid: number) {
   return useQuery({
     queryKey: folderKeys.teamContent(teamName, directoryUuid),
@@ -152,9 +125,6 @@ export function useTeamFolderContent(teamName: string, directoryUuid: number) {
 // Team Directory Mutations
 // ===================================
 
-/**
- * 팀 디렉토리 생성
- */
 export function useCreateTeamFolder(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -167,9 +137,6 @@ export function useCreateTeamFolder(teamName: string) {
   });
 }
 
-/**
- * 팀 디렉토리 수정
- */
 export function useUpdateTeamFolder(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -190,9 +157,6 @@ export function useUpdateTeamFolder(teamName: string) {
   });
 }
 
-/**
- * 팀 디렉토리 삭제
- */
 export function useDeleteTeamFolder(teamName: string) {
   const queryClient = useQueryClient();
 

@@ -3,20 +3,11 @@ import { useStompWebSocket } from '@/shared/hooks/useStompWebSocket';
 import type { CursorSendMessage, CursorReceiveMessage } from '@/shared/api/stompTypes';
 
 export interface UseCursorWebSocketOptions {
-  /**
-   * 로드맵 ID
-   */
-  roadmapId: number;
+    roadmapId: number;
 
-  /**
-   * 커서 위치 수신 콜백
-   */
-  onCursorMove?: (cursor: CursorReceiveMessage) => void;
+    onCursorMove?: (cursor: CursorReceiveMessage) => void;
 
-  /**
-   * 자동 구독 여부 (기본값: true)
-   */
-  autoSubscribe?: boolean;
+    autoSubscribe?: boolean;
 }
 
 export interface CursorPosition {
@@ -24,26 +15,6 @@ export interface CursorPosition {
   y: number;
 }
 
-/**
- * 커서 위치 실시간 구독 Hook
- *
- * 다른 사용자의 커서 위치를 실시간으로 받고, 자신의 커서 위치를 브로드캐스팅합니다.
- *
- * @example
- * ```tsx
- * const { isSubscribed, sendCursorPosition, otherCursors } = useCursorWebSocket({
- *   roadmapId: 1,
- *   onCursorMove: (cursor) => {
- *     console.log(`User ${cursor.userName} moved to (${cursor.x}, ${cursor.y})`);
- *   },
- * });
- *
- * // 마우스 이동 시
- * const handleMouseMove = (e: MouseEvent) => {
- *   sendCursorPosition({ x: e.clientX, y: e.clientY });
- * };
- * ```
- */
 export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
   const { roadmapId, onCursorMove, autoSubscribe = true } = options;
 
@@ -84,10 +55,7 @@ export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
     };
   }, [isConnected, autoSubscribe, roadmapId, subscribe, unsubscribe, handleCursorMove]);
 
-  /**
-   * 커서 위치 전송
-   */
-  const sendCursorPosition = useCallback(
+    const sendCursorPosition = useCallback(
     (position: CursorPosition) => {
       if (!isConnected) {
         return;
@@ -104,10 +72,7 @@ export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
     [isConnected, roadmapId, send],
   );
 
-  /**
-   * 특정 사용자의 커서 제거 (타임아웃 등)
-   */
-  const removeCursor = useCallback((userId: number) => {
+    const removeCursor = useCallback((userId: number) => {
     setOtherCursors((prev) => {
       const next = new Map(prev);
       next.delete(userId);

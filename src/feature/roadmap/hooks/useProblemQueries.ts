@@ -7,9 +7,6 @@ import { nodeKeys } from './useNodeQueries';
 // Problem Mutations
 // ===================================
 
-/**
- * 문제 생성
- */
 export function useCreateProblem(nodeUuid: number, roadmapUuid: number) {
   const queryClient = useQueryClient();
 
@@ -23,9 +20,6 @@ export function useCreateProblem(nodeUuid: number, roadmapUuid: number) {
   });
 }
 
-/**
- * 문제 풀이
- */
 export function useSolveProblem(nodeUuid: number, roadmapUuid: number) {
   const queryClient = useQueryClient();
 

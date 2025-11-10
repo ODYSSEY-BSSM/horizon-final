@@ -25,9 +25,6 @@ export const roadmapKeys = {
 // Personal Roadmap Queries
 // ===================================
 
-/**
- * 개인 로드맵 전체 조회
- */
 export function useRoadmaps() {
   return useQuery({
     queryKey: roadmapKeys.lists(),
@@ -35,9 +32,6 @@ export function useRoadmaps() {
   });
 }
 
-/**
- * 개인 로드맵 단일 조회
- */
 export function useRoadmap(roadmapUuid: number) {
   return useQuery({
     queryKey: roadmapKeys.detail(roadmapUuid),
@@ -46,9 +40,6 @@ export function useRoadmap(roadmapUuid: number) {
   });
 }
 
-/**
- * 개인 로드맵 개수 조회
- */
 export function useRoadmapCount() {
   return useQuery({
     queryKey: roadmapKeys.count(),
@@ -60,9 +51,6 @@ export function useRoadmapCount() {
 // Personal Roadmap Mutations
 // ===================================
 
-/**
- * 개인 로드맵 생성
- */
 export function useCreateRoadmap() {
   const queryClient = useQueryClient();
 
@@ -75,9 +63,6 @@ export function useCreateRoadmap() {
   });
 }
 
-/**
- * 개인 로드맵 수정
- */
 export function useUpdateRoadmap() {
   const queryClient = useQueryClient();
 
@@ -91,9 +76,6 @@ export function useUpdateRoadmap() {
   });
 }
 
-/**
- * 개인 로드맵 삭제
- */
 export function useDeleteRoadmap() {
   const queryClient = useQueryClient();
 
@@ -106,9 +88,6 @@ export function useDeleteRoadmap() {
   });
 }
 
-/**
- * 즐겨찾기 추가
- */
 export function useAddFavorite() {
   const queryClient = useQueryClient();
 
@@ -121,9 +100,6 @@ export function useAddFavorite() {
   });
 }
 
-/**
- * 즐겨찾기 삭제
- */
 export function useRemoveFavorite() {
   const queryClient = useQueryClient();
 
@@ -136,9 +112,6 @@ export function useRemoveFavorite() {
   });
 }
 
-/**
- * 마지막 접속 시간 갱신
- */
 export function useUpdateLastAccessed() {
   const queryClient = useQueryClient();
 
@@ -154,9 +127,6 @@ export function useUpdateLastAccessed() {
 // Team Roadmap Queries
 // ===================================
 
-/**
- * 팀 로드맵 전체 조회
- */
 export function useTeamRoadmaps(teamName: string) {
   return useQuery({
     queryKey: roadmapKeys.teamList(teamName),
@@ -165,9 +135,6 @@ export function useTeamRoadmaps(teamName: string) {
   });
 }
 
-/**
- * 팀 로드맵 단일 조회
- */
 export function useTeamRoadmap(teamName: string, roadmapUuid: number) {
   return useQuery({
     queryKey: roadmapKeys.teamDetail(teamName, roadmapUuid),
@@ -176,9 +143,6 @@ export function useTeamRoadmap(teamName: string, roadmapUuid: number) {
   });
 }
 
-/**
- * 팀 로드맵 개수 조회
- */
 export function useTeamRoadmapCount(teamName: string) {
   return useQuery({
     queryKey: roadmapKeys.teamCount(teamName),
@@ -191,9 +155,6 @@ export function useTeamRoadmapCount(teamName: string) {
 // Team Roadmap Mutations
 // ===================================
 
-/**
- * 팀 로드맵 생성
- */
 export function useCreateTeamRoadmap(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -207,9 +168,6 @@ export function useCreateTeamRoadmap(teamName: string) {
   });
 }
 
-/**
- * 팀 로드맵 수정
- */
 export function useUpdateTeamRoadmap(teamName: string) {
   const queryClient = useQueryClient();
 
@@ -230,9 +188,6 @@ export function useUpdateTeamRoadmap(teamName: string) {
   });
 }
 
-/**
- * 팀 로드맵 삭제
- */
 export function useDeleteTeamRoadmap(teamName: string) {
   const queryClient = useQueryClient();
 
