@@ -5,7 +5,7 @@ import type {
   RegisterRequest,
   TokenRefreshResponse,
   UserInfoResponse,
-} from './types';
+} from '../types/auth';
 
 export const authApi = {
   // 로그인
@@ -39,7 +39,7 @@ export const authApi = {
     });
   },
 
-  // 사용자 정보 조회 (예시)
+  // 사용자 정보 조회
   getProfile: async (): Promise<UserInfoResponse> => {
     const response = await apiClient.get<UserInfoResponse>('/user/profile');
     return response.data;
