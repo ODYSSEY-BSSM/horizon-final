@@ -10,9 +10,12 @@ import {
   TeamDropdown,
   useTeamSpaceData,
 } from '@/feature/team';
+import { useTeamFolders, useCreateTeamFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
+import type { TeamFolder } from '@/feature/team/types/team';
+import { Color, Icon } from '@/shared/api/types';
 
 const TeamFoldersContent = () => {
   const params = useParams();
@@ -24,14 +27,35 @@ const TeamFoldersContent = () => {
 
   const teamId = params.teamId;
 
-  const { teams, getTeamFolders, addFolder, addTeam } = useTeamSpaceData();
+  const { teams, addTeam } = useTeamSpaceData();
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
   const currentTeam = teams.find((team) => team.id === teamId);
-  const folders = getTeamFolders(teamId);
+  const teamName = currentTeam?.name || '';
+
+  // 팀 폴더 조회
+  const { data: teamFoldersData } = useTeamFolders(teamName);
+
+  // 팀 폴더 생성 mutation
+  const createFolderMutation = useCreateTeamFolder(teamName);
+
+  // API 데이터를 UI 타입으로 변환
+  const folders: TeamFolder[] = useMemo(() => {
+    if (!teamFoldersData) return [];
+
+    return teamFoldersData.map((folder) => ({
+      id: folder.uuid.toString(),
+      teamId: teamId,
+      name: folder.name,
+      description: '',
+      progress: 0,
+      roadmapCount: 0,
+      createdRoadmapCount: 0,
+    }));
+  }, [teamFoldersData, teamId]);
 
   const handleTeamChange = (newTeamId: string) => {
     router.push(`/team-space/${newTeamId}`);
@@ -42,8 +66,18 @@ const TeamFoldersContent = () => {
   };
 
   const handleFolderCreate = (data: { name: string; description: string }) => {
-    addFolder({ teamId, ...data });
-    setShowFolderModal(false);
+    createFolderMutation.mutate(
+      {
+        name: data.name,
+        color: Color.BLUE, // 기본 색상
+        icon: Icon.FOLDER, // 기본 아이콘
+      },
+      {
+        onSuccess: () => {
+          setShowFolderModal(false);
+        },
+      },
+    );
   };
 
   const handleCreateTeam = () => {
