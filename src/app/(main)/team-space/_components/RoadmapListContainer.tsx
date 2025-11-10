@@ -4,15 +4,16 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
-import type { Roadmap } from '@/lib/types/team';
+import type { Roadmap as TeamRoadmap } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import { ROADMAP_FILTER_TABS } from '../_constants/RoadmapFilterTabs.constants';
 import FilterTabs from './FilterTabs';
-import RoadmapListItem from './RoadmapListItem';
+import { RoadmapListItem } from '@/feature/roadmap';
+import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 
 interface RoadmapListContainerProps {
-  roadmaps: Roadmap[];
-  onRoadmapClick: (roadmap: Roadmap) => void;
+  roadmaps: TeamRoadmap[];
+  onRoadmapClick: (roadmap: TeamRoadmap) => void;
   onCreateRoadmap?: () => void;
 }
 
@@ -87,9 +88,24 @@ const RoadmapListContainer = ({
       {roadmaps.length > 0 ? (
         <StyledContent>
           <StyledRoadmapList>
-            {roadmaps.map((roadmap) => (
-              <RoadmapListItem key={roadmap.id} roadmap={roadmap} onClick={onRoadmapClick} />
-            ))}
+            {roadmaps.map((roadmap) => {
+              const unifiedRoadmap: Roadmap = {
+                id: roadmap.id,
+                name: roadmap.name,
+                description: roadmap.description,
+                icon: roadmap.icon || 'deployed_code',
+                color: (roadmap.color as RoadmapColor) || 'blue',
+                type: roadmap.type || 'team',
+                totalSteps: roadmap.totalSteps || 0,
+                completedSteps: roadmap.completedSteps || 0,
+                status: roadmap.status || 'in-progress',
+                progress: roadmap.progress || 0,
+                folderId: roadmap.folderId,
+                createdAt: roadmap.createdAt,
+                updatedAt: roadmap.updatedAt,
+              };
+              return <RoadmapListItem key={roadmap.id} roadmap={unifiedRoadmap} onClick={() => onRoadmapClick(roadmap)} />;
+            })}
           </StyledRoadmapList>
         </StyledContent>
       ) : (

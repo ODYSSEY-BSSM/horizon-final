@@ -9,7 +9,7 @@ import FilterTab from './FilterTab';
 import ListHeader from './ListHeader';
 import { Pagination } from '@/feature/roadmap';
 import RoadmapCard from './RoadmapCard';
-import RoadmapListItem from './RoadmapListItem';
+import { RoadmapListItem } from '@/feature/roadmap';
 
 export interface RoadmapListProps {
   className?: string;
@@ -131,7 +131,20 @@ const RoadmapList = ({
       {currentView === 'list' ? (
         <StyledListItemsContainer>
           {paginatedItems.map((item) => (
-            <RoadmapListItem key={item.id} item={item} />
+            <RoadmapListItem
+              key={item.id}
+              roadmap={{
+                id: item.id,
+                name: item.title,
+                icon: item.icon,
+                color: item.color,
+                type: item.category,
+                totalSteps: item.steps,
+                completedSteps: Math.round(item.steps * item.progress / 100),
+                status: item.status,
+                progress: item.progress,
+              }}
+            />
           ))}
         </StyledListItemsContainer>
       ) : (

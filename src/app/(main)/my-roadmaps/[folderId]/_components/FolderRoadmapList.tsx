@@ -9,7 +9,7 @@ import { tokens } from '@/shared/tokens';
 import type { MockRoadmap } from '../_data/mockData';
 import FolderFilterTabs from './FolderFilterTabs';
 import { Pagination } from '@/feature/roadmap';
-import RoadmapListItem from './RoadmapListItem';
+import { RoadmapListItem } from '@/feature/roadmap';
 
 export interface FolderRoadmapListProps {
   className?: string;
@@ -103,7 +103,20 @@ const FolderRoadmapList = ({
           {viewMode === 'list' ? (
             <StyledRoadmapList>
               {roadmaps.map((roadmap) => (
-                <RoadmapListItem key={roadmap.id} roadmap={roadmap} />
+                <RoadmapListItem
+                  key={roadmap.id}
+                  roadmap={{
+                    id: roadmap.id,
+                    name: roadmap.title,
+                    icon: roadmap.icon,
+                    color: roadmap.color,
+                    type: roadmap.type === 'my' ? 'personal' : 'team',
+                    totalSteps: Math.floor(Math.random() * 20) + 5,
+                    completedSteps: Math.floor((Math.random() * 20 + 5) * roadmap.progress / 100),
+                    status: roadmap.progress === 100 ? 'completed' : 'in-progress',
+                    progress: roadmap.progress,
+                  }}
+                />
               ))}
             </StyledRoadmapList>
           ) : (

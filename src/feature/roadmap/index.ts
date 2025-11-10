@@ -1,6 +1,8 @@
 // Components
 export { Pagination } from './components/Pagination';
 export type { PaginationProps } from './components/Pagination';
+export { RoadmapListItem } from './components/RoadmapListItem';
+export type { RoadmapListItemProps } from './components/RoadmapListItem';
 
 // Hooks
 export { useDropdown } from './hooks/useDropdown';
