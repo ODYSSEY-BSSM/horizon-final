@@ -1,10 +1,10 @@
 'use client';
 
 import styled from '@emotion/styled';
+import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 import { RoadmapListItem } from '@/feature/roadmap';
 import { AddRoadmapCard } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
-import { mapTeamRoadmapToRoadmap } from '../../utils/roadmapMapper';
 
 interface RoadmapGridProps {
   roadmaps: TeamRoadmap[];
@@ -16,13 +16,30 @@ export default function RoadmapGrid({ roadmaps, onAddRoadmap, onRoadmapClick }: 
   return (
     <StyledContainer>
       <StyledGrid>
-        {roadmaps.map((roadmap) => (
-          <RoadmapListItem
-            key={roadmap.id}
-            roadmap={mapTeamRoadmapToRoadmap(roadmap)}
-            onClick={() => onRoadmapClick(roadmap)}
-          />
-        ))}
+        {roadmaps.map((roadmap) => {
+          const unifiedRoadmap: Roadmap = {
+            id: roadmap.id,
+            name: roadmap.name,
+            description: roadmap.description,
+            icon: roadmap.icon || 'deployed_code',
+            color: roadmap.color || 'blue',
+            type: roadmap.type || 'team',
+            totalSteps: roadmap.totalSteps || 0,
+            completedSteps: roadmap.completedSteps || 0,
+            status: roadmap.status || 'in-progress',
+            progress: roadmap.progress || 0,
+            folderId: roadmap.folderId,
+            createdAt: roadmap.createdAt,
+            updatedAt: roadmap.updatedAt,
+          };
+          return (
+            <RoadmapListItem
+              key={roadmap.id}
+              roadmap={unifiedRoadmap}
+              onClick={() => onRoadmapClick(roadmap)}
+            />
+          );
+        })}
         <AddRoadmapCard onClick={onAddRoadmap} />
       </StyledGrid>
     </StyledContainer>

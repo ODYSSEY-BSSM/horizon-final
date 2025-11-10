@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
@@ -15,7 +15,12 @@ type ModalState = {
 
 const FolderDetailContent = () => {
   const params = useParams();
-  const folderId = params?.folderId as string;
+
+  if (!params?.folderId || Array.isArray(params.folderId)) {
+    notFound();
+  }
+
+  const folderId = params.folderId;
 
   const [modals, setModals] = useState<ModalState>({
     roadmapCreate: false,

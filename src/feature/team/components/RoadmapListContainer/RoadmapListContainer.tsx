@@ -2,12 +2,12 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import type { Roadmap, RoadmapColor } from '@/feature/roadmap';
 import { FilterTabs, RoadmapListItem } from '@/feature/roadmap';
 import { ROADMAP_FILTER_TABS } from '@/feature/team';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
-import { mapTeamRoadmapToRoadmap } from '../../utils/roadmapMapper';
 
 interface RoadmapListContainerProps {
   roadmaps: TeamRoadmap[];
@@ -86,13 +86,30 @@ const RoadmapListContainer = ({
       {roadmaps.length > 0 ? (
         <StyledContent>
           <StyledRoadmapList>
-            {roadmaps.map((roadmap) => (
-              <RoadmapListItem
-                key={roadmap.id}
-                roadmap={mapTeamRoadmapToRoadmap(roadmap)}
-                onClick={() => onRoadmapClick(roadmap)}
-              />
-            ))}
+            {roadmaps.map((roadmap) => {
+              const unifiedRoadmap: Roadmap = {
+                id: roadmap.id,
+                name: roadmap.name,
+                description: roadmap.description,
+                icon: roadmap.icon || 'deployed_code',
+                color: roadmap.color || 'blue',
+                type: roadmap.type || 'team',
+                totalSteps: roadmap.totalSteps || 0,
+                completedSteps: roadmap.completedSteps || 0,
+                status: roadmap.status || 'in-progress',
+                progress: roadmap.progress || 0,
+                folderId: roadmap.folderId,
+                createdAt: roadmap.createdAt,
+                updatedAt: roadmap.updatedAt,
+              };
+              return (
+                <RoadmapListItem
+                  key={roadmap.id}
+                  roadmap={unifiedRoadmap}
+                  onClick={() => onRoadmapClick(roadmap)}
+                />
+              );
+            })}
           </StyledRoadmapList>
         </StyledContent>
       ) : (
