@@ -1,3 +1,5 @@
+import type { RoadmapColor } from '@/feature/roadmap';
+
 export type Team = {
   id: string;
   name: string;
@@ -28,7 +30,7 @@ export type Roadmap = {
   type?: 'personal' | 'team';
   status?: 'in-progress' | 'completed';
   icon?: string;
-  color?: string;
+  color?: RoadmapColor;
   createdAt?: string;
   updatedAt?: string;
 };

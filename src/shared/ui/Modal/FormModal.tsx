@@ -22,7 +22,7 @@ export const FormModal = <T extends Record<string, string>>({
   const [formData, setFormData] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     fields.forEach((field) => {
-      initial[field.name] = (initialData?.[field.name] as string) || '';
+      initial[field.name] = initialData?.[field.name] ?? '';
     });
     return initial;
   });
@@ -34,7 +34,7 @@ export const FormModal = <T extends Record<string, string>>({
     if (isOpen && mode === 'edit' && initialData) {
       const updated: Record<string, string> = {};
       fields.forEach((field) => {
-        updated[field.name] = (initialData[field.name] as string) || '';
+        updated[field.name] = initialData[field.name] ?? '';
       });
       setFormData(updated);
     } else if (!isOpen) {

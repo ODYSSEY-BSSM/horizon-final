@@ -7,7 +7,6 @@ import {
   STEP_TITLES,
 } from '../../constants/RoadmapFormModal.constants';
 import { FormLayout } from './components/FormLayout';
-import type { STEP_HEIGHTS } from './constants/spacing';
 import { CategoryStep } from './steps/CategoryStep';
 import { FolderStep } from './steps/FolderStep';
 import { InfoStep } from './steps/InfoStep';
@@ -39,10 +38,11 @@ const RoadmapFormModal = () => {
       (stepNum) => Object.keys(FORM_STEPS)[stepNum - 1].toLowerCase() === currentStep,
     ) || FORM_STEPS.CATEGORY;
 
-  const title = STEP_TITLES[stepNumber as keyof typeof STEP_TITLES];
-  const description = STEP_DESCRIPTIONS[stepNumber as keyof typeof STEP_DESCRIPTIONS];
+  type StepNumber = (typeof FORM_STEPS)[keyof typeof FORM_STEPS];
+  const validStepNumber = stepNumber as StepNumber;
 
-  const currentStepKey = currentStep as keyof typeof STEP_HEIGHTS;
+  const title = STEP_TITLES[validStepNumber];
+  const description = STEP_DESCRIPTIONS[validStepNumber];
 
   if (!isModalOpen) {
     return null;
@@ -52,7 +52,7 @@ const RoadmapFormModal = () => {
     <FormLayout
       title={title}
       description={description}
-      currentStep={currentStepKey}
+      currentStep={currentStep}
       onClose={closeModal}
     >
       {renderCurrentStep()}

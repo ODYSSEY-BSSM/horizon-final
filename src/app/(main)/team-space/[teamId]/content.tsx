@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useParams, useRouter } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import {
   CreateTeamModal,
@@ -17,7 +17,12 @@ import { Button, FormModal } from '@/shared/ui';
 const TeamFoldersContent = () => {
   const params = useParams();
   const router = useRouter();
-  const teamId = params.teamId as string;
+
+  if (!params?.teamId || Array.isArray(params.teamId)) {
+    notFound();
+  }
+
+  const teamId = params.teamId;
 
   const { teams, getTeamFolders, addFolder, addTeam } = useTeamSpaceData();
   const [activeTab, setActiveTab] = useState<string>('recent');

@@ -1,15 +1,25 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
 import { tokens } from '@/shared/tokens';
 import { Button } from '@/shared/ui';
 
 const FolderRoadmapsContent = () => {
   const params = useParams();
-  const teamId = params.teamId as string;
-  const folderId = params.folderId as string;
+
+  if (
+    !params?.teamId ||
+    Array.isArray(params.teamId) ||
+    !params?.folderId ||
+    Array.isArray(params.folderId)
+  ) {
+    notFound();
+  }
+
+  const teamId = params.teamId;
+  const folderId = params.folderId;
 
   const { teams, folders } = useTeamSpaceData();
 

@@ -10,13 +10,15 @@ interface FilterTabProps {
 }
 
 const FilterTab = ({ currentFilter, onFilterChange }: FilterTabProps) => {
+  const entries = Object.entries(FILTER_OPTIONS) as Array<[FilterType, string]>;
+
   return (
     <StyledFilterTab>
-      {Object.entries(FILTER_OPTIONS).map(([key, value]) => (
+      {entries.map(([key, value]) => (
         <StyledTabItem
           key={key}
           $isSelected={currentFilter === key}
-          onClick={() => onFilterChange(key as FilterType)}
+          onClick={() => onFilterChange(key)}
         >
           <Text variant="B2">{value}</Text>
         </StyledTabItem>
