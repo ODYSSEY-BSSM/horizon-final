@@ -6,10 +6,8 @@ import { useState } from 'react';
 import { Button, FormModal } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import type { ColorOption } from '../_components/ColorDropdown';
-import type { IconOption } from '../_components/IconDropdown';
-import RoadmapStyleModal from '../_forms/RoadmapStyleModal';
-import RoadmapListSection from './_sections/RoadmapListSection';
+import type { ColorOption, IconOption } from '@/feature/roadmap';
+import { RoadmapStyleModal, RoadmapListSection } from '@/feature/roadmap';
 
 type ModalState = {
   roadmapCreate: boolean;

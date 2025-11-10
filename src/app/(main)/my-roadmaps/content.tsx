@@ -3,9 +3,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { FormModal } from '@/shared/ui';
-
-import FolderSection from './_sections/FolderSection';
-import MyRoadmapsHeader from './_sections/MyRoadmapsHeader';
+import { FolderSection, MyRoadmapsHeader } from '@/feature/roadmap';
 
 type ModalState = {
   folderCreate: boolean;
