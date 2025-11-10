@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Button } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import FolderGrid from '../_components/FolderGrid';
-import TeamDropdown from '../_components/TeamDropdown';
+import { TeamDropdown } from '@/feature/team';
 import TeamFolderModal from '../_forms/TeamFolderModal';
 import { useTeamSpaceData } from '../_hooks/useTeamSpaceData';
 
