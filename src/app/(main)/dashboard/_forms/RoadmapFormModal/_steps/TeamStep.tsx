@@ -7,7 +7,7 @@ import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { TEAM_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../../_hooks/useDropdown';
+import { useDropdown } from '@/feature/roadmap';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
@@ -16,7 +16,7 @@ const TeamStep = () => {
     useTeamStep();
   const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: TEAM_OPTIONS.length,
-    onSelect: (_index) => {
+    onSelect: (_index: number) => {
       // `control` is not directly accessible here, so we call field.onChange inside the render prop
     },
   });

@@ -9,7 +9,7 @@ import { Text } from '@/shared/ui';
 import { TextField } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_OPTIONS } from '../../../_constants/RoadmapFormModal.constants';
-import { useDropdown } from '../../../_hooks/useDropdown';
+import { useDropdown } from '@/feature/roadmap';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 
@@ -34,7 +34,7 @@ const FolderStep = () => {
   const FOLDER_OPTIONS_WITH_NEW = [{ id: 'new', label: '새 폴더' }, ...FOLDER_OPTIONS];
   const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: FOLDER_OPTIONS_WITH_NEW.length,
-    onSelect: (index) => {
+    onSelect: (index: number) => {
       if (index === 0) {
         handleNewFolderClick();
       } else {

@@ -5,7 +5,7 @@ import { useId } from 'react';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
-import { useDropdown } from '../_hooks/useDropdown';
+import { useDropdown } from '@/feature/roadmap';
 
 export type ColorOption = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
 

@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
-import Pagination from '../_components/Pagination';
+import { Pagination } from '@/feature/roadmap';
 import SchoolNodeListItem from '../_components/SchoolNodeListItem';
 import type { SchoolNode } from '../_types/schoolConnect.types';
 
