@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import Icon from '@/components/common/Icon/Icon';
+import { Icon } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import { DEFAULT_SEARCH_PLACEHOLDER } from './Header.constants';
 import { useHeader } from './Header.hooks';

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import Text from '@/components/common/Text/Text';
+import { Text } from '@/shared/ui';
 import type { FilterType } from '@/lib/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { FILTER_OPTIONS } from '../_constants/FilterTab.constants';

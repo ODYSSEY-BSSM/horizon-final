@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import Button from '@/components/common/Button/Button';
-import Text from '@/components/common/Text/Text';
+import { Button } from '@/shared/ui';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import type { ColorOption } from '../_components/ColorDropdown';
 import type { IconOption } from '../_components/IconDropdown';

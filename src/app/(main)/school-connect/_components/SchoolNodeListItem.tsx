@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import Text from '@/components/common/Text/Text';
+import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
 import type { SchoolNode } from '../_types/schoolConnect.types';
 

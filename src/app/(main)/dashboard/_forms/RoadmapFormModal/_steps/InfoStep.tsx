@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { Controller } from 'react-hook-form';
 import { useInfoStep } from '@/app/(main)/dashboard/_hooks/useInfoStep';
-import TextField from '@/components/common/TextField/TextField';
+import { TextField } from '@/shared/ui';
 import FormFooter from '../_components/FormFooter';
 import { MODAL_SPACING } from '../_constants/spacing';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { apiClient } from '../api/client';
+import { apiClient } from '@/shared/api';
 import { tokenStore } from './tokenStore';
 
 /**
