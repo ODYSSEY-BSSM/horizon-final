@@ -5,12 +5,13 @@ import type React from 'react';
 import { Icon } from '@/shared/ui';
 import { Text } from '@/shared/ui';
 import { tokens } from '@/shared/tokens';
+import type { AddFolderCardProps } from './AddFolderCard.types';
 
-interface AddFolderCardProps {
-  onClick: () => void;
-}
-
-const AddFolderCard = ({ onClick }: AddFolderCardProps) => {
+/**
+ * Unified AddFolderCard component
+ * Consolidates 2 duplicate implementations from my-roadmaps and team-space
+ */
+const AddFolderCard = ({ onClick, className }: AddFolderCardProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -20,6 +21,7 @@ const AddFolderCard = ({ onClick }: AddFolderCardProps) => {
 
   return (
     <StyledAddFolderCard
+      className={className}
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -58,6 +60,7 @@ const StyledAddFolderCard = styled.div`
   box-sizing: border-box;
   position: relative;
   flex-shrink: 0;
+  transition: all 0.2s;
 
   &:hover {
     border-color: ${tokens.colors.neutral[400]};

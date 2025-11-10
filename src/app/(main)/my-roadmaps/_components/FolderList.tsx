@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { Pagination, FilterTabs } from '@/feature/roadmap';
+import { AddFolderCard } from '@/feature/folder';
 import { tokens } from '@/shared/tokens';
-import AddFolderCard from './AddFolderCard';
 import { FILTER_TABS } from '../_constants/FilterTabs.constants';
 import type { Folder } from './FolderCard';
 import FolderCard from './FolderCard';

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import type { TeamFolder } from '@/lib/types/team';
 import { tokens } from '@/shared/tokens';
 import { FOLDER_FILTER_TABS } from '../_constants/FilterTabs.constants';
-import AddFolderCard from './AddFolderCard';
+import { AddFolderCard } from '@/feature/folder';
 import { FilterTabs } from '@/feature/roadmap';
 import FolderListItem from './FolderListItem';
 
