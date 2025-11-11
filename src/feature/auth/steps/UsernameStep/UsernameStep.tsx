@@ -16,21 +16,23 @@ const UsernameStep = () => {
   return (
     <StyledContainer>
       <form onSubmit={onSubmit}>
-        <TextField
-          label="사용자 이름"
-          placeholder="UserName"
-          type="text"
-          width="100%"
-          {...register('username')}
-          error={!!errors.username}
-          helperText={errors.username?.message || '16자 이내 한글 또는 영어로 작성'}
-        />
+        <StyledFormContent>
+          <TextField
+            label="사용자 이름"
+            placeholder="UserName"
+            type="text"
+            width="100%"
+            {...register('username')}
+            error={!!errors.username}
+            helperText={errors.username?.message || '16자 이내 한글 또는 영어로 작성'}
+          />
 
-        <StyledSubmitButton type="submit" disabled={isLoading}>
-          <Text variant="ST" color={tokens.colors.white}>
-            {isLoading ? '완료 중...' : '완료'}
-          </Text>
-        </StyledSubmitButton>
+          <StyledSubmitButton type="submit" disabled={isLoading}>
+            <Text variant="ST" color={tokens.colors.white}>
+              {isLoading ? '완료 중...' : '완료'}
+            </Text>
+          </StyledSubmitButton>
+        </StyledFormContent>
       </form>
     </StyledContainer>
   );
@@ -41,7 +43,13 @@ export default UsernameStep;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 62px;
+  width: 100%;
+`;
+
+const StyledFormContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   width: 100%;
 `;
 
