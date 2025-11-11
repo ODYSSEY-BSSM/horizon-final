@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { authApi } from '@/feature/auth/api/authApi';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type VerificationFormData, verificationSchema } from '@/feature/auth/validations/signup';
 
 export const useVerificationForm = () => {
-  const { goToStep, saveStepData } = useSignupFlow();
+  const { completedData, goToStep, saveStepData } = useSignupFlow();
 
   const form = useForm<VerificationFormData>({
     resolver: zodResolver(verificationSchema),
@@ -16,8 +17,22 @@ export const useVerificationForm = () => {
 
   const handleSubmit = async (data: VerificationFormData) => {
     try {
-      // API call simulation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const devCode = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE;
+
+      if (devCode && data.verificationCode === devCode) {
+        saveStepData({ verificationCode: data.verificationCode });
+        goToStep('password');
+        return;
+      }
+
+      if (!completedData.email) {
+        throw new Error('이메일 정보가 없습니다');
+      }
+
+      await authApi.verifyCode({
+        email: completedData.email,
+        code: data.verificationCode,
+      });
 
       saveStepData({ verificationCode: data.verificationCode });
       goToStep('password');
@@ -31,8 +46,11 @@ export const useVerificationForm = () => {
 
   const handleResendCode = async () => {
     try {
-      // API call simulation for resending code
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!completedData.email) {
+        throw new Error('이메일 정보가 없습니다');
+      }
+
+      await authApi.requestVerificationCode({ email: completedData.email });
     } catch (_error) {
       form.setError('verificationCode', {
         type: 'manual',
