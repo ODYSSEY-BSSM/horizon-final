@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { authApi } from '@/feature/auth/api/authApi';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type EmailFormData, emailSchema } from '@/feature/auth/validations/signup';
 
@@ -17,7 +16,7 @@ export const useEmailForm = () => {
 
   const handleSubmit = async (data: EmailFormData) => {
     try {
-      await authApi.requestVerificationCode({ email: data.email });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       saveStepData({ email: data.email });
       goToStep('verification');
