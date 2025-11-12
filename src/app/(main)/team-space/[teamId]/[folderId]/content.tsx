@@ -65,7 +65,9 @@ const FolderRoadmapsContent = () => {
   };
 
   const handleStyleSubmit = (data: { color: ColorOption; icon: IconOption }) => {
-    if (!roadmapData) return;
+    if (!roadmapData) {
+      return;
+    }
 
     createRoadmapMutation.mutate(
       {

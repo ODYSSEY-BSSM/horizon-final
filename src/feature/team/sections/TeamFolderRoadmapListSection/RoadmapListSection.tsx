@@ -8,11 +8,7 @@ interface RoadmapListSectionProps {
   onAddRoadmapClick: () => void;
 }
 
-const RoadmapListSection = ({
-  teamId,
-  folderId,
-  onAddRoadmapClick,
-}: RoadmapListSectionProps) => {
+const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapListSectionProps) => {
   const {
     activeFilter,
     setActiveFilter,

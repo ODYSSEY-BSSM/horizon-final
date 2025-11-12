@@ -7,10 +7,7 @@ export const problemApi = {
   // ===================================
 
   // 문제 생성
-  createProblem: async (
-    nodeId: number,
-    data: ProblemCreateRequest,
-  ): Promise<ProblemResponse> => {
+  createProblem: async (nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
     const response = await apiClient.post<ProblemResponse>(`/${nodeId}/problems`, data);
     return response.data;
   },

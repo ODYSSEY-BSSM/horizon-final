@@ -63,7 +63,7 @@ export const useTeamSpaceData = () => {
     }
 
     const teamId = parseInt(teamIdStr, 10);
-    if (isNaN(teamId)) {
+    if (Number.isNaN(teamId)) {
       return {
         success: false,
       };
