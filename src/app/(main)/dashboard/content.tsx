@@ -32,10 +32,15 @@ const DashboardContent = () => {
 
   // 에러 상태
   if (error || !userData) {
+    // biome-ignore lint/suspicious/noConsoleLog: Development debugging
+    console.error('[Dashboard] Error or no user data:', { error, userData });
     return (
       <StyledPageContainer>
         <StyledLoadingContainer>
           <StyledErrorText>대시보드를 불러오는데 실패했습니다.</StyledErrorText>
+          <StyledErrorHint>
+            로그인이 필요합니다. (test@example.com / password123)
+          </StyledErrorHint>
         </StyledLoadingContainer>
       </StyledPageContainer>
     );
@@ -81,6 +86,8 @@ const StyledContentContainer = styled.div`
 
 const StyledLoadingContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 12px;
   justify-content: center;
   align-items: center;
   height: 500px;
@@ -95,4 +102,9 @@ const StyledLoadingText = styled.div`
 const StyledErrorText = styled.div`
   color: ${tokens.colors.error[200]};
   font-size: 18px;
+`;
+
+const StyledErrorHint = styled.div`
+  color: ${tokens.colors.neutral[500]};
+  font-size: 14px;
 `;
