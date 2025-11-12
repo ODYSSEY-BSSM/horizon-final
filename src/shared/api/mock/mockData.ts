@@ -11,16 +11,10 @@ import type {
 } from '@/feature/roadmap/types';
 import type { DirectoryResponse } from '@/feature/folder/types';
 import type { TeamResponse } from '@/feature/team/types';
+import type { MockUser, MockSchool } from './mockTypes';
 
-export interface MockUser {
-  id: number;
-  email: string;
-  password: string;
-  username: string;
-  role: UserRole;
-  teamIds: number[];
-  schoolId?: number;
-}
+// Re-export types for backward compatibility
+export type { MockUser, MockSchool } from './mockTypes';
 
 // Swagger API 초기 데이터
 export const initialMockData = {
@@ -166,7 +160,7 @@ export const initialMockData = {
       name: '부산소프트웨어마이스터고등학교',
       code: 'BSSM',
     },
-  ],
+  ] as MockSchool[],
 
   educationNodes: [
     {

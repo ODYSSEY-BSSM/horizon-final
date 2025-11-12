@@ -39,7 +39,12 @@ export class MockStorage {
     try {
       localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      // localStorage quota exceeded or other storage error
+      // In production, this should be logged to a monitoring service
+      if (process.env.NODE_ENV === 'development') {
+        // biome-ignore lint/suspicious/noConsoleLog: Development debugging
+        console.error('Failed to save to localStorage:', error);
+      }
     }
   }
 

@@ -4,6 +4,8 @@
 
 import { mockStorage } from './mockStorage';
 import { initialMockData, type MockUser } from './mockData';
+import { MOCK_DELAYS, delay } from './mockConstants';
+import { MOCK_ERRORS } from './mockErrors';
 import type {
   LoginRequest,
   LoginResponse,
@@ -29,23 +31,29 @@ function setCurrentUser(user: MockUser | null): void {
   mockStorage.set('currentUser', user);
 }
 
+function getVerificationCodes(): Map<string, string> {
+  const stored = mockStorage.get<[string, string][]>('verificationCodes');
+  return stored ? new Map(stored) : new Map();
+}
+
+function setVerificationCodes(codes: Map<string, string>): void {
+  mockStorage.set('verificationCodes', Array.from(codes.entries()));
+}
+
 // 가짜 JWT 생성
 const generateToken = (userId: number): string => {
   return `mock_token_${userId}_${Date.now()}`;
 };
 
-// 인증 코드 저장소
-const verificationCodes = new Map<string, string>();
-
 export const mockAuthApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await delay(MOCK_DELAYS.SLOW);
 
     const users = getUsers();
     const user = users.find((u) => u.email === credentials.email);
 
     if (!user || user.password !== credentials.password) {
-      throw new Error('이메일 또는 비밀번호가 올바르지 않습니다.');
+      throw new Error(MOCK_ERRORS.INVALID_CREDENTIALS);
     }
 
     setCurrentUser(user);
@@ -57,11 +65,11 @@ export const mockAuthApi = {
   },
 
   refreshToken: async (refreshToken: string): Promise<TokenRefreshResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      throw new Error('인증이 필요합니다.');
+      throw new Error(MOCK_ERRORS.INVALID_REFRESH_TOKEN);
     }
 
     return {
@@ -71,32 +79,33 @@ export const mockAuthApi = {
   },
 
   logout: async (): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     setCurrentUser(null);
   },
 
   requestVerificationCode: async (data: VerificationCodeRequest): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await delay(MOCK_DELAYS.SLOW);
     const code = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE || '123456';
-    verificationCodes.set(data.email, code);
-    console.log(`[Mock] 인증 코드: ${code}`);
-  },
 
-  verifyCode: async (data: VerificationRequest): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    const storedCode = verificationCodes.get(data.email);
-    if (!storedCode || storedCode !== data.code) {
-      throw new Error('인증 코드가 일치하지 않습니다.');
+    const verificationCodes = getVerificationCodes();
+    verificationCodes.set(data.email, code);
+    setVerificationCodes(verificationCodes);
+
+    // 개발 환경에서 콘솔에 인증 코드 출력
+    if (process.env.NODE_ENV === 'development') {
+      // biome-ignore lint/suspicious/noConsoleLog: Development debugging
+      console.log(`[DEV] Verification code for ${data.email}: ${code}`);
     }
-    verificationCodes.delete(data.email);
   },
 
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await delay(MOCK_DELAYS.SLOW);
 
     const users = getUsers();
-    if (users.find((u) => u.email === data.email)) {
-      throw new Error('이미 가입된 이메일입니다.');
+    const existingUser = users.find((u) => u.email === data.email);
+
+    if (existingUser) {
+      throw new Error(MOCK_ERRORS.EMAIL_ALREADY_EXISTS);
     }
 
     const newUser: MockUser = {
@@ -112,33 +121,33 @@ export const mockAuthApi = {
     mockStorage.set('users', users);
 
     return {
-      uuid: newUser.id,
+      id: newUser.id,
       email: newUser.email,
       username: newUser.username,
-      role: newUser.role,
     };
   },
 
-  requestPasswordResetCode: async (data: VerificationCodeRequest): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const code = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE || '123456';
-    verificationCodes.set(data.email, code);
-    console.log(`[Mock] 비밀번호 재설정 코드: ${code}`);
-  },
+  verifyCode: async (data: VerificationRequest): Promise<void> => {
+    await delay(MOCK_DELAYS.NORMAL);
 
-  verifyPasswordResetCode: async (data: VerificationRequest): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    const verificationCodes = getVerificationCodes();
     const storedCode = verificationCodes.get(data.email);
+
     if (!storedCode || storedCode !== data.code) {
-      throw new Error('인증 코드가 일치하지 않습니다.');
+      throw new Error(MOCK_ERRORS.INVALID_VERIFICATION_CODE);
     }
+
+    // 인증 성공 후 코드 삭제
+    verificationCodes.delete(data.email);
+    setVerificationCodes(verificationCodes);
   },
 
   changePassword: async (data: PasswordChangeRequest): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await delay(MOCK_DELAYS.SLOW);
+
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
     const users = getUsers();
@@ -150,11 +159,11 @@ export const mockAuthApi = {
   },
 
   getProfile: async (): Promise<UserInfoResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const currentUser = getCurrentUser();
     if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
     return {
