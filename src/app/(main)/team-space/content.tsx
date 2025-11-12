@@ -40,8 +40,8 @@ const TeamSpaceContent = () => {
     openModal('teamCreate');
   };
 
-  const handleTeamCreate = ({ name }: { name: string }) => {
-    const newTeam = addTeam({ name, description: '' });
+  const handleTeamCreate = async ({ name }: { name: string }) => {
+    const newTeam = await addTeam({ name, description: '' });
     return newTeam;
   };
 
