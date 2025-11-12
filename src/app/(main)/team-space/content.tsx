@@ -54,12 +54,18 @@ const TeamSpaceContent = () => {
   };
 
   const handleTeamJoinSubmit = (data: { inviteCode: string }) => {
-    const result = joinTeam(data.inviteCode);
-    if (result.success && result.team) {
-      closeModal('teamJoin');
-      // 참여한 팀으로 이동
-      router.push(`/team-space/${result.team.id}`);
-    } else {
+    const result = joinTeam(data.inviteCode, {
+      onSuccess: () => {
+        closeModal('teamJoin');
+        alert('팀 가입 신청이 완료되었습니다. 팀장의 승인을 기다려주세요.');
+        // 팀 목록 새로고침을 위해 현재 페이지 유지
+      },
+      onError: (error) => {
+        alert(error);
+      },
+    });
+
+    if (!result.success) {
       alert('유효하지 않은 초대 코드입니다.');
     }
   };
