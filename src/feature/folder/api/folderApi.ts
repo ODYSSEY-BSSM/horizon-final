@@ -1,13 +1,13 @@
 import { apiClient } from '@/shared/api';
 import type {
+  DirectoryContentResponse,
   DirectoryCreateRequest,
   DirectoryResponse,
   DirectoryUpdateRequest,
-  DirectoryContentResponse,
+  TeamDirectoryContentResponse,
   TeamDirectoryCreateRequest,
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
-  TeamDirectoryContentResponse,
 } from '../types';
 
 export const folderApi = {
@@ -38,10 +38,7 @@ export const folderApi = {
     directoryUuid: number,
     data: DirectoryUpdateRequest,
   ): Promise<DirectoryResponse> => {
-    const response = await apiClient.put<DirectoryResponse>(
-      `/directories/${directoryUuid}`,
-      data,
-    );
+    const response = await apiClient.put<DirectoryResponse>(`/directories/${directoryUuid}`, data);
     return response.data;
   },
 
@@ -76,14 +73,15 @@ export const folderApi = {
 
   // 팀 디렉토리 전체 조회
   getTeamDirectories: async (teamName: string): Promise<TeamDirectoryResponse[]> => {
-    const response = await apiClient.get<TeamDirectoryResponse[]>(
-      `/directories/teams/${teamName}`,
-    );
+    const response = await apiClient.get<TeamDirectoryResponse[]>(`/directories/teams/${teamName}`);
     return response.data;
   },
 
   // 팀 디렉토리 단일 조회
-  getTeamDirectory: async (teamName: string, directoryUuid: number): Promise<TeamDirectoryResponse> => {
+  getTeamDirectory: async (
+    teamName: string,
+    directoryUuid: number,
+  ): Promise<TeamDirectoryResponse> => {
     const response = await apiClient.get<TeamDirectoryResponse>(
       `/directories/teams/${teamName}/${directoryUuid}`,
     );

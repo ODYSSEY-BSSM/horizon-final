@@ -1,37 +1,36 @@
 export { apiClient } from './client';
 export { ApiError } from './errors';
+export type {
+  CursorReceiveMessage,
+  CursorSendMessage,
+  DeleteMessage,
+  NodeCategory,
+  NodeType as WsNodeType,
+  NodeUpdateMessage,
+  RoadmapNodeMessage,
+  TeamDirectoryMessage,
+} from './stompTypes';
+export type { StompMessageHandler } from './stompWebSocket';
+
+// STOMP WebSocket
+export { destroyStompClient, getStompClient, StompWebSocketClient } from './stompWebSocket';
 export type { ApiErrorResponse, ApiResponse, PaginatedResponse } from './types';
 export {
   ApplyStatus,
   Color,
+  ColorHexMap,
   Icon,
+  IconMap,
   NodeType,
   ProblemStatus,
   Subject,
   UserRole,
-  ColorHexMap,
-  IconMap,
 } from './types';
-
-// STOMP WebSocket
-export { getStompClient, destroyStompClient, StompWebSocketClient } from './stompWebSocket';
-export type { StompMessageHandler } from './stompWebSocket';
-export type {
-  TeamDirectoryMessage,
-  RoadmapNodeMessage,
-  NodeUpdateMessage,
-  CursorSendMessage,
-  CursorReceiveMessage,
-  DeleteMessage,
-  NodeType as WsNodeType,
-  NodeCategory,
-} from './stompTypes';
-
+export type { WebSocketEventType, WebSocketMessage } from './websocket';
 // Legacy WebSocket (deprecated - use STOMP instead)
 export {
+  disconnectAllWebSockets,
   getWebSocketClient,
   removeWebSocketClient,
-  disconnectAllWebSockets,
   WebSocketClient,
 } from './websocket';
-export type { WebSocketMessage, WebSocketEventType } from './websocket';

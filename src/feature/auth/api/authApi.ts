@@ -18,7 +18,7 @@ export const authApi = {
 
   // 로그인
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('/auth', credentials);
+    const response = await apiClient.post<LoginResponse>('/auth', credentials, { auth: false });
     return response.data;
   },
 
@@ -29,6 +29,7 @@ export const authApi = {
         'Refresh-Token': refreshToken,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      auth: false,
     });
     return response.data;
   },
@@ -48,28 +49,28 @@ export const authApi = {
 
   // 회원가입 인증 코드 요청
   requestVerificationCode: async (data: VerificationCodeRequest): Promise<void> => {
-    await apiClient.post('/verification/password', data);
+    await apiClient.post('/verification', data, { auth: false });
   },
 
   // 회원가입 인증 코드 인증
   verifyCode: async (data: VerificationRequest): Promise<void> => {
-    await apiClient.patch('/verification', data);
+    await apiClient.patch('/verification', data, { auth: false });
   },
 
   // 회원가입
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    const response = await apiClient.post<RegisterResponse>('/users', data);
+    const response = await apiClient.post<RegisterResponse>('/users', data, { auth: false });
     return response.data;
   },
 
   // 비밀번호 변경 인증 코드 발송
   requestPasswordResetCode: async (data: VerificationCodeRequest): Promise<void> => {
-    await apiClient.post('/verification/password', data);
+    await apiClient.post('/verification/password', data, { auth: false });
   },
 
   // 비밀번호 변경 인증 코드 인증
   verifyPasswordResetCode: async (data: VerificationRequest): Promise<void> => {
-    await apiClient.put('/verification', data);
+    await apiClient.put('/verification', data, { auth: false });
   },
 
   // 유저 비밀번호 변경

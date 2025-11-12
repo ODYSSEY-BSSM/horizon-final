@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getStompClient, type StompMessageHandler } from '@/shared/api/stompWebSocket';
 
 export interface UseStompWebSocketOptions {
@@ -17,9 +17,7 @@ export interface UseStompWebSocketReturn {
   send: <T>(destination: string, body: T) => void;
 }
 
-export function useStompWebSocket(
-  options: UseStompWebSocketOptions = {},
-): UseStompWebSocketReturn {
+export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseStompWebSocketReturn {
   const { autoConnect = true, onConnect, onDisconnect, onError } = options;
 
   const [isConnected, setIsConnected] = useState(false);
@@ -76,9 +74,8 @@ export function useStompWebSocket(
 
   // Subscribe function
   const subscribe = useCallback(
-    <T,>(destination: string, handler: StompMessageHandler<T>) => {
+    <T>(destination: string, handler: StompMessageHandler<T>) => {
       if (!isConnected) {
-        console.warn('[useStompWebSocket] Cannot subscribe: not connected');
         return null;
       }
 
@@ -99,9 +96,8 @@ export function useStompWebSocket(
 
   // Send function
   const send = useCallback(
-    <T,>(destination: string, body: T) => {
+    <T>(destination: string, body: T) => {
       if (!isConnected) {
-        console.warn('[useStompWebSocket] Cannot send: not connected');
         return;
       }
 

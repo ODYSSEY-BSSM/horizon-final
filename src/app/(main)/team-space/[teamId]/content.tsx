@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import { useCreateTeamFolder, useTeamFolders } from '@/feature/folder/hooks/useFolderQueries';
 import {
   CreateTeamModal,
   FolderGrid,
@@ -10,12 +11,11 @@ import {
   TeamDropdown,
   useTeamSpaceData,
 } from '@/feature/team';
-import { useTeamFolders, useCreateTeamFolder } from '@/feature/folder/hooks/useFolderQueries';
+import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
+import { Color, Icon } from '@/shared/api/types';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
-import type { TeamFolder } from '@/feature/team/types/team';
-import { Color, Icon } from '@/shared/api/types';
 
 const TeamFoldersContent = () => {
   const params = useParams();
@@ -41,7 +41,9 @@ const TeamFoldersContent = () => {
   const createFolderMutation = useCreateTeamFolder(teamName);
 
   const folders: TeamFolder[] = useMemo(() => {
-    if (!teamFoldersData) return [];
+    if (!teamFoldersData) {
+      return [];
+    }
 
     return teamFoldersData.map((folder) => ({
       id: folder.uuid.toString(),

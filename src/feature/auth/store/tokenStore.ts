@@ -1,4 +1,3 @@
-
 class TokenStore {
   private accessToken: string | null = null;
   private readonly REFRESH_TOKEN_KEY = 'refreshToken';

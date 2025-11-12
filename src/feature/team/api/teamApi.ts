@@ -1,13 +1,13 @@
 import { apiClient } from '@/shared/api';
 import type {
-  TeamCreateRequest,
-  TeamResponse,
-  TeamUpdateRequest,
-  TeamMembersResponse,
+  TeamApplyActionRequest,
+  TeamApplyListResponse,
   TeamApplyRequest,
   TeamApplyResponse,
-  TeamApplyListResponse,
-  TeamApplyActionRequest,
+  TeamCreateRequest,
+  TeamMembersResponse,
+  TeamResponse,
+  TeamUpdateRequest,
 } from '../types';
 
 export const teamApi = {
@@ -67,27 +67,23 @@ export const teamApi = {
 
   // 팀 신청 목록 조회 (팀장/관리자용)
   getTeamApplications: async (teamName: string): Promise<TeamApplyListResponse> => {
-    const response = await apiClient.get<TeamApplyListResponse>(
-      `/team-applies/teams/${teamName}`,
-    );
+    const response = await apiClient.get<TeamApplyListResponse>(`/team-applies/teams/${teamName}`);
     return response.data;
   },
 
   // 팀 신청 수락
   approveTeamApplication: async (applyUuid: number): Promise<TeamApplyResponse> => {
-    const response = await apiClient.put<TeamApplyResponse>(
-      `/team-applies/${applyUuid}`,
-      { status: 'APPROVED' } as TeamApplyActionRequest,
-    );
+    const response = await apiClient.put<TeamApplyResponse>(`/team-applies/${applyUuid}`, {
+      status: 'APPROVED',
+    } as TeamApplyActionRequest);
     return response.data;
   },
 
   // 팀 신청 거절
   rejectTeamApplication: async (applyUuid: number): Promise<TeamApplyResponse> => {
-    const response = await apiClient.put<TeamApplyResponse>(
-      `/team-applies/${applyUuid}`,
-      { status: 'REJECTED' } as TeamApplyActionRequest,
-    );
+    const response = await apiClient.put<TeamApplyResponse>(`/team-applies/${applyUuid}`, {
+      status: 'REJECTED',
+    } as TeamApplyActionRequest);
     return response.data;
   },
 

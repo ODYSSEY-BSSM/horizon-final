@@ -13,11 +13,11 @@ export const problemApi = {
   },
 
   // 문제 풀이
-  solveProblem: async (problemUuid: number, data: ProblemSolveRequest): Promise<ProblemResponse> => {
-    const response = await apiClient.post<ProblemResponse>(
-      `/problems/${problemUuid}/solve`,
-      data,
-    );
+  solveProblem: async (
+    problemUuid: number,
+    data: ProblemSolveRequest,
+  ): Promise<ProblemResponse> => {
+    const response = await apiClient.post<ProblemResponse>(`/problems/${problemUuid}/solve`, data);
     return response.data;
   },
 };

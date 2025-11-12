@@ -1,4 +1,4 @@
-import { Client, IFrame, IMessage, StompSubscription } from '@stomp/stompjs';
+import { Client, type IFrame, type IMessage, type StompSubscription } from '@stomp/stompjs';
 import { tokenStore } from '@/feature/auth';
 
 // STOMP WebSocket configuration
@@ -10,10 +10,10 @@ export type StompMessageHandler<T = unknown> = (message: T) => void;
 export class StompWebSocketClient {
   private client: Client;
   private subscriptions: Map<string, StompSubscription> = new Map();
-  private isConnected: boolean = false;
-  private reconnectAttempts: number = 0;
-  private maxReconnectAttempts: number = 5;
-  private reconnectDelay: number = 3000;
+  private isConnected = false;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectDelay = 3000;
 
   constructor() {
     this.client = new Client({
@@ -31,14 +31,12 @@ export class StompWebSocketClient {
 
   connect(): void {
     if (this.isConnected || this.client.active) {
-      console.warn('[STOMP] Already connected or connecting');
       return;
     }
 
     // Get JWT token for authentication
     const token = tokenStore.getAccessToken();
     if (!token) {
-      console.error('[STOMP] No access token found');
       return;
     }
 
@@ -46,8 +44,6 @@ export class StompWebSocketClient {
     this.client.connectHeaders = {
       Authorization: `Bearer ${token}`,
     };
-
-    console.log('[STOMP] Connecting...');
     this.client.activate();
   }
 
@@ -55,8 +51,6 @@ export class StompWebSocketClient {
     if (!this.client.active) {
       return;
     }
-
-    console.log('[STOMP] Disconnecting...');
 
     // Unsubscribe all
     this.subscriptions.forEach((subscription) => {
@@ -71,7 +65,6 @@ export class StompWebSocketClient {
 
   subscribe<T>(destination: string, handler: StompMessageHandler<T>): string {
     if (!this.isConnected) {
-      console.error('[STOMP] Cannot subscribe: not connected');
       throw new Error('Not connected to STOMP server');
     }
 
@@ -79,13 +72,12 @@ export class StompWebSocketClient {
       try {
         const data = JSON.parse(message.body) as T;
         handler(data);
-      } catch (error) {
-        console.error('[STOMP] Failed to parse message:', error);
+      } catch (_error) {
+        // JSON 파싱 오류는 무시합니다.
       }
     });
 
     this.subscriptions.set(destination, subscription);
-    console.log('[STOMP] Subscribed to:', destination);
 
     return subscription.id;
   }
@@ -95,13 +87,11 @@ export class StompWebSocketClient {
     if (subscription) {
       subscription.unsubscribe();
       this.subscriptions.delete(destination);
-      console.log('[STOMP] Unsubscribed from:', destination);
     }
   }
 
   send<T>(destination: string, body: T): void {
     if (!this.isConnected) {
-      console.error('[STOMP] Cannot send: not connected');
       return;
     }
 
@@ -109,8 +99,6 @@ export class StompWebSocketClient {
       destination,
       body: JSON.stringify(body),
     });
-
-    console.log('[STOMP] Sent message to:', destination);
   }
 
   getIsConnected(): boolean {
@@ -121,31 +109,26 @@ export class StompWebSocketClient {
   // Private Methods
   // ===================================
 
-  private onConnect(frame: IFrame): void {
-    console.log('[STOMP] Connected:', frame);
+  private onConnect(_frame: IFrame): void {
     this.isConnected = true;
     this.reconnectAttempts = 0;
   }
 
-  private onDisconnect(frame: IFrame): void {
-    console.log('[STOMP] Disconnected:', frame);
+  private onDisconnect(_frame: IFrame): void {
     this.isConnected = false;
     this.subscriptions.clear();
 
     // Auto-reconnect
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
-      console.log(
-        `[STOMP] Reconnecting... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
-      );
       setTimeout(() => this.connect(), this.reconnectDelay);
     } else {
-      console.error('[STOMP] Max reconnect attempts reached');
+      // 최대 재연결 시도 횟수를 초과했습니다.
     }
   }
 
-  private onError(frame: IFrame): void {
-    console.error('[STOMP] Error:', frame);
+  private onError(_frame: IFrame): void {
+    // 소켓 에러 처리
   }
 }
 

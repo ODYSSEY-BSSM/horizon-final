@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useTeams, useCreateTeam, useApplyToTeam } from './useTeamQueries';
 import type { Team, TeamFolder } from '@/feature/team/types/team';
+import { useApplyToTeam, useCreateTeam, useTeams } from './useTeamQueries';
 
 export const useTeamSpaceData = () => {
   const { data: teamsData, isLoading: isLoadingTeams } = useTeams();
@@ -10,7 +10,9 @@ export const useTeamSpaceData = () => {
   const applyToTeamMutation = useApplyToTeam();
 
   const teams: Team[] = useMemo(() => {
-    if (!teamsData) return [];
+    if (!teamsData) {
+      return [];
+    }
 
     return teamsData.map((team) => ({
       id: team.uuid.toString(),
@@ -21,19 +23,20 @@ export const useTeamSpaceData = () => {
     }));
   }, [teamsData]);
 
-  const getTeamFolders = (teamId: string | null, filterTab?: string): TeamFolder[] => {
+  const getTeamFolders = (_teamId: string | null, _filterTab?: string): TeamFolder[] => {
     return [];
   };
 
-  const getFolderRoadmaps = (folderId: string) => {
+  const getFolderRoadmaps = (_folderId: string) => {
     return [];
   };
 
-  const addFolder = (data: { teamId: string; name: string; description: string }) => {
-    console.warn('useCreateTeamFolder 훅을 직접 사용해주세요:', data);
+  const addFolder = (_data: { teamId: string; name: string; description: string }) => {
+    // TODO: 폴더 추가 기능 구현
   };
 
   const addTeam = (data: { name: string; description: string }): Team => {
+    // TODO: 팀 추가 기능 구현
     createTeamMutation.mutate(data);
 
     return {
@@ -74,4 +77,3 @@ export const useTeamSpaceData = () => {
     isApplyingToTeam: applyToTeamMutation.isPending,
   };
 };
-

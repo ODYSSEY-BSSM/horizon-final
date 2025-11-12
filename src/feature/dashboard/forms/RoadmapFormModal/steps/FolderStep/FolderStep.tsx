@@ -2,7 +2,6 @@
 
 import styled from '@emotion/styled';
 import { useId } from 'react';
-import { FOLDER_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { useFolderStep } from '@/feature/dashboard/hooks/useFolderStep';
 import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
@@ -27,6 +26,7 @@ const FolderStep = () => {
     handleNewFolderSubmit,
     handleNewFolderBlur,
     getDisplayText,
+    FOLDER_OPTIONS,
   } = useFolderStep();
   const FOLDER_OPTIONS_WITH_NEW = [{ id: 'new', label: '새 폴더' }, ...FOLDER_OPTIONS];
   const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({

@@ -1,13 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { CursorReceiveMessage, CursorSendMessage } from '@/shared/api/stompTypes';
 import { useStompWebSocket } from '@/shared/hooks/useStompWebSocket';
-import type { CursorSendMessage, CursorReceiveMessage } from '@/shared/api/stompTypes';
 
 export interface UseCursorWebSocketOptions {
-    roadmapId: number;
+  roadmapId: number;
 
-    onCursorMove?: (cursor: CursorReceiveMessage) => void;
+  onCursorMove?: (cursor: CursorReceiveMessage) => void;
 
-    autoSubscribe?: boolean;
+  autoSubscribe?: boolean;
 }
 
 export interface CursorPosition {
@@ -55,7 +55,7 @@ export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
     };
   }, [isConnected, autoSubscribe, roadmapId, subscribe, unsubscribe, handleCursorMove]);
 
-    const sendCursorPosition = useCallback(
+  const sendCursorPosition = useCallback(
     (position: CursorPosition) => {
       if (!isConnected) {
         return;
@@ -72,7 +72,7 @@ export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
     [isConnected, roadmapId, send],
   );
 
-    const removeCursor = useCallback((userId: number) => {
+  const removeCursor = useCallback((userId: number) => {
     setOtherCursors((prev) => {
       const next = new Map(prev);
       next.delete(userId);

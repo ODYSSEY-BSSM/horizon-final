@@ -1,4 +1,4 @@
-import type { ColorOption, DropdownOption, IconOption } from '@/shared/types/modal';
+import type { ColorOption, IconOption } from '@/shared/types/modal';
 
 export const FORM_STEPS = {
   CATEGORY: 1,
@@ -26,22 +26,8 @@ export const STEP_DESCRIPTIONS = {
   [FORM_STEPS.STYLE]: '로드맵 스타일을 지정해주세요.',
 } as const;
 
-// Mock data - replace with real API data
-export const FOLDER_OPTIONS: DropdownOption[] = [
-  { id: 'folder1', label: '폴더1', value: 'folder1' },
-  { id: 'folder2', label: '폴더2', value: 'folder2' },
-  { id: 'folder3', label: '폴더3', value: 'folder3' },
-  { id: 'folder4', label: '폴더4', value: 'folder4' },
-  { id: 'folder5', label: '폴더5', value: 'folder5' },
-  { id: 'folder6', label: '폴더6', value: 'folder6' },
-];
-
-export const TEAM_OPTIONS: DropdownOption[] = [
-  { id: 'team1', label: '개발팀', value: 'team1' },
-  { id: 'team2', label: '디자인팀', value: 'team2' },
-  { id: 'team3', label: '기획팀', value: 'team3' },
-  { id: 'team4', label: '마케팅팀', value: 'team4' },
-];
+// NOTE: FOLDER_OPTIONS과 TEAM_OPTIONS는 실제 API에서 가져옵니다.
+// useFolderStep과 useTeamStep 훅에서 folderApi.getDirectories()와 teamApi.getTeams()를 사용합니다.
 
 export const CATEGORY_OPTIONS = [
   { id: 'personal', label: '개인 로드맵', value: 'personal' },

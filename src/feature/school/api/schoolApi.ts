@@ -1,9 +1,9 @@
 import { apiClient } from '@/shared/api';
 import type {
-  SchoolConnectRequest,
-  SchoolResponse,
-  SchoolDisconnectResponse,
   EducationNodeListResponse,
+  SchoolConnectRequest,
+  SchoolDisconnectResponse,
+  SchoolResponse,
 } from '../types';
 
 export const schoolApi = {
