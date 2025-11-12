@@ -16,4 +16,8 @@ export {
 } from './hooks/useFolderQueries';
 
 // Types
-export type { Folder, FolderCreateRequest, FolderUpdateRequest } from './types/folder';
+export type {
+  DirectoryResponse as Folder,
+  DirectoryCreateRequest as FolderCreateRequest,
+  DirectoryUpdateRequest as FolderUpdateRequest,
+} from './types/directory';
