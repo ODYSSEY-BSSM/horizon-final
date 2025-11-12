@@ -10,14 +10,19 @@ export interface MenuItem {
   path: string;
 }
 
-export type RoadmapCategory = 'my-roadmaps' | 'team-roadmaps' | 'connected-school';
+export type RoadmapCategory =
+  | 'my-roadmap-count'
+  | 'my-roadmap-in-progress'
+  | 'team-roadmap-count'
+  | 'team-roadmap-in-progress'
+  | 'connected-school';
 
 export interface InfoCardData {
-  category: RoadmapCategory;
-  count: number;
-  subCount?: number;
-  schoolName?: string;
-  hasItem: boolean;
+  'my-roadmap-count'?: { count: number };
+  'my-roadmap-in-progress'?: { count: number; subCount: number };
+  'team-roadmap-count'?: { count: number };
+  'team-roadmap-in-progress'?: { count: number; subCount: number };
+  'connected-school'?: { schoolName: string; hasItem: boolean };
 }
 
 export type RoadmapStatus = 'in-progress' | 'completed';

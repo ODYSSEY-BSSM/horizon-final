@@ -18,11 +18,20 @@ export const useDashboardData = () => {
 
     return {
       name: userProfile.username,
-      myRoadmapsCount,
-      myRoadmapsInProgress,
-      teamRoadmapsCount: userProfile.teams?.length || 0,
-      teamRoadmapsInProgress: 0, // TODO: 팀 로드맵 진행 중 개수 계산
-      connectedSchool: userProfile.school || '',
+      'my-roadmap-count': { count: myRoadmapsCount },
+      'my-roadmap-in-progress': {
+        count: myRoadmapsInProgress,
+        subCount: myRoadmapsInProgress,
+      },
+      'team-roadmap-count': { count: userProfile.teams?.length || 0 },
+      'team-roadmap-in-progress': {
+        count: 0, // TODO: 팀 로드맵 진행 중 개수 계산
+        subCount: 0,
+      },
+      'connected-school': {
+        schoolName: userProfile.school || '',
+        hasItem: !!userProfile.school,
+      },
     };
   }, [userProfile, roadmapsData]);
 
