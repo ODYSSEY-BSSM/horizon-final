@@ -1,16 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 import { teamApi } from '@/feature/team/api/teamApi';
-import { useTeamStepForm } from './useRoadmapForm';
 
 export const useTeamStep = () => {
-  const {
-    control,
-    onNext,
-    onPrevious,
-    formState: { errors, isValid },
-    watch,
-  } = useTeamStepForm();
+  const { formData, updateField, nextStep, previousStep, isStepValid } = useRoadmapFormStore();
 
   // 내가 속한 팀 목록 조회
   const { data: teams, isLoading } = useQuery({
@@ -29,7 +23,7 @@ export const useTeamStep = () => {
       value: String(team.id),
     })) || [];
 
-  const teamId = watch('teamId');
+  const teamId = formData.teamId;
   const selectedTeam = teamId ? TEAM_OPTIONS.find((option) => option.id === teamId) : null;
 
   const getDisplayText = () => {
@@ -41,15 +35,23 @@ export const useTeamStep = () => {
 
   const hasSelection = !!teamId;
 
+  const handleNext = () => {
+    nextStep();
+  };
+
+  const handlePrevious = () => {
+    previousStep();
+  };
+
+  const isValid = isStepValid();
+
   return {
     // Form state
-    control,
-    errors,
     isValid,
 
     // Navigation
-    onNext,
-    onPrevious,
+    onNext: handleNext,
+    onPrevious: handlePrevious,
 
     // Dropdown state
     isOpen,
@@ -61,6 +63,9 @@ export const useTeamStep = () => {
     hasSelection,
     isLoading,
     TEAM_OPTIONS,
+
+    // Field update
+    updateField,
 
     // Handlers
     getDisplayText,

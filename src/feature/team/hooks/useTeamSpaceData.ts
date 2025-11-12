@@ -54,14 +54,17 @@ export const useTeamSpaceData = () => {
     callbacks?: { onSuccess?: () => void; onError?: (error: string) => void },
   ): { success: boolean; teamId?: number } => {
     // 팀 가입 (초대 코드 사용)
-    applyToTeamMutation.mutate({ inviteCode }, {
-      onSuccess: () => {
-        callbacks?.onSuccess?.();
+    applyToTeamMutation.mutate(
+      { inviteCode },
+      {
+        onSuccess: () => {
+          callbacks?.onSuccess?.();
+        },
+        onError: () => {
+          callbacks?.onError?.('팀 가입에 실패했습니다.');
+        },
       },
-      onError: () => {
-        callbacks?.onError?.('팀 가입에 실패했습니다.');
-      },
-    });
+    );
 
     // 초대 코드에서 팀 ID 추출 (선택사항)
     const teamIdStr = decodeInviteCode(inviteCode);

@@ -1,46 +1,31 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Controller } from 'react-hook-form';
 import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
 import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { useInfoStep } from '@/feature/dashboard/hooks/useInfoStep';
 import { TextField } from '@/shared/ui';
 
 const InfoStep = () => {
-  const { control, onNext, onPrevious, isValid } = useInfoStep();
+  const { name, description, updateField, onNext, onPrevious, isValid } = useInfoStep();
 
   return (
     <StyledFormContainer>
       <StyledFieldContainer>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              placeholder="이름을 입력해주세요"
-              aria-label="로드맵 이름"
-              error={!!error}
-              helperText={error?.message}
-              label="이름"
-            />
-          )}
+        <TextField
+          value={name}
+          onChange={(e) => updateField('name', e.target.value)}
+          placeholder="이름을 입력해주세요"
+          aria-label="로드맵 이름"
+          label="이름"
         />
 
-        <Controller
-          name="description"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              placeholder="설명을 입력해주세요"
-              aria-label="로드맵 설명"
-              error={!!error}
-              helperText={error?.message}
-              label="설명"
-            />
-          )}
+        <TextField
+          value={description}
+          onChange={(e) => updateField('description', e.target.value)}
+          placeholder="설명을 입력해주세요"
+          aria-label="로드맵 설명"
+          label="설명"
         />
       </StyledFieldContainer>
 

@@ -96,7 +96,8 @@ export function useCreateTeamFolder(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TeamDirectoryCreateRequest) => teamFolderApi.createTeamDirectory(teamId, data),
+    mutationFn: (data: TeamDirectoryCreateRequest) =>
+      teamFolderApi.createTeamDirectory(teamId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: folderKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });

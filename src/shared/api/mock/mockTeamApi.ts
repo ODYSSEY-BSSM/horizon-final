@@ -2,17 +2,17 @@
  * Mock Team API (Swagger 완벽 일치)
  */
 
-import { MOCK_DELAYS, delay } from './mockConstants';
-import { MOCK_ERRORS } from './mockErrors';
-import { mockStorage } from './mockStorage';
-import { initialMockData } from './mockData';
 import type {
   TeamCreateRequest,
+  TeamInviteRequest,
   TeamResponse,
   TeamUpdateRequest,
-  TeamInviteRequest,
 } from '@/feature/team/types';
+import { delay, MOCK_DELAYS } from './mockConstants';
 import type { MockUser } from './mockData';
+import { initialMockData } from './mockData';
+import { MOCK_ERRORS } from './mockErrors';
+import { mockStorage } from './mockStorage';
 
 interface StoredTeam {
   id: number;
@@ -56,7 +56,9 @@ export const mockTeamApi = {
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
 
     const newTeam: StoredTeam = {
       id: mockStorage.getNextId(),
@@ -90,7 +92,9 @@ export const mockTeamApi = {
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) return [];
+    if (!currentUser) {
+      return [];
+    }
 
     // 현재 사용자가 속한 팀만 반환
     const userTeams = teams.filter((t) => t.memberIds.includes(currentUser.id));
@@ -105,7 +109,9 @@ export const mockTeamApi = {
     const users = getUsers();
     const team = teams.find((t) => t.id === teamId);
 
-    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    if (!team) {
+      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    }
 
     return toTeamResponse(team, users);
   },
@@ -117,7 +123,9 @@ export const mockTeamApi = {
     const users = getUsers();
     const index = teams.findIndex((t) => t.id === teamId);
 
-    if (index === -1) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    }
 
     teams[index] = { ...teams[index], ...data };
     mockStorage.set('teams', teams);
@@ -132,7 +140,9 @@ export const mockTeamApi = {
     const users = getUsers();
     const team = teams.find((t) => t.id === teamId);
 
-    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    if (!team) {
+      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    }
 
     // 팀 삭제
     const filtered = teams.filter((t) => t.id !== teamId);
@@ -160,10 +170,14 @@ export const mockTeamApi = {
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
 
     const team = teams.find((t) => t.inviteCode === data.inviteCode);
-    if (!team) throw new Error(MOCK_ERRORS.INVALID_INVITE_CODE);
+    if (!team) {
+      throw new Error(MOCK_ERRORS.INVALID_INVITE_CODE);
+    }
 
     // 이미 팀 멤버인지 확인
     if (team.memberIds.includes(currentUser.id)) {
@@ -192,13 +206,17 @@ export const mockTeamApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
-    const users = getUsers();
+    const _users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
 
     const team = teams.find((t) => t.id === teamId);
-    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    if (!team) {
+      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    }
 
     // 팀장은 탈퇴 불가
     if (team.leaderId === currentUser.id) {
@@ -225,13 +243,17 @@ export const mockTeamApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
-    const users = getUsers();
+    const _users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
 
     const team = teams.find((t) => t.id === teamId);
-    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    if (!team) {
+      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
+    }
 
     // 팀장만 멤버 제거 가능
     if (team.leaderId !== currentUser.id) {

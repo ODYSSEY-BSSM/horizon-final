@@ -2,7 +2,6 @@
 
 import styled from '@emotion/styled';
 import { useId } from 'react';
-import { Controller } from 'react-hook-form';
 import {
   COLOR_OPTIONS,
   ICON_OPTIONS,
@@ -20,7 +19,6 @@ const StyleStep = () => {
   const iconLabelId = useId();
   const iconButtonId = `${iconLabelId}-button`;
   const {
-    control,
     isValid,
     onComplete,
     onPrevious,
@@ -29,6 +27,7 @@ const StyleStep = () => {
     selectedColor,
     selectedIcon,
     getGradient,
+    updateField,
   } = useStyleStep();
   const {
     isOpen: colorDropdownOpen,
@@ -66,144 +65,169 @@ const StyleStep = () => {
           </StyledThumbnailPreview>
 
           <StyledStyleSelectors>
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <StyledDropdownContainer>
-                  <Text
-                    as="label"
-                    id={colorLabelId}
-                    htmlFor={colorButtonId}
-                    variant="B1"
-                    color={tokens.colors.neutral[500]}
-                  >
-                    컬러
-                  </Text>
-                  <div
-                    style={{ position: 'relative' }}
-                    ref={colorDropdownRef}
-                    onKeyDown={(e) => {
-                      handleColorKeyDown(e);
-                      if (e.key === 'Enter' && highlightedColorIndex !== -1) {
-                        field.onChange(COLOR_OPTIONS[highlightedColorIndex].value);
-                        setColorDropdownOpen(false);
-                      }
-                    }}
-                    role="group"
-                  >
-                    <StyledDropdownHeader
-                      type="button"
-                      id={colorButtonId}
-                      aria-labelledby={colorLabelId}
-                      aria-haspopup="listbox"
-                      $isOpen={colorDropdownOpen}
-                      onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
-                      aria-label="색상 선택"
-                      aria-expanded={colorDropdownOpen}
-                      aria-activedescendant={
-                        colorDropdownOpen && highlightedColorIndex !== -1
-                          ? `color-option-${COLOR_OPTIONS[highlightedColorIndex].id}`
-                          : undefined
-                      }
-                    >
-                      <div
-                        style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}
+            <StyledDropdownContainer>
+              <Text
+                as="label"
+                id={colorLabelId}
+                htmlFor={colorButtonId}
+                variant="B1"
+                color={tokens.colors.neutral[500]}
+              >
+                컬러
+              </Text>
+              <div
+                style={{ position: 'relative' }}
+                ref={colorDropdownRef}
+                onKeyDown={(e) => {
+                  handleColorKeyDown(e);
+                  if (e.key === 'Enter' && highlightedColorIndex !== -1) {
+                    updateField('color', COLOR_OPTIONS[highlightedColorIndex].value);
+                    setColorDropdownOpen(false);
+                  }
+                }}
+                role="group"
+              >
+                <StyledDropdownHeader
+                  type="button"
+                  id={colorButtonId}
+                  aria-labelledby={colorLabelId}
+                  aria-haspopup="listbox"
+                  $isOpen={colorDropdownOpen}
+                  onClick={() => setColorDropdownOpen(!colorDropdownOpen)}
+                  aria-label="색상 선택"
+                  aria-expanded={colorDropdownOpen}
+                  aria-activedescendant={
+                    colorDropdownOpen && highlightedColorIndex !== -1
+                      ? `color-option-${COLOR_OPTIONS[highlightedColorIndex].id}`
+                      : undefined
+                  }
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}>
+                    <StyledColorSwatch $color={selectedColor.color} />
+                    <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                      {selectedColor.label}
+                    </Text>
+                  </div>
+                  <Icon
+                    name={colorDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                    variant="SM"
+                    color={tokens.colors.neutral[600]}
+                    decorative
+                  />
+                </StyledDropdownHeader>
+
+                <StyledDropdownList $isOpen={colorDropdownOpen} role="listbox">
+                  <StyledColorGrid>
+                    {COLOR_OPTIONS.map((option, index) => (
+                      <StyledColorOption
+                        type="button"
+                        key={option.id}
+                        id={`color-option-${option.id}`}
+                        $color={option.color}
+                        $selected={color === option.value}
+                        onClick={() => {
+                          updateField('color', option.value);
+                          setColorDropdownOpen(false);
+                        }}
+                        $highlighted={highlightedColorIndex === index}
+                        role="option"
+                        aria-selected={color === option.value}
                       >
-                        <StyledColorSwatch $color={selectedColor.color} />
+                        <StyledColorSwatch $color={option.color} />
                         <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                          {selectedColor.label}
+                          {option.label}
                         </Text>
-                      </div>
+                      </StyledColorOption>
+                    ))}
+                  </StyledColorGrid>
+                </StyledDropdownList>
+              </div>
+            </StyledDropdownContainer>
+
+            <StyledDropdownContainer>
+              <Text
+                as="label"
+                id={iconLabelId}
+                htmlFor={iconButtonId}
+                variant="B1"
+                color={tokens.colors.neutral[500]}
+              >
+                아이콘
+              </Text>
+              <div
+                style={{ position: 'relative' }}
+                ref={iconDropdownRef}
+                onKeyDown={(e) => {
+                  handleIconKeyDown(e);
+                  if (e.key === 'Enter' && highlightedIconIndex !== -1) {
+                    updateField('icon', ICON_OPTIONS[highlightedIconIndex].value);
+                    setIconDropdownOpen(false);
+                  }
+                }}
+                role="group"
+              >
+                <StyledDropdownHeader
+                  type="button"
+                  id={iconButtonId}
+                  aria-labelledby={iconLabelId}
+                  aria-haspopup="listbox"
+                  $isOpen={iconDropdownOpen}
+                  onClick={() => setIconDropdownOpen(!iconDropdownOpen)}
+                  aria-label="아이콘 선택"
+                  aria-expanded={iconDropdownOpen}
+                  aria-activedescendant={
+                    iconDropdownOpen && highlightedIconIndex !== -1
+                      ? `icon-option-${ICON_OPTIONS[highlightedIconIndex].id}`
+                      : undefined
+                  }
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: tokens.spacing.medium,
+                    }}
+                  >
+                    <StyledIconContainer>
                       <Icon
-                        name={colorDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                        name={selectedIcon.icon}
                         variant="SM"
-                        color={tokens.colors.neutral[600]}
+                        color={tokens.colors.black}
+                        filled
                         decorative
                       />
-                    </StyledDropdownHeader>
-
-                    <StyledDropdownList $isOpen={colorDropdownOpen} role="listbox">
-                      <StyledColorGrid>
-                        {COLOR_OPTIONS.map((option, index) => (
-                          <StyledColorOption
-                            type="button"
-                            key={option.id}
-                            id={`color-option-${option.id}`}
-                            $color={option.color}
-                            $selected={color === option.value}
-                            onClick={() => {
-                              field.onChange(option.value);
-                              setColorDropdownOpen(false);
-                            }}
-                            $highlighted={highlightedColorIndex === index}
-                            role="option"
-                            aria-selected={color === option.value}
-                          >
-                            <StyledColorSwatch $color={option.color} />
-                            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                              {option.label}
-                            </Text>
-                          </StyledColorOption>
-                        ))}
-                      </StyledColorGrid>
-                    </StyledDropdownList>
+                    </StyledIconContainer>
+                    <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                      {selectedIcon.label}
+                    </Text>
                   </div>
-                </StyledDropdownContainer>
-              )}
-            />
+                  <Icon
+                    name={iconDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                    variant="SM"
+                    color={tokens.colors.neutral[600]}
+                    decorative
+                  />
+                </StyledDropdownHeader>
 
-            <Controller
-              name="icon"
-              control={control}
-              render={({ field }) => (
-                <StyledDropdownContainer>
-                  <Text
-                    as="label"
-                    id={iconLabelId}
-                    htmlFor={iconButtonId}
-                    variant="B1"
-                    color={tokens.colors.neutral[500]}
-                  >
-                    아이콘
-                  </Text>
-                  <div
-                    style={{ position: 'relative' }}
-                    ref={iconDropdownRef}
-                    onKeyDown={(e) => {
-                      handleIconKeyDown(e);
-                      if (e.key === 'Enter' && highlightedIconIndex !== -1) {
-                        field.onChange(ICON_OPTIONS[highlightedIconIndex].value);
-                        setIconDropdownOpen(false);
-                      }
-                    }}
-                    role="group"
-                  >
-                    <StyledDropdownHeader
-                      type="button"
-                      id={iconButtonId}
-                      aria-labelledby={iconLabelId}
-                      aria-haspopup="listbox"
-                      $isOpen={iconDropdownOpen}
-                      onClick={() => setIconDropdownOpen(!iconDropdownOpen)}
-                      aria-label="아이콘 선택"
-                      aria-expanded={iconDropdownOpen}
-                      aria-activedescendant={
-                        iconDropdownOpen && highlightedIconIndex !== -1
-                          ? `icon-option-${ICON_OPTIONS[highlightedIconIndex].id}`
-                          : undefined
-                      }
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: tokens.spacing.medium,
+                <StyledDropdownList $isOpen={iconDropdownOpen} role="listbox">
+                  <StyledIconGrid>
+                    {ICON_OPTIONS.map((option, index) => (
+                      <StyledIconOption
+                        type="button"
+                        key={option.id}
+                        id={`icon-option-${option.id}`}
+                        $selected={icon === option.value}
+                        onClick={() => {
+                          updateField('icon', option.value);
+                          setIconDropdownOpen(false);
                         }}
+                        $highlighted={highlightedIconIndex === index}
+                        role="option"
+                        aria-selected={icon === option.value}
                       >
                         <StyledIconContainer>
                           <Icon
-                            name={selectedIcon.icon}
+                            name={option.icon}
                             variant="SM"
                             color={tokens.colors.black}
                             filled
@@ -211,53 +235,14 @@ const StyleStep = () => {
                           />
                         </StyledIconContainer>
                         <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                          {selectedIcon.label}
+                          {option.label}
                         </Text>
-                      </div>
-                      <Icon
-                        name={iconDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-                        variant="SM"
-                        color={tokens.colors.neutral[600]}
-                        decorative
-                      />
-                    </StyledDropdownHeader>
-
-                    <StyledDropdownList $isOpen={iconDropdownOpen} role="listbox">
-                      <StyledIconGrid>
-                        {ICON_OPTIONS.map((option, index) => (
-                          <StyledIconOption
-                            type="button"
-                            key={option.id}
-                            id={`icon-option-${option.id}`}
-                            $selected={icon === option.value}
-                            onClick={() => {
-                              field.onChange(option.value);
-                              setIconDropdownOpen(false);
-                            }}
-                            $highlighted={highlightedIconIndex === index}
-                            role="option"
-                            aria-selected={icon === option.value}
-                          >
-                            <StyledIconContainer>
-                              <Icon
-                                name={option.icon}
-                                variant="SM"
-                                color={tokens.colors.black}
-                                filled
-                                decorative
-                              />
-                            </StyledIconContainer>
-                            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                              {option.label}
-                            </Text>
-                          </StyledIconOption>
-                        ))}
-                      </StyledIconGrid>
-                    </StyledDropdownList>
-                  </div>
-                </StyledDropdownContainer>
-              )}
-            />
+                      </StyledIconOption>
+                    ))}
+                  </StyledIconGrid>
+                </StyledDropdownList>
+              </div>
+            </StyledDropdownContainer>
           </StyledStyleSelectors>
         </StyledStyleContainer>
       </StyledContent>
