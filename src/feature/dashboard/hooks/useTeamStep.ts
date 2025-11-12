@@ -24,9 +24,9 @@ export const useTeamStep = () => {
   // API 데이터를 드롭다운 옵션 형식으로 변환
   const TEAM_OPTIONS =
     teams?.map((team) => ({
-      id: String(team.uuid),
+      id: String(team.id),
       label: team.name,
-      value: String(team.uuid),
+      value: String(team.id),
     })) || [];
 
   const teamId = watch('teamId');

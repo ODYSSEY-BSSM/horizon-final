@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useCreateFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { FolderSection, MyRoadmapsHeader } from '@/feature/roadmap';
-import { Color, Icon } from '@/shared/api/types';
 import { FormModal } from '@/shared/ui';
 
 type ModalState = {
@@ -34,8 +33,6 @@ const MyRoadmapsContent = () => {
     createFolderMutation.mutate(
       {
         name: data.name,
-        color: Color.BLUE,
-        icon: Icon.FOLDER,
       },
       {
         onSuccess: () => {

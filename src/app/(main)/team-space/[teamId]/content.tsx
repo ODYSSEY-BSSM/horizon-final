@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import type { DirectoryResponse } from '@/feature/folder/types';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import {
   CreateTeamModal,
@@ -13,7 +14,6 @@ import {
 } from '@/feature/team';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
-import { Color, Icon } from '@/shared/api/types';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -40,24 +40,22 @@ const TeamFoldersContent = () => {
   const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
 
   const folders: TeamFolder[] = useMemo(() => {
-    if (!teamRootFolder?.items) {
+    if (!teamRootFolder?.directories) {
       return [];
     }
 
-    // 디렉토리만 추출
-    return teamRootFolder.items
-      .filter((item) => item.type === 'directory')
-      .map((item) => ({
-        id: item.uuid.toString(),
-        name: item.name,
-        teamId: teamId,
-        description: '', // TODO: API에서 description 제공 필요
-        color: item.color.toLowerCase(),
-        icon: item.icon.toLowerCase(),
-        roadmapCount: 0, // TODO: 폴더 내 로드맵 개수 계산 필요
-        createdRoadmapCount: 0, // TODO: 생성된 로드맵 개수 계산 필요
-        progress: 0, // TODO: 진행률 계산 필요
-      }));
+    // 디렉토리 매핑 (Swagger 구조 사용)
+    return teamRootFolder.directories.map((directory: DirectoryResponse) => ({
+      id: directory.id.toString(),
+      name: directory.name,
+      teamId: teamId,
+      description: '',
+      color: 'blue', // 기본값
+      icon: 'folder', // 기본값
+      roadmapCount: directory.roadmaps?.length || 0,
+      createdRoadmapCount: directory.roadmaps?.length || 0,
+      progress: 0,
+    }));
   }, [teamRootFolder, teamId]);
 
   const handleTeamChange = (newTeamId: string) => {
@@ -72,8 +70,6 @@ const TeamFoldersContent = () => {
     createFolderMutation.mutate(
       {
         name: data.name,
-        color: Color.BLUE,
-        icon: Icon.FOLDER,
       },
       {
         onSuccess: () => {

@@ -16,11 +16,11 @@ export const useTeamSpaceData = () => {
     }
 
     return teamsData.map((team) => ({
-      id: team.uuid.toString(),
+      id: team.id.toString(),
       name: team.name,
-      description: team.description || '',
-      memberCount: team.memberCount,
-      createdAt: team.createdAt,
+      description: '', // Swagger에 description 필드 없음
+      memberCount: team.members?.length || 0,
+      createdAt: new Date().toISOString(), // Swagger에 createdAt 필드 없음
     }));
   }, [teamsData]);
 
@@ -53,35 +53,23 @@ export const useTeamSpaceData = () => {
     inviteCode: string,
     callbacks?: { onSuccess?: () => void; onError?: (error: string) => void },
   ): { success: boolean; teamId?: number } => {
-    // 초대 코드에서 팀 ID 추출
-    const teamIdStr = decodeInviteCode(inviteCode);
-
-    if (!teamIdStr) {
-      return {
-        success: false,
-      };
-    }
-
-    const teamId = parseInt(teamIdStr, 10);
-    if (Number.isNaN(teamId)) {
-      return {
-        success: false,
-      };
-    }
-
-    // 팀 가입 신청
-    applyToTeamMutation.mutate(teamId, {
+    // 팀 가입 (초대 코드 사용)
+    applyToTeamMutation.mutate({ inviteCode }, {
       onSuccess: () => {
         callbacks?.onSuccess?.();
       },
       onError: () => {
-        callbacks?.onError?.('팀 가입 신청에 실패했습니다.');
+        callbacks?.onError?.('팀 가입에 실패했습니다.');
       },
     });
 
+    // 초대 코드에서 팀 ID 추출 (선택사항)
+    const teamIdStr = decodeInviteCode(inviteCode);
+    const teamId = teamIdStr ? parseInt(teamIdStr, 10) : undefined;
+
     return {
       success: true,
-      teamId,
+      teamId: teamId && !Number.isNaN(teamId) ? teamId : undefined,
     };
   };
 

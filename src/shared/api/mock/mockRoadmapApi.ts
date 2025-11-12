@@ -6,6 +6,7 @@ import { MOCK_DELAYS, delay } from './mockConstants';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 import { initialMockData } from './mockData';
+import { ProblemStatus } from '@/shared/api/types';
 import type {
   RoadmapCreateRequest,
   RoadmapResponse,
@@ -240,7 +241,7 @@ export const mockProblemApi = {
     const newProblem: ProblemResponse = {
       id: mockStorage.getNextId(),
       title: data.title,
-      status: 'UNRESOLVED',
+      status: ProblemStatus.UNRESOLVED,
     };
 
     problems.push(newProblem);
@@ -270,7 +271,7 @@ export const mockProblemApi = {
 
     problems[index] = {
       ...problems[index],
-      status: isCorrect ? 'RESOLVED' : 'UNRESOLVED',
+      status: isCorrect ? ProblemStatus.RESOLVED : ProblemStatus.UNRESOLVED,
     };
 
     mockStorage.set('problems', problems);

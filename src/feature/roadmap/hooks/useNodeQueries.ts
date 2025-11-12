@@ -71,7 +71,7 @@ export function useUpdateNode(roadmapId: number) {
     mutationFn: ({ nodeId, data }: { nodeId: number; data: NodeUpdateRequest }) =>
       nodeApi.updateNode(roadmapId, nodeId, data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.uuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.id) });
       queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });
@@ -84,7 +84,7 @@ export function useMoveNode(roadmapId: number) {
     mutationFn: ({ nodeId, data }: { nodeId: number; data: NodeUpdateRequest }) =>
       nodeApi.updateNode(roadmapId, nodeId, data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.uuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.id) });
       queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });

@@ -144,11 +144,11 @@ export const initialMockData = {
     {
       id: 1,
       name: '개발 스터디',
-      leader: '테스트유저',
+      leaderId: 1,
       inviteCode: 'STUDY2024',
-      members: ['테스트유저'],
+      memberIds: [1],
     },
-  ] as TeamResponse[],
+  ],
 
   teamDirectories: [] as DirectoryResponse[],
 

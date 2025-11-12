@@ -35,7 +35,10 @@ export function useTeam(teamId: number) {
 export function useTeamMembers(teamId: number) {
   return useQuery({
     queryKey: teamKeys.members(teamId),
-    queryFn: () => teamApi.getTeamMembers(teamId),
+    queryFn: async () => {
+      const team = await teamApi.getTeam(teamId);
+      return team.members;
+    },
     enabled: !!teamId,
   });
 }
@@ -43,7 +46,10 @@ export function useTeamMembers(teamId: number) {
 export function useTeamApplications(teamId: number) {
   return useQuery({
     queryKey: teamKeys.applications(teamId),
-    queryFn: () => teamApi.getTeamApplications(teamId),
+    queryFn: async () => {
+      // Swagger에는 지원/승인 시스템이 없음 (초대 코드만 사용)
+      return [];
+    },
     enabled: !!teamId,
   });
 }
@@ -90,7 +96,7 @@ export function useRemoveTeamMember(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (memberUuid: number) => teamApi.removeTeamMember(teamId, memberUuid),
+    mutationFn: (memberUuid: number) => teamApi.removeMember(teamId, memberUuid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.members(teamId) });
       queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });
@@ -106,7 +112,7 @@ export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (teamId: number) => teamApi.applyToTeam(teamId),
+    mutationFn: ({ inviteCode }: { inviteCode: string }) => teamApi.joinTeam({ inviteCode }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
@@ -117,7 +123,10 @@ export function useApproveTeamApplication(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (applyId: number) => teamApi.approveTeamApplication(applyId),
+    mutationFn: async (applyId: number) => {
+      // Swagger에는 승인 시스템이 없음 (초대 코드로 즉시 가입)
+      throw new Error('Team approval is not supported. Use invite codes instead.');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
@@ -129,7 +138,10 @@ export function useRejectTeamApplication(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (applyId: number) => teamApi.rejectTeamApplication(applyId),
+    mutationFn: async (applyId: number) => {
+      // Swagger에는 거절 시스템이 없음 (초대 코드로 즉시 가입)
+      throw new Error('Team rejection is not supported. Use invite codes instead.');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
     },
@@ -140,7 +152,10 @@ export function useDeleteTeamApplication() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (applyId: number) => teamApi.deleteTeamApplication(applyId),
+    mutationFn: async (applyId: number) => {
+      // Swagger에는 지원 삭제 시스템이 없음 (초대 코드로 즉시 가입)
+      throw new Error('Team application deletion is not supported. Use invite codes instead.');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },

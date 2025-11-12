@@ -1,12 +1,13 @@
 /**
  * Mock Storage System (Swagger API 기준)
- * localStorage 기반 데이터 영속성 관리
+ * localStorage 기반 데이터 영속성 관리 (SSR-safe)
  */
 
 const STORAGE_PREFIX = 'horizon_swagger_';
 
 export class MockStorage {
   private static instance: MockStorage;
+  private memoryStorage: Map<string, string> = new Map();
 
   private constructor() {
     this.initializeStorage();
@@ -19,6 +20,10 @@ export class MockStorage {
     return MockStorage.instance;
   }
 
+  private isClient(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+
   private initializeStorage(): void {
     if (!this.has('initialized')) {
       this.set('initialized', true);
@@ -28,7 +33,10 @@ export class MockStorage {
 
   get<T>(key: string): T | null {
     try {
-      const item = localStorage.getItem(STORAGE_PREFIX + key);
+      const fullKey = STORAGE_PREFIX + key;
+      const item = this.isClient()
+        ? localStorage.getItem(fullKey)
+        : this.memoryStorage.get(fullKey) || null;
       return item ? JSON.parse(item) : null;
     } catch {
       return null;
@@ -37,32 +45,51 @@ export class MockStorage {
 
   set<T>(key: string, value: T): void {
     try {
-      localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+      const fullKey = STORAGE_PREFIX + key;
+      const serialized = JSON.stringify(value);
+      if (this.isClient()) {
+        localStorage.setItem(fullKey, serialized);
+      } else {
+        this.memoryStorage.set(fullKey, serialized);
+      }
     } catch (error) {
       // localStorage quota exceeded or other storage error
       // In production, this should be logged to a monitoring service
       if (process.env.NODE_ENV === 'development') {
         // biome-ignore lint/suspicious/noConsoleLog: Development debugging
-        console.error('Failed to save to localStorage:', error);
+        console.error('Failed to save to storage:', error);
       }
     }
   }
 
   has(key: string): boolean {
-    return localStorage.getItem(STORAGE_PREFIX + key) !== null;
+    const fullKey = STORAGE_PREFIX + key;
+    if (this.isClient()) {
+      return localStorage.getItem(fullKey) !== null;
+    }
+    return this.memoryStorage.has(fullKey);
   }
 
   remove(key: string): void {
-    localStorage.removeItem(STORAGE_PREFIX + key);
+    const fullKey = STORAGE_PREFIX + key;
+    if (this.isClient()) {
+      localStorage.removeItem(fullKey);
+    } else {
+      this.memoryStorage.delete(fullKey);
+    }
   }
 
   clear(): void {
-    const keys = Object.keys(localStorage);
-    keys.forEach((key) => {
-      if (key.startsWith(STORAGE_PREFIX)) {
-        localStorage.removeItem(key);
-      }
-    });
+    if (this.isClient()) {
+      const keys = Object.keys(localStorage);
+      keys.forEach((key) => {
+        if (key.startsWith(STORAGE_PREFIX)) {
+          localStorage.removeItem(key);
+        }
+      });
+    } else {
+      this.memoryStorage.clear();
+    }
     this.initializeStorage();
   }
 

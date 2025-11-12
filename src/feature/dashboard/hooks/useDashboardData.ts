@@ -32,14 +32,14 @@ export const useDashboardData = () => {
     }
 
     return roadmapsData.map((roadmap) => ({
-      id: roadmap.uuid.toString(),
-      title: roadmap.name,
+      id: roadmap.id.toString(),
+      title: roadmap.title,
       icon: roadmap.icon.toLowerCase(),
       color: roadmap.color.toLowerCase() as RoadmapColor,
       category: 'personal' as const,
       steps: 0, // TODO: API에서 단계 정보를 제공하면 업데이트 필요
       status: 'in-progress' as const,
-      progress: 0,
+      progress: roadmap.progress || 0,
     }));
   }, [roadmapsData]);
 
