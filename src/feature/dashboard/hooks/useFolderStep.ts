@@ -13,9 +13,9 @@ export const useFolderStep = () => {
   } = form;
 
   // 개인 디렉토리 목록 조회
-  const { data: directories, isLoading } = useQuery({
+  const { data: rootContent, isLoading } = useQuery({
     queryKey: ['directories'],
-    queryFn: folderApi.getDirectories,
+    queryFn: folderApi.getRootDirectory,
     staleTime: 1000 * 60 * 5, // 5분
   });
 
@@ -27,12 +27,12 @@ export const useFolderStep = () => {
   const folderName = watch('folderName');
 
   // API 데이터를 드롭다운 옵션 형식으로 변환
-  const FOLDER_OPTIONS =
-    directories?.map((dir) => ({
-      id: String(dir.uuid),
-      label: dir.name,
-      value: String(dir.uuid),
-    })) || [];
+  const directories = rootContent?.items.filter((item) => item.type === 'directory') || [];
+  const FOLDER_OPTIONS = directories.map((dir) => ({
+    id: String(dir.uuid),
+    label: dir.name,
+    value: String(dir.uuid),
+  }));
 
   const selectedFolder = folderId ? FOLDER_OPTIONS.find((option) => option.id === folderId) : null;
 

@@ -27,7 +27,7 @@ const TeamFoldersContent = () => {
 
   const teamId = params.teamId;
 
-  const { teams, addTeam } = useTeamSpaceData(teamId);
+  const { teams, addTeam } = useTeamSpaceData();
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -38,21 +38,8 @@ const TeamFoldersContent = () => {
 
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
 
-  const folders: TeamFolder[] = useMemo(() => {
-    if (!currentTeam?.folders) {
-      return [];
-    }
-
-    return currentTeam.folders.map((folder) => ({
-      id: folder.id.toString(),
-      teamId: teamId,
-      name: folder.name,
-      description: '',
-      progress: 0,
-      roadmapCount: 0,
-      createdRoadmapCount: 0,
-    }));
-  }, [currentTeam, teamId]);
+  // TODO: 팀 폴더 조회는 별도 API 호출 필요
+  const folders: TeamFolder[] = [];
 
   const handleTeamChange = (newTeamId: string) => {
     router.push(`/team-space/${newTeamId}`);

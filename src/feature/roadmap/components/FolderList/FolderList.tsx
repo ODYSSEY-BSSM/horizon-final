@@ -25,19 +25,21 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const { data: rootFolder, isLoading, error } = useRootFolder();
 
   const folders: Folder[] = useMemo(() => {
-    if (!rootFolder?.directories) {
+    if (!rootFolder?.items) {
       return [];
     }
 
-    return rootFolder.directories.map((folder) => ({
-      id: folder.id,
-      name: folder.name,
-      description: '', // API 응답에 설명이 없으므로 빈 문자열로 설정
-      progress: 0, // TODO: 진행률 계산 로직 필요
-      roadmapCount: folder.roadmaps?.length || 0,
-      completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
-      lastRoadmap: '', // TODO: 마지막 로드맵 이름 가져오기
-    }));
+    return rootFolder.items
+      .filter((item) => item.type === 'directory')
+      .map((folder) => ({
+        id: folder.uuid,
+        name: folder.name,
+        description: '', // API 응답에 설명이 없으므로 빈 문자열로 설정
+        progress: 0, // TODO: 진행률 계산 로직 필요
+        roadmapCount: 0, // TODO: 로드맵 개수 계산 필요
+        completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
+        lastRoadmap: '', // TODO: 마지막 로드맵 이름 가져오기
+      }));
   }, [rootFolder]);
 
   const sortedFolders = useMemo(() => {

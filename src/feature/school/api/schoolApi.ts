@@ -12,8 +12,8 @@ export const schoolApi = {
   // ===================================
 
   // 학교 연동
-  connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
-    const response = await apiClient.put<SchoolResponse>('/users/school', data);
+  connectSchool: async (): Promise<SchoolResponse> => {
+    const response = await apiClient.put<SchoolResponse>('/users/school');
     return response.data;
   },
 

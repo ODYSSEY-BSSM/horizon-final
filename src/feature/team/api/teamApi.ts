@@ -27,40 +27,40 @@ export const teamApi = {
   },
 
   // 팀 단일 조회
-  getTeam: async (teamName: string): Promise<TeamResponse> => {
-    const response = await apiClient.get<TeamResponse>(`/teams/${teamName}`);
+  getTeam: async (teamId: number): Promise<TeamResponse> => {
+    const response = await apiClient.get<TeamResponse>(`/teams/${teamId}`);
     return response.data;
   },
 
   // 팀 수정
-  updateTeam: async (teamName: string, data: TeamUpdateRequest): Promise<TeamResponse> => {
-    const response = await apiClient.put<TeamResponse>(`/teams/${teamName}`, data);
+  updateTeam: async (teamId: number, data: TeamUpdateRequest): Promise<TeamResponse> => {
+    const response = await apiClient.put<TeamResponse>(`/teams/${teamId}`, data);
     return response.data;
   },
 
   // 팀 삭제
-  deleteTeam: async (teamName: string): Promise<void> => {
-    await apiClient.delete(`/teams/${teamName}`);
+  deleteTeam: async (teamId: number): Promise<void> => {
+    await apiClient.delete(`/teams/${teamId}`);
   },
 
   // 팀 멤버 조회
-  getTeamMembers: async (teamName: string): Promise<TeamMembersResponse> => {
-    const response = await apiClient.get<TeamMembersResponse>(`/teams/${teamName}/members`);
+  getTeamMembers: async (teamId: number): Promise<TeamMembersResponse> => {
+    const response = await apiClient.get<TeamMembersResponse>(`/teams/${teamId}/members`);
     return response.data;
   },
 
   // 팀 멤버 삭제 (추방)
-  removeTeamMember: async (teamName: string, memberUuid: number): Promise<void> => {
-    await apiClient.delete(`/teams/${teamName}/members/${memberUuid}`);
+  removeTeamMember: async (teamId: number, memberUuid: number): Promise<void> => {
+    await apiClient.delete(`/teams/${teamId}/members/${memberUuid}`);
   },
 
   // ===================================
   // Team Apply API
   // ===================================
 
-  // 팀 신청 (초대 코드로 가입 신청)
-  applyToTeam: async (teamId: number, data: TeamApplyRequest): Promise<TeamApplyResponse> => {
-    const response = await apiClient.post<TeamApplyResponse>(`/apply/${teamId}`, data);
+  // 팀 신청
+  applyToTeam: async (teamId: number): Promise<TeamApplyResponse> => {
+    const response = await apiClient.post<TeamApplyResponse>(`/apply/${teamId}`);
     return response.data;
   },
 

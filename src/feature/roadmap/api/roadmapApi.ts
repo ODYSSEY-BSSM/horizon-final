@@ -26,6 +26,7 @@ export const roadmapApi = {
   },
 
   // 개인 로드맵 단일 조회
+  // TODO: API 스펙에 GET /roadmap/{id} 엔드포인트가 없음 - 백엔드에 추가 필요
   getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
     const response = await apiClient.get<RoadmapResponse>(`/roadmap/${roadmapId}`);
     return response.data;

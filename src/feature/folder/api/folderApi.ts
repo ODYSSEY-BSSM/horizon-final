@@ -20,6 +20,12 @@ export const folderApi = {
     return response.data;
   },
 
+  // 팀 루트 디렉토리 조회
+  getTeamRootDirectory: async (teamId: number): Promise<DirectoryContentResponse> => {
+    const response = await apiClient.get<DirectoryContentResponse>(`/root/team?teamId=${teamId}`);
+    return response.data;
+  },
+
   // 개인 디렉토리 생성
   createDirectory: async (data: DirectoryCreateRequest): Promise<DirectoryResponse> => {
     const response = await apiClient.post<DirectoryResponse>('/directories', data);
