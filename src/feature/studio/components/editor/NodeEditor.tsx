@@ -2,7 +2,7 @@
 
 import { Trash2, X } from 'lucide-react';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useStudioStore } from '../../stores/studioStore';
 import type { NodeColor, StudioNodeType } from '../../types/node';
 import { getProgressColor, NODE_COLORS } from '../../types/node';
@@ -11,6 +11,15 @@ export const NodeEditor: React.FC = () => {
   const { nodes, selectedNodeId, updateNode, deleteNode, setSelectedNodeId } = useStudioStore();
 
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
+
+  // Generate unique IDs for form fields
+  const titleId = useId();
+  const descriptionId = useId();
+  const progressId = useId();
+  const nodeTypeId = useId();
+  const colorLabelId = useId();
+  const subjectId = useId();
+  const educationId = useId();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -74,8 +83,10 @@ export const NodeEditor: React.FC = () => {
       <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">노드 편집</h2>
         <button
+          type="button"
           onClick={() => setSelectedNodeId(null)}
           className="text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="편집기 닫기"
         >
           <X size={24} />
         </button>
@@ -85,8 +96,11 @@ export const NodeEditor: React.FC = () => {
       <div className="p-4 space-y-4">
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">제목</label>
+          <label htmlFor={titleId} className="block text-sm font-medium text-gray-700 mb-1">
+            제목
+          </label>
           <input
+            id={titleId}
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -98,8 +112,11 @@ export const NodeEditor: React.FC = () => {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">설명</label>
+          <label htmlFor={descriptionId} className="block text-sm font-medium text-gray-700 mb-1">
+            설명
+          </label>
           <textarea
+            id={descriptionId}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onBlur={handleSave}
@@ -111,10 +128,11 @@ export const NodeEditor: React.FC = () => {
 
         {/* Progress */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor={progressId} className="block text-sm font-medium text-gray-700 mb-1">
             진도율: <span style={{ color: progressColor, fontWeight: 600 }}>{progress}%</span>
           </label>
           <input
+            id={progressId}
             type="range"
             min="0"
             max="100"
@@ -126,6 +144,10 @@ export const NodeEditor: React.FC = () => {
             style={{
               accentColor: progressColor,
             }}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+            aria-label="진도율"
           />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>0%</span>
@@ -137,8 +159,11 @@ export const NodeEditor: React.FC = () => {
 
         {/* Node Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">노드 타입</label>
+          <label htmlFor={nodeTypeId} className="block text-sm font-medium text-gray-700 mb-1">
+            노드 타입
+          </label>
           <select
+            id={nodeTypeId}
             value={nodeType}
             onChange={(e) => {
               setNodeType(e.target.value as StudioNodeType);
@@ -154,11 +179,14 @@ export const NodeEditor: React.FC = () => {
 
         {/* Color */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">색상</label>
-          <div className="grid grid-cols-3 gap-2">
+          <span id={colorLabelId} className="block text-sm font-medium text-gray-700 mb-2">
+            색상
+          </span>
+          <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby={colorLabelId}>
             {Object.entries(NODE_COLORS).map(([colorName, colorValue]) => (
               <button
                 key={colorName}
+                type="button"
                 onClick={() => {
                   setColor(colorName as NodeColor);
                   handleSave();
@@ -167,7 +195,8 @@ export const NodeEditor: React.FC = () => {
                   color === colorName ? 'border-gray-900 scale-105' : 'border-gray-300'
                 }`}
                 style={{ backgroundColor: colorValue }}
-                title={colorName}
+                aria-label={`${colorName} 색상 선택`}
+                aria-pressed={color === colorName}
               />
             ))}
           </div>
@@ -175,8 +204,11 @@ export const NodeEditor: React.FC = () => {
 
         {/* Subject */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">과목</label>
+          <label htmlFor={subjectId} className="block text-sm font-medium text-gray-700 mb-1">
+            과목
+          </label>
           <input
+            id={subjectId}
             type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
@@ -190,7 +222,7 @@ export const NodeEditor: React.FC = () => {
         <div className="flex items-center">
           <input
             type="checkbox"
-            id="isEducation"
+            id={educationId}
             checked={isEducation}
             onChange={(e) => {
               setIsEducation(e.target.checked);
@@ -198,7 +230,7 @@ export const NodeEditor: React.FC = () => {
             }}
             className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
-          <label htmlFor="isEducation" className="ml-2 text-sm font-medium text-gray-700">
+          <label htmlFor={educationId} className="ml-2 text-sm font-medium text-gray-700">
             교육 콘텐츠
           </label>
         </div>
@@ -206,6 +238,7 @@ export const NodeEditor: React.FC = () => {
         {/* Delete Button */}
         <div className="pt-4 border-t border-gray-200">
           <button
+            type="button"
             onClick={handleDelete}
             className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
           >
