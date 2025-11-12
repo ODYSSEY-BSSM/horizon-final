@@ -35,3 +35,16 @@ export { useTeamStep } from './hooks/useTeamStep';
 export { DashboardHeader } from './sections/DashboardHeader';
 export { InfoCardsGrid } from './sections/InfoCardsGrid';
 export { RoadmapSection } from './sections/RoadmapSection';
+
+// Types
+export type {
+  DashboardRoadmapCard,
+  FilterType,
+  InfoCardData,
+  MenuItem,
+  MenuItemType,
+  RoadmapCategory,
+  RoadmapItem,
+  RoadmapStatus,
+  ViewType,
+} from './types/dashboard';

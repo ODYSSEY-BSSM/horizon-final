@@ -30,4 +30,4 @@ export { TeamFolderRoadmapListSection } from './sections/TeamFolderRoadmapListSe
 export { TeamSpaceHeader } from './sections/TeamSpaceHeader';
 
 // Types
-export type { Team, TeamFolder, Roadmap as TeamRoadmap } from './types/team';
+export type { Team, TeamFolder, TeamRoadmap, Roadmap } from './types/team';

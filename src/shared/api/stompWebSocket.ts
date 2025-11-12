@@ -72,8 +72,13 @@ export class StompWebSocketClient {
       try {
         const data = JSON.parse(message.body) as T;
         handler(data);
-      } catch (_error) {
-        // JSON 파싱 오류는 무시합니다.
+      } catch (error) {
+        console.error(
+          `[StompWebSocket] Failed to parse message from ${destination}:`,
+          error,
+          '\nMessage body:',
+          message.body,
+        );
       }
     });
 
@@ -109,26 +114,31 @@ export class StompWebSocketClient {
   // Private Methods
   // ===================================
 
-  private onConnect(_frame: IFrame): void {
+  private onConnect(frame: IFrame): void {
     this.isConnected = true;
     this.reconnectAttempts = 0;
+    console.log('[StompWebSocket] Connected successfully', frame.command);
   }
 
-  private onDisconnect(_frame: IFrame): void {
+  private onDisconnect(frame: IFrame): void {
     this.isConnected = false;
     this.subscriptions.clear();
+    console.log('[StompWebSocket] Disconnected', frame.command);
 
     // Auto-reconnect
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
+      console.log(
+        `[StompWebSocket] Reconnecting... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
+      );
       setTimeout(() => this.connect(), this.reconnectDelay);
     } else {
-      // 최대 재연결 시도 횟수를 초과했습니다.
+      console.warn('[StompWebSocket] Max reconnect attempts reached. Giving up.');
     }
   }
 
-  private onError(_frame: IFrame): void {
-    // 소켓 에러 처리
+  private onError(frame: IFrame): void {
+    console.error('[StompWebSocket] Error occurred:', frame.headers, frame.body);
   }
 }
 

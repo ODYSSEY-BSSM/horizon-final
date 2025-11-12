@@ -19,7 +19,7 @@ export type TeamFolder = {
   lastRoadmapName?: string;
 };
 
-export type Roadmap = {
+export type TeamRoadmap = {
   id: string;
   folderId: string;
   name: string;
@@ -34,6 +34,9 @@ export type Roadmap = {
   createdAt?: string;
   updatedAt?: string;
 };
+
+// Deprecated: Use TeamRoadmap instead
+export type Roadmap = TeamRoadmap;
 
 export type FilterTab = {
   label: string;

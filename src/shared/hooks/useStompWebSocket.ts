@@ -38,7 +38,7 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
         }
         return connected;
       });
-    }, 500);
+    }, 2000); // Check every 2 seconds to reduce CPU usage
 
     return () => {
       if (checkIntervalRef.current) {

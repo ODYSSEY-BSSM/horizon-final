@@ -42,6 +42,8 @@ export class WebSocketClient {
 
     try {
       // Get access token for authentication
+      // WARNING: This passes token via URL query parameter which exposes it in browser history.
+      // Consider migrating to STOMP WebSocket (stompWebSocket.ts) which supports proper header-based auth.
       const token = tokenStore.getAccessToken();
       const wsUrl = token ? `${this.url}?token=${token}` : this.url;
 
@@ -175,8 +177,8 @@ export class WebSocketClient {
           handler(message);
         }
       }
-    } catch (_error) {
-      // JSON 파싱 오류는 무시합니다.
+    } catch (error) {
+      console.error('[WebSocket] Failed to parse message:', error, '\nMessage data:', event.data);
     }
   }
 

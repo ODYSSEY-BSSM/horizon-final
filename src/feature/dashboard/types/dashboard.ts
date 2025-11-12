@@ -22,7 +22,7 @@ export interface InfoCardData {
 
 export type RoadmapStatus = 'in-progress' | 'completed';
 
-export interface RoadmapItem {
+export interface DashboardRoadmapCard {
   id: string;
   title: string;
   icon: string;
@@ -32,6 +32,9 @@ export interface RoadmapItem {
   status: RoadmapStatus;
   progress: number;
 }
+
+// Deprecated: Use DashboardRoadmapCard instead
+export type RoadmapItem = DashboardRoadmapCard;
 
 export type FilterType = 'all' | 'my' | 'team' | 'completed' | 'in-progress';
 
