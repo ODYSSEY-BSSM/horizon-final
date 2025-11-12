@@ -31,6 +31,7 @@ const FolderDetailContent = () => {
   const [roadmapData, setRoadmapData] = useState<{
     title: string;
     description: string;
+    categories?: string[];
   } | null>(null);
 
   const createRoadmapMutation = useCreateRoadmap();
@@ -61,10 +62,12 @@ const FolderDetailContent = () => {
 
     createRoadmapMutation.mutate(
       {
-        name: roadmapData.title,
+        title: roadmapData.title,
+        description: roadmapData.description || '',
+        categories: roadmapData.categories || [],
         color: data.color.toUpperCase() as any,
         icon: data.icon.toUpperCase() as any,
-        directoryUuid: Number(folderId),
+        directoryId: Number(folderId),
       },
       {
         onSuccess: () => {

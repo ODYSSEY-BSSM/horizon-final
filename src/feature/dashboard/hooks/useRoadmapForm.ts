@@ -191,18 +191,18 @@ export const useStyleStepForm = () => {
       if (formData.folderName && !formData.folderId) {
         const newFolder = await createFolderMutation.mutateAsync({
           name: formData.folderName,
-          color: Color.BLUE,
-          icon: Icon.FOLDER,
         });
-        directoryId = newFolder.uuid;
+        directoryId = newFolder.id;
       }
 
       // 로드맵 생성
       const roadmapData = {
-        name: formData.name || '',
+        title: formData.name || '',
+        description: '',
+        categories: [],
         color: styleData.color.toUpperCase() as any,
         icon: styleData.icon.toUpperCase() as any,
-        directoryUuid: directoryId,
+        directoryId: directoryId || 1, // 기본 디렉토리 사용
       };
 
       if (formData.category === 'team' && formData.teamId) {

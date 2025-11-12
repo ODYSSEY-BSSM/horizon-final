@@ -6,6 +6,7 @@ import { mockStorage } from './mockStorage';
 import { initialMockData, type MockUser } from './mockData';
 import { MOCK_DELAYS, delay } from './mockConstants';
 import { MOCK_ERRORS } from './mockErrors';
+import { UserRole } from '@/shared/api/types';
 import type {
   LoginRequest,
   LoginResponse,
@@ -113,7 +114,7 @@ export const mockAuthApi = {
       email: data.email,
       password: data.password,
       username: data.username,
-      role: 'USER',
+      role: UserRole.USER,
       teamIds: [],
     };
 

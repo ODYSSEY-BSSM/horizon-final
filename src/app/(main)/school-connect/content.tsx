@@ -17,6 +17,14 @@ const SchoolConnectContent = () => {
 
   const { currentNodes, currentPage, totalPages, goToPage } = useSchoolNodeList(state.nodes);
 
+  // Wrapper to handle school code input (TODO: should collect from user input)
+  const handleConnectWrapper = () => {
+    const schoolCode = prompt('학교 코드를 입력하세요:');
+    if (schoolCode) {
+      handleConnect(schoolCode);
+    }
+  };
+
   return (
     <StyledPageContainer>
       {state.status === 'connected' && state.school ? (
@@ -31,7 +39,7 @@ const SchoolConnectContent = () => {
           />
         </>
       ) : (
-        <EmptyState onConnect={handleConnect} />
+        <EmptyState onConnect={handleConnectWrapper} />
       )}
 
       <ConfirmModal

@@ -1,10 +1,9 @@
 export type {
-  DirectoryContentItem,
   DirectoryContentResponse,
   DirectoryCreateRequest,
   DirectoryResponse,
   DirectoryUpdateRequest,
-  TeamDirectoryContentItem,
+  SimpleRoadmapResponse,
   TeamDirectoryContentResponse,
   TeamDirectoryCreateRequest,
   TeamDirectoryResponse,
