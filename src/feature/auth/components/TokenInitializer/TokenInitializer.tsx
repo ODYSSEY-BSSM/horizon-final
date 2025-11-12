@@ -10,32 +10,9 @@ export function TokenInitializer() {
       const refreshToken = tokenStore.getRefreshToken();
       const accessToken = tokenStore.getAccessToken();
 
+      // If we have a refresh token but no access token, try to refresh
       if (refreshToken && !accessToken) {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/auth/token`,
-            {
-              method: 'PUT',
-              headers: {
-                'Refresh-Token': refreshToken,
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-            },
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            const newAccessToken = data.data.accessToken;
-            const newRefreshToken = data.data.refreshToken;
-
-            tokenStore.setTokens(newAccessToken, newRefreshToken);
-            apiClient.setAccessToken(newAccessToken);
-          } else {
-            tokenStore.clearTokens();
-          }
-        } catch (_error) {
-          tokenStore.clearTokens();
-        }
+        await apiClient.refreshToken();
       }
     };
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
-import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { useUserProfile } from '@/feature/auth';
+import { useRoadmaps } from '@/feature/roadmap';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {

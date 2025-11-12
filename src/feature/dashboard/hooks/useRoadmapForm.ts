@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCreateFolder } from '@/feature/folder/hooks/useFolderQueries';
-import { useCreateRoadmap, useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
-import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
+import { useCreateFolder } from '@/feature/folder';
 import {
+  useCreateRoadmap,
+  useCreateTeamRoadmap,
+  useRoadmapFormFlow,
   type CategoryStepFormData,
   categoryStepSchema,
   type FolderStepFormData,
@@ -15,7 +16,7 @@ import {
   styleStepSchema,
   type TeamStepFormData,
   teamStepSchema,
-} from '@/feature/roadmap/validations/roadmap';
+} from '@/feature/roadmap';
 import { Color, Icon } from '@/shared/api/types';
 import type { RoadmapFormData } from '@/shared/types/modal';
 

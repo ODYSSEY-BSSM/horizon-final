@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { type KeyboardEvent, useState } from 'react';
-import { folderApi } from '@/feature/folder/api/folderApi';
+import { folderApi } from '@/feature/folder';
 import { useFolderStepForm } from './useRoadmapForm';
 
 export const useFolderStep = () => {

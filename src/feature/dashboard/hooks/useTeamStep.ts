@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { teamApi } from '@/feature/team/api/teamApi';
+import { teamApi } from '@/feature/team';
 import { useTeamStepForm } from './useRoadmapForm';
 
 export const useTeamStep = () => {

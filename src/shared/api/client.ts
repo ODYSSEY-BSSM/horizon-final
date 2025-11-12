@@ -66,7 +66,7 @@ class ApiClient {
 
     // Handle token refresh for 401 errors
     if (response.status === 401 && auth) {
-      const refreshed = await this.tryRefreshToken();
+      const refreshed = await this.refreshToken();
       if (refreshed) {
         // Retry the request with new token
         const newHeaders = {
@@ -134,7 +134,7 @@ class ApiClient {
     return result;
   }
 
-  private async tryRefreshToken(): Promise<boolean> {
+  async refreshToken(): Promise<boolean> {
     if (typeof window === 'undefined') {
       return false;
     }

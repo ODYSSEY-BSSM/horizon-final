@@ -1,3 +1,6 @@
+// API
+export { teamApi } from './api/teamApi';
+
 // Components
 export { AddRoadmapCard } from './components/AddRoadmapCard';
 export { CreateTeamModal } from './components/CreateTeamModal';
@@ -25,3 +28,6 @@ export { useTeamSpaceData } from './hooks/useTeamSpaceData';
 // Sections
 export { TeamFolderRoadmapListSection } from './sections/TeamFolderRoadmapListSection';
 export { TeamSpaceHeader } from './sections/TeamSpaceHeader';
+
+// Types
+export type { Team, TeamFolder, Roadmap as TeamRoadmap } from './types/team';

@@ -5,7 +5,7 @@ import {
   STEP_DESCRIPTIONS,
   STEP_TITLES,
 } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
-import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
+import { useRoadmapFormFlow } from '@/feature/roadmap';
 import { FormLayout } from './components/FormLayout';
 import { CategoryStep } from './steps/CategoryStep';
 import { FolderStep } from './steps/FolderStep';

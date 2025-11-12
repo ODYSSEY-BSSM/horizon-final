@@ -13,7 +13,7 @@ export { useEmailForm } from './hooks/signup/useEmailForm';
 export { usePasswordForm } from './hooks/signup/usePasswordForm';
 export { useUsernameForm } from './hooks/signup/useUsernameForm';
 export { useVerificationForm } from './hooks/signup/useVerificationForm';
-export { useLogin } from './hooks/useSignIn';
+export { useLogin, useLogout, useUserProfile } from './hooks/useSignIn';
 export { useRegister } from './hooks/useSignUp';
 
 // Steps
