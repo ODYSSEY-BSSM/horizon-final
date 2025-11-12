@@ -14,15 +14,15 @@ import type {
 import type { MockUser, MockSchool } from './mockData';
 
 function getSchools(): MockSchool[] {
-  return mockStorage.get<MockSchool[]>('schools') || initialMockData.schools;
+  return mockStorage.getOrDefault('schools', initialMockData.schools);
 }
 
 function getUsers(): MockUser[] {
-  return mockStorage.get<MockUser[]>('users') || initialMockData.users;
+  return mockStorage.getOrDefault('users', initialMockData.users);
 }
 
 function getEducationNodes(): EducationNodeResponse[] {
-  return mockStorage.get<EducationNodeResponse[]>('educationNodes') || [];
+  return mockStorage.getOrDefault('educationNodes', []);
 }
 
 export const mockSchoolApi = {

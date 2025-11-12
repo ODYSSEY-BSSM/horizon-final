@@ -25,11 +25,11 @@ interface StoredDirectory {
 }
 
 function getDirectories(): StoredDirectory[] {
-  return mockStorage.get<StoredDirectory[]>('directories') || initialMockData.directories;
+  return mockStorage.getOrDefault('directories', initialMockData.directories);
 }
 
 function getRoadmaps(): RoadmapResponse[] {
-  return mockStorage.get<RoadmapResponse[]>('roadmaps') || initialMockData.roadmaps;
+  return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
 }
 
 // 재귀적으로 디렉토리 트리 구조 생성
