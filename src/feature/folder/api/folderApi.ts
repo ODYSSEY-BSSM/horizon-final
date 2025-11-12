@@ -7,7 +7,8 @@ import type {
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
 } from '../types';
-import { mockFolderApi } from '@/shared/api/mock/mockFolderApi';
+import { mockFolderApi, mockTeamFolderApi } from '@/shared/api/mock/mockFolderApi';
 
 // Mock API 사용 (실제 API 대신)
 export const folderApi = mockFolderApi;
+export const teamFolderApi = mockTeamFolderApi;
