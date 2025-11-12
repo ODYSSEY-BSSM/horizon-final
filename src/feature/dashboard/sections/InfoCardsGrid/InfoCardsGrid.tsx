@@ -20,15 +20,15 @@ const InfoCardsGrid = ({
   return (
     <StyledInfoCardsGrid>
       <InfoCard
-        key="my-roadmaps"
-        category="my-roadmaps"
+        key="my-roadmap-count"
+        category="my-roadmap-count"
         count={myRoadmapsCount}
         subCount={myRoadmapsInProgress}
         hasItem={true}
       />
       <InfoCard
-        key="team-roadmaps"
-        category="team-roadmaps"
+        key="team-roadmap-count"
+        category="team-roadmap-count"
         count={teamRoadmapsCount}
         subCount={teamRoadmapsInProgress}
         hasItem={true}
@@ -37,7 +37,7 @@ const InfoCardsGrid = ({
         key="connected-school"
         category="connected-school"
         schoolName={connectedSchool}
-        hasItem={true}
+        hasItem={!!connectedSchool}
       />
     </StyledInfoCardsGrid>
   );

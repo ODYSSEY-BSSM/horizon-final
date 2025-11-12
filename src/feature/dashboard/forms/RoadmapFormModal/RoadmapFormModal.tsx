@@ -5,7 +5,7 @@ import {
   STEP_DESCRIPTIONS,
   STEP_TITLES,
 } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
-import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 import { FormLayout } from './components/FormLayout';
 import { CategoryStep } from './steps/CategoryStep';
 import { FolderStep } from './steps/FolderStep';
@@ -14,7 +14,7 @@ import { StyleStep } from './steps/StyleStep';
 import { TeamStep } from './steps/TeamStep';
 
 const RoadmapFormModal = () => {
-  const { currentStep, isModalOpen, closeModal } = useRoadmapFormFlow();
+  const { currentStep, isModalOpen, closeModal } = useRoadmapFormStore();
 
   const renderCurrentStep = () => {
     switch (currentStep) {

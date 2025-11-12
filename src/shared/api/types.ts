@@ -25,50 +25,64 @@ export interface ApiErrorResponse {
 // Common Enums (from HTML API spec)
 // ===================================
 
-// Roadmap & Node Colors
+// Roadmap & Node Colors (Swagger API)
 export enum Color {
   RED = 'RED',
-  BLUE = 'BLUE',
   ORANGE = 'ORANGE',
-  GREEN = 'GREEN',
-  PURPLE = 'PURPLE',
   YELLOW = 'YELLOW',
-  PINK = 'PINK',
+  GREEN = 'GREEN',
+  BLUE = 'BLUE',
+  PURPLE = 'PURPLE',
 }
 
 // Color Hex Mapping (from API response)
 export const ColorHexMap: Record<string, string> = {
   DC2626: 'RED',
   EA580C: 'ORANGE',
-  '3B82F6': 'BLUE',
-  '22C55E': 'GREEN',
-  A855F7: 'PURPLE',
   EAB308: 'YELLOW',
-  EC4899: 'PINK',
+  '22C55E': 'GREEN',
+  '3B82F6': 'BLUE',
+  A855F7: 'PURPLE',
 };
 
-// Roadmap & Node Icons
+// Roadmap & Node Icons (Swagger API - 16 icons)
 export enum Icon {
-  DATABASE = 'DATABASE',
-  HTML = 'HTML',
+  LANGUAGE = 'LANGUAGE',
   CODE = 'CODE',
-  BOOK = 'BOOK',
-  STAR = 'STAR',
-  HEART = 'HEART',
-  FOLDER = 'FOLDER',
-  DOCUMENT = 'DOCUMENT',
+  SHIELD = 'SHIELD',
+  DATABASE = 'DATABASE',
+  HOST = 'HOST',
+  HTML = 'HTML',
+  CSS = 'CSS',
+  JAVASCRIPT = 'JAVASCRIPT',
+  REACT = 'REACT',
+  VUE = 'VUE',
+  ANGULAR = 'ANGULAR',
+  NODE = 'NODE',
+  PYTHON = 'PYTHON',
+  JAVA = 'JAVA',
+  CPP = 'CPP',
+  GO = 'GO',
 }
 
 // Icon Lowercase Mapping (from API response)
 export const IconMap: Record<string, Icon> = {
-  database: Icon.DATABASE,
-  html: Icon.HTML,
+  language: Icon.LANGUAGE,
   code: Icon.CODE,
-  book: Icon.BOOK,
-  star: Icon.STAR,
-  heart: Icon.HEART,
-  folder: Icon.FOLDER,
-  document: Icon.DOCUMENT,
+  shield: Icon.SHIELD,
+  database: Icon.DATABASE,
+  host: Icon.HOST,
+  html: Icon.HTML,
+  css: Icon.CSS,
+  javascript: Icon.JAVASCRIPT,
+  react: Icon.REACT,
+  vue: Icon.VUE,
+  angular: Icon.ANGULAR,
+  node: Icon.NODE,
+  python: Icon.PYTHON,
+  java: Icon.JAVA,
+  cpp: Icon.CPP,
+  go: Icon.GO,
 };
 
 // Education Subject Types
@@ -96,12 +110,7 @@ export enum ProblemStatus {
   RESOLVED = 'RESOLVED',
 }
 
-// Team Apply Status
-export enum ApplyStatus {
-  SUBMITTED = 'SUBMITTED',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
+// Team Apply Status - 제거됨 (Swagger API는 초대 코드 방식 사용)
 
 // User Role
 export enum UserRole {

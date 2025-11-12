@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { authApi } from '@/feature/auth/api/authApi';
 import { tokenStore } from '@/feature/auth/store/tokenStore';
 import { apiClient } from '@/shared/api';
 
@@ -12,27 +13,12 @@ export function TokenInitializer() {
 
       if (refreshToken && !accessToken) {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/auth/token`,
-            {
-              method: 'PUT',
-              headers: {
-                'Refresh-Token': refreshToken,
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-            },
-          );
+          const response = await authApi.refreshToken(refreshToken);
+          const newAccessToken = response.accessToken;
+          const newRefreshToken = response.refreshToken;
 
-          if (response.ok) {
-            const data = await response.json();
-            const newAccessToken = data.data.accessToken;
-            const newRefreshToken = data.data.refreshToken;
-
-            tokenStore.setTokens(newAccessToken, newRefreshToken);
-            apiClient.setAccessToken(newAccessToken);
-          } else {
-            tokenStore.clearTokens();
-          }
+          tokenStore.setTokens(newAccessToken, newRefreshToken);
+          apiClient.setAccessToken(newAccessToken);
         } catch (_error) {
           tokenStore.clearTokens();
         }

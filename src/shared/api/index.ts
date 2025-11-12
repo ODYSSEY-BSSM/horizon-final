@@ -16,7 +16,6 @@ export type { StompMessageHandler } from './stompWebSocket';
 export { destroyStompClient, getStompClient, StompWebSocketClient } from './stompWebSocket';
 export type { ApiErrorResponse, ApiResponse, PaginatedResponse } from './types';
 export {
-  ApplyStatus,
   Color,
   ColorHexMap,
   Icon,

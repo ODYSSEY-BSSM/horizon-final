@@ -43,10 +43,9 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  uuid: number;
+  id: number;
   email: string;
   username: string;
-  role: UserRole;
 }
 
 // Password Change

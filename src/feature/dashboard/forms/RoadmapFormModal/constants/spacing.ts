@@ -1,4 +1,4 @@
-import type { RoadmapFormStep } from '@/feature/roadmap/stores/roadmapFormFlow';
+import type { RoadmapFormStep } from '@/feature/roadmap/stores/roadmapFormStore';
 
 export const MODAL_SPACING = {
   // 모달 기본 패딩

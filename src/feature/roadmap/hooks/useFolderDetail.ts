@@ -18,33 +18,72 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
   const { data: rootFolder, isLoading } = useRootFolder();
 
   const roadmaps = useMemo(() => {
-    if (!rootFolder?.items) {
+    if (!rootFolder?.directories) {
       return [];
     }
 
-    // 로드맵만 추출
-    let allRoadmaps = rootFolder.items.filter((item) => item.type === 'roadmap');
-
-    // folderId가 제공되면 해당 폴더의 로드맵만 필터링
+    // folderId가 제공되면 해당 폴더의 로드맵만 반환
     if (options?.folderId) {
       const folderIdNum = Number(options.folderId);
-      allRoadmaps = allRoadmaps.filter((item) => item.parentUuid === folderIdNum);
+      // 재귀적으로 디렉토리 찾기
+      const findDirectory = (dirs: typeof rootFolder.directories, id: number): any => {
+        for (const dir of dirs) {
+          if (dir.id === id) {
+            return dir;
+          }
+          if (dir.directories?.length) {
+            const found = findDirectory(dir.directories, id);
+            if (found) {
+              return found;
+            }
+          }
+        }
+        return null;
+      };
+
+      const targetDir = findDirectory(rootFolder.directories, folderIdNum);
+      const roadmapList = targetDir?.roadmaps || [];
+
+      return roadmapList.map((roadmap: any) => ({
+        id: roadmap.id?.toString() || '',
+        title: roadmap.title || '',
+        icon: 'folder',
+        color: 'blue' as RoadmapColor,
+        category: 'personal' as 'personal' | 'team',
+        steps: 0,
+        status: 'in-progress' as 'completed' | 'in-progress',
+        progress: 0,
+      }));
     }
 
-    return allRoadmaps.map((item) => ({
-      id: item.uuid.toString(),
-      title: item.name,
-      icon: item.icon.toLowerCase(),
-      color: item.color.toLowerCase() as RoadmapColor,
+    // folderId가 없으면 모든 디렉토리의 로드맵 수집
+    const collectAllRoadmaps = (dirs: typeof rootFolder.directories): any[] => {
+      let all: any[] = [];
+      for (const dir of dirs) {
+        all = all.concat(dir.roadmaps || []);
+        if (dir.directories?.length) {
+          all = all.concat(collectAllRoadmaps(dir.directories));
+        }
+      }
+      return all;
+    };
+
+    const allRoadmaps = collectAllRoadmaps(rootFolder.directories);
+
+    return allRoadmaps.map((roadmap: any) => ({
+      id: roadmap.id?.toString() || '',
+      title: roadmap.title || '',
+      icon: 'folder',
+      color: 'blue' as RoadmapColor,
       category: 'personal' as 'personal' | 'team',
-      steps: 0, // TODO: progress 데이터 필요
-      status: 'in-progress' as 'completed' | 'in-progress', // TODO: status 데이터 필요
-      progress: 0, // TODO: progress 데이터 필요
+      steps: 0,
+      status: 'in-progress' as 'completed' | 'in-progress',
+      progress: 0,
     }));
   }, [rootFolder, options?.folderId]);
 
   const filteredRoadmaps = useMemo(() => {
-    return roadmaps.filter((roadmap) => {
+    return roadmaps.filter((roadmap: (typeof roadmaps)[0]) => {
       switch (activeFilter) {
         case 'my':
         case 'team':

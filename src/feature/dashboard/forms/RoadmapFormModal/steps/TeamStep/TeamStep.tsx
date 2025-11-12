@@ -1,7 +1,6 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { Controller } from 'react-hook-form';
 import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
 import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
 import { useTeamStep } from '@/feature/dashboard/hooks/useTeamStep';
@@ -11,8 +10,6 @@ import { Icon, Text } from '@/shared/ui';
 
 const TeamStep = () => {
   const {
-    control,
-    errors,
     isValid,
     onNext,
     onPrevious,
@@ -20,10 +17,16 @@ const TeamStep = () => {
     hasSelection,
     getDisplayText,
     TEAM_OPTIONS,
+    updateField,
   } = useTeamStep();
   const { isOpen, setIsOpen, dropdownRef, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: TEAM_OPTIONS.length,
   });
+
+  const handleTeamSelect = (selectedTeamId: string) => {
+    updateField('teamId', selectedTeamId);
+    setIsOpen(false);
+  };
 
   return (
     <StyledFormContainer>
@@ -33,77 +36,62 @@ const TeamStep = () => {
             팀
           </Text>
 
-          <Controller
-            name="teamId"
-            control={control}
-            render={({ field }) => (
-              <div
-                style={{ position: 'relative' }}
-                ref={dropdownRef}
-                onKeyDown={(e) => {
-                  handleKeyDown(e);
-                  if (e.key === 'Enter' && highlightedIndex !== -1) {
-                    field.onChange(TEAM_OPTIONS[highlightedIndex].id);
-                    setIsOpen(false);
-                  }
-                }}
-                role="group"
+          <div
+            style={{ position: 'relative' }}
+            ref={dropdownRef}
+            onKeyDown={(e) => {
+              handleKeyDown(e);
+              if (e.key === 'Enter' && highlightedIndex !== -1) {
+                handleTeamSelect(TEAM_OPTIONS[highlightedIndex].id);
+              }
+            }}
+            role="group"
+          >
+            <StyledDropdownHeader
+              type="button"
+              $isOpen={isOpen}
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="팀 선택"
+              aria-expanded={isOpen}
+              aria-activedescendant={
+                isOpen && highlightedIndex !== -1
+                  ? `team-option-${TEAM_OPTIONS[highlightedIndex].id}`
+                  : undefined
+              }
+            >
+              <Text
+                as="span"
+                variant="B1"
+                color={hasSelection ? tokens.colors.neutral[800] : tokens.colors.neutral[400]}
               >
-                <StyledDropdownHeader
-                  type="button"
-                  $isOpen={isOpen}
-                  onClick={() => setIsOpen(!isOpen)}
-                  aria-label="팀 선택"
-                  aria-expanded={isOpen}
-                  aria-activedescendant={
-                    isOpen && highlightedIndex !== -1
-                      ? `team-option-${TEAM_OPTIONS[highlightedIndex].id}`
-                      : undefined
-                  }
-                >
-                  <Text
-                    as="span"
-                    variant="B1"
-                    color={hasSelection ? tokens.colors.neutral[800] : tokens.colors.neutral[400]}
-                  >
-                    {getDisplayText()}
-                  </Text>
-                  <Icon
-                    name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
-                    variant="SM"
-                    color={tokens.colors.neutral[400]}
-                    decorative
-                  />
-                </StyledDropdownHeader>
+                {getDisplayText()}
+              </Text>
+              <Icon
+                name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
+                variant="SM"
+                color={tokens.colors.neutral[400]}
+                decorative
+              />
+            </StyledDropdownHeader>
 
-                <StyledDropdownList $isOpen={isOpen} role="listbox">
-                  {TEAM_OPTIONS.map((option, index) => (
-                    <StyledDropdownOption
-                      type="button"
-                      key={option.id}
-                      id={`team-option-${option.id}`}
-                      onClick={() => {
-                        field.onChange(option.id);
-                        setIsOpen(false);
-                      }}
-                      $highlighted={highlightedIndex === index}
-                      role="option"
-                      aria-selected={teamId === option.id}
-                    >
-                      <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
-                        {option.label}
-                      </Text>
-                    </StyledDropdownOption>
-                  ))}
-                </StyledDropdownList>
-                {errors.teamId && (
-                  <Text variant="C" color={tokens.colors.error[200]}>
-                    {errors.teamId.message}
+            <StyledDropdownList $isOpen={isOpen} role="listbox">
+              {TEAM_OPTIONS.map((option, index) => (
+                <StyledDropdownOption
+                  type="button"
+                  key={option.id}
+                  id={`team-option-${option.id}`}
+                  onClick={() => handleTeamSelect(option.id)}
+                  $highlighted={highlightedIndex === index}
+                  role="option"
+                  aria-selected={teamId === option.id}
+                >
+                  <Text as="span" variant="B1" color={tokens.colors.neutral[600]}>
+                    {option.label}
                   </Text>
-                )}
-              </div>
-            )}
-          />
+                </StyledDropdownOption>
+              ))}
+            </StyledDropdownList>
+          </div>
         </StyledDropdownContainer>
       </StyledContent>
 
