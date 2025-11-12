@@ -91,10 +91,6 @@ export const mockAuthApi = {
     const verificationCodes = getVerificationCodes();
     verificationCodes.set(data.email, code);
     setVerificationCodes(verificationCodes);
-
-    // 개발 환경에서 콘솔에 인증 코드 출력
-    if (process.env.NODE_ENV === 'development') {
-    }
   },
 
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {

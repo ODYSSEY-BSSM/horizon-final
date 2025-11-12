@@ -61,7 +61,9 @@ export const useStyleStep = () => {
       } else {
         await submitRoadmap();
       }
-    } catch (_error) {}
+    } catch (_error) {
+      // Error already handled by mutation onError callback
+    }
   };
 
   const isValid = isStepValid();

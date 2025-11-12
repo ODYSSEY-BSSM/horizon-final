@@ -65,7 +65,7 @@ function buildTeamDirectoryTree(
     id: dir.id,
     name: dir.name,
     parentId: dir.parentId,
-    teamId: dir.teamId!,
+    teamId: dir.teamId ?? teamId,
     directories: buildTeamDirectoryTree(directories, roadmaps, teamId, dir.id),
     roadmaps: roadmaps
       .filter((r) => r.directoryId === dir.id)
@@ -225,7 +225,7 @@ export const mockTeamFolderApi = {
       id: directory.id,
       name: directory.name,
       parentId: directory.parentId,
-      teamId: directory.teamId!,
+      teamId: directory.teamId ?? teamId,
       directories: buildTeamDirectoryTree(directories, roadmaps, teamId, directory.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === directory.id)
@@ -256,7 +256,7 @@ export const mockTeamFolderApi = {
       id: updated.id,
       name: updated.name,
       parentId: updated.parentId,
-      teamId: updated.teamId!,
+      teamId: updated.teamId ?? teamId,
       directories: buildTeamDirectoryTree(directories, roadmaps, teamId, updated.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === updated.id)
