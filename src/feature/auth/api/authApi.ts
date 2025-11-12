@@ -36,11 +36,7 @@ export const authApi = {
 
   // 로그아웃
   logout: async (): Promise<void> => {
-    await apiClient.delete('/auth', {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
+    await apiClient.delete('/auth');
   },
 
   // ===================================

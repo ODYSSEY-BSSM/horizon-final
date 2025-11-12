@@ -20,7 +20,7 @@ const BreadcrumbNavigation = ({ items }: BreadcrumbNavigationProps) => {
   return (
     <BreadcrumbNav>
       {items.map((item, index) => (
-        <BreadcrumbItem key={item} $isLast={index === items.length - 1}>
+        <BreadcrumbItem key={`${item}-${index}`} $isLast={index === items.length - 1}>
           {item}
         </BreadcrumbItem>
       ))}

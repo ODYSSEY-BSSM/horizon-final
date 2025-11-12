@@ -6,7 +6,6 @@ import type {
   RoadmapUpdateRequest,
   TeamRoadmapCreateRequest,
   TeamRoadmapResponse,
-  TeamRoadmapUpdateRequest,
 } from '../types';
 
 export const roadmapApi = {
@@ -16,54 +15,50 @@ export const roadmapApi = {
 
   // 개인 로드맵 생성
   createRoadmap: async (data: RoadmapCreateRequest): Promise<RoadmapResponse> => {
-    const response = await apiClient.post<RoadmapResponse>('/roadmaps', data);
+    const response = await apiClient.post<RoadmapResponse>('/roadmap', data);
     return response.data;
   },
 
   // 개인 로드맵 전체 조회
   getRoadmaps: async (): Promise<RoadmapResponse[]> => {
-    const response = await apiClient.get<RoadmapResponse[]>('/roadmaps');
+    const response = await apiClient.get<RoadmapResponse[]>('/roadmap');
     return response.data;
   },
 
   // 개인 로드맵 단일 조회
-  getRoadmap: async (roadmapUuid: number): Promise<RoadmapResponse> => {
-    const response = await apiClient.get<RoadmapResponse>(`/roadmaps/${roadmapUuid}`);
+  getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
+    const response = await apiClient.get<RoadmapResponse>(`/roadmap/${roadmapId}`);
     return response.data;
   },
 
   // 개인 로드맵 수정
   updateRoadmap: async (
-    roadmapUuid: number,
+    roadmapId: number,
     data: RoadmapUpdateRequest,
   ): Promise<RoadmapResponse> => {
-    const response = await apiClient.put<RoadmapResponse>(`/roadmaps/${roadmapUuid}`, data);
+    const response = await apiClient.put<RoadmapResponse>(`/roadmap/${roadmapId}`, data);
     return response.data;
   },
 
   // 개인 로드맵 삭제
-  deleteRoadmap: async (roadmapUuid: number): Promise<void> => {
-    await apiClient.delete(`/roadmaps/${roadmapUuid}`);
+  deleteRoadmap: async (roadmapId: number): Promise<void> => {
+    await apiClient.delete(`/roadmap/${roadmapId}`);
   },
 
-  // 즐겨찾기 추가
-  addFavorite: async (roadmapUuid: number): Promise<void> => {
-    await apiClient.post(`/roadmaps/${roadmapUuid}/favorite`);
+  // 즐겨찾기 토글
+  toggleFavorite: async (roadmapId: number): Promise<void> => {
+    await apiClient.post(`/roadmap/${roadmapId}/favorite`);
   },
 
-  // 즐겨찾기 삭제
-  removeFavorite: async (roadmapUuid: number): Promise<void> => {
-    await apiClient.delete(`/roadmaps/${roadmapUuid}/favorite`);
-  },
-
-  // 마지막 접속 시간 갱신
-  updateLastAccessed: async (roadmapUuid: number): Promise<void> => {
-    await apiClient.put(`/roadmaps/${roadmapUuid}/last-accessed`);
+  // 마지막 접속 조회
+  getLastAccessed: async (): Promise<RoadmapResponse> => {
+    const response = await apiClient.get<RoadmapResponse>('/roadmap/last-accessed');
+    return response.data;
   },
 
   // 개인 로드맵 개수 조회
   getRoadmapCount: async (): Promise<RoadmapCountResponse> => {
-    const response = await apiClient.get<RoadmapCountResponse>('/roadmaps/count');
+    const response = await apiClient.get<RoadmapCountResponse>('/roadmap/count');
     return response.data;
   },
 
@@ -73,48 +68,16 @@ export const roadmapApi = {
 
   // 팀 로드맵 생성
   createTeamRoadmap: async (
-    teamName: string,
+    teamId: number,
     data: TeamRoadmapCreateRequest,
   ): Promise<TeamRoadmapResponse> => {
-    const response = await apiClient.post<TeamRoadmapResponse>(`/roadmaps/teams/${teamName}`, data);
+    const response = await apiClient.post<TeamRoadmapResponse>(`/teams/${teamId}/roadmap`, data);
     return response.data;
   },
 
   // 팀 로드맵 전체 조회
-  getTeamRoadmaps: async (teamName: string): Promise<TeamRoadmapResponse[]> => {
-    const response = await apiClient.get<TeamRoadmapResponse[]>(`/roadmaps/teams/${teamName}`);
-    return response.data;
-  },
-
-  // 팀 로드맵 단일 조회
-  getTeamRoadmap: async (teamName: string, roadmapUuid: number): Promise<TeamRoadmapResponse> => {
-    const response = await apiClient.get<TeamRoadmapResponse>(
-      `/roadmaps/teams/${teamName}/${roadmapUuid}`,
-    );
-    return response.data;
-  },
-
-  // 팀 로드맵 수정
-  updateTeamRoadmap: async (
-    teamName: string,
-    roadmapUuid: number,
-    data: TeamRoadmapUpdateRequest,
-  ): Promise<TeamRoadmapResponse> => {
-    const response = await apiClient.put<TeamRoadmapResponse>(
-      `/roadmaps/teams/${teamName}/${roadmapUuid}`,
-      data,
-    );
-    return response.data;
-  },
-
-  // 팀 로드맵 삭제
-  deleteTeamRoadmap: async (teamName: string, roadmapUuid: number): Promise<void> => {
-    await apiClient.delete(`/roadmaps/teams/${teamName}/${roadmapUuid}`);
-  },
-
-  // 팀 로드맵 개수 조회
-  getTeamRoadmapCount: async (teamName: string): Promise<RoadmapCountResponse> => {
-    const response = await apiClient.get<RoadmapCountResponse>(`/roadmaps/teams/${teamName}/count`);
+  getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
+    const response = await apiClient.get<TeamRoadmapResponse[]>(`/teams/${teamId}/roadmap`);
     return response.data;
   },
 };

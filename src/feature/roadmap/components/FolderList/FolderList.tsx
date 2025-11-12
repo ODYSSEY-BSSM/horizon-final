@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useMemo, useState } from 'react';
 import { AddFolderCard } from '@/feature/folder';
-import { useFolders } from '@/feature/folder/hooks/useFolderQueries';
+import { useRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import type { Folder } from '@/feature/roadmap';
 import {
   FOLDER_FILTER_TABS as FILTER_TABS,
@@ -22,23 +22,23 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('latest');
 
-  const { data: foldersData, isLoading, error } = useFolders();
+  const { data: rootFolder, isLoading, error } = useRootFolder();
 
   const folders: Folder[] = useMemo(() => {
-    if (!foldersData) {
+    if (!rootFolder?.directories) {
       return [];
     }
 
-    return foldersData.map((folder) => ({
-      id: folder.uuid,
+    return rootFolder.directories.map((folder) => ({
+      id: folder.id,
       name: folder.name,
-      description: '',
+      description: '', // API 응답에 설명이 없으므로 빈 문자열로 설정
       progress: 0, // TODO: 진행률 계산 로직 필요
-      roadmapCount: 0, // TODO: 로드맵 개수 API 호출 필요
+      roadmapCount: folder.roadmaps?.length || 0,
       completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
       lastRoadmap: '', // TODO: 마지막 로드맵 이름 가져오기
     }));
-  }, [foldersData]);
+  }, [rootFolder]);
 
   const sortedFolders = useMemo(() => {
     return [...folders].sort((a, b) => {

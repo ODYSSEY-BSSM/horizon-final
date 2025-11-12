@@ -13,44 +13,51 @@ export const nodeApi = {
   // ===================================
 
   // 노드 생성
-  createNode: async (roadmapUuid: number, data: NodeCreateRequest): Promise<NodeResponse> => {
-    const response = await apiClient.post<NodeResponse>(`/nodes/roadmaps/${roadmapUuid}`, data);
+  createNode: async (roadmapId: number, data: NodeCreateRequest): Promise<NodeResponse> => {
+    const response = await apiClient.post<NodeResponse>(`/roadmap/${roadmapId}/nodes`, data);
     return response.data;
   },
 
   // 교육과정 노드 전환
   convertEducationNode: async (
-    educationUuid: number,
-    roadmapUuid: number,
+    roadmapId: number,
+    nodeId: number,
     data: EducationNodeConvertRequest,
   ): Promise<NodeResponse> => {
-    const response = await apiClient.post<NodeResponse>(
-      `/nodes/education/${educationUuid}/roadmaps/${roadmapUuid}`,
+    const response = await apiClient.patch<NodeResponse>(
+      `/roadmap/${roadmapId}/nodes/${nodeId}`,
       data,
     );
     return response.data;
   },
 
   // 단일 노드 조회
-  getNode: async (nodeUuid: number): Promise<NodeResponse> => {
-    const response = await apiClient.get<NodeResponse>(`/nodes/${nodeUuid}`);
+  getNode: async (roadmapId: number, nodeId: number): Promise<NodeResponse> => {
+    const response = await apiClient.get<NodeResponse>(`/roadmap/${roadmapId}/nodes/${nodeId}`);
     return response.data;
   },
 
   // 노드 전체 조회
-  getNodes: async (roadmapUuid: number): Promise<NodeListResponse> => {
-    const response = await apiClient.get<NodeListResponse>(`/nodes/roadmaps/${roadmapUuid}`);
+  getNodes: async (roadmapId: number): Promise<NodeListResponse> => {
+    const response = await apiClient.get<NodeListResponse>(`/roadmap/${roadmapId}/nodes`);
     return response.data;
   },
 
   // 노드 수정
-  updateNode: async (nodeUuid: number, data: NodeUpdateRequest): Promise<NodeResponse> => {
-    const response = await apiClient.put<NodeResponse>(`/nodes/${nodeUuid}`, data);
+  updateNode: async (
+    roadmapId: number,
+    nodeId: number,
+    data: NodeUpdateRequest,
+  ): Promise<NodeResponse> => {
+    const response = await apiClient.put<NodeResponse>(
+      `/roadmap/${roadmapId}/nodes/${nodeId}`,
+      data,
+    );
     return response.data;
   },
 
   // 노드 삭제
-  deleteNode: async (nodeUuid: number): Promise<void> => {
-    await apiClient.delete(`/nodes/${nodeUuid}`);
+  deleteNode: async (roadmapId: number, nodeId: number): Promise<void> => {
+    await apiClient.delete(`/roadmap/${roadmapId}/nodes/${nodeId}`);
   },
 };

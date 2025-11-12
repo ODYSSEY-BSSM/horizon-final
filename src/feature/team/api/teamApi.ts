@@ -1,6 +1,5 @@
 import { apiClient } from '@/shared/api';
 import type {
-  TeamApplyActionRequest,
   TeamApplyListResponse,
   TeamApplyRequest,
   TeamApplyResponse,
@@ -60,35 +59,31 @@ export const teamApi = {
   // ===================================
 
   // 팀 신청 (초대 코드로 가입 신청)
-  applyToTeam: async (data: TeamApplyRequest): Promise<TeamApplyResponse> => {
-    const response = await apiClient.post<TeamApplyResponse>('/team-applies', data);
+  applyToTeam: async (teamId: number, data: TeamApplyRequest): Promise<TeamApplyResponse> => {
+    const response = await apiClient.post<TeamApplyResponse>(`/apply/${teamId}`, data);
     return response.data;
   },
 
   // 팀 신청 목록 조회 (팀장/관리자용)
-  getTeamApplications: async (teamName: string): Promise<TeamApplyListResponse> => {
-    const response = await apiClient.get<TeamApplyListResponse>(`/team-applies/teams/${teamName}`);
+  getTeamApplications: async (teamId: number): Promise<TeamApplyListResponse> => {
+    const response = await apiClient.get<TeamApplyListResponse>(`/apply/teams/${teamId}`);
     return response.data;
   },
 
   // 팀 신청 수락
-  approveTeamApplication: async (applyUuid: number): Promise<TeamApplyResponse> => {
-    const response = await apiClient.put<TeamApplyResponse>(`/team-applies/${applyUuid}`, {
-      status: 'APPROVED',
-    } as TeamApplyActionRequest);
+  approveTeamApplication: async (applyId: number): Promise<TeamApplyResponse> => {
+    const response = await apiClient.put<TeamApplyResponse>(`/apply/${applyId}/approve`, {});
     return response.data;
   },
 
   // 팀 신청 거절
-  rejectTeamApplication: async (applyUuid: number): Promise<TeamApplyResponse> => {
-    const response = await apiClient.put<TeamApplyResponse>(`/team-applies/${applyUuid}`, {
-      status: 'REJECTED',
-    } as TeamApplyActionRequest);
+  rejectTeamApplication: async (applyId: number): Promise<TeamApplyResponse> => {
+    const response = await apiClient.patch<TeamApplyResponse>(`/apply/${applyId}/reject`, {});
     return response.data;
   },
 
   // 팀 신청 삭제 (신청 취소)
-  deleteTeamApplication: async (applyUuid: number): Promise<void> => {
-    await apiClient.delete(`/team-applies/${applyUuid}`);
+  deleteTeamApplication: async (applyId: number): Promise<void> => {
+    await apiClient.delete(`/apply/${applyId}`);
   },
 };

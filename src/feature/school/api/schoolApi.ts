@@ -13,19 +13,19 @@ export const schoolApi = {
 
   // 학교 연동
   connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
-    const response = await apiClient.post<SchoolResponse>('/school-connect', data);
+    const response = await apiClient.put<SchoolResponse>('/users/school', data);
     return response.data;
   },
 
   // 학교 연동 정보 조회
   getConnectedSchool: async (): Promise<SchoolResponse> => {
-    const response = await apiClient.get<SchoolResponse>('/school-connect');
+    const response = await apiClient.get<SchoolResponse>('/users/school');
     return response.data;
   },
 
   // 학교 연동 해제
   disconnectSchool: async (): Promise<SchoolDisconnectResponse> => {
-    const response = await apiClient.delete<SchoolDisconnectResponse>('/school-connect');
+    const response = await apiClient.delete<SchoolDisconnectResponse>('/users/school');
     return response.data;
   },
 
@@ -36,9 +36,9 @@ export const schoolApi = {
   },
 
   // 특정 교육과정 노드 조회
-  getEducationNode: async (educationUuid: number): Promise<EducationNodeListResponse> => {
+  getEducationNode: async (educationId: number): Promise<EducationNodeListResponse> => {
     const response = await apiClient.get<EducationNodeListResponse>(
-      `/education-nodes/${educationUuid}`,
+      `/education-nodes/${educationId}`,
     );
     return response.data;
   },
