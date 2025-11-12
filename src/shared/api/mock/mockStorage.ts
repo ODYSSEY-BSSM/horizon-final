@@ -1,9 +1,9 @@
 /**
- * Mock Storage System
+ * Mock Storage System (Swagger API 기준)
  * localStorage 기반 데이터 영속성 관리
  */
 
-const STORAGE_PREFIX = 'horizon_mock_';
+const STORAGE_PREFIX = 'horizon_swagger_';
 
 export class MockStorage {
   private static instance: MockStorage;
@@ -20,17 +20,9 @@ export class MockStorage {
   }
 
   private initializeStorage(): void {
-    // 초기 데이터가 없으면 설정
     if (!this.has('initialized')) {
       this.set('initialized', true);
-      this.set('lastUserId', 1);
-      this.set('lastRoadmapId', 1);
-      this.set('lastNodeId', 1);
-      this.set('lastProblemId', 1);
-      this.set('lastDirectoryId', 1);
-      this.set('lastTeamId', 1);
-      this.set('lastApplyId', 1);
-      this.set('lastEducationNodeId', 1);
+      this.set('lastId', 1);
     }
   }
 
@@ -70,11 +62,10 @@ export class MockStorage {
   }
 
   // ID 생성기
-  getNextId(type: string): number {
-    const key = `last${type}Id`;
-    const currentId = this.get<number>(key) || 0;
+  getNextId(): number {
+    const currentId = this.get<number>('lastId') || 0;
     const nextId = currentId + 1;
-    this.set(key, nextId);
+    this.set('lastId', nextId);
     return nextId;
   }
 }

@@ -1,415 +1,256 @@
 /**
- * Mock Team API
+ * Mock Team API (Swagger 완벽 일치)
  */
 
-import { mockDatabase } from './mockDatabase';
 import { mockStorage } from './mockStorage';
+import { initialMockData } from './mockData';
 import type {
-  TeamApplyListResponse,
-  TeamApplyResponse,
   TeamCreateRequest,
-  TeamMembersResponse,
   TeamResponse,
   TeamUpdateRequest,
+  TeamInviteRequest,
 } from '@/feature/team/types';
-import type { TeamMemberResponse } from '@/shared/api/types';
+import type { MockUser } from './mockData';
 
-// 초대 코드 생성
-const generateInviteCode = (): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
-};
+interface StoredTeam {
+  id: number;
+  name: string;
+  leaderId: number;
+  inviteCode: string;
+  memberIds: number[];
+}
+
+function getTeams(): StoredTeam[] {
+  return mockStorage.get<StoredTeam[]>('teams') || initialMockData.teams;
+}
+
+function getUsers(): MockUser[] {
+  return mockStorage.get<MockUser[]>('users') || initialMockData.users;
+}
+
+function generateInviteCode(): string {
+  return Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+// StoredTeam을 TeamResponse로 변환 (멤버 이름 포함)
+function toTeamResponse(team: StoredTeam, users: MockUser[]): TeamResponse {
+  const leader = users.find((u) => u.id === team.leaderId);
+  const members = users.filter((u) => team.memberIds.includes(u.id));
+
+  return {
+    id: team.id,
+    name: team.name,
+    leader: leader?.username || 'Unknown',
+    inviteCode: team.inviteCode,
+    members: members.map((m) => m.username),
+  };
+}
 
 export const mockTeamApi = {
-  // ===================================
-  // Team API
-  // ===================================
-
-  // 팀 생성
   createTeam: async (data: TeamCreateRequest): Promise<TeamResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const teams = getTeams();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    const uuid = mockStorage.getNextId('Team');
-    const now = new Date().toISOString();
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
 
-    const newTeam = {
-      uuid,
-      name: data.name,
-      description: data.description,
+    const newTeam: StoredTeam = {
+      id: mockStorage.getNextId(),
+      name: data.name || `${currentUser.username}의 팀`,
+      leaderId: currentUser.id,
       inviteCode: generateInviteCode(),
-      memberUuids: [currentUser.uuid],
-      createdAt: now,
-      updatedAt: now,
+      memberIds: [currentUser.id],
     };
 
-    mockDatabase.addTeam(newTeam);
-
-    // 팀 멤버 추가
-    mockDatabase.addTeamMember({
-      userUuid: currentUser.uuid,
-      teamUuid: uuid,
-      joinedAt: now,
-    });
+    teams.push(newTeam);
+    mockStorage.set('teams', teams);
 
     // 사용자의 팀 목록 업데이트
-    currentUser.teams.push(uuid);
-    mockDatabase.updateUser(currentUser.uuid, { teams: currentUser.teams });
+    currentUser.teamIds = [...currentUser.teamIds, newTeam.id];
+    mockStorage.set('currentUser', currentUser);
 
-    return {
-      uuid: newTeam.uuid,
-      name: newTeam.name,
-      description: newTeam.description,
-      inviteCode: newTeam.inviteCode,
-      memberCount: 1,
-      createdAt: newTeam.createdAt,
-      updatedAt: newTeam.updatedAt,
-    };
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) {
+      allUsers[userIndex] = currentUser;
+      mockStorage.set('users', allUsers);
+    }
+
+    return toTeamResponse(newTeam, users);
   },
 
-  // 팀 전체 조회 (내가 속한 팀 목록)
   getTeams: async (): Promise<TeamResponse[]> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const teams = getTeams();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    const allTeams = mockDatabase.getTeams();
-    const myTeams = allTeams.filter((team) => currentUser.teams.includes(team.uuid));
+    if (!currentUser) return [];
 
-    return myTeams.map((team) => ({
-      uuid: team.uuid,
-      name: team.name,
-      description: team.description,
-      inviteCode: team.inviteCode,
-      memberCount: team.memberUuids.length,
-      createdAt: team.createdAt,
-      updatedAt: team.updatedAt,
-    }));
+    // 현재 사용자가 속한 팀만 반환
+    const userTeams = teams.filter((t) => t.memberIds.includes(currentUser.id));
+
+    return userTeams.map((t) => toTeamResponse(t, users));
   },
 
-  // 팀 단일 조회
   getTeam: async (teamId: number): Promise<TeamResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const teams = getTeams();
+    const users = getUsers();
+    const team = teams.find((t) => t.id === teamId);
 
-    const team = mockDatabase.getTeam(teamId);
-    if (!team) {
-      throw new Error('팀을 찾을 수 없습니다.');
-    }
+    if (!team) throw new Error('팀을 찾을 수 없습니다.');
 
-    return {
-      uuid: team.uuid,
-      name: team.name,
-      description: team.description,
-      inviteCode: team.inviteCode,
-      memberCount: team.memberUuids.length,
-      createdAt: team.createdAt,
-      updatedAt: team.updatedAt,
-    };
+    return toTeamResponse(team, users);
   },
 
-  // 팀 수정
   updateTeam: async (teamId: number, data: TeamUpdateRequest): Promise<TeamResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const teams = getTeams();
+    const users = getUsers();
+    const index = teams.findIndex((t) => t.id === teamId);
 
-    const updated = mockDatabase.updateTeam(teamId, data);
-    if (!updated) {
-      throw new Error('팀을 찾을 수 없습니다.');
-    }
+    if (index === -1) throw new Error('팀을 찾을 수 없습니다.');
 
-    return {
-      uuid: updated.uuid,
-      name: updated.name,
-      description: updated.description,
-      inviteCode: updated.inviteCode,
-      memberCount: updated.memberUuids.length,
-      createdAt: updated.createdAt,
-      updatedAt: updated.updatedAt,
-    };
+    teams[index] = { ...teams[index], ...data };
+    mockStorage.set('teams', teams);
+
+    return toTeamResponse(teams[index], users);
   },
 
-  // 팀 삭제
   deleteTeam: async (teamId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const teams = getTeams();
+    const users = getUsers();
+    const team = teams.find((t) => t.id === teamId);
 
-    const success = mockDatabase.deleteTeam(teamId);
-    if (!success) {
-      throw new Error('팀을 찾을 수 없습니다.');
-    }
+    if (!team) throw new Error('팀을 찾을 수 없습니다.');
 
-    // 모든 사용자에서 팀 제거
-    const users = mockDatabase.getUsers();
-    for (const user of users) {
-      if (user.teams.includes(teamId)) {
-        user.teams = user.teams.filter((id) => id !== teamId);
-        mockDatabase.updateUser(user.uuid, { teams: user.teams });
-      }
+    // 팀 삭제
+    const filtered = teams.filter((t) => t.id !== teamId);
+    mockStorage.set('teams', filtered);
+
+    // 모든 사용자의 팀 목록에서 제거
+    const updatedUsers = users.map((u) => ({
+      ...u,
+      teamIds: u.teamIds.filter((id) => id !== teamId),
+    }));
+    mockStorage.set('users', updatedUsers);
+
+    // 현재 사용자도 업데이트
+    const currentUser = mockStorage.get<MockUser>('currentUser');
+    if (currentUser) {
+      currentUser.teamIds = currentUser.teamIds.filter((id) => id !== teamId);
+      mockStorage.set('currentUser', currentUser);
     }
   },
 
-  // 팀 멤버 조회
-  getTeamMembers: async (teamId: number): Promise<TeamMembersResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const team = mockDatabase.getTeam(teamId);
-    if (!team) {
-      throw new Error('팀을 찾을 수 없습니다.');
-    }
-
-    const teamMembers = mockDatabase.getTeamMembers(teamId);
-    const members: TeamMemberResponse[] = [];
-
-    for (const member of teamMembers) {
-      const user = mockDatabase.getUser(member.userUuid);
-      if (user) {
-        members.push({
-          uuid: user.uuid,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          joinedAt: member.joinedAt,
-        });
-      }
-    }
-
-    return { members };
-  },
-
-  // 팀 멤버 삭제 (추방)
-  removeTeamMember: async (teamId: number, memberUuid: number): Promise<void> => {
+  joinTeam: async (data: TeamInviteRequest): Promise<TeamResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+    const teams = getTeams();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
+
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+
+    const team = teams.find((t) => t.inviteCode === data.inviteCode);
+    if (!team) throw new Error('유효하지 않은 초대 코드입니다.');
+
+    // 이미 팀 멤버인지 확인
+    if (team.memberIds.includes(currentUser.id)) {
+      throw new Error('이미 팀에 가입되어 있습니다.');
     }
 
-    const success = mockDatabase.removeTeamMember(teamId, memberUuid);
-    if (!success) {
-      throw new Error('팀 멤버를 찾을 수 없습니다.');
+    // 팀에 사용자 추가
+    team.memberIds.push(currentUser.id);
+    mockStorage.set('teams', teams);
+
+    // 사용자의 팀 목록에 추가
+    currentUser.teamIds = [...currentUser.teamIds, team.id];
+    mockStorage.set('currentUser', currentUser);
+
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) {
+      allUsers[userIndex] = currentUser;
+      mockStorage.set('users', allUsers);
     }
+
+    return toTeamResponse(team, users);
+  },
+
+  leaveTeam: async (teamId: number): Promise<void> => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const teams = getTeams();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
+
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+
+    const team = teams.find((t) => t.id === teamId);
+    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+
+    // 팀장은 탈퇴 불가
+    if (team.leaderId === currentUser.id) {
+      throw new Error('팀장은 팀을 탈퇴할 수 없습니다. 팀을 삭제하거나 팀장을 위임하세요.');
+    }
+
+    // 팀에서 사용자 제거
+    team.memberIds = team.memberIds.filter((id) => id !== currentUser.id);
+    mockStorage.set('teams', teams);
 
     // 사용자의 팀 목록에서 제거
-    const user = mockDatabase.getUser(memberUuid);
-    if (user) {
-      user.teams = user.teams.filter((id) => id !== teamId);
-      mockDatabase.updateUser(memberUuid, { teams: user.teams });
+    currentUser.teamIds = currentUser.teamIds.filter((id) => id !== teamId);
+    mockStorage.set('currentUser', currentUser);
+
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) {
+      allUsers[userIndex] = currentUser;
+      mockStorage.set('users', allUsers);
     }
   },
 
-  // ===================================
-  // Team Apply API
-  // ===================================
-
-  // 팀 신청
-  applyToTeam: async (teamId: number): Promise<TeamApplyResponse> => {
+  removeMember: async (teamId: number, memberId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+    const teams = getTeams();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
+
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+
+    const team = teams.find((t) => t.id === teamId);
+    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+
+    // 팀장만 멤버 제거 가능
+    if (team.leaderId !== currentUser.id) {
+      throw new Error('팀장만 멤버를 제거할 수 있습니다.');
     }
 
-    const team = mockDatabase.getTeam(teamId);
-    if (!team) {
-      throw new Error('팀을 찾을 수 없습니다.');
+    // 팀장 자신은 제거 불가
+    if (memberId === currentUser.id) {
+      throw new Error('팀장은 자신을 제거할 수 없습니다.');
     }
 
-    const uuid = mockStorage.getNextId('Apply');
-    const now = new Date().toISOString();
+    // 팀에서 사용자 제거
+    team.memberIds = team.memberIds.filter((id) => id !== memberId);
+    mockStorage.set('teams', teams);
 
-    const newApply = {
-      uuid,
-      teamUuid: teamId,
-      userUuid: currentUser.uuid,
-      status: 'SUBMITTED' as const,
-      appliedAt: now,
-    };
-
-    mockDatabase.addTeamApply(newApply);
-
-    return {
-      uuid: newApply.uuid,
-      teamName: team.name,
-      username: currentUser.username,
-      email: currentUser.email,
-      status: newApply.status,
-      appliedAt: newApply.appliedAt,
-    };
-  },
-
-  // 팀 신청 목록 조회 (팀장/관리자용)
-  getTeamApplications: async (teamId: number): Promise<TeamApplyListResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const team = mockDatabase.getTeam(teamId);
-    if (!team) {
-      throw new Error('팀을 찾을 수 없습니다.');
-    }
-
-    const applies = mockDatabase.getTeamApplies(teamId);
-    const applications: TeamApplyResponse[] = [];
-
-    for (const apply of applies) {
-      const user = mockDatabase.getUser(apply.userUuid);
-      if (user) {
-        applications.push({
-          uuid: apply.uuid,
-          teamName: team.name,
-          username: user.username,
-          email: user.email,
-          status: apply.status,
-          appliedAt: apply.appliedAt,
-          processedAt: apply.processedAt,
-        });
-      }
-    }
-
-    return { applications };
-  },
-
-  // 팀 신청 수락
-  approveTeamApplication: async (applyId: number): Promise<TeamApplyResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const apply = mockDatabase.getTeamApply(applyId);
-    if (!apply) {
-      throw new Error('신청을 찾을 수 없습니다.');
-    }
-
-    const team = mockDatabase.getTeam(apply.teamUuid);
-    const user = mockDatabase.getUser(apply.userUuid);
-    if (!team || !user) {
-      throw new Error('팀 또는 사용자를 찾을 수 없습니다.');
-    }
-
-    // 신청 상태 업데이트
-    const updated = mockDatabase.updateTeamApply(applyId, {
-      status: 'APPROVED',
-      processedAt: new Date().toISOString(),
-    });
-
-    if (!updated) {
-      throw new Error('신청 업데이트에 실패했습니다.');
-    }
-
-    // 팀 멤버 추가
-    mockDatabase.addTeamMember({
-      userUuid: user.uuid,
-      teamUuid: team.uuid,
-      joinedAt: new Date().toISOString(),
-    });
-
-    // 사용자의 팀 목록 업데이트
-    if (!user.teams.includes(team.uuid)) {
-      user.teams.push(team.uuid);
-      mockDatabase.updateUser(user.uuid, { teams: user.teams });
-    }
-
-    return {
-      uuid: updated.uuid,
-      teamName: team.name,
-      username: user.username,
-      email: user.email,
-      status: updated.status,
-      appliedAt: updated.appliedAt,
-      processedAt: updated.processedAt,
-    };
-  },
-
-  // 팀 신청 거절
-  rejectTeamApplication: async (applyId: number): Promise<TeamApplyResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const apply = mockDatabase.getTeamApply(applyId);
-    if (!apply) {
-      throw new Error('신청을 찾을 수 없습니다.');
-    }
-
-    const team = mockDatabase.getTeam(apply.teamUuid);
-    const user = mockDatabase.getUser(apply.userUuid);
-    if (!team || !user) {
-      throw new Error('팀 또는 사용자를 찾을 수 없습니다.');
-    }
-
-    // 신청 상태 업데이트
-    const updated = mockDatabase.updateTeamApply(applyId, {
-      status: 'REJECTED',
-      processedAt: new Date().toISOString(),
-    });
-
-    if (!updated) {
-      throw new Error('신청 업데이트에 실패했습니다.');
-    }
-
-    return {
-      uuid: updated.uuid,
-      teamName: team.name,
-      username: user.username,
-      email: user.email,
-      status: updated.status,
-      appliedAt: updated.appliedAt,
-      processedAt: updated.processedAt,
-    };
-  },
-
-  // 팀 신청 삭제 (신청 취소)
-  deleteTeamApplication: async (applyId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const success = mockDatabase.deleteTeamApply(applyId);
-    if (!success) {
-      throw new Error('신청을 찾을 수 없습니다.');
+    // 해당 사용자의 팀 목록에서 제거
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === memberId);
+    if (userIndex !== -1) {
+      allUsers[userIndex].teamIds = allUsers[userIndex].teamIds.filter((id) => id !== teamId);
+      mockStorage.set('users', allUsers);
     }
   },
 };

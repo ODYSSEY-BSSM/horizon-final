@@ -1,387 +1,184 @@
 /**
- * Mock Data - 초기 데이터 정의
+ * Mock Data (Swagger API 완벽 일치)
  */
 
+import type { NodeType, ProblemStatus, Subject, UserRole } from '@/shared/api/types';
 import type {
-  Color,
-  Icon,
-  NodeType,
-  ProblemStatus,
-  Subject,
-  UserRole,
-  ApplyStatus,
-} from '@/shared/api/types';
+  RoadmapResponse,
+  TeamRoadmapResponse,
+  NodeResponse,
+  ProblemResponse,
+} from '@/feature/roadmap/types';
+import type { DirectoryResponse } from '@/feature/folder/types';
+import type { TeamResponse } from '@/feature/team/types';
 
 export interface MockUser {
-  uuid: number;
+  id: number;
   email: string;
   password: string;
   username: string;
   role: UserRole;
-  teams: number[];
-  schoolUuid?: number;
-  isConnectedSchool?: boolean;
-  createdAt: string;
+  teamIds: number[];
+  schoolId?: number;
 }
 
-export interface MockDirectory {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  parentUuid?: number;
-  childUuids: number[];
-  roadmapUuids: number[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MockTeamDirectory {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  teamId: number;
-  parentUuid?: number;
-  childUuids: number[];
-  roadmapUuids: number[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MockRoadmap {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  isFavorite: boolean;
-  directoryUuid?: number;
-  userUuid: number;
-  createdAt: string;
-  updatedAt: string;
-  lastAccessedAt?: string;
-}
-
-export interface MockTeamRoadmap {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  directoryUuid?: number;
-  teamId: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MockNode {
-  uuid: number;
-  name: string;
-  description?: string;
-  color: Color;
-  icon: Icon;
-  type: NodeType;
-  parentUuid?: number;
-  childUuids: number[];
-  roadmapUuid: number;
-  educationUuid?: number;
-  subject?: Subject;
-  isResolved: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MockProblem {
-  uuid: number;
-  title: string;
-  description: string;
-  link?: string;
-  status: ProblemStatus;
-  nodeUuid: number;
-  createdAt: string;
-  updatedAt: string;
-  solvedAt?: string;
-}
-
-export interface MockTeam {
-  uuid: number;
-  name: string;
-  description?: string;
-  inviteCode: string;
-  memberUuids: number[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MockTeamMember {
-  userUuid: number;
-  teamUuid: number;
-  joinedAt: string;
-}
-
-export interface MockTeamApply {
-  uuid: number;
-  teamUuid: number;
-  userUuid: number;
-  status: ApplyStatus;
-  appliedAt: string;
-  processedAt?: string;
-}
-
-export interface MockSchool {
-  uuid: number;
-  name: string;
-  code: string;
-  logoUrl?: string;
-}
-
-export interface MockEducationNode {
-  uuid: number;
-  name: string;
-  description?: string;
-  subject: Subject;
-  teacher?: string;
-  grade?: number;
-  semester?: number;
-  schoolUuid: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// 초기 데이터
+// Swagger API 초기 데이터
 export const initialMockData = {
   users: [
     {
-      uuid: 1,
+      id: 1,
       email: 'test@example.com',
       password: 'password123',
-      username: '테스트 사용자',
+      username: '테스트유저',
       role: 'USER' as UserRole,
-      teams: [],
-      createdAt: new Date().toISOString(),
+      teamIds: [1],
     },
     {
-      uuid: 2,
+      id: 2,
       email: 'admin@example.com',
       password: 'admin123',
       username: '관리자',
       role: 'ADMIN' as UserRole,
-      teams: [],
-      createdAt: new Date().toISOString(),
+      teamIds: [],
     },
   ] as MockUser[],
 
   directories: [
     {
-      uuid: 1,
+      id: 1,
       name: '프로젝트',
-      color: 'BLUE' as Color,
-      icon: 'FOLDER' as Icon,
-      childUuids: [2, 3],
-      roadmapUuids: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      directories: [
+        {
+          id: 2,
+          name: '웹 개발',
+          parentId: 1,
+          directories: [],
+          roadmaps: [
+            { id: 1, title: 'React 마스터하기' },
+            { id: 2, title: 'Next.js 완전정복' },
+          ],
+        },
+      ],
+      roadmaps: [],
     },
-    {
-      uuid: 2,
-      name: '웹 개발',
-      color: 'GREEN' as Color,
-      icon: 'CODE' as Icon,
-      parentUuid: 1,
-      childUuids: [],
-      roadmapUuids: [1, 2],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      uuid: 3,
-      name: 'AI/ML',
-      color: 'PURPLE' as Color,
-      icon: 'DATABASE' as Icon,
-      parentUuid: 1,
-      childUuids: [],
-      roadmapUuids: [3],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ] as MockDirectory[],
+  ] as DirectoryResponse[],
 
   roadmaps: [
     {
-      uuid: 1,
-      name: 'React 마스터하기',
-      color: 'BLUE' as Color,
-      icon: 'CODE' as Icon,
-      isFavorite: true,
-      directoryUuid: 2,
-      userUuid: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      id: 1,
+      title: 'React 마스터하기',
+      description: 'React를 깊이 있게 학습하는 로드맵',
+      categories: ['프론트엔드', 'JavaScript', 'React'],
+      lastModifiedAt: new Date().toISOString().split('T')[0],
       lastAccessedAt: new Date().toISOString(),
-    },
-    {
-      uuid: 2,
-      name: 'Next.js 완전정복',
-      color: 'GREEN' as Color,
-      icon: 'BOOK' as Icon,
-      isFavorite: false,
-      directoryUuid: 2,
-      userUuid: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      uuid: 3,
-      name: '머신러닝 기초',
-      color: 'PURPLE' as Color,
-      icon: 'DATABASE' as Icon,
       isFavorite: true,
-      directoryUuid: 3,
-      userUuid: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      color: 'BLUE',
+      icon: 'REACT',
+      progress: 50,
+      directoryId: 2,
     },
-  ] as MockRoadmap[],
+    {
+      id: 2,
+      title: 'Next.js 완전정복',
+      description: 'Next.js로 풀스택 개발하기',
+      categories: ['프론트엔드', 'React', 'Next.js'],
+      lastModifiedAt: new Date().toISOString().split('T')[0],
+      lastAccessedAt: new Date().toISOString(),
+      isFavorite: false,
+      color: 'GREEN',
+      icon: 'NODE',
+      progress: 30,
+      directoryId: 2,
+    },
+  ] as RoadmapResponse[],
 
   nodes: [
     {
-      uuid: 1,
-      name: 'React 기초',
+      id: 1,
+      title: 'React 기초',
       description: 'React의 기본 개념 학습',
-      color: 'BLUE' as Color,
-      icon: 'BOOK' as Icon,
+      height: 150,
+      width: 200,
       type: 'TOP' as NodeType,
-      childUuids: [2, 3],
-      roadmapUuid: 1,
-      isResolved: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      x: 100,
+      y: 100,
+      color: 'BLUE',
+      roadmapId: 1,
+      childNode: [
+        {
+          id: 2,
+          title: 'Hooks 이해하기',
+          description: 'useState, useEffect 등',
+          height: 120,
+          width: 180,
+          type: 'MIDDLE' as NodeType,
+          x: 100,
+          y: 300,
+          color: 'GREEN',
+          roadmapId: 1,
+          parentNodeId: 1,
+          childNode: [],
+          progress: 60,
+          isEducation: false,
+        },
+      ],
+      progress: 70,
+      isEducation: false,
     },
-    {
-      uuid: 2,
-      name: 'Hooks 이해하기',
-      description: 'useState, useEffect 등',
-      color: 'GREEN' as Color,
-      icon: 'CODE' as Icon,
-      type: 'MIDDLE' as NodeType,
-      parentUuid: 1,
-      childUuids: [4],
-      roadmapUuid: 1,
-      isResolved: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      uuid: 3,
-      name: 'Component 설계',
-      description: '재사용 가능한 컴포넌트 만들기',
-      color: 'ORANGE' as Color,
-      icon: 'STAR' as Icon,
-      type: 'MIDDLE' as NodeType,
-      parentUuid: 1,
-      childUuids: [],
-      roadmapUuid: 1,
-      isResolved: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      uuid: 4,
-      name: 'Custom Hooks',
-      description: '나만의 Hook 만들기',
-      color: 'PINK' as Color,
-      icon: 'HEART' as Icon,
-      type: 'BOTTOM' as NodeType,
-      parentUuid: 2,
-      childUuids: [],
-      roadmapUuid: 1,
-      isResolved: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ] as MockNode[],
+  ] as NodeResponse[],
 
   problems: [
     {
-      uuid: 1,
+      id: 1,
       title: 'useState 실습',
-      description: 'Counter 앱 만들기',
-      link: 'https://example.com/problem1',
       status: 'RESOLVED' as ProblemStatus,
-      nodeUuid: 2,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      solvedAt: new Date().toISOString(),
     },
     {
-      uuid: 2,
+      id: 2,
       title: 'useEffect 실습',
-      description: 'API 호출 및 데이터 표시',
       status: 'UNRESOLVED' as ProblemStatus,
-      nodeUuid: 2,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  ] as MockProblem[],
+  ] as ProblemResponse[],
+
+  // 문제의 정답 저장 (별도 관리)
+  problemAnswers: new Map<number, string>([
+    [1, 'Counter 앱 완성'],
+    [2, 'API 데이터 표시'],
+  ]),
 
   teams: [
     {
-      uuid: 1,
+      id: 1,
       name: '개발 스터디',
-      description: '함께 성장하는 개발자들',
+      leader: '테스트유저',
       inviteCode: 'STUDY2024',
-      memberUuids: [1],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      members: ['테스트유저'],
     },
-  ] as MockTeam[],
+  ] as TeamResponse[],
 
-  teamMembers: [
-    {
-      userUuid: 1,
-      teamUuid: 1,
-      joinedAt: new Date().toISOString(),
-    },
-  ] as MockTeamMember[],
+  teamDirectories: [] as DirectoryResponse[],
 
-  teamApplies: [] as MockTeamApply[],
-
-  teamDirectories: [] as MockTeamDirectory[],
-
-  teamRoadmaps: [] as MockTeamRoadmap[],
+  teamRoadmaps: [] as TeamRoadmapResponse[],
 
   schools: [
     {
-      uuid: 1,
+      id: 1,
       name: '부산소프트웨어마이스터고등학교',
       code: 'BSSM',
-      logoUrl: undefined,
     },
-  ] as MockSchool[],
+  ],
 
   educationNodes: [
     {
-      uuid: 1,
+      id: 1,
       name: '자료구조',
       description: '기본 자료구조 학습',
       subject: 'DATA_STRUCTURES' as Subject,
       teacher: '김선생',
       grade: 1,
       semester: 1,
-      schoolUuid: 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
-    {
-      uuid: 2,
-      name: '알고리즘',
-      description: '기본 알고리즘 학습',
-      subject: 'ALGORITHMS' as Subject,
-      teacher: '이선생',
-      grade: 1,
-      semester: 2,
-      schoolUuid: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ] as MockEducationNode[],
+  ],
 };
