@@ -18,7 +18,7 @@ import type {
 
 // localStorage에서 데이터 가져오기
 function getUsers(): MockUser[] {
-  return mockStorage.get<MockUser[]>('users') || initialMockData.users;
+  return mockStorage.getOrDefault('users', initialMockData.users);
 }
 
 function getCurrentUser(): MockUser | null {

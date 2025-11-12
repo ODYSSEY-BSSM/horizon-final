@@ -22,15 +22,15 @@ import type {
 } from '@/feature/roadmap/types';
 
 function getRoadmaps(): RoadmapResponse[] {
-  return mockStorage.get<RoadmapResponse[]>('roadmaps') || initialMockData.roadmaps;
+  return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
 }
 
 function getNodes(): NodeResponse[] {
-  return mockStorage.get<NodeResponse[]>('nodes') || initialMockData.nodes;
+  return mockStorage.getOrDefault('nodes', initialMockData.nodes);
 }
 
 function getProblems(): ProblemResponse[] {
-  return mockStorage.get<ProblemResponse[]>('problems') || initialMockData.problems;
+  return mockStorage.getOrDefault('problems', initialMockData.problems);
 }
 
 function getProblemAnswers(): Map<number, string> {

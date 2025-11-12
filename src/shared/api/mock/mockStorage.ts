@@ -68,6 +68,11 @@ export class MockStorage {
     this.set('lastId', nextId);
     return nextId;
   }
+
+  // Helper: get with default value
+  getOrDefault<T>(key: string, defaultValue: T): T {
+    return this.get<T>(key) || defaultValue;
+  }
 }
 
 export const mockStorage = MockStorage.getInstance();

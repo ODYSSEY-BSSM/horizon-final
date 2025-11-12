@@ -21,11 +21,11 @@ interface StoredTeam {
 }
 
 function getTeams(): StoredTeam[] {
-  return mockStorage.get<StoredTeam[]>('teams') || initialMockData.teams;
+  return mockStorage.getOrDefault('teams', initialMockData.teams);
 }
 
 function getUsers(): MockUser[] {
-  return mockStorage.get<MockUser[]>('users') || initialMockData.users;
+  return mockStorage.getOrDefault('users', initialMockData.users);
 }
 
 function generateInviteCode(): string {
