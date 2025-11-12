@@ -5,10 +5,6 @@ import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
 import type { SkeletonViewProps } from './SkeletonView.types';
 
-/**
- * Unified SkeletonView component
- * Consolidates 2 duplicate implementations from my-roadmaps
- */
 const SkeletonView = ({
   cardCount = 3,
   className,

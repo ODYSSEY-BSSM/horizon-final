@@ -1,5 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { type KeyboardEvent, useState } from 'react';
-import { FOLDER_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
+import { folderApi } from '@/feature/folder/api/folderApi';
 import { useFolderStepForm } from './useRoadmapForm';
 
 export const useFolderStep = () => {
@@ -11,12 +12,27 @@ export const useFolderStep = () => {
     formState: { isValid },
   } = form;
 
+  // 개인 디렉토리 목록 조회
+  const { data: rootContent, isLoading } = useQuery({
+    queryKey: ['directories'],
+    queryFn: folderApi.getRootDirectory,
+    staleTime: 1000 * 60 * 5, // 5분
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [newFolderMode, setNewFolderMode] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
 
   const folderId = watch('folderId');
   const folderName = watch('folderName');
+
+  // API 데이터를 드롭다운 옵션 형식으로 변환
+  const directories = rootContent?.items.filter((item) => item.type === 'directory') || [];
+  const FOLDER_OPTIONS = directories.map((dir) => ({
+    id: String(dir.uuid),
+    label: dir.name,
+    value: String(dir.uuid),
+  }));
 
   const selectedFolder = folderId ? FOLDER_OPTIONS.find((option) => option.id === folderId) : null;
 
@@ -83,6 +99,8 @@ export const useFolderStep = () => {
     // Data
     selectedFolder,
     hasSelection,
+    isLoading,
+    FOLDER_OPTIONS,
 
     // Handlers
     handleFolderSelect,

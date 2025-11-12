@@ -2,9 +2,18 @@
 
 import styled from '@emotion/styled';
 import { notFound, useParams } from 'next/navigation';
+import { useState } from 'react';
+import type { ColorOption, IconOption } from '@/feature/roadmap';
+import { RoadmapStyleModal } from '@/feature/roadmap';
+import { useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
 import { tokens } from '@/shared/tokens';
-import { Button } from '@/shared/ui';
+import { Button, FormModal } from '@/shared/ui';
+
+type ModalState = {
+  roadmapCreate: boolean;
+  roadmapStyle: boolean;
+};
 
 const FolderRoadmapsContent = () => {
   const params = useParams();
@@ -21,28 +30,70 @@ const FolderRoadmapsContent = () => {
   const teamId = params.teamId;
   const folderId = params.folderId;
 
-  const { teams, folders } = useTeamSpaceData();
+  const { teams } = useTeamSpaceData();
 
   const currentTeam = teams.find((team) => team.id === teamId);
-  const currentFolder = folders.find((folder) => folder.id === folderId);
 
-  const handleAddRoadmap = () => {
-    // TODO: 로드맵 생성 모달 구현
-    const name = prompt('로드맵 이름을 입력하세요:');
-    const description = prompt('로드맵 설명을 입력하세요:');
+  const [modals, setModals] = useState<ModalState>({
+    roadmapCreate: false,
+    roadmapStyle: false,
+  });
 
-    if (name && description) {
-      // TODO: 로드맵 생성 로직 구현
-    }
+  const [roadmapData, setRoadmapData] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
+  const createRoadmapMutation = useCreateTeamRoadmap(Number(teamId));
+
+  const openModal = (modal: keyof ModalState) => {
+    setModals((prev) => ({ ...prev, [modal]: true }));
   };
 
-  if (!currentTeam || !currentFolder) {
+  const closeModal = (modal: keyof ModalState) => {
+    setModals((prev) => ({ ...prev, [modal]: false }));
+  };
+
+  const handleAddRoadmap = () => {
+    openModal('roadmapCreate');
+  };
+
+  const handleRoadmapSubmit = (data: { title: string; description: string }) => {
+    setRoadmapData(data);
+    closeModal('roadmapCreate');
+    openModal('roadmapStyle');
+  };
+
+  const handleStyleSubmit = (data: { color: ColorOption; icon: IconOption }) => {
+    if (!roadmapData) {
+      return;
+    }
+
+    createRoadmapMutation.mutate(
+      {
+        name: roadmapData.title,
+        color: data.color.toUpperCase() as any,
+        icon: data.icon.toUpperCase() as any,
+        directoryUuid: Number(folderId),
+      },
+      {
+        onSuccess: () => {
+          closeModal('roadmapStyle');
+          setRoadmapData(null);
+        },
+      },
+    );
+  };
+
+  const handleStyleBack = () => {
+    closeModal('roadmapStyle');
+    openModal('roadmapCreate');
+  };
+
+  if (!currentTeam) {
     return (
       <StyledContainer>
-        <StyledErrorMessage>
-          {!currentTeam && '팀을 찾을 수 없습니다.'}
-          {!currentFolder && '폴더를 찾을 수 없습니다.'}
-        </StyledErrorMessage>
+        <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
       </StyledContainer>
     );
   }
@@ -62,7 +113,31 @@ const FolderRoadmapsContent = () => {
         </Button>
       </StyledHeader>
 
-      <TeamFolderRoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
+      <TeamFolderRoadmapListSection
+        teamId={teamId}
+        folderId={folderId}
+        onAddRoadmapClick={handleAddRoadmap}
+      />
+
+      <FormModal
+        isOpen={modals.roadmapCreate}
+        onClose={() => closeModal('roadmapCreate')}
+        onSubmit={handleRoadmapSubmit}
+        title="로드맵 정보"
+        description="로드맵 정보를 작성해주세요."
+        fields={[
+          { name: 'title', label: '이름', placeholder: '이름을 입력해주세요', required: true },
+          { name: 'description', label: '설명', placeholder: '설명을 입력해주세요' },
+        ]}
+        submitText="다음"
+      />
+
+      <RoadmapStyleModal
+        isOpen={modals.roadmapStyle}
+        onClose={() => closeModal('roadmapStyle')}
+        onSubmit={handleStyleSubmit}
+        onBack={handleStyleBack}
+      />
     </StyledContainer>
   );
 };

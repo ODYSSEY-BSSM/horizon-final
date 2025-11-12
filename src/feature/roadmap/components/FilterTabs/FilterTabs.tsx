@@ -5,10 +5,6 @@ import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
 import type { FilterTabsProps } from './FilterTabs.types';
 
-/**
- * Unified FilterTabs component for roadmap filtering
- * Consolidates 4 duplicate implementations from my-roadmaps and team-space
- */
 const FilterTabs = ({ tabs, activeTab, onTabClick, className }: FilterTabsProps) => {
   return (
     <StyledFilterTabsContainer className={className}>

@@ -1,6 +1,10 @@
 import { tokenStore } from '@/feature/auth';
 import type { ApiResponse } from './types';
 
+export interface ApiClientRequestInit extends RequestInit {
+  auth?: boolean;
+}
+
 // Base API configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
 
@@ -27,7 +31,11 @@ class ApiClient {
     this.accessToken = token;
   }
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
+  private async request<T>(
+    endpoint: string,
+    options: ApiClientRequestInit = {},
+  ): Promise<ApiResponse<T>> {
+    const { auth = true, ...restOptions } = options;
     // Always get the latest token from tokenStore (in-memory)
     if (typeof window !== 'undefined') {
       const token = tokenStore.getAccessToken();
@@ -42,22 +50,22 @@ class ApiClient {
       'Content-Type': 'application/json',
     };
 
-    if (this.accessToken) {
+    if (this.accessToken && auth) {
       defaultHeaders.Authorization = `Bearer ${this.accessToken}`;
     }
 
     const config: RequestInit = {
-      ...options,
+      ...restOptions,
       headers: {
         ...defaultHeaders,
-        ...options.headers,
+        ...restOptions.headers,
       },
     };
 
     const response = await fetch(url, config);
 
     // Handle token refresh for 401 errors
-    if (response.status === 401 && this.accessToken) {
+    if (response.status === 401 && auth) {
       const refreshed = await this.tryRefreshToken();
       if (refreshed) {
         // Retry the request with new token
@@ -68,7 +76,7 @@ class ApiClient {
         };
 
         const retryConfig: RequestInit = {
-          ...options,
+          ...restOptions,
           headers: newHeaders,
         };
 
@@ -76,7 +84,27 @@ class ApiClient {
         if (!retryResponse.ok) {
           throw new Error(`HTTP ${retryResponse.status}: ${retryResponse.statusText}`);
         }
-        return retryResponse.json();
+
+        // Handle empty response body
+        const retryText = await retryResponse.text();
+        if (!retryText || retryText.length === 0) {
+          return { code: 'OK', message: 'success', data: undefined as T };
+        }
+
+        // Parse JSON response
+        let retryResult: ApiResponse<T>;
+        try {
+          retryResult = JSON.parse(retryText);
+        } catch (_error) {
+          throw new Error('Failed to parse response JSON');
+        }
+
+        // Check API response code
+        if (retryResult.code !== 'OK') {
+          throw new Error(retryResult.message || `API Error: ${retryResult.code}`);
+        }
+
+        return retryResult;
       }
     }
 
@@ -84,7 +112,26 @@ class ApiClient {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    return response.json();
+    // Handle empty response body
+    const text = await response.text();
+    if (!text || text.length === 0) {
+      return { code: 'OK', message: 'success', data: undefined as T };
+    }
+
+    // Parse JSON response
+    let result: ApiResponse<T>;
+    try {
+      result = JSON.parse(text);
+    } catch (_error) {
+      throw new Error('Failed to parse response JSON');
+    }
+
+    // Check API response code (서버가 200 OK지만 body에 에러를 담아 보낼 수 있음)
+    if (result.code !== 'OK') {
+      throw new Error(result.message || `API Error: ${result.code}`);
+    }
+
+    return result;
   }
 
   private async tryRefreshToken(): Promise<boolean> {
@@ -128,11 +175,15 @@ class ApiClient {
     return false;
   }
 
-  async get<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
+  async get<T>(endpoint: string, options?: ApiClientRequestInit): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
-  async post<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<ApiResponse<T>> {
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: ApiClientRequestInit,
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'POST',
@@ -140,7 +191,11 @@ class ApiClient {
     });
   }
 
-  async put<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<ApiResponse<T>> {
+  async put<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: ApiClientRequestInit,
+  ): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       ...options,
       method: 'PUT',
@@ -148,8 +203,20 @@ class ApiClient {
     });
   }
 
-  async delete<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
+  async delete<T>(endpoint: string, options?: ApiClientRequestInit): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
+  }
+
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    options?: ApiClientRequestInit,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    });
   }
 }
 

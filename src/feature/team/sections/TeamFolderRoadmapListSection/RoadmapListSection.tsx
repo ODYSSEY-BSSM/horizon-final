@@ -3,11 +3,12 @@
 import { TeamFolderRoadmapList, useTeamFolderDetail } from '@/feature/team';
 
 interface RoadmapListSectionProps {
+  teamId: string;
   folderId: string;
   onAddRoadmapClick: () => void;
 }
 
-const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionProps) => {
+const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapListSectionProps) => {
   const {
     activeFilter,
     setActiveFilter,
@@ -17,7 +18,7 @@ const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionP
     currentPage,
     totalPages,
     onPageChange,
-  } = useTeamFolderDetail(folderId);
+  } = useTeamFolderDetail(teamId, folderId);
 
   return (
     <TeamFolderRoadmapList
