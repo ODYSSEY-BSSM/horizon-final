@@ -171,7 +171,7 @@ export function useUpdateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ roadmapId, data }: { roadmapId: number; data: TeamRoadmapUpdateRequest }) =>
+    mutationFn: (_params: { roadmapId: number; data: TeamRoadmapUpdateRequest }) =>
       Promise.reject(new Error('Team roadmap update endpoint not implemented in API')),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({

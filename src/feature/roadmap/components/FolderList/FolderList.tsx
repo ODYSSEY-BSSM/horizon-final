@@ -11,6 +11,7 @@ import {
   FolderCard,
   Pagination,
 } from '@/feature/roadmap';
+import { tokens } from '@/shared/tokens';
 
 export interface FolderListProps {
   className?: string;
@@ -83,7 +84,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   return (
     <StyledContainer className={className}>
-      <FilterTabs tabs={MY_ROADMAPS_FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>
