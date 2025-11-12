@@ -1,402 +1,255 @@
 /**
- * Mock Roadmap, Node, Problem API
+ * Mock Roadmap/Node/Problem API (Swagger 완벽 일치)
  */
 
-import { mockDatabase } from './mockDatabase';
 import { mockStorage } from './mockStorage';
+import { initialMockData } from './mockData';
 import type {
-  RoadmapCountResponse,
   RoadmapCreateRequest,
   RoadmapResponse,
   RoadmapUpdateRequest,
+  RoadmapCountResponse,
   TeamRoadmapCreateRequest,
   TeamRoadmapResponse,
   NodeCreateRequest,
-  NodeListResponse,
   NodeResponse,
   NodeUpdateRequest,
+  NodeListResponse,
   EducationNodeConvertRequest,
   ProblemCreateRequest,
   ProblemResponse,
   ProblemSolveRequest,
 } from '@/feature/roadmap/types';
 
-export const mockRoadmapApi = {
-  // ===================================
-  // Personal Roadmap API
-  // ===================================
+function getRoadmaps(): RoadmapResponse[] {
+  return mockStorage.get<RoadmapResponse[]>('roadmaps') || initialMockData.roadmaps;
+}
 
-  // 개인 로드맵 생성
+function getNodes(): NodeResponse[] {
+  return mockStorage.get<NodeResponse[]>('nodes') || initialMockData.nodes;
+}
+
+function getProblems(): ProblemResponse[] {
+  return mockStorage.get<ProblemResponse[]>('problems') || initialMockData.problems;
+}
+
+function getProblemAnswers(): Map<number, string> {
+  const stored = mockStorage.get<[number, string][]>('problemAnswers');
+  return stored ? new Map(stored) : initialMockData.problemAnswers;
+}
+
+export const mockRoadmapApi = {
   createRoadmap: async (data: RoadmapCreateRequest): Promise<RoadmapResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const uuid = mockStorage.getNextId('Roadmap');
-    const now = new Date().toISOString();
-
-    const newRoadmap = {
-      uuid,
-      name: data.name,
+    const roadmaps = getRoadmaps();
+    const newRoadmap: RoadmapResponse = {
+      id: mockStorage.getNextId(),
+      title: data.title,
+      description: data.description,
+      categories: data.categories,
+      lastModifiedAt: new Date().toISOString().split('T')[0],
+      lastAccessedAt: new Date().toISOString(),
+      isFavorite: false,
       color: data.color,
       icon: data.icon,
-      isFavorite: false,
-      directoryUuid: data.directoryUuid,
-      userUuid: currentUser.uuid,
-      createdAt: now,
-      updatedAt: now,
-      lastAccessedAt: now,
+      progress: 0,
+      directoryId: data.directoryId,
     };
 
-    mockDatabase.addRoadmap(newRoadmap);
-
+    roadmaps.push(newRoadmap);
+    mockStorage.set('roadmaps', roadmaps);
     return newRoadmap;
   },
 
-  // 개인 로드맵 전체 조회
   getRoadmaps: async (): Promise<RoadmapResponse[]> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    return mockDatabase.getRoadmaps(currentUser.uuid);
+    return getRoadmaps();
   },
 
-  // 개인 로드맵 단일 조회
   getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const roadmap = mockDatabase.getRoadmap(roadmapId);
-    if (!roadmap) {
-      throw new Error('로드맵을 찾을 수 없습니다.');
-    }
-
-    // lastAccessedAt 업데이트
-    mockDatabase.updateRoadmap(roadmapId, {
-      lastAccessedAt: new Date().toISOString(),
-    });
-
+    const roadmaps = getRoadmaps();
+    const roadmap = roadmaps.find((r) => r.id === roadmapId);
+    if (!roadmap) throw new Error('로드맵을 찾을 수 없습니다.');
     return roadmap;
   },
 
-  // 개인 로드맵 수정
   updateRoadmap: async (
     roadmapId: number,
     data: RoadmapUpdateRequest,
   ): Promise<RoadmapResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
+    const roadmaps = getRoadmaps();
+    const index = roadmaps.findIndex((r) => r.id === roadmapId);
+    if (index === -1) throw new Error('로드맵을 찾을 수 없습니다.');
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const updated = mockDatabase.updateRoadmap(roadmapId, data);
-    if (!updated) {
-      throw new Error('로드맵을 찾을 수 없습니다.');
-    }
-
-    return updated;
+    roadmaps[index] = { ...roadmaps[index], ...data };
+    mockStorage.set('roadmaps', roadmaps);
+    return roadmaps[index];
   },
 
-  // 개인 로드맵 삭제
   deleteRoadmap: async (roadmapId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const success = mockDatabase.deleteRoadmap(roadmapId);
-    if (!success) {
-      throw new Error('로드맵을 찾을 수 없습니다.');
-    }
+    const roadmaps = getRoadmaps();
+    const filtered = roadmaps.filter((r) => r.id !== roadmapId);
+    mockStorage.set('roadmaps', filtered);
   },
 
-  // 즐겨찾기 토글
   toggleFavorite: async (roadmapId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+    const roadmaps = getRoadmaps();
+    const roadmap = roadmaps.find((r) => r.id === roadmapId);
+    if (roadmap) {
+      roadmap.isFavorite = !roadmap.isFavorite;
+      mockStorage.set('roadmaps', roadmaps);
     }
-
-    const roadmap = mockDatabase.getRoadmap(roadmapId);
-    if (!roadmap) {
-      throw new Error('로드맵을 찾을 수 없습니다.');
-    }
-
-    mockDatabase.updateRoadmap(roadmapId, {
-      isFavorite: !roadmap.isFavorite,
-    });
   },
 
-  // 마지막 접속 조회
   getLastAccessed: async (): Promise<RoadmapResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const roadmaps = mockDatabase.getRoadmaps(currentUser.uuid);
-    const sorted = roadmaps
-      .filter((r) => r.lastAccessedAt)
-      .sort(
-        (a, b) =>
-          new Date(b.lastAccessedAt!).getTime() - new Date(a.lastAccessedAt!).getTime(),
-      );
-
-    if (sorted.length === 0) {
-      throw new Error('최근 접속한 로드맵이 없습니다.');
-    }
-
+    const roadmaps = getRoadmaps();
+    const sorted = [...roadmaps].sort(
+      (a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime(),
+    );
+    if (sorted.length === 0) throw new Error('로드맵이 없습니다.');
     return sorted[0];
   },
 
-  // 개인 로드맵 개수 조회
   getRoadmapCount: async (): Promise<RoadmapCountResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const roadmaps = mockDatabase.getRoadmaps(currentUser.uuid);
-    return { count: roadmaps.length };
+    return { count: getRoadmaps().length };
   },
 
-  // ===================================
-  // Team Roadmap API
-  // ===================================
-
-  // 팀 로드맵 생성
   createTeamRoadmap: async (
     teamId: number,
     data: TeamRoadmapCreateRequest,
   ): Promise<TeamRoadmapResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const uuid = mockStorage.getNextId('Roadmap');
-    const now = new Date().toISOString();
-
-    const newRoadmap = {
-      uuid,
-      name: data.name,
+    const roadmaps = getRoadmaps();
+    const newRoadmap: any = {
+      id: mockStorage.getNextId(),
+      title: data.title,
+      description: data.description,
+      categories: data.categories,
+      lastModifiedAt: new Date().toISOString().split('T')[0],
+      lastAccessedAt: new Date().toISOString(),
       color: data.color,
       icon: data.icon,
-      directoryUuid: data.directoryUuid,
+      progress: 0,
+      directoryId: data.directoryId,
       teamId,
-      createdAt: now,
-      updatedAt: now,
+      teamName: '팀',
     };
-
-    mockDatabase.addTeamRoadmap(newRoadmap);
-
+    roadmaps.push(newRoadmap);
+    mockStorage.set('roadmaps', roadmaps);
     return newRoadmap;
   },
 
-  // 팀 로드맵 전체 조회
   getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    return mockDatabase.getTeamRoadmaps(teamId);
+    return getRoadmaps().filter((r: any) => r.teamId === teamId) as any;
   },
 };
 
 export const mockNodeApi = {
-  // ===================================
-  // Node API
-  // ===================================
-
-  // 노드 생성
   createNode: async (roadmapId: number, data: NodeCreateRequest): Promise<NodeResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const uuid = mockStorage.getNextId('Node');
-    const now = new Date().toISOString();
-
-    const newNode = {
-      uuid,
-      name: data.name,
+    const nodes = getNodes();
+    const newNode: NodeResponse = {
+      id: mockStorage.getNextId(),
+      title: data.title,
       description: data.description,
-      color: data.color,
-      icon: data.icon,
+      height: data.height,
+      width: data.width,
       type: data.type,
-      parentUuid: data.parentUuid,
-      childUuids: [],
-      roadmapUuid: roadmapId,
-      isResolved: false,
-      createdAt: now,
-      updatedAt: now,
+      x: data.x,
+      y: data.y,
+      color: data.color,
+      roadmapId,
+      parentNodeId: data.parentNodeId,
+      childNode: [],
+      progress: 0,
+      isEducation: false,
     };
-
-    mockDatabase.addNode(newNode);
-
+    nodes.push(newNode);
+    mockStorage.set('nodes', nodes);
     return newNode;
   },
 
-  // 교육과정 노드 전환
-  convertEducationNode: async (
-    roadmapId: number,
-    nodeId: number,
-    data: EducationNodeConvertRequest,
-  ): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const updated = mockDatabase.updateNode(nodeId, {
-      educationUuid: data.educationUuid,
-      subject: data.subject,
-    });
-
-    if (!updated) {
-      throw new Error('노드를 찾을 수 없습니다.');
-    }
-
-    return updated;
-  },
-
-  // 단일 노드 조회
-  getNode: async (roadmapId: number, nodeId: number): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const node = mockDatabase.getNode(nodeId);
-    if (!node || node.roadmapUuid !== roadmapId) {
-      throw new Error('노드를 찾을 수 없습니다.');
-    }
-
-    return node;
-  },
-
-  // 노드 전체 조회
   getNodes: async (roadmapId: number): Promise<NodeListResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const nodes = mockDatabase.getNodes(roadmapId);
+    const nodes = getNodes().filter((n) => n.roadmapId === roadmapId);
     return { nodes };
   },
 
-  // 노드 수정
+  getNode: async (roadmapId: number, nodeId: number): Promise<NodeResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const node = getNodes().find((n) => n.id === nodeId && n.roadmapId === roadmapId);
+    if (!node) throw new Error('노드를 찾을 수 없습니다.');
+    return node;
+  },
+
   updateNode: async (
     roadmapId: number,
     nodeId: number,
     data: NodeUpdateRequest,
   ): Promise<NodeResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
+    const nodes = getNodes();
+    const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
+    if (index === -1) throw new Error('노드를 찾을 수 없습니다.');
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const updated = mockDatabase.updateNode(nodeId, data);
-    if (!updated || updated.roadmapUuid !== roadmapId) {
-      throw new Error('노드를 찾을 수 없습니다.');
-    }
-
-    return updated;
+    nodes[index] = { ...nodes[index], ...data };
+    mockStorage.set('nodes', nodes);
+    return nodes[index];
   },
 
-  // 노드 삭제
   deleteNode: async (roadmapId: number, nodeId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
+    const nodes = getNodes();
+    const filtered = nodes.filter((n) => !(n.id === nodeId && n.roadmapId === roadmapId));
+    mockStorage.set('nodes', filtered);
+  },
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+  convertEducationNode: async (
+    roadmapId: number,
+    nodeId: number,
+    data: EducationNodeConvertRequest,
+  ): Promise<NodeResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    const nodes = getNodes();
+    const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
+    if (index === -1) throw new Error('노드를 찾을 수 없습니다.');
 
-    const node = mockDatabase.getNode(nodeId);
-    if (!node || node.roadmapUuid !== roadmapId) {
-      throw new Error('노드를 찾을 수 없습니다.');
-    }
-
-    const success = mockDatabase.deleteNode(nodeId);
-    if (!success) {
-      throw new Error('노드 삭제에 실패했습니다.');
-    }
+    nodes[index] = { ...nodes[index], isEducation: true, subject: data.subject };
+    mockStorage.set('nodes', nodes);
+    return nodes[index];
   },
 };
 
 export const mockProblemApi = {
-  // ===================================
-  // Problem API
-  // ===================================
-
-  // 문제 생성
   createProblem: async (nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const problems = getProblems();
+    const answers = getProblemAnswers();
 
-    const uuid = mockStorage.getNextId('Problem');
-    const now = new Date().toISOString();
-
-    const newProblem = {
-      uuid,
+    const newProblem: ProblemResponse = {
+      id: mockStorage.getNextId(),
       title: data.title,
-      description: data.description,
-      link: data.link,
-      status: 'UNRESOLVED' as const,
-      nodeUuid: nodeId,
-      createdAt: now,
-      updatedAt: now,
+      status: 'UNRESOLVED',
     };
 
-    mockDatabase.addProblem(newProblem);
+    problems.push(newProblem);
+    answers.set(newProblem.id, data.answer);
+
+    mockStorage.set('problems', problems);
+    mockStorage.set('problemAnswers', Array.from(answers.entries()));
 
     return newProblem;
   },
 
-  // 문제 풀이
   solveProblem: async (
     nodeId: number,
     problemId: number,
@@ -404,25 +257,21 @@ export const mockProblemApi = {
   ): Promise<ProblemResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const problems = getProblems();
+    const answers = getProblemAnswers();
 
-    const problem = mockDatabase.getProblem(problemId);
-    if (!problem || problem.nodeUuid !== nodeId) {
-      throw new Error('문제를 찾을 수 없습니다.');
-    }
+    const index = problems.findIndex((p) => p.id === problemId);
+    if (index === -1) throw new Error('문제를 찾을 수 없습니다.');
 
-    const updated = mockDatabase.updateProblem(problemId, {
-      status: data.status,
-      solvedAt: data.status === 'RESOLVED' ? new Date().toISOString() : undefined,
-    });
+    const correctAnswer = answers.get(problemId);
+    const isCorrect = correctAnswer === data.answer;
 
-    if (!updated) {
-      throw new Error('문제 업데이트에 실패했습니다.');
-    }
+    problems[index] = {
+      ...problems[index],
+      status: isCorrect ? 'RESOLVED' : 'UNRESOLVED',
+    };
 
-    return updated;
+    mockStorage.set('problems', problems);
+    return problems[index];
   },
 };

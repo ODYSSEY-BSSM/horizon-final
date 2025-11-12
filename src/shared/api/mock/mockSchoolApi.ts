@@ -1,43 +1,63 @@
 /**
- * Mock School API
+ * Mock School API (Swagger 완벽 일치)
  */
 
-import { mockDatabase } from './mockDatabase';
+import { mockStorage } from './mockStorage';
+import { initialMockData } from './mockData';
 import type {
+  SchoolConnectRequest,
+  SchoolResponse,
+  EducationNodeResponse,
   EducationNodeListResponse,
   SchoolDisconnectResponse,
-  SchoolResponse,
 } from '@/feature/school/types';
-import type { EducationNodeResponse } from '@/shared/api/types';
+import type { MockUser, MockSchool } from './mockData';
+
+function getSchools(): MockSchool[] {
+  return mockStorage.get<MockSchool[]>('schools') || initialMockData.schools;
+}
+
+function getUsers(): MockUser[] {
+  return mockStorage.get<MockUser[]>('users') || initialMockData.users;
+}
+
+function getEducationNodes(): EducationNodeResponse[] {
+  return mockStorage.get<EducationNodeResponse[]>('educationNodes') || [];
+}
 
 export const mockSchoolApi = {
-  // ===================================
-  // School Connect API
-  // ===================================
-
-  // 학교 연동
-  connectSchool: async (): Promise<SchoolResponse> => {
+  connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
+    const schools = getSchools();
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
+
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+
+    // 학교 코드로 학교 찾기
+    const school = schools.find((s) => s.code === data.schoolCode);
+    if (!school) throw new Error('유효하지 않은 학교 코드입니다.');
+
+    // 이미 연동된 학교가 있는지 확인
+    if (currentUser.schoolId) {
+      throw new Error('이미 학교가 연동되어 있습니다.');
     }
 
-    // 기본 학교 (BSSM)로 연동
-    const school = mockDatabase.getSchools()[0];
-    if (!school) {
-      throw new Error('학교를 찾을 수 없습니다.');
-    }
+    // 사용자에 학교 연동
+    currentUser.schoolId = school.id;
+    mockStorage.set('currentUser', currentUser);
 
-    // 사용자 정보 업데이트
-    mockDatabase.updateUser(currentUser.uuid, {
-      schoolUuid: school.uuid,
-      isConnectedSchool: true,
-    });
+    // 전체 사용자 목록 업데이트
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) {
+      allUsers[userIndex] = currentUser;
+      mockStorage.set('users', allUsers);
+    }
 
     return {
-      uuid: school.uuid,
+      id: school.id,
       name: school.name,
       code: school.code,
       logoUrl: school.logoUrl,
@@ -45,26 +65,20 @@ export const mockSchoolApi = {
     };
   },
 
-  // 학교 연동 정보 조회
   getConnectedSchool: async (): Promise<SchoolResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const schools = getSchools();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser.schoolUuid || !currentUser.isConnectedSchool) {
-      throw new Error('학교에 연동되어 있지 않습니다.');
-    }
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser.schoolId) throw new Error('연동된 학교가 없습니다.');
 
-    const school = mockDatabase.getSchool(currentUser.schoolUuid);
-    if (!school) {
-      throw new Error('학교를 찾을 수 없습니다.');
-    }
+    const school = schools.find((s) => s.id === currentUser.schoolId);
+    if (!school) throw new Error('학교를 찾을 수 없습니다.');
 
     return {
-      uuid: school.uuid,
+      id: school.id,
       name: school.name,
       code: school.code,
       logoUrl: school.logoUrl,
@@ -72,24 +86,26 @@ export const mockSchoolApi = {
     };
   },
 
-  // 학교 연동 해제
   disconnectSchool: async (): Promise<SchoolDisconnectResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const users = getUsers();
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser.schoolUuid || !currentUser.isConnectedSchool) {
-      throw new Error('학교에 연동되어 있지 않습니다.');
-    }
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser.schoolId) throw new Error('연동된 학교가 없습니다.');
 
-    // 사용자 정보 업데이트
-    mockDatabase.updateUser(currentUser.uuid, {
-      schoolUuid: undefined,
-      isConnectedSchool: false,
-    });
+    // 사용자의 학교 연동 해제
+    currentUser.schoolId = undefined;
+    mockStorage.set('currentUser', currentUser);
+
+    // 전체 사용자 목록 업데이트
+    const allUsers = getUsers();
+    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
+    if (userIndex !== -1) {
+      allUsers[userIndex] = currentUser;
+      mockStorage.set('users', allUsers);
+    }
 
     return {
       success: true,
@@ -97,66 +113,35 @@ export const mockSchoolApi = {
     };
   },
 
-  // 교육과정 노드 목록 조회
   getEducationNodes: async (): Promise<EducationNodeListResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser.schoolUuid || !currentUser.isConnectedSchool) {
-      throw new Error('학교에 연동되어 있지 않습니다.');
-    }
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser.schoolId) throw new Error('학교 연동이 필요합니다.');
 
-    const nodes = mockDatabase.getEducationNodes(currentUser.schoolUuid);
+    const educationNodes = getEducationNodes();
 
-    const nodeResponses: EducationNodeResponse[] = nodes.map((node) => ({
-      uuid: node.uuid,
-      name: node.name,
-      description: node.description,
-      subject: node.subject,
-      teacher: node.teacher,
-      grade: node.grade,
-      semester: node.semester,
-      createdAt: node.createdAt,
-      updatedAt: node.updatedAt,
-    }));
+    // 현재 사용자의 학교에 해당하는 교육과정 노드만 반환
+    const schoolNodes = educationNodes.filter((node: any) => node.schoolId === currentUser.schoolId);
 
-    return { nodes: nodeResponses };
+    return { nodes: schoolNodes };
   },
 
-  // 특정 교육과정 노드 조회
-  getEducationNode: async (educationId: number): Promise<EducationNodeListResponse> => {
+  getEducationNode: async (nodeId: number): Promise<EducationNodeResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser.schoolUuid || !currentUser.isConnectedSchool) {
-      throw new Error('학교에 연동되어 있지 않습니다.');
-    }
+    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser.schoolId) throw new Error('학교 연동이 필요합니다.');
 
-    const node = mockDatabase.getEducationNode(educationId);
-    if (!node || node.schoolUuid !== currentUser.schoolUuid) {
-      throw new Error('교육과정 노드를 찾을 수 없습니다.');
-    }
+    const educationNodes = getEducationNodes();
+    const node = educationNodes.find((n: any) => n.id === nodeId && n.schoolId === currentUser.schoolId);
 
-    const nodeResponse: EducationNodeResponse = {
-      uuid: node.uuid,
-      name: node.name,
-      description: node.description,
-      subject: node.subject,
-      teacher: node.teacher,
-      grade: node.grade,
-      semester: node.semester,
-      createdAt: node.createdAt,
-      updatedAt: node.updatedAt,
-    };
+    if (!node) throw new Error('교육과정 노드를 찾을 수 없습니다.');
 
-    return { nodes: [nodeResponse] };
+    return node;
   },
 };

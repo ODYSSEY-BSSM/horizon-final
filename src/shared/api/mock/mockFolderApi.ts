@@ -1,287 +1,265 @@
 /**
- * Mock Folder API
+ * Mock Folder/Directory API (Swagger 완벽 일치)
  */
 
-import { mockDatabase } from './mockDatabase';
 import { mockStorage } from './mockStorage';
+import { initialMockData } from './mockData';
 import type {
-  DirectoryContentResponse,
   DirectoryCreateRequest,
   DirectoryResponse,
   DirectoryUpdateRequest,
+  DirectoryContentResponse,
   TeamDirectoryCreateRequest,
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
+  TeamDirectoryContentResponse,
+  SimpleRoadmapResponse,
 } from '@/feature/folder/types';
-import type { DirectoryContentItem } from '@/shared/api/types';
+import type { RoadmapResponse } from '@/feature/roadmap/types';
+
+interface StoredDirectory {
+  id: number;
+  name: string;
+  parentId?: number;
+  teamId?: number;
+}
+
+function getDirectories(): StoredDirectory[] {
+  return mockStorage.get<StoredDirectory[]>('directories') || initialMockData.directories;
+}
+
+function getRoadmaps(): RoadmapResponse[] {
+  return mockStorage.get<RoadmapResponse[]>('roadmaps') || initialMockData.roadmaps;
+}
+
+// 재귀적으로 디렉토리 트리 구조 생성
+function buildDirectoryTree(
+  directories: StoredDirectory[],
+  roadmaps: RoadmapResponse[],
+  parentId?: number,
+): DirectoryResponse[] {
+  const children = directories.filter((d) => d.parentId === parentId && !d.teamId);
+
+  return children.map((dir) => ({
+    id: dir.id,
+    name: dir.name,
+    parentId: dir.parentId,
+    directories: buildDirectoryTree(directories, roadmaps, dir.id),
+    roadmaps: roadmaps
+      .filter((r) => r.directoryId === dir.id)
+      .map((r) => ({ id: r.id, title: r.title })),
+  }));
+}
+
+// 팀 디렉토리 트리 구조 생성
+function buildTeamDirectoryTree(
+  directories: StoredDirectory[],
+  roadmaps: RoadmapResponse[],
+  teamId: number,
+  parentId?: number,
+): TeamDirectoryResponse[] {
+  const children = directories.filter((d) => d.parentId === parentId && d.teamId === teamId);
+
+  return children.map((dir) => ({
+    id: dir.id,
+    name: dir.name,
+    parentId: dir.parentId,
+    teamId: dir.teamId!,
+    directories: buildTeamDirectoryTree(directories, roadmaps, teamId, dir.id),
+    roadmaps: roadmaps
+      .filter((r) => r.directoryId === dir.id)
+      .map((r) => ({ id: r.id, title: r.title })),
+  }));
+}
 
 export const mockFolderApi = {
-  // ===================================
-  // Personal Directory API
-  // ===================================
-
-  // 루트 디렉토리 조회
-  getRootDirectory: async (): Promise<DirectoryContentResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const directories = mockDatabase.getDirectories();
-    const roadmaps = mockDatabase.getRoadmaps(currentUser.uuid);
-
-    // 루트 레벨 아이템만 (parentUuid가 없거나 directoryUuid가 없는 것들)
-    const rootDirectories = directories.filter((d) => !d.parentUuid);
-    const rootRoadmaps = roadmaps.filter((r) => !r.directoryUuid);
-
-    const items: DirectoryContentItem[] = [
-      ...rootDirectories.map(
-        (d): DirectoryContentItem => ({
-          uuid: d.uuid,
-          name: d.name,
-          color: d.color,
-          icon: d.icon,
-          type: 'directory' as const,
-          parentUuid: d.parentUuid,
-          createdAt: d.createdAt,
-          updatedAt: d.updatedAt,
-        }),
-      ),
-      ...rootRoadmaps.map(
-        (r): DirectoryContentItem => ({
-          uuid: r.uuid,
-          name: r.name,
-          color: r.color,
-          icon: r.icon,
-          type: 'roadmap' as const,
-          parentUuid: r.directoryUuid,
-          createdAt: r.createdAt,
-          updatedAt: r.updatedAt,
-        }),
-      ),
-    ];
-
-    return { items };
-  },
-
-  // 팀 루트 디렉토리 조회
-  getTeamRootDirectory: async (teamId: number): Promise<DirectoryContentResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const directories = mockDatabase.getTeamDirectories(teamId);
-    const roadmaps = mockDatabase.getTeamRoadmaps(teamId);
-
-    // 루트 레벨 아이템만
-    const rootDirectories = directories.filter((d) => !d.parentUuid);
-    const rootRoadmaps = roadmaps.filter((r) => !r.directoryUuid);
-
-    const items: DirectoryContentItem[] = [
-      ...rootDirectories.map(
-        (d): DirectoryContentItem => ({
-          uuid: d.uuid,
-          name: d.name,
-          color: d.color,
-          icon: d.icon,
-          type: 'directory' as const,
-          parentUuid: d.parentUuid,
-          createdAt: d.createdAt,
-          updatedAt: d.updatedAt,
-        }),
-      ),
-      ...rootRoadmaps.map(
-        (r): DirectoryContentItem => ({
-          uuid: r.uuid,
-          name: r.name,
-          color: r.color,
-          icon: r.icon,
-          type: 'roadmap' as const,
-          parentUuid: r.directoryUuid,
-          createdAt: r.createdAt,
-          updatedAt: r.updatedAt,
-        }),
-      ),
-    ];
-
-    return { items };
-  },
-
-  // 개인 디렉토리 생성
   createDirectory: async (data: DirectoryCreateRequest): Promise<DirectoryResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
 
-    const uuid = mockStorage.getNextId('Directory');
-    const now = new Date().toISOString();
-
-    const newDirectory = {
-      uuid,
+    const newDirectory: StoredDirectory = {
+      id: mockStorage.getNextId(),
       name: data.name,
-      color: data.color,
-      icon: data.icon,
-      parentUuid: data.parentUuid,
-      childUuids: [],
-      roadmapUuids: [],
-      createdAt: now,
-      updatedAt: now,
+      parentId: data.parentId,
     };
 
-    mockDatabase.addDirectory(newDirectory);
+    directories.push(newDirectory);
+    mockStorage.set('directories', directories);
 
-    // 부모 디렉토리에 자식 추가
-    if (data.parentUuid) {
-      const parent = mockDatabase.getDirectory(data.parentUuid);
-      if (parent) {
-        parent.childUuids.push(uuid);
-        mockDatabase.updateDirectory(data.parentUuid, { childUuids: parent.childUuids });
-      }
-    }
-
-    return newDirectory;
+    return {
+      id: newDirectory.id,
+      name: newDirectory.name,
+      parentId: newDirectory.parentId,
+      directories: [],
+      roadmaps: [],
+    };
   },
 
-  // 개인 디렉토리 수정
+  getDirectories: async (): Promise<DirectoryContentResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+
+    return {
+      directories: buildDirectoryTree(directories, roadmaps, undefined),
+    };
+  },
+
+  getDirectory: async (directoryId: number): Promise<DirectoryResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+    const directory = directories.find((d) => d.id === directoryId && !d.teamId);
+
+    if (!directory) throw new Error('디렉토리를 찾을 수 없습니다.');
+
+    return {
+      id: directory.id,
+      name: directory.name,
+      parentId: directory.parentId,
+      directories: buildDirectoryTree(directories, roadmaps, directory.id),
+      roadmaps: roadmaps
+        .filter((r) => r.directoryId === directory.id)
+        .map((r) => ({ id: r.id, title: r.title })),
+    };
+  },
+
   updateDirectory: async (
     directoryId: number,
     data: DirectoryUpdateRequest,
   ): Promise<DirectoryResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+    const index = directories.findIndex((d) => d.id === directoryId && !d.teamId);
 
-    const updated = mockDatabase.updateDirectory(directoryId, data);
-    if (!updated) {
-      throw new Error('디렉토리를 찾을 수 없습니다.');
-    }
+    if (index === -1) throw new Error('디렉토리를 찾을 수 없습니다.');
 
-    return updated;
+    directories[index] = { ...directories[index], ...data };
+    mockStorage.set('directories', directories);
+
+    const updated = directories[index];
+    return {
+      id: updated.id,
+      name: updated.name,
+      parentId: updated.parentId,
+      directories: buildDirectoryTree(directories, roadmaps, updated.id),
+      roadmaps: roadmaps
+        .filter((r) => r.directoryId === updated.id)
+        .map((r) => ({ id: r.id, title: r.title })),
+    };
   },
 
-  // 개인 디렉토리 삭제
   deleteDirectory: async (directoryId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const success = mockDatabase.deleteDirectory(directoryId);
-    if (!success) {
-      throw new Error('디렉토리를 찾을 수 없습니다.');
-    }
-
-    // 부모 디렉토리에서 제거
-    const directories = mockDatabase.getDirectories();
-    for (const dir of directories) {
-      if (dir.childUuids.includes(directoryId)) {
-        dir.childUuids = dir.childUuids.filter((id) => id !== directoryId);
-        mockDatabase.updateDirectory(dir.uuid, { childUuids: dir.childUuids });
-      }
-    }
+    const directories = getDirectories();
+    const filtered = directories.filter((d) => d.id !== directoryId);
+    mockStorage.set('directories', filtered);
   },
+};
 
-  // ===================================
-  // Team Directory API
-  // ===================================
-
-  // 팀 디렉토리 생성
+export const mockTeamFolderApi = {
   createTeamDirectory: async (
     teamId: number,
     data: TeamDirectoryCreateRequest,
   ): Promise<TeamDirectoryResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
 
-    const uuid = mockStorage.getNextId('Directory');
-    const now = new Date().toISOString();
-
-    const newDirectory = {
-      uuid,
+    const newDirectory: StoredDirectory = {
+      id: mockStorage.getNextId(),
       name: data.name,
-      color: data.color,
-      icon: data.icon,
+      parentId: data.parentId,
       teamId,
-      parentUuid: data.parentUuid,
-      childUuids: [],
-      roadmapUuids: [],
-      createdAt: now,
-      updatedAt: now,
     };
 
-    mockDatabase.addTeamDirectory(newDirectory);
+    directories.push(newDirectory);
+    mockStorage.set('directories', directories);
 
-    // 부모 디렉토리에 자식 추가
-    if (data.parentUuid) {
-      const parent = mockDatabase.getTeamDirectory(data.parentUuid);
-      if (parent) {
-        parent.childUuids.push(uuid);
-        mockDatabase.updateTeamDirectory(data.parentUuid, { childUuids: parent.childUuids });
-      }
-    }
-
-    return newDirectory;
+    return {
+      id: newDirectory.id,
+      name: newDirectory.name,
+      parentId: newDirectory.parentId,
+      teamId,
+      directories: [],
+      roadmaps: [],
+    };
   },
 
-  // 팀 디렉토리 수정
+  getTeamDirectories: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+
+    return {
+      directories: buildTeamDirectoryTree(directories, roadmaps, teamId, undefined),
+    };
+  },
+
+  getTeamDirectory: async (teamId: number, directoryId: number): Promise<TeamDirectoryResponse> => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+    const directory = directories.find((d) => d.id === directoryId && d.teamId === teamId);
+
+    if (!directory) throw new Error('팀 디렉토리를 찾을 수 없습니다.');
+
+    return {
+      id: directory.id,
+      name: directory.name,
+      parentId: directory.parentId,
+      teamId: directory.teamId!,
+      directories: buildTeamDirectoryTree(directories, roadmaps, teamId, directory.id),
+      roadmaps: roadmaps
+        .filter((r) => r.directoryId === directory.id)
+        .map((r) => ({ id: r.id, title: r.title })),
+    };
+  },
+
   updateTeamDirectory: async (
-    directoryId: number,
     teamId: number,
+    directoryId: number,
     data: TeamDirectoryUpdateRequest,
   ): Promise<TeamDirectoryResponse> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
+    const directories = getDirectories();
+    const roadmaps = getRoadmaps();
+    const index = directories.findIndex((d) => d.id === directoryId && d.teamId === teamId);
 
-    const updated = mockDatabase.updateTeamDirectory(directoryId, data);
-    if (!updated) {
-      throw new Error('디렉토리를 찾을 수 없습니다.');
-    }
+    if (index === -1) throw new Error('팀 디렉토리를 찾을 수 없습니다.');
 
-    return updated;
+    directories[index] = { ...directories[index], ...data };
+    mockStorage.set('directories', directories);
+
+    const updated = directories[index];
+    return {
+      id: updated.id,
+      name: updated.name,
+      parentId: updated.parentId,
+      teamId: updated.teamId!,
+      directories: buildTeamDirectoryTree(directories, roadmaps, teamId, updated.id),
+      roadmaps: roadmaps
+        .filter((r) => r.directoryId === updated.id)
+        .map((r) => ({ id: r.id, title: r.title })),
+    };
   },
 
-  // 팀 디렉토리 삭제
-  deleteTeamDirectory: async (directoryId: number, teamId: number): Promise<void> => {
+  deleteTeamDirectory: async (teamId: number, directoryId: number): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const currentUser = mockDatabase.getCurrentUser();
-    if (!currentUser) {
-      throw new Error('로그인이 필요합니다.');
-    }
-
-    const success = mockDatabase.deleteTeamDirectory(directoryId);
-    if (!success) {
-      throw new Error('디렉토리를 찾을 수 없습니다.');
-    }
-
-    // 부모 디렉토리에서 제거
-    const directories = mockDatabase.getTeamDirectories(teamId);
-    for (const dir of directories) {
-      if (dir.childUuids.includes(directoryId)) {
-        dir.childUuids = dir.childUuids.filter((id) => id !== directoryId);
-        mockDatabase.updateTeamDirectory(dir.uuid, { childUuids: dir.childUuids });
-      }
-    }
+    const directories = getDirectories();
+    const filtered = directories.filter((d) => !(d.id === directoryId && d.teamId === teamId));
+    mockStorage.set('directories', filtered);
   },
 };

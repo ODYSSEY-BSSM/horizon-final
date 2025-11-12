@@ -1,36 +1,42 @@
 import type { Color, Icon } from '@/shared/api/types';
 
 // ===================================
-// Roadmap API Types
+// Roadmap API Types (Swagger API)
 // ===================================
 
 // Roadmap Create (개인 로드맵 생성)
 export interface RoadmapCreateRequest {
-  name: string;
+  title: string; // 0-64자
+  description: string; // 0-150자
+  categories: string[]; // 카테고리 목록
+  directoryId: number; // 디렉토리 ID
   color: Color;
   icon: Icon;
-  directoryUuid?: number; // 디렉토리 UUID (선택)
 }
 
 // Roadmap Response (로드맵 응답)
 export interface RoadmapResponse {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
+  id: number;
+  title: string;
+  description: string;
+  categories: string[];
+  lastModifiedAt: string; // date
+  lastAccessedAt: string; // date-time
   isFavorite: boolean;
-  directoryUuid?: number;
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
-  lastAccessedAt?: string; // ISO 8601 format
+  color: string;
+  icon: string;
+  progress: number; // int32
+  directoryId?: number;
 }
 
 // Roadmap Update (로드맵 수정)
 export interface RoadmapUpdateRequest {
-  name?: string;
+  title?: string;
+  description?: string;
+  categories?: string[];
   color?: Color;
   icon?: Icon;
-  directoryUuid?: number;
+  directoryId?: number;
 }
 
 // Roadmap Count Response (로드맵 개수 조회)
@@ -39,33 +45,41 @@ export interface RoadmapCountResponse {
 }
 
 // ===================================
-// Team Roadmap API Types
+// Team Roadmap API Types (Swagger API)
 // ===================================
 
 // Team Roadmap Create (팀 로드맵 생성)
 export interface TeamRoadmapCreateRequest {
-  name: string;
+  title: string;
+  description: string;
+  categories: string[];
+  directoryId?: number;
   color: Color;
   icon: Icon;
-  directoryUuid?: number; // 팀 디렉토리 UUID (선택)
 }
 
 // Team Roadmap Response (팀 로드맵 응답)
 export interface TeamRoadmapResponse {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  directoryUuid?: number;
+  id: number;
+  title: string;
+  description: string;
+  categories: string[];
+  lastModifiedAt: string;
+  lastAccessedAt: string;
+  color: string;
+  icon: string;
+  progress: number;
+  directoryId?: number;
+  teamId: number;
   teamName: string;
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
 }
 
 // Team Roadmap Update (팀 로드맵 수정)
 export interface TeamRoadmapUpdateRequest {
-  name?: string;
+  title?: string;
+  description?: string;
+  categories?: string[];
   color?: Color;
   icon?: Icon;
-  directoryUuid?: number;
+  directoryId?: number;
 }
