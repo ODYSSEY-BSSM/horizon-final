@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useId } from 'react';
 import { tokens } from '@/shared/tokens';
 import { Button, Text } from '@/shared/ui';
+import { StyledModalContainer, StyledOverlay as BaseStyledOverlay } from './Modal.styles';
 import type { ConfirmModalProps } from './ConfirmModal.types';
 
 export const ConfirmModal = ({
@@ -38,6 +39,7 @@ export const ConfirmModal = ({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         onClick={(e) => e.stopPropagation()}
+        $width="400px"
         $isAlertMode={isAlertMode}
       >
         <StyledContent>
@@ -78,25 +80,13 @@ export const ConfirmModal = ({
   );
 };
 
-const StyledOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+const StyledOverlay = styled(BaseStyledOverlay)`
   padding: ${tokens.spacing.large};
 `;
 
-const StyledModal = styled.div<{ $isAlertMode: boolean }>`
-  background-color: ${tokens.colors.white};
+const StyledModal = styled(StyledModalContainer)<{ $isAlertMode: boolean }>`
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.large};
-  width: 400px;
-  max-width: 100%;
   box-shadow: ${tokens.shadow[0]};
-  overflow: hidden;
 `;
 
 const StyledContent = styled.div`

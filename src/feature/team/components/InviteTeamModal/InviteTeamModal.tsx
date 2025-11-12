@@ -4,6 +4,12 @@ import styled from '@emotion/styled';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
+import {
+  StyledCloseButton,
+  StyledDivider,
+  StyledModalContainer,
+  StyledOverlay as BaseStyledOverlay,
+} from '@/shared/ui/Modal/Modal.styles';
 
 interface InviteTeamModalProps {
   isOpen: boolean;
@@ -78,6 +84,7 @@ export const InviteTeamModal = ({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         onClick={(event) => event.stopPropagation()}
+        $width="480px"
       >
         <StyledHeader>
           <StyledHeaderTop>
@@ -116,27 +123,13 @@ export const InviteTeamModal = ({
   );
 };
 
-const StyledOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const StyledOverlay = styled(BaseStyledOverlay)`
   padding: ${tokens.spacing.large};
-  z-index: 1000;
 `;
 
-const StyledModal = styled.div`
-  width: 480px;
-  max-width: 100%;
-  background-color: ${tokens.colors.white};
+const StyledModal = styled(StyledModalContainer)`
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.large};
   box-shadow: ${tokens.shadow[0]};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
 `;
 
 const StyledHeader = styled.div`
@@ -151,28 +144,6 @@ const StyledHeaderTop = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-`;
-
-const StyledCloseButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const StyledDivider = styled.div`
-  height: 1px;
-  background-color: ${tokens.colors.neutral[100]};
-  margin-top: 20px;
 `;
 
 const StyledContent = styled.div`

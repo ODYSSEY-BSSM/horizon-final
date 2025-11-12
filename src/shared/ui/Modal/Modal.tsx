@@ -3,6 +3,12 @@
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
+import {
+  StyledCloseButton,
+  StyledDivider,
+  StyledModalContainer,
+  StyledOverlay,
+} from './Modal.styles';
 import type { ModalProps, ModalWidth } from './Modal.types';
 
 const MODAL_WIDTHS: Record<ModalWidth, string> = {
@@ -26,7 +32,7 @@ export const Modal = ({
 
   return (
     <StyledOverlay onClick={onClose}>
-      <StyledModal onClick={(e) => e.stopPropagation()} $width={width}>
+      <StyledModalContainer onClick={(e) => e.stopPropagation()} $width={MODAL_WIDTHS[width]}>
         <StyledHeader>
           <StyledHeaderTop>
             <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
@@ -48,31 +54,10 @@ export const Modal = ({
         <StyledDivider />
 
         <StyledContent>{children}</StyledContent>
-      </StyledModal>
+      </StyledModalContainer>
     </StyledOverlay>
   );
 };
-
-const StyledOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const StyledModal = styled.div<{ $width: ModalWidth }>`
-  background-color: ${tokens.colors.white};
-  border-radius: ${tokens.radius.large};
-  width: ${({ $width }) => MODAL_WIDTHS[$width]};
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-`;
 
 const StyledHeader = styled.div`
   padding: ${tokens.spacing.xlarge};
@@ -85,27 +70,6 @@ const StyledHeaderTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const StyledCloseButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const StyledDivider = styled.div`
-  height: 1px;
-  background-color: ${tokens.colors.neutral[100]};
 `;
 
 const StyledContent = styled.div`

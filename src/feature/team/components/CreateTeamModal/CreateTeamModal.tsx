@@ -6,6 +6,12 @@ import type { Team } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
+import {
+  StyledCloseButton,
+  StyledDivider,
+  StyledModalContainer,
+  StyledOverlay as BaseStyledOverlay,
+} from '@/shared/ui/Modal/Modal.styles';
 
 interface CreateTeamModalProps {
   isOpen: boolean;
@@ -114,6 +120,7 @@ export const CreateTeamModal = ({
         aria-labelledby={titleId}
         aria-describedby={descriptionId}
         onClick={(event) => event.stopPropagation()}
+        $width="480px"
       >
         <StyledHeader>
           <StyledHeaderTop>
@@ -180,27 +187,13 @@ export const CreateTeamModal = ({
   );
 };
 
-const StyledOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const StyledOverlay = styled(BaseStyledOverlay)`
   padding: ${tokens.spacing.large};
-  z-index: 1000;
 `;
 
-const StyledModal = styled.div`
-  width: 480px;
-  max-width: 100%;
-  background-color: ${tokens.colors.white};
+const StyledModal = styled(StyledModalContainer)`
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.large};
   box-shadow: ${tokens.shadow[0]};
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
 `;
 
 const StyledHeader = styled.div`
@@ -214,28 +207,6 @@ const StyledHeaderTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`;
-
-const StyledCloseButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const StyledDivider = styled.div`
-  height: 1px;
-  background-color: ${tokens.colors.neutral[100]};
-  margin-top: 20px;
 `;
 
 const StyledForm = styled.form`
