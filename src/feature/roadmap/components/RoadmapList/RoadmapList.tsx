@@ -87,7 +87,7 @@ const RoadmapList = ({
         </StyledHeaderContent>
       </StyledHeader>
 
-      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
+      <FilterTabs tabs={MY_ROADMAPS_FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
 
       {roadmaps.length > 0 ? (
         <StyledRoadmapList>
