@@ -1,5 +1,6 @@
 import { tokenStore } from '@/feature/auth';
 import type { ApiResponse } from './types';
+import { mockAuthApi } from './mock/mockAuthApi';
 
 export interface ApiClientRequestInit extends RequestInit {
   auth?: boolean;
@@ -145,34 +146,23 @@ class ApiClient {
     }
 
     try {
-      const response = await fetch(`${this.baseURL}/auth/token`, {
-        method: 'PUT',
-        headers: {
-          'Refresh-Token': refreshToken,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
+      const response = await mockAuthApi.refreshToken(refreshToken);
+      const newAccessToken = response.accessToken;
+      const newRefreshToken = response.refreshToken;
 
-      if (response.ok) {
-        const data = await response.json();
-        const newAccessToken = data.data.accessToken;
-        const newRefreshToken = data.data.refreshToken;
+      // 보안 개선: tokenStore 사용
+      tokenStore.setTokens(newAccessToken, newRefreshToken);
+      this.accessToken = newAccessToken;
 
-        // 보안 개선: tokenStore 사용
-        tokenStore.setTokens(newAccessToken, newRefreshToken);
-        this.accessToken = newAccessToken;
-
-        return true;
-      }
+      return true;
     } catch (_error) {
       // Token refresh failed
+      // Refresh failed, clear tokens
+      tokenStore.clearTokens();
+      this.accessToken = null;
+
+      return false;
     }
-
-    // Refresh failed, clear tokens
-    tokenStore.clearTokens();
-    this.accessToken = null;
-
-    return false;
   }
 
   async get<T>(endpoint: string, options?: ApiClientRequestInit): Promise<ApiResponse<T>> {
