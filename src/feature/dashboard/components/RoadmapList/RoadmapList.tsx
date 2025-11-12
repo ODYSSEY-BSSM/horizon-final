@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { ListHeader } from '@/feature/dashboard';
 import {
@@ -91,6 +92,7 @@ const RoadmapList = ({
   onPageChange,
   className,
 }: RoadmapListProps) => {
+  const router = useRouter();
   const {
     currentView,
     currentFilter,
@@ -121,6 +123,10 @@ const RoadmapList = ({
     onAddRoadmap();
   };
 
+  const handleRoadmapClick = (roadmapId: string | number) => {
+    router.push(`/roadmap/${roadmapId}`);
+  };
+
   return (
     <StyledRoadmapListContainer className={className}>
       <ListHeader
@@ -146,13 +152,14 @@ const RoadmapList = ({
                 status: item.status,
                 progress: item.progress,
               }}
+              onClick={() => handleRoadmapClick(item.id)}
             />
           ))}
         </StyledListItemsContainer>
       ) : (
         <StyledThumbnailGridContainer>
           {paginatedItems.map((item) => (
-            <RoadmapCard key={item.id} item={item} />
+            <RoadmapCard key={item.id} item={item} onClick={() => handleRoadmapClick(item.id)} />
           ))}
         </StyledThumbnailGridContainer>
       )}

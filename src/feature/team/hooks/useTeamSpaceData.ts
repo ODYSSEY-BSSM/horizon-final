@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { Team, TeamFolder } from '@/feature/team/types/team';
+import { decodeInviteCode } from '../utils/inviteCode';
 import { useApplyToTeam, useCreateTeam, useTeams } from './useTeamQueries';
 
 export const useTeamSpaceData = () => {
@@ -48,16 +49,39 @@ export const useTeamSpaceData = () => {
     };
   };
 
-  const joinTeam = (inviteCode: string): { success: boolean; team?: Team } => {
-    // TODO: inviteCode에서 teamId 추출 또는 별도 API 호출 필요
-    const teamId = 1; // 임시
-    applyToTeamMutation.mutate(teamId);
+  const joinTeam = (
+    inviteCode: string,
+    callbacks?: { onSuccess?: () => void; onError?: (error: string) => void },
+  ): { success: boolean; teamId?: number } => {
+    // 초대 코드에서 팀 ID 추출
+    const teamIdStr = decodeInviteCode(inviteCode);
 
-    // Do not return a fake team object to prevent redirecting to a 404 page.
-    // The calling component should handle the success case by showing a message instead of redirecting.
+    if (!teamIdStr) {
+      return {
+        success: false,
+      };
+    }
+
+    const teamId = parseInt(teamIdStr, 10);
+    if (isNaN(teamId)) {
+      return {
+        success: false,
+      };
+    }
+
+    // 팀 가입 신청
+    applyToTeamMutation.mutate(teamId, {
+      onSuccess: () => {
+        callbacks?.onSuccess?.();
+      },
+      onError: () => {
+        callbacks?.onError?.('팀 가입 신청에 실패했습니다.');
+      },
+    });
+
     return {
       success: true,
-      team: undefined,
+      teamId,
     };
   };
 

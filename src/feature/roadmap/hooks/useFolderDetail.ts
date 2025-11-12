@@ -6,7 +6,11 @@ import type { RoadmapColor } from '@/shared/types/roadmap';
 
 const ITEMS_PER_PAGE = 10;
 
-const useFolderDetail = () => {
+interface UseFolderDetailOptions {
+  folderId?: string;
+}
+
+const useFolderDetail = (options?: UseFolderDetailOptions) => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -19,7 +23,13 @@ const useFolderDetail = () => {
     }
 
     // 로드맵만 추출
-    const allRoadmaps = rootFolder.items.filter((item) => item.type === 'roadmap');
+    let allRoadmaps = rootFolder.items.filter((item) => item.type === 'roadmap');
+
+    // folderId가 제공되면 해당 폴더의 로드맵만 필터링
+    if (options?.folderId) {
+      const folderIdNum = Number(options.folderId);
+      allRoadmaps = allRoadmaps.filter((item) => item.parentUuid === folderIdNum);
+    }
 
     return allRoadmaps.map((item) => ({
       id: item.uuid.toString(),
@@ -31,7 +41,7 @@ const useFolderDetail = () => {
       status: ('in-progress' as 'completed' | 'in-progress'), // TODO: status 데이터 필요
       progress: 0, // TODO: progress 데이터 필요
     }));
-  }, [rootFolder]);
+  }, [rootFolder, options?.folderId]);
 
   const filteredRoadmaps = useMemo(() => {
     return roadmaps.filter((roadmap) => {

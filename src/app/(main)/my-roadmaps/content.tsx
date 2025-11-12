@@ -2,7 +2,9 @@
 
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useCreateFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { FolderSection, MyRoadmapsHeader } from '@/feature/roadmap';
+import { Color, Icon } from '@/shared/api/types';
 import { FormModal } from '@/shared/ui';
 
 type ModalState = {
@@ -13,6 +15,8 @@ const MyRoadmapsContent = () => {
   const [modals, setModals] = useState<ModalState>({
     folderCreate: false,
   });
+
+  const createFolderMutation = useCreateFolder();
 
   const openModal = (modal: keyof ModalState) => {
     setModals((prev) => ({ ...prev, [modal]: true }));
@@ -26,8 +30,19 @@ const MyRoadmapsContent = () => {
     openModal('folderCreate');
   };
 
-  const handleFolderSubmit = (_data: { name: string; description: string }) => {
-    closeModal('folderCreate');
+  const handleFolderSubmit = (data: { name: string; description: string }) => {
+    createFolderMutation.mutate(
+      {
+        name: data.name,
+        color: Color.BLUE,
+        icon: Icon.FOLDER,
+      },
+      {
+        onSuccess: () => {
+          closeModal('folderCreate');
+        },
+      },
+    );
   };
 
   return (

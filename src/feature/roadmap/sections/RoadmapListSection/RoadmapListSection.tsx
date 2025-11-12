@@ -8,7 +8,6 @@ interface RoadmapListSectionProps {
 }
 
 const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionProps) => {
-  // TODO: folderId should be used to filter roadmaps
   const {
     activeFilter,
     setActiveFilter,
@@ -18,7 +17,7 @@ const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionP
     currentPage,
     totalPages,
     onPageChange,
-  } = useFolderDetail();
+  } = useFolderDetail({ folderId });
 
   return (
     <FolderRoadmapList
