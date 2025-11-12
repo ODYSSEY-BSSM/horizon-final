@@ -1,11 +1,18 @@
-const DEFAULT_INVITE_CODE = '1Q2W3E4R';
+const PREFIX = 'horizon-';
 
-export const generateInviteCode = (teamId: string, fallback = DEFAULT_INVITE_CODE): string => {
-  const normalized = teamId.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+export const generateInviteCode = (teamId: string): string => {
+  return `${PREFIX}${Buffer.from(teamId).toString('base64')}`;
+};
 
-  if (normalized.length >= 8) {
-    return normalized.slice(0, 8);
+export const decodeInviteCode = (inviteCode: string): string | null => {
+  if (!inviteCode.startsWith(PREFIX)) {
+    return null;
   }
-
-  return `${normalized}${fallback}`.slice(0, 8);
+  try {
+    const base64 = inviteCode.slice(PREFIX.length);
+    const teamId = Buffer.from(base64, 'base64').toString('ascii');
+    return teamId;
+  } catch (_error) {
+    return null;
+  }
 };

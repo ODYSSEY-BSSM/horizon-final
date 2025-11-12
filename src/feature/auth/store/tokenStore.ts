@@ -1,13 +1,3 @@
-/**
- * 토큰 관리 Store
- *
- * 보안 개선:
- * - accessToken: 메모리에만 저장 (XSS 공격 시에도 페이지 새로고침으로 제거됨)
- * - refreshToken: sessionStorage에 저장 (localStorage보다 안전, 탭 닫으면 삭제)
- *
- * TODO: 향후 백엔드에서 httpOnly 쿠키 방식으로 변경 예정
- */
-
 class TokenStore {
   private accessToken: string | null = null;
   private readonly REFRESH_TOKEN_KEY = 'refreshToken';

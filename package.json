@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:https": "local-ssl-proxy --source 3000 --target 3001 --cert ~/.mkcert/localhost.pem --key ~/.mkcert/localhost-key.pem",
     "build": "next build",
     "start": "next start",
     "prepare": "husky",
@@ -18,8 +19,10 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^5.2.2",
+    "@stomp/stompjs": "^7.2.1",
     "@tanstack/react-query": "^5.90.5",
     "dayjs": "1.11.19",
+    "local-ssl-proxy": "^2.0.5",
     "next": "15.4.6",
     "react": "^19",
     "react-dom": "^19",

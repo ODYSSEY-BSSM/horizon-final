@@ -1,29 +1,52 @@
 import { useMemo } from 'react';
-import { MOCK_ROADMAPS } from '@/feature/dashboard/data/mockData';
+import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
+import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
-  // TODO: API 연동 시 실제 데이터 fetching 로직으로 교체
-  // const { data: userData } = useQuery({ queryKey: ['user'], queryFn: fetchUser });
-  // const { data: roadmapsData } = useQuery({ queryKey: ['roadmaps'], queryFn: fetchRoadmaps });
+  const { data: userProfile, isLoading: isLoadingUser, error: userError } = useUserProfile();
 
-  const userData = useMemo(
-    () => ({
-      name: '홍길동',
-      myRoadmapsCount: 10,
-      myRoadmapsInProgress: 8,
-      teamRoadmapsCount: 5,
-      teamRoadmapsInProgress: 3,
-      connectedSchool: '부산소프트웨어마이스터고등학교',
-    }),
-    [],
-  );
+  const { data: roadmapsData, isLoading: isLoadingRoadmaps, error: roadmapsError } = useRoadmaps();
 
-  const roadmapsData = useMemo(() => MOCK_ROADMAPS, []);
+  const userData = useMemo(() => {
+    if (!userProfile) {
+      return null;
+    }
+
+    const myRoadmapsCount = roadmapsData?.length || 0;
+    const myRoadmapsInProgress = roadmapsData?.filter((roadmap) => roadmap.isFavorite).length || 0;
+
+    return {
+      name: userProfile.username,
+      myRoadmapsCount,
+      myRoadmapsInProgress,
+      teamRoadmapsCount: userProfile.teams?.length || 0,
+      teamRoadmapsInProgress: 0, // TODO: 팀 로드맵 진행 중 개수 계산
+      connectedSchool: userProfile.school || '',
+    };
+  }, [userProfile, roadmapsData]);
+
+  const roadmaps = useMemo(() => {
+    if (!roadmapsData) {
+      return [];
+    }
+
+    return roadmapsData.map((roadmap) => ({
+      id: roadmap.uuid.toString(),
+      title: roadmap.name,
+      icon: roadmap.icon.toLowerCase(),
+      color: roadmap.color.toLowerCase() as RoadmapColor,
+      category: 'personal' as const,
+      steps: 0, // TODO: API에서 단계 정보를 제공하면 업데이트 필요
+      status: 'in-progress' as const,
+      progress: 0,
+    }));
+  }, [roadmapsData]);
 
   return {
     userData,
-    roadmapsData,
-    isLoading: false,
-    error: null,
+    roadmapsData: roadmaps,
+    isLoading: isLoadingUser || isLoadingRoadmaps,
+    error: userError || roadmapsError,
   };
 };

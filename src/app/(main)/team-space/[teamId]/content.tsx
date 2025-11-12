@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import {
   CreateTeamModal,
   FolderGrid,
@@ -10,7 +11,9 @@ import {
   TeamDropdown,
   useTeamSpaceData,
 } from '@/feature/team';
+import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
+import { Color, Icon } from '@/shared/api/types';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -24,14 +27,38 @@ const TeamFoldersContent = () => {
 
   const teamId = params.teamId;
 
-  const { teams, getTeamFolders, addFolder, addTeam } = useTeamSpaceData();
+  const { teams, addTeam } = useTeamSpaceData();
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
   const currentTeam = teams.find((team) => team.id === teamId);
-  const folders = getTeamFolders(teamId);
+  const _teamName = currentTeam?.name || '';
+
+  const createFolderMutation = useCreateTeamFolder(Number(teamId));
+  const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
+
+  const folders: TeamFolder[] = useMemo(() => {
+    if (!teamRootFolder?.items) {
+      return [];
+    }
+
+    // 디렉토리만 추출
+    return teamRootFolder.items
+      .filter((item) => item.type === 'directory')
+      .map((item) => ({
+        id: item.uuid.toString(),
+        name: item.name,
+        teamId: teamId,
+        description: '', // TODO: API에서 description 제공 필요
+        color: item.color.toLowerCase(),
+        icon: item.icon.toLowerCase(),
+        roadmapCount: 0, // TODO: 폴더 내 로드맵 개수 계산 필요
+        createdRoadmapCount: 0, // TODO: 생성된 로드맵 개수 계산 필요
+        progress: 0, // TODO: 진행률 계산 필요
+      }));
+  }, [teamRootFolder, teamId]);
 
   const handleTeamChange = (newTeamId: string) => {
     router.push(`/team-space/${newTeamId}`);
@@ -42,8 +69,18 @@ const TeamFoldersContent = () => {
   };
 
   const handleFolderCreate = (data: { name: string; description: string }) => {
-    addFolder({ teamId, ...data });
-    setShowFolderModal(false);
+    createFolderMutation.mutate(
+      {
+        name: data.name,
+        color: Color.BLUE,
+        icon: Icon.FOLDER,
+      },
+      {
+        onSuccess: () => {
+          setShowFolderModal(false);
+        },
+      },
+    );
   };
 
   const handleCreateTeam = () => {

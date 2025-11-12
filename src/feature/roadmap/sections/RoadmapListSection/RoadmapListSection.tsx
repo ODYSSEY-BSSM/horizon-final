@@ -17,7 +17,7 @@ const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionP
     currentPage,
     totalPages,
     onPageChange,
-  } = useFolderDetail(folderId);
+  } = useFolderDetail({ folderId });
 
   return (
     <FolderRoadmapList

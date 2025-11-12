@@ -5,6 +5,7 @@ import { notFound, useParams } from 'next/navigation';
 import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
+import { useCreateRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal, Text } from '@/shared/ui';
 
@@ -27,6 +28,13 @@ const FolderDetailContent = () => {
     roadmapStyle: false,
   });
 
+  const [roadmapData, setRoadmapData] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
+  const createRoadmapMutation = useCreateRoadmap();
+
   const openModal = (modal: keyof ModalState) => {
     setModals((prev) => ({ ...prev, [modal]: true }));
   };
@@ -39,15 +47,32 @@ const FolderDetailContent = () => {
     openModal('roadmapCreate');
   };
 
-  const handleRoadmapSubmit = (_data: { title: string; description: string }) => {
+  const handleRoadmapSubmit = (data: { title: string; description: string }) => {
+    setRoadmapData(data);
     closeModal('roadmapCreate');
     // Open style modal for next step
     openModal('roadmapStyle');
   };
 
-  const handleStyleSubmit = (_data: { color: ColorOption; icon: IconOption }) => {
-    closeModal('roadmapStyle');
-    // TODO: Save roadmap with style
+  const handleStyleSubmit = (data: { color: ColorOption; icon: IconOption }) => {
+    if (!roadmapData) {
+      return;
+    }
+
+    createRoadmapMutation.mutate(
+      {
+        name: roadmapData.title,
+        color: data.color.toUpperCase() as any,
+        icon: data.icon.toUpperCase() as any,
+        directoryUuid: Number(folderId),
+      },
+      {
+        onSuccess: () => {
+          closeModal('roadmapStyle');
+          setRoadmapData(null);
+        },
+      },
+    );
   };
 
   const handleStyleBack = () => {
@@ -74,7 +99,6 @@ const FolderDetailContent = () => {
 
       <RoadmapListSection folderId={folderId} onAddRoadmapClick={handleAddRoadmap} />
 
-      {/* Modals */}
       <FormModal
         isOpen={modals.roadmapCreate}
         onClose={() => closeModal('roadmapCreate')}

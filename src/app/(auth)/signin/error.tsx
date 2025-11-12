@@ -16,7 +16,6 @@ export default function SignInError({
 
   return (
     <StyledContainer>
-      {/* 브랜딩 */}
       <StyledHeaderWrapper>
         <Text variant="H2" color={tokens.colors.primary[500]}>
           HORIZON
@@ -26,7 +25,6 @@ export default function SignInError({
         </Text>
       </StyledHeaderWrapper>
 
-      {/* 에러 아이콘 */}
       <StyledErrorIcon>
         <svg
           width="32"
@@ -48,7 +46,6 @@ export default function SignInError({
         </svg>
       </StyledErrorIcon>
 
-      {/* 에러 메시지 */}
       <StyledErrorMessageSection>
         <Text variant="H3" color={tokens.colors.neutral[900]}>
           로그인할 수 없습니다
@@ -68,7 +65,6 @@ export default function SignInError({
         )}
       </StyledErrorMessageSection>
 
-      {/* 액션 버튼들 */}
       <StyledActionSection>
         <StyledRetryButton type="button" onClick={reset}>
           <Text variant="ST" color={tokens.colors.white}>

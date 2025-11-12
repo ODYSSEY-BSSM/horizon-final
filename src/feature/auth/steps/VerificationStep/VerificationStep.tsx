@@ -51,13 +51,13 @@ export default VerificationStep;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 40px;
 `;
 
 const StyledButtonSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
 `;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`

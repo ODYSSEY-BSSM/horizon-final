@@ -80,7 +80,7 @@ export default PasswordStep;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 62px;
+  gap: 40px;
   width: 100%;
 `;
 

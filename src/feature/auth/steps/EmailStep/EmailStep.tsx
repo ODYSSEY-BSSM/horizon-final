@@ -73,14 +73,14 @@ const StyledContainer = styled.div`
 const StyledFormContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 82px;
+  gap: 40px;
   width: 100%;
 `;
 
 const StyledActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
 `;
 
 const StyledButtonSection = styled.div`

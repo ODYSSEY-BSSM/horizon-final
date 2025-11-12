@@ -2,7 +2,11 @@
 
 import styled from '@emotion/styled';
 import type { Roadmap } from '@/feature/roadmap';
-import { FilterTabs, MY_ROADMAPS_FILTER_TABS, RoadmapListItem } from '@/feature/roadmap';
+import {
+  MY_ROADMAPS_FILTER_TABS as FILTER_TABS,
+  FilterTabs,
+  RoadmapListItem,
+} from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 

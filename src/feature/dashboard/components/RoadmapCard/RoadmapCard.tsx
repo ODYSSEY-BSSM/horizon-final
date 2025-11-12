@@ -11,17 +11,18 @@ export interface RoadmapCardProps {
   item: RoadmapItem;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onClick?: () => void;
   className?: string;
 }
 
-const RoadmapCard = ({ item, className }: RoadmapCardProps) => {
+const RoadmapCard = ({ item, onClick, className }: RoadmapCardProps) => {
   const handleOverflowClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // TODO: Show overflow menu
   };
 
   const handleCardClick = () => {
-    // TODO: Navigate to roadmap detail
+    onClick?.();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

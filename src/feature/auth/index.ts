@@ -30,6 +30,7 @@ export type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  RegisterResponse,
   TokenRefreshResponse,
   UserInfoResponse,
 } from './types/auth';
