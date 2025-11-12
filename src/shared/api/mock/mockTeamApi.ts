@@ -2,6 +2,8 @@
  * Mock Team API (Swagger 완벽 일치)
  */
 
+import { MOCK_DELAYS, delay } from './mockConstants';
+import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 import { initialMockData } from './mockData';
 import type {
@@ -48,13 +50,13 @@ function toTeamResponse(team: StoredTeam, users: MockUser[]): TeamResponse {
 
 export const mockTeamApi = {
   createTeam: async (data: TeamCreateRequest): Promise<TeamResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
 
     const newTeam: StoredTeam = {
       id: mockStorage.getNextId(),
@@ -82,7 +84,7 @@ export const mockTeamApi = {
   },
 
   getTeams: async (): Promise<TeamResponse[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const teams = getTeams();
     const users = getUsers();
@@ -97,25 +99,25 @@ export const mockTeamApi = {
   },
 
   getTeam: async (teamId: number): Promise<TeamResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const teams = getTeams();
     const users = getUsers();
     const team = teams.find((t) => t.id === teamId);
 
-    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
 
     return toTeamResponse(team, users);
   },
 
   updateTeam: async (teamId: number, data: TeamUpdateRequest): Promise<TeamResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const index = teams.findIndex((t) => t.id === teamId);
 
-    if (index === -1) throw new Error('팀을 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
 
     teams[index] = { ...teams[index], ...data };
     mockStorage.set('teams', teams);
@@ -124,13 +126,13 @@ export const mockTeamApi = {
   },
 
   deleteTeam: async (teamId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const team = teams.find((t) => t.id === teamId);
 
-    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
 
     // 팀 삭제
     const filtered = teams.filter((t) => t.id !== teamId);
@@ -152,20 +154,20 @@ export const mockTeamApi = {
   },
 
   joinTeam: async (data: TeamInviteRequest): Promise<TeamResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
 
     const team = teams.find((t) => t.inviteCode === data.inviteCode);
-    if (!team) throw new Error('유효하지 않은 초대 코드입니다.');
+    if (!team) throw new Error(MOCK_ERRORS.INVALID_INVITE_CODE);
 
     // 이미 팀 멤버인지 확인
     if (team.memberIds.includes(currentUser.id)) {
-      throw new Error('이미 팀에 가입되어 있습니다.');
+      throw new Error(MOCK_ERRORS.ALREADY_TEAM_MEMBER);
     }
 
     // 팀에 사용자 추가
@@ -187,20 +189,20 @@ export const mockTeamApi = {
   },
 
   leaveTeam: async (teamId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
 
     const team = teams.find((t) => t.id === teamId);
-    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
 
     // 팀장은 탈퇴 불가
     if (team.leaderId === currentUser.id) {
-      throw new Error('팀장은 팀을 탈퇴할 수 없습니다. 팀을 삭제하거나 팀장을 위임하세요.');
+      throw new Error(MOCK_ERRORS.LEADER_CANNOT_LEAVE);
     }
 
     // 팀에서 사용자 제거
@@ -220,25 +222,25 @@ export const mockTeamApi = {
   },
 
   removeMember: async (teamId: number, memberId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
 
     const team = teams.find((t) => t.id === teamId);
-    if (!team) throw new Error('팀을 찾을 수 없습니다.');
+    if (!team) throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
 
     // 팀장만 멤버 제거 가능
     if (team.leaderId !== currentUser.id) {
-      throw new Error('팀장만 멤버를 제거할 수 있습니다.');
+      throw new Error(MOCK_ERRORS.ONLY_LEADER_CAN_REMOVE);
     }
 
     // 팀장 자신은 제거 불가
     if (memberId === currentUser.id) {
-      throw new Error('팀장은 자신을 제거할 수 없습니다.');
+      throw new Error(MOCK_ERRORS.LEADER_CANNOT_REMOVE_SELF);
     }
 
     // 팀에서 사용자 제거

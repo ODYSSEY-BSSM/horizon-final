@@ -2,6 +2,8 @@
  * Mock Roadmap/Node/Problem API (Swagger 완벽 일치)
  */
 
+import { MOCK_DELAYS, delay } from './mockConstants';
+import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 import { initialMockData } from './mockData';
 import type {
@@ -40,7 +42,7 @@ function getProblemAnswers(): Map<number, string> {
 
 export const mockRoadmapApi = {
   createRoadmap: async (data: RoadmapCreateRequest): Promise<RoadmapResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const roadmaps = getRoadmaps();
     const newRoadmap: RoadmapResponse = {
@@ -63,15 +65,15 @@ export const mockRoadmapApi = {
   },
 
   getRoadmaps: async (): Promise<RoadmapResponse[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     return getRoadmaps();
   },
 
   getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
-    if (!roadmap) throw new Error('로드맵을 찾을 수 없습니다.');
+    if (!roadmap) throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     return roadmap;
   },
 
@@ -79,10 +81,10 @@ export const mockRoadmapApi = {
     roadmapId: number,
     data: RoadmapUpdateRequest,
   ): Promise<RoadmapResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
     const index = roadmaps.findIndex((r) => r.id === roadmapId);
-    if (index === -1) throw new Error('로드맵을 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
 
     roadmaps[index] = { ...roadmaps[index], ...data };
     mockStorage.set('roadmaps', roadmaps);
@@ -90,14 +92,14 @@ export const mockRoadmapApi = {
   },
 
   deleteRoadmap: async (roadmapId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
     const filtered = roadmaps.filter((r) => r.id !== roadmapId);
     mockStorage.set('roadmaps', filtered);
   },
 
   toggleFavorite: async (roadmapId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
     if (roadmap) {
@@ -107,17 +109,17 @@ export const mockRoadmapApi = {
   },
 
   getLastAccessed: async (): Promise<RoadmapResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const sorted = [...roadmaps].sort(
       (a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime(),
     );
-    if (sorted.length === 0) throw new Error('로드맵이 없습니다.');
+    if (sorted.length === 0) throw new Error(MOCK_ERRORS.NO_ROADMAPS);
     return sorted[0];
   },
 
   getRoadmapCount: async (): Promise<RoadmapCountResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     return { count: getRoadmaps().length };
   },
 
@@ -125,7 +127,7 @@ export const mockRoadmapApi = {
     teamId: number,
     data: TeamRoadmapCreateRequest,
   ): Promise<TeamRoadmapResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
     const newRoadmap: any = {
       id: mockStorage.getNextId(),
@@ -147,14 +149,14 @@ export const mockRoadmapApi = {
   },
 
   getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     return getRoadmaps().filter((r: any) => r.teamId === teamId) as any;
   },
 };
 
 export const mockNodeApi = {
   createNode: async (roadmapId: number, data: NodeCreateRequest): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const newNode: NodeResponse = {
       id: mockStorage.getNextId(),
@@ -178,15 +180,15 @@ export const mockNodeApi = {
   },
 
   getNodes: async (roadmapId: number): Promise<NodeListResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     const nodes = getNodes().filter((n) => n.roadmapId === roadmapId);
     return { nodes };
   },
 
   getNode: async (roadmapId: number, nodeId: number): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
     const node = getNodes().find((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (!node) throw new Error('노드를 찾을 수 없습니다.');
+    if (!node) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
     return node;
   },
 
@@ -195,10 +197,10 @@ export const mockNodeApi = {
     nodeId: number,
     data: NodeUpdateRequest,
   ): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (index === -1) throw new Error('노드를 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
 
     nodes[index] = { ...nodes[index], ...data };
     mockStorage.set('nodes', nodes);
@@ -206,7 +208,7 @@ export const mockNodeApi = {
   },
 
   deleteNode: async (roadmapId: number, nodeId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const filtered = nodes.filter((n) => !(n.id === nodeId && n.roadmapId === roadmapId));
     mockStorage.set('nodes', filtered);
@@ -217,10 +219,10 @@ export const mockNodeApi = {
     nodeId: number,
     data: EducationNodeConvertRequest,
   ): Promise<NodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (index === -1) throw new Error('노드를 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
 
     nodes[index] = { ...nodes[index], isEducation: true, subject: data.subject };
     mockStorage.set('nodes', nodes);
@@ -230,7 +232,7 @@ export const mockNodeApi = {
 
 export const mockProblemApi = {
   createProblem: async (nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const problems = getProblems();
     const answers = getProblemAnswers();
@@ -255,13 +257,13 @@ export const mockProblemApi = {
     problemId: number,
     data: ProblemSolveRequest,
   ): Promise<ProblemResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const problems = getProblems();
     const answers = getProblemAnswers();
 
     const index = problems.findIndex((p) => p.id === problemId);
-    if (index === -1) throw new Error('문제를 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.PROBLEM_NOT_FOUND);
 
     const correctAnswer = answers.get(problemId);
     const isCorrect = correctAnswer === data.answer;

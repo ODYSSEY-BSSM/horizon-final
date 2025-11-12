@@ -2,6 +2,8 @@
  * Mock Folder/Directory API (Swagger 완벽 일치)
  */
 
+import { MOCK_DELAYS, delay } from './mockConstants';
+import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 import { initialMockData } from './mockData';
 import type {
@@ -74,7 +76,7 @@ function buildTeamDirectoryTree(
 
 export const mockFolderApi = {
   createDirectory: async (data: DirectoryCreateRequest): Promise<DirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
@@ -98,7 +100,7 @@ export const mockFolderApi = {
   },
 
   getDirectories: async (): Promise<DirectoryContentResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
@@ -109,13 +111,13 @@ export const mockFolderApi = {
   },
 
   getDirectory: async (directoryId: number): Promise<DirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
     const directory = directories.find((d) => d.id === directoryId && !d.teamId);
 
-    if (!directory) throw new Error('디렉토리를 찾을 수 없습니다.');
+    if (!directory) throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
 
     return {
       id: directory.id,
@@ -132,13 +134,13 @@ export const mockFolderApi = {
     directoryId: number,
     data: DirectoryUpdateRequest,
   ): Promise<DirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
     const index = directories.findIndex((d) => d.id === directoryId && !d.teamId);
 
-    if (index === -1) throw new Error('디렉토리를 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
 
     directories[index] = { ...directories[index], ...data };
     mockStorage.set('directories', directories);
@@ -156,7 +158,7 @@ export const mockFolderApi = {
   },
 
   deleteDirectory: async (directoryId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const filtered = directories.filter((d) => d.id !== directoryId);
@@ -169,7 +171,7 @@ export const mockTeamFolderApi = {
     teamId: number,
     data: TeamDirectoryCreateRequest,
   ): Promise<TeamDirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
@@ -195,7 +197,7 @@ export const mockTeamFolderApi = {
   },
 
   getTeamDirectories: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
@@ -206,13 +208,13 @@ export const mockTeamFolderApi = {
   },
 
   getTeamDirectory: async (teamId: number, directoryId: number): Promise<TeamDirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
     const directory = directories.find((d) => d.id === directoryId && d.teamId === teamId);
 
-    if (!directory) throw new Error('팀 디렉토리를 찾을 수 없습니다.');
+    if (!directory) throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
 
     return {
       id: directory.id,
@@ -231,13 +233,13 @@ export const mockTeamFolderApi = {
     directoryId: number,
     data: TeamDirectoryUpdateRequest,
   ): Promise<TeamDirectoryResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const roadmaps = getRoadmaps();
     const index = directories.findIndex((d) => d.id === directoryId && d.teamId === teamId);
 
-    if (index === -1) throw new Error('팀 디렉토리를 찾을 수 없습니다.');
+    if (index === -1) throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
 
     directories[index] = { ...directories[index], ...data };
     mockStorage.set('directories', directories);
@@ -256,7 +258,7 @@ export const mockTeamFolderApi = {
   },
 
   deleteTeamDirectory: async (teamId: number, directoryId: number): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
     const filtered = directories.filter((d) => !(d.id === directoryId && d.teamId === teamId));

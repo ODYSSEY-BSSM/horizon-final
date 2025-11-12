@@ -2,6 +2,8 @@
  * Mock School API (Swagger 완벽 일치)
  */
 
+import { MOCK_DELAYS, delay } from './mockConstants';
+import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 import { initialMockData } from './mockData';
 import type {
@@ -27,21 +29,21 @@ function getEducationNodes(): EducationNodeResponse[] {
 
 export const mockSchoolApi = {
   connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const schools = getSchools();
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
 
     // 학교 코드로 학교 찾기
     const school = schools.find((s) => s.code === data.schoolCode);
-    if (!school) throw new Error('유효하지 않은 학교 코드입니다.');
+    if (!school) throw new Error(MOCK_ERRORS.INVALID_SCHOOL_CODE);
 
     // 이미 연동된 학교가 있는지 확인
     if (currentUser.schoolId) {
-      throw new Error('이미 학교가 연동되어 있습니다.');
+      throw new Error(MOCK_ERRORS.SCHOOL_ALREADY_CONNECTED);
     }
 
     // 사용자에 학교 연동
@@ -66,16 +68,16 @@ export const mockSchoolApi = {
   },
 
   getConnectedSchool: async (): Promise<SchoolResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const schools = getSchools();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
-    if (!currentUser.schoolId) throw new Error('연동된 학교가 없습니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
 
     const school = schools.find((s) => s.id === currentUser.schoolId);
-    if (!school) throw new Error('학교를 찾을 수 없습니다.');
+    if (!school) throw new Error(MOCK_ERRORS.SCHOOL_NOT_FOUND);
 
     return {
       id: school.id,
@@ -87,13 +89,13 @@ export const mockSchoolApi = {
   },
 
   disconnectSchool: async (): Promise<SchoolDisconnectResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await delay(MOCK_DELAYS.NORMAL);
 
     const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
-    if (!currentUser.schoolId) throw new Error('연동된 학교가 없습니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
 
     // 사용자의 학교 연동 해제
     currentUser.schoolId = undefined;
@@ -114,12 +116,12 @@ export const mockSchoolApi = {
   },
 
   getEducationNodes: async (): Promise<EducationNodeListResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
-    if (!currentUser.schoolId) throw new Error('학교 연동이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
 
     const educationNodes = getEducationNodes();
 
@@ -130,17 +132,17 @@ export const mockSchoolApi = {
   },
 
   getEducationNode: async (nodeId: number): Promise<EducationNodeResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await delay(MOCK_DELAYS.FAST);
 
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error('로그인이 필요합니다.');
-    if (!currentUser.schoolId) throw new Error('학교 연동이 필요합니다.');
+    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
 
     const educationNodes = getEducationNodes();
     const node = educationNodes.find((n: any) => n.id === nodeId && n.schoolId === currentUser.schoolId);
 
-    if (!node) throw new Error('교육과정 노드를 찾을 수 없습니다.');
+    if (!node) throw new Error(MOCK_ERRORS.EDUCATION_NODE_NOT_FOUND);
 
     return node;
   },
