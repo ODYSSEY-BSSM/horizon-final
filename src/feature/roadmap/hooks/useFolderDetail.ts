@@ -38,7 +38,7 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
       color: item.color.toLowerCase() as RoadmapColor,
       category: 'personal' as 'personal' | 'team',
       steps: 0, // TODO: progress 데이터 필요
-      status: ('in-progress' as 'completed' | 'in-progress'), // TODO: status 데이터 필요
+      status: 'in-progress' as 'completed' | 'in-progress', // TODO: status 데이터 필요
       progress: 0, // TODO: progress 데이터 필요
     }));
   }, [rootFolder, options?.folderId]);

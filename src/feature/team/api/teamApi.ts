@@ -1,7 +1,6 @@
 import { apiClient } from '@/shared/api';
 import type {
   TeamApplyListResponse,
-  TeamApplyRequest,
   TeamApplyResponse,
   TeamCreateRequest,
   TeamMembersResponse,

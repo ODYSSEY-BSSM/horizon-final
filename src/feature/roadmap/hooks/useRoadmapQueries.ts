@@ -136,7 +136,8 @@ export function useTeamRoadmaps(teamId: number) {
 export function useTeamRoadmap(teamId: number, roadmapId: number) {
   return useQuery({
     queryKey: roadmapKeys.teamDetail(teamId, roadmapId),
-    queryFn: () => Promise.reject(new Error('Team roadmap single item endpoint not implemented in API')),
+    queryFn: () =>
+      Promise.reject(new Error('Team roadmap single item endpoint not implemented in API')),
     enabled: false, // TODO: API doesn't support this endpoint yet
   });
 }
@@ -185,7 +186,7 @@ export function useDeleteTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (roadmapId: number) =>
+    mutationFn: (_roadmapId: number) =>
       Promise.reject(new Error('Team roadmap delete endpoint not implemented in API')),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });

@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { schoolApi } from '../api';
-import type { SchoolConnectRequest } from '../types';
 
 // Query Keys
 export const schoolKeys = {

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { teamApi } from '../api';
-import type { TeamApplyRequest, TeamCreateRequest, TeamUpdateRequest } from '../types';
+import type { TeamCreateRequest, TeamUpdateRequest } from '../types';
 
 // Query Keys
 export const teamKeys = {
