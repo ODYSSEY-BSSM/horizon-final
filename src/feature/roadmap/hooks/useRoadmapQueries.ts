@@ -62,6 +62,10 @@ export function useCreateRoadmap() {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.count() });
     },
+    onError: (error) => {
+      // TODO: 토스트 라이브러리 등으로 교체
+      alert(`로드맵 생성에 실패했습니다: ${error.message}`);
+    },
   });
 }
 
