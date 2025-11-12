@@ -3,8 +3,8 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import type { DirectoryResponse } from '@/feature/folder/types';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
+import type { DirectoryResponse } from '@/feature/folder/types';
 import {
   CreateTeamModal,
   FolderGrid,

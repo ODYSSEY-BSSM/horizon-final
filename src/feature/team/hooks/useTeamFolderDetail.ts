@@ -22,10 +22,14 @@ const useFolderDetail = (teamId: string, folderId: string) => {
     // 재귀적으로 특정 디렉토리 찾기
     const findDirectory = (dirs: typeof teamRootFolder.directories, id: number): any => {
       for (const dir of dirs) {
-        if (dir.id === id) return dir;
+        if (dir.id === id) {
+          return dir;
+        }
         if (dir.directories?.length) {
           const found = findDirectory(dir.directories, id);
-          if (found) return found;
+          if (found) {
+            return found;
+          }
         }
       }
       return null;

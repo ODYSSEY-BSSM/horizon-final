@@ -2,19 +2,18 @@
  * Mock Data (Swagger API 완벽 일치)
  */
 
-import type { NodeType, ProblemStatus, Subject, UserRole } from '@/shared/api/types';
+import type { DirectoryResponse } from '@/feature/folder/types';
 import type {
-  RoadmapResponse,
-  TeamRoadmapResponse,
   NodeResponse,
   ProblemResponse,
+  RoadmapResponse,
+  TeamRoadmapResponse,
 } from '@/feature/roadmap/types';
-import type { DirectoryResponse } from '@/feature/folder/types';
-import type { TeamResponse } from '@/feature/team/types';
-import type { MockUser, MockSchool } from './mockTypes';
+import type { NodeType, ProblemStatus, Subject, UserRole } from '@/shared/api/types';
+import type { MockSchool, MockUser } from './mockTypes';
 
 // Re-export types for backward compatibility
-export type { MockUser, MockSchool } from './mockTypes';
+export type { MockSchool, MockUser } from './mockTypes';
 
 // Swagger API 초기 데이터
 export const initialMockData = {
@@ -67,7 +66,7 @@ export const initialMockData = {
       lastAccessedAt: new Date().toISOString(),
       isFavorite: true,
       color: 'BLUE',
-      icon: 'REACT',
+      icon: 'JAVASCRIPT',
       progress: 50,
       directoryId: 2,
     },
@@ -80,7 +79,7 @@ export const initialMockData = {
       lastAccessedAt: new Date().toISOString(),
       isFavorite: false,
       color: 'GREEN',
-      icon: 'NODE',
+      icon: 'JAVASCRIPT',
       progress: 30,
       directoryId: 2,
     },

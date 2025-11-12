@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import { authApi } from '@/feature/auth/api/authApi';
 import { tokenStore } from '@/feature/auth/store/tokenStore';
 import { apiClient } from '@/shared/api';
-import { authApi } from '@/feature/auth/api/authApi';
 
 export function TokenInitializer() {
   useEffect(() => {

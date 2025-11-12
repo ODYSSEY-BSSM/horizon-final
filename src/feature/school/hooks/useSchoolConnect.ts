@@ -98,14 +98,8 @@ export const useSchoolConnect = () => {
 
   const handleConnect = async (schoolCode: string) => {
     try {
-      // biome-ignore lint/suspicious/noConsoleLog: Development debugging
-      console.log('[SchoolConnect] Attempting to connect with code:', schoolCode);
       await connectSchool({ schoolCode });
-      // biome-ignore lint/suspicious/noConsoleLog: Development debugging
-      console.log('[SchoolConnect] Connection successful');
-    } catch (error) {
-      // biome-ignore lint/suspicious/noConsoleLog: Development debugging
-      console.error('[SchoolConnect] Connection failed:', error);
+    } catch (_error) {
       // 에러를 의도적으로 무시합니다 (모달로 표시됨).
     }
   };

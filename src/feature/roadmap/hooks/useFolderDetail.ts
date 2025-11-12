@@ -28,10 +28,14 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
       // 재귀적으로 디렉토리 찾기
       const findDirectory = (dirs: typeof rootFolder.directories, id: number): any => {
         for (const dir of dirs) {
-          if (dir.id === id) return dir;
+          if (dir.id === id) {
+            return dir;
+          }
           if (dir.directories?.length) {
             const found = findDirectory(dir.directories, id);
-            if (found) return found;
+            if (found) {
+              return found;
+            }
           }
         }
         return null;
@@ -79,7 +83,7 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
   }, [rootFolder, options?.folderId]);
 
   const filteredRoadmaps = useMemo(() => {
-    return roadmaps.filter((roadmap: typeof roadmaps[0]) => {
+    return roadmaps.filter((roadmap: (typeof roadmaps)[0]) => {
       switch (activeFilter) {
         case 'my':
         case 'team':

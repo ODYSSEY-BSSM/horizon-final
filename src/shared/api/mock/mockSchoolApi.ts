@@ -2,18 +2,18 @@
  * Mock School API (Swagger 완벽 일치)
  */
 
-import { MOCK_DELAYS, delay } from './mockConstants';
+import type {
+  EducationNodeListResponse,
+  EducationNodeResponse,
+  SchoolConnectRequest,
+  SchoolDisconnectResponse,
+  SchoolResponse,
+} from '@/feature/school/types';
+import { delay, MOCK_DELAYS } from './mockConstants';
+import type { MockSchool, MockUser } from './mockData';
+import { initialMockData } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
-import { initialMockData } from './mockData';
-import type {
-  SchoolConnectRequest,
-  SchoolResponse,
-  EducationNodeResponse,
-  EducationNodeListResponse,
-  SchoolDisconnectResponse,
-} from '@/feature/school/types';
-import type { MockUser, MockSchool } from './mockData';
 
 function getSchools(): MockSchool[] {
   return mockStorage.getOrDefault('schools', initialMockData.schools);
@@ -32,14 +32,18 @@ export const mockSchoolApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const schools = getSchools();
-    const users = getUsers();
+    const _users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
 
     // 학교 코드로 학교 찾기
     const school = schools.find((s) => s.code === data.schoolCode);
-    if (!school) throw new Error(MOCK_ERRORS.INVALID_SCHOOL_CODE);
+    if (!school) {
+      throw new Error(MOCK_ERRORS.INVALID_SCHOOL_CODE);
+    }
 
     // 이미 연동된 학교가 있는지 확인
     if (currentUser.schoolId) {
@@ -73,11 +77,17 @@ export const mockSchoolApi = {
     const schools = getSchools();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+    if (!currentUser.schoolId) {
+      throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
+    }
 
     const school = schools.find((s) => s.id === currentUser.schoolId);
-    if (!school) throw new Error(MOCK_ERRORS.SCHOOL_NOT_FOUND);
+    if (!school) {
+      throw new Error(MOCK_ERRORS.SCHOOL_NOT_FOUND);
+    }
 
     return {
       id: school.id,
@@ -91,11 +101,15 @@ export const mockSchoolApi = {
   disconnectSchool: async (): Promise<SchoolDisconnectResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
 
-    const users = getUsers();
+    const _users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+    if (!currentUser.schoolId) {
+      throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
+    }
 
     // 사용자의 학교 연동 해제
     currentUser.schoolId = undefined;
@@ -120,13 +134,19 @@ export const mockSchoolApi = {
 
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+    if (!currentUser.schoolId) {
+      throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
+    }
 
     const educationNodes = getEducationNodes();
 
     // 현재 사용자의 학교에 해당하는 교육과정 노드만 반환
-    const schoolNodes = educationNodes.filter((node: any) => node.schoolId === currentUser.schoolId);
+    const schoolNodes = educationNodes.filter(
+      (node: any) => node.schoolId === currentUser.schoolId,
+    );
 
     return { nodes: schoolNodes };
   },
@@ -136,13 +156,21 @@ export const mockSchoolApi = {
 
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
-    if (!currentUser) throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    if (!currentUser.schoolId) throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+    if (!currentUser.schoolId) {
+      throw new Error(MOCK_ERRORS.SCHOOL_CONNECTION_REQUIRED);
+    }
 
     const educationNodes = getEducationNodes();
-    const node = educationNodes.find((n: any) => n.id === nodeId && n.schoolId === currentUser.schoolId);
+    const node = educationNodes.find(
+      (n: any) => n.id === nodeId && n.schoolId === currentUser.schoolId,
+    );
 
-    if (!node) throw new Error(MOCK_ERRORS.EDUCATION_NODE_NOT_FOUND);
+    if (!node) {
+      throw new Error(MOCK_ERRORS.EDUCATION_NODE_NOT_FOUND);
+    }
 
     return node;
   },

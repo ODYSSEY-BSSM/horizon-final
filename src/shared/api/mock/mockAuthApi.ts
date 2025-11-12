@@ -2,11 +2,6 @@
  * Mock Auth API (Swagger 완벽 일치)
  */
 
-import { mockStorage } from './mockStorage';
-import { initialMockData, type MockUser } from './mockData';
-import { MOCK_DELAYS, delay } from './mockConstants';
-import { MOCK_ERRORS } from './mockErrors';
-import { UserRole } from '@/shared/api/types';
 import type {
   LoginRequest,
   LoginResponse,
@@ -18,6 +13,11 @@ import type {
   VerificationCodeRequest,
   VerificationRequest,
 } from '@/feature/auth/types/auth';
+import { UserRole } from '@/shared/api/types';
+import { delay, MOCK_DELAYS } from './mockConstants';
+import { initialMockData, type MockUser } from './mockData';
+import { MOCK_ERRORS } from './mockErrors';
+import { mockStorage } from './mockStorage';
 
 // localStorage에서 데이터 가져오기
 function getUsers(): MockUser[] {
@@ -65,7 +65,7 @@ export const mockAuthApi = {
     };
   },
 
-  refreshToken: async (refreshToken: string): Promise<TokenRefreshResponse> => {
+  refreshToken: async (_refreshToken: string): Promise<TokenRefreshResponse> => {
     await delay(MOCK_DELAYS.FAST);
 
     const currentUser = getCurrentUser();
@@ -94,8 +94,6 @@ export const mockAuthApi = {
 
     // 개발 환경에서 콘솔에 인증 코드 출력
     if (process.env.NODE_ENV === 'development') {
-      // biome-ignore lint/suspicious/noConsoleLog: Development debugging
-      console.log(`[DEV] Verification code for ${data.email}: ${code}`);
     }
   },
 

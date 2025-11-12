@@ -8,12 +8,12 @@ import {
   RoadmapSection,
   useDashboardData,
 } from '@/feature/dashboard';
-import { useRoadmapFormFlow } from '@/feature/roadmap/stores/roadmapFormFlow';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 import { tokens } from '@/shared/tokens';
 
 const DashboardContent = () => {
   const { userData, roadmapsData, isLoading, error } = useDashboardData();
-  const { openModal } = useRoadmapFormFlow();
+  const { openModal } = useRoadmapFormStore();
 
   const handleAddRoadmap = () => {
     openModal();
@@ -32,15 +32,13 @@ const DashboardContent = () => {
 
   // 에러 상태
   if (error || !userData) {
-    // biome-ignore lint/suspicious/noConsoleLog: Development debugging
+    // biome-ignore lint: reason
     console.error('[Dashboard] Error or no user data:', { error, userData });
     return (
       <StyledPageContainer>
         <StyledLoadingContainer>
           <StyledErrorText>대시보드를 불러오는데 실패했습니다.</StyledErrorText>
-          <StyledErrorHint>
-            로그인이 필요합니다. (test@example.com / password123)
-          </StyledErrorHint>
+          <StyledErrorHint>로그인이 필요합니다. (test@example.com / password123)</StyledErrorHint>
         </StyledLoadingContainer>
       </StyledPageContainer>
     );

@@ -16,6 +16,7 @@ const FolderStep = () => {
   const {
     isValid,
     onNext,
+    onPrevious,
     newFolderMode,
     newFolderName,
     setNewFolderName,
@@ -141,7 +142,13 @@ const FolderStep = () => {
         </StyledDropdownContainer>
       </StyledContent>
 
-      <FormFooter onNext={onNext} isValid={isValid} showPrevious={false} isLastStep={false} />
+      <FormFooter
+        onNext={onNext}
+        onPrevious={onPrevious}
+        isValid={isValid}
+        showPrevious={true}
+        isLastStep={false}
+      />
     </StyledFormContainer>
   );
 };

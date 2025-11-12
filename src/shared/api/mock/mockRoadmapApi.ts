@@ -2,27 +2,27 @@
  * Mock Roadmap/Node/Problem API (Swagger 완벽 일치)
  */
 
-import { MOCK_DELAYS, delay } from './mockConstants';
-import { MOCK_ERRORS } from './mockErrors';
-import { mockStorage } from './mockStorage';
-import { initialMockData } from './mockData';
-import { ProblemStatus } from '@/shared/api/types';
 import type {
-  RoadmapCreateRequest,
-  RoadmapResponse,
-  RoadmapUpdateRequest,
-  RoadmapCountResponse,
-  TeamRoadmapCreateRequest,
-  TeamRoadmapResponse,
+  EducationNodeConvertRequest,
   NodeCreateRequest,
+  NodeListResponse,
   NodeResponse,
   NodeUpdateRequest,
-  NodeListResponse,
-  EducationNodeConvertRequest,
   ProblemCreateRequest,
   ProblemResponse,
   ProblemSolveRequest,
+  RoadmapCountResponse,
+  RoadmapCreateRequest,
+  RoadmapResponse,
+  RoadmapUpdateRequest,
+  TeamRoadmapCreateRequest,
+  TeamRoadmapResponse,
 } from '@/feature/roadmap/types';
+import { ProblemStatus } from '@/shared/api/types';
+import { delay, MOCK_DELAYS } from './mockConstants';
+import { initialMockData } from './mockData';
+import { MOCK_ERRORS } from './mockErrors';
+import { mockStorage } from './mockStorage';
 
 function getRoadmaps(): RoadmapResponse[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
@@ -74,7 +74,9 @@ export const mockRoadmapApi = {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
-    if (!roadmap) throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    if (!roadmap) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    }
     return roadmap;
   },
 
@@ -85,7 +87,9 @@ export const mockRoadmapApi = {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
     const index = roadmaps.findIndex((r) => r.id === roadmapId);
-    if (index === -1) throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    }
 
     roadmaps[index] = { ...roadmaps[index], ...data };
     mockStorage.set('roadmaps', roadmaps);
@@ -115,7 +119,9 @@ export const mockRoadmapApi = {
     const sorted = [...roadmaps].sort(
       (a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime(),
     );
-    if (sorted.length === 0) throw new Error(MOCK_ERRORS.NO_ROADMAPS);
+    if (sorted.length === 0) {
+      throw new Error(MOCK_ERRORS.NO_ROADMAPS);
+    }
     return sorted[0];
   },
 
@@ -189,7 +195,9 @@ export const mockNodeApi = {
   getNode: async (roadmapId: number, nodeId: number): Promise<NodeResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const node = getNodes().find((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (!node) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    if (!node) {
+      throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    }
     return node;
   },
 
@@ -201,7 +209,9 @@ export const mockNodeApi = {
     await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (index === -1) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    }
 
     nodes[index] = { ...nodes[index], ...data };
     mockStorage.set('nodes', nodes);
@@ -223,7 +233,9 @@ export const mockNodeApi = {
     await delay(MOCK_DELAYS.NORMAL);
     const nodes = getNodes();
     const index = nodes.findIndex((n) => n.id === nodeId && n.roadmapId === roadmapId);
-    if (index === -1) throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.NODE_NOT_FOUND);
+    }
 
     nodes[index] = { ...nodes[index], isEducation: true, subject: data.subject };
     mockStorage.set('nodes', nodes);
@@ -232,7 +244,7 @@ export const mockNodeApi = {
 };
 
 export const mockProblemApi = {
-  createProblem: async (nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
+  createProblem: async (_nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
 
     const problems = getProblems();
@@ -254,7 +266,7 @@ export const mockProblemApi = {
   },
 
   solveProblem: async (
-    nodeId: number,
+    _nodeId: number,
     problemId: number,
     data: ProblemSolveRequest,
   ): Promise<ProblemResponse> => {
@@ -264,7 +276,9 @@ export const mockProblemApi = {
     const answers = getProblemAnswers();
 
     const index = problems.findIndex((p) => p.id === problemId);
-    if (index === -1) throw new Error(MOCK_ERRORS.PROBLEM_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.PROBLEM_NOT_FOUND);
+    }
 
     const correctAnswer = answers.get(problemId);
     const isCorrect = correctAnswer === data.answer;

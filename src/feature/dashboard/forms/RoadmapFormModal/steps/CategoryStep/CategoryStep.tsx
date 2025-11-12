@@ -4,12 +4,23 @@ import styled from '@emotion/styled';
 import { CATEGORY_OPTIONS } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
 import { FormFooter } from '@/feature/dashboard/forms/RoadmapFormModal/components/FormFooter';
 import { MODAL_SPACING } from '@/feature/dashboard/forms/RoadmapFormModal/constants/spacing';
-import { useCategoryStep } from '@/feature/dashboard/hooks/useCategoryStep';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
 
 const CategoryStep = () => {
-  const { selectedCategory, handleCategorySelect, onNext, isValid } = useCategoryStep();
+  const { formData, updateField, nextStep, isStepValid } = useRoadmapFormStore();
+  const selectedCategory = formData.category;
+
+  const handleCategorySelect = (category: 'personal' | 'team') => {
+    updateField('category', category);
+  };
+
+  const handleNext = () => {
+    nextStep();
+  };
+
+  const isValid = isStepValid();
 
   return (
     <StyledFormContainer>
@@ -21,7 +32,7 @@ const CategoryStep = () => {
                 type="button"
                 key={category.id}
                 $isSelected={selectedCategory === category.id}
-                onClick={() => handleCategorySelect(category.id)}
+                onClick={() => handleCategorySelect(category.id as 'personal' | 'team')}
                 aria-pressed={selectedCategory === category.id}
               >
                 <StyledCategoryText
@@ -37,7 +48,7 @@ const CategoryStep = () => {
         </StyledCategoryContainer>
       </StyledContent>
 
-      <FormFooter onNext={onNext} isValid={isValid} showPrevious={false} isLastStep={false} />
+      <FormFooter onNext={handleNext} isValid={isValid} showPrevious={false} isLastStep={false} />
     </StyledFormContainer>
   );
 };

@@ -1,30 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
 import { type KeyboardEvent, useState } from 'react';
-import { folderApi } from '@/feature/folder/api/folderApi';
-import { useFolderStepForm } from './useRoadmapForm';
+import { useRootFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 
 export const useFolderStep = () => {
-  const form = useFolderStepForm();
-  const {
-    watch,
-    setValue,
-    onNext,
-    formState: { isValid },
-  } = form;
+  const { formData, updateField, nextStep, previousStep, isStepValid } = useRoadmapFormStore();
+
+  const isTeamRoadmap = formData.category === 'team';
+  const teamId = formData.teamId ? Number(formData.teamId) : 0;
 
   // 개인 디렉토리 목록 조회
-  const { data: rootContent, isLoading } = useQuery({
-    queryKey: ['directories'],
-    queryFn: folderApi.getDirectories,
-    staleTime: 1000 * 60 * 5, // 5분
-  });
+  const { data: personalRootContent, isLoading: isPersonalLoading } = useRootFolder();
+
+  // 팀 디렉토리 목록 조회 (팀 로드맵이고 teamId가 있을 때만)
+  const { data: teamRootContent, isLoading: isTeamLoading } = useTeamRootFolder(teamId);
+
+  const rootContent = isTeamRoadmap ? teamRootContent : personalRootContent;
+  const isLoading = isTeamRoadmap ? isTeamLoading : isPersonalLoading;
 
   const [isOpen, setIsOpen] = useState(false);
   const [newFolderMode, setNewFolderMode] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
 
-  const folderId = watch('folderId');
-  const folderName = watch('folderName');
+  const folderId = formData.folderId;
+  const folderName = formData.folderName;
 
   // API 데이터를 드롭다운 옵션 형식으로 변환 (Swagger 구조 사용)
   const directories = rootContent?.directories || [];
@@ -37,8 +35,8 @@ export const useFolderStep = () => {
   const selectedFolder = folderId ? FOLDER_OPTIONS.find((option) => option.id === folderId) : null;
 
   const handleFolderSelect = (selectedFolderId: string) => {
-    setValue('folderId', selectedFolderId, { shouldValidate: true });
-    setValue('folderName', '', { shouldValidate: true });
+    updateField('folderId', selectedFolderId);
+    updateField('folderName', undefined);
     setIsOpen(false);
     setNewFolderMode(false);
     setNewFolderName('');
@@ -51,8 +49,8 @@ export const useFolderStep = () => {
 
   const handleNewFolderSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newFolderName.trim()) {
-      setValue('folderId', undefined, { shouldValidate: true });
-      setValue('folderName', newFolderName.trim(), { shouldValidate: true });
+      updateField('folderId', undefined);
+      updateField('folderName', newFolderName.trim());
       setNewFolderMode(false);
       setNewFolderName('');
     } else if (e.key === 'Escape') {
@@ -63,8 +61,8 @@ export const useFolderStep = () => {
 
   const handleNewFolderBlur = () => {
     if (newFolderName.trim()) {
-      setValue('folderId', undefined, { shouldValidate: true });
-      setValue('folderName', newFolderName.trim(), { shouldValidate: true });
+      updateField('folderId', undefined);
+      updateField('folderName', newFolderName.trim());
     }
     setNewFolderMode(false);
     setNewFolderName('');
@@ -82,10 +80,21 @@ export const useFolderStep = () => {
 
   const hasSelection = !!(folderId || folderName);
 
+  const handleNext = () => {
+    nextStep();
+  };
+
+  const handlePrevious = () => {
+    previousStep();
+  };
+
+  const isValid = isStepValid();
+
   return {
     // Form state
     isValid,
-    onNext,
+    onNext: handleNext,
+    onPrevious: handlePrevious,
 
     // Dropdown state
     isOpen,

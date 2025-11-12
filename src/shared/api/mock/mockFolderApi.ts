@@ -2,22 +2,21 @@
  * Mock Folder/Directory API (Swagger 완벽 일치)
  */
 
-import { MOCK_DELAYS, delay } from './mockConstants';
-import { MOCK_ERRORS } from './mockErrors';
-import { mockStorage } from './mockStorage';
-import { initialMockData } from './mockData';
 import type {
+  DirectoryContentResponse,
   DirectoryCreateRequest,
   DirectoryResponse,
   DirectoryUpdateRequest,
-  DirectoryContentResponse,
+  TeamDirectoryContentResponse,
   TeamDirectoryCreateRequest,
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
-  TeamDirectoryContentResponse,
-  SimpleRoadmapResponse,
 } from '@/feature/folder/types';
 import type { RoadmapResponse } from '@/feature/roadmap/types';
+import { delay, MOCK_DELAYS } from './mockConstants';
+import { initialMockData } from './mockData';
+import { MOCK_ERRORS } from './mockErrors';
+import { mockStorage } from './mockStorage';
 
 interface StoredDirectory {
   id: number;
@@ -79,7 +78,7 @@ export const mockFolderApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
-    const roadmaps = getRoadmaps();
+    const _roadmaps = getRoadmaps();
 
     const newDirectory: StoredDirectory = {
       id: mockStorage.getNextId(),
@@ -117,7 +116,9 @@ export const mockFolderApi = {
     const roadmaps = getRoadmaps();
     const directory = directories.find((d) => d.id === directoryId && !d.teamId);
 
-    if (!directory) throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
+    if (!directory) {
+      throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
+    }
 
     return {
       id: directory.id,
@@ -140,7 +141,9 @@ export const mockFolderApi = {
     const roadmaps = getRoadmaps();
     const index = directories.findIndex((d) => d.id === directoryId && !d.teamId);
 
-    if (index === -1) throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.DIRECTORY_NOT_FOUND);
+    }
 
     directories[index] = { ...directories[index], ...data };
     mockStorage.set('directories', directories);
@@ -174,7 +177,7 @@ export const mockTeamFolderApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();
-    const roadmaps = getRoadmaps();
+    const _roadmaps = getRoadmaps();
 
     const newDirectory: StoredDirectory = {
       id: mockStorage.getNextId(),
@@ -214,7 +217,9 @@ export const mockTeamFolderApi = {
     const roadmaps = getRoadmaps();
     const directory = directories.find((d) => d.id === directoryId && d.teamId === teamId);
 
-    if (!directory) throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
+    if (!directory) {
+      throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
+    }
 
     return {
       id: directory.id,
@@ -239,7 +244,9 @@ export const mockTeamFolderApi = {
     const roadmaps = getRoadmaps();
     const index = directories.findIndex((d) => d.id === directoryId && d.teamId === teamId);
 
-    if (index === -1) throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.TEAM_DIRECTORY_NOT_FOUND);
+    }
 
     directories[index] = { ...directories[index], ...data };
     mockStorage.set('directories', directories);
