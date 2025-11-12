@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { useCreateTeamFolder, useTeamFolders } from '@/feature/folder/hooks/useFolderQueries';
+import { useCreateTeamFolder } from '@/feature/folder/hooks/useFolderQueries';
 import {
   CreateTeamModal,
   FolderGrid,
@@ -27,26 +27,24 @@ const TeamFoldersContent = () => {
 
   const teamId = params.teamId;
 
-  const { teams, addTeam } = useTeamSpaceData();
+  const { teams, addTeam } = useTeamSpaceData(teamId);
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
   const currentTeam = teams.find((team) => team.id === teamId);
-  const teamName = currentTeam?.name || '';
+  const _teamName = currentTeam?.name || '';
 
-  const { data: teamFoldersData } = useTeamFolders(teamName);
-
-  const createFolderMutation = useCreateTeamFolder(teamName);
+  const createFolderMutation = useCreateTeamFolder(Number(teamId));
 
   const folders: TeamFolder[] = useMemo(() => {
-    if (!teamFoldersData) {
+    if (!currentTeam?.folders) {
       return [];
     }
 
-    return teamFoldersData.map((folder) => ({
-      id: folder.uuid.toString(),
+    return currentTeam.folders.map((folder) => ({
+      id: folder.id.toString(),
       teamId: teamId,
       name: folder.name,
       description: '',
@@ -54,7 +52,7 @@ const TeamFoldersContent = () => {
       roadmapCount: 0,
       createdRoadmapCount: 0,
     }));
-  }, [teamFoldersData, teamId]);
+  }, [currentTeam, teamId]);
 
   const handleTeamChange = (newTeamId: string) => {
     router.push(`/team-space/${newTeamId}`);

@@ -49,17 +49,15 @@ export const useTeamSpaceData = () => {
   };
 
   const joinTeam = (inviteCode: string): { success: boolean; team?: Team } => {
-    applyToTeamMutation.mutate({ inviteCode });
+    // TODO: inviteCode에서 teamId 추출 또는 별도 API 호출 필요
+    const teamId = 1; // 임시
+    applyToTeamMutation.mutate({ teamId, data: { inviteCode } });
 
+    // Do not return a fake team object to prevent redirecting to a 404 page.
+    // The calling component should handle the success case by showing a message instead of redirecting.
     return {
       success: true,
-      team: {
-        id: Date.now().toString(),
-        name: '참여 신청한 팀',
-        description: '',
-        memberCount: 2,
-        createdAt: new Date().toISOString(),
-      },
+      team: undefined,
     };
   };
 

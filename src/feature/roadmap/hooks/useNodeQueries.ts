@@ -6,28 +6,29 @@ import type { EducationNodeConvertRequest, NodeCreateRequest, NodeUpdateRequest 
 export const nodeKeys = {
   all: ['nodes'] as const,
   lists: () => [...nodeKeys.all, 'list'] as const,
-  list: (roadmapUuid: number) => [...nodeKeys.lists(), roadmapUuid] as const,
+  list: (roadmapId: number) => [...nodeKeys.lists(), roadmapId] as const,
   details: () => [...nodeKeys.all, 'detail'] as const,
-  detail: (id: number) => [...nodeKeys.details(), id] as const,
+  detail: (roadmapId: number, nodeId: number) =>
+    [...nodeKeys.details(), roadmapId, nodeId] as const,
 };
 
 // ===================================
 // Node Queries
 // ===================================
 
-export function useNodes(roadmapUuid: number) {
+export function useNodes(roadmapId: number) {
   return useQuery({
-    queryKey: nodeKeys.list(roadmapUuid),
-    queryFn: () => nodeApi.getNodes(roadmapUuid),
-    enabled: !!roadmapUuid,
+    queryKey: nodeKeys.list(roadmapId),
+    queryFn: () => nodeApi.getNodes(roadmapId),
+    enabled: !!roadmapId,
   });
 }
 
-export function useNode(nodeUuid: number) {
+export function useNode(roadmapId: number, nodeId: number) {
   return useQuery({
-    queryKey: nodeKeys.detail(nodeUuid),
-    queryFn: () => nodeApi.getNode(nodeUuid),
-    enabled: !!nodeUuid,
+    queryKey: nodeKeys.detail(roadmapId, nodeId),
+    queryFn: () => nodeApi.getNode(roadmapId, nodeId),
+    enabled: !!roadmapId && !!nodeId,
   });
 }
 
@@ -35,54 +36,67 @@ export function useNode(nodeUuid: number) {
 // Node Mutations
 // ===================================
 
-export function useCreateNode(roadmapUuid: number) {
+export function useCreateNode(roadmapId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: NodeCreateRequest) => nodeApi.createNode(roadmapUuid, data),
+    mutationFn: (data: NodeCreateRequest) => nodeApi.createNode(roadmapId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapUuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });
 }
 
-export function useConvertEducationNode(roadmapUuid: number) {
+export function useConvertEducationNode(roadmapId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({
-      educationUuid,
+      educationId,
       data,
     }: {
-      educationUuid: number;
+      educationId: number;
       data: EducationNodeConvertRequest;
-    }) => nodeApi.convertEducationNode(educationUuid, roadmapUuid, data),
+    }) => nodeApi.convertEducationNode(educationId, roadmapId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapUuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });
 }
 
-export function useUpdateNode() {
+export function useUpdateNode(roadmapId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ nodeUuid, data }: { nodeUuid: number; data: NodeUpdateRequest }) =>
-      nodeApi.updateNode(nodeUuid, data),
+    mutationFn: ({ nodeId, data }: { nodeId: number; data: NodeUpdateRequest }) =>
+      nodeApi.updateNode(roadmapId, nodeId, data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(data.uuid) });
-      queryClient.invalidateQueries({ queryKey: nodeKeys.list(data.roadmapUuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.uuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });
 }
 
-export function useDeleteNode(roadmapUuid: number) {
+export function useMoveNode(roadmapId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (nodeUuid: number) => nodeApi.deleteNode(nodeUuid),
+    mutationFn: ({ nodeId, data }: { nodeId: number; data: NodeUpdateRequest }) =>
+      nodeApi.moveNode(roadmapId, nodeId, data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.uuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
+    },
+  });
+}
+
+export function useDeleteNode(roadmapId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (nodeId: number) => nodeApi.deleteNode(roadmapId, nodeId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapUuid) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
   });
 }

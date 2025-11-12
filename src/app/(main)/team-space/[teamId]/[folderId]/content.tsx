@@ -2,7 +2,6 @@
 
 import styled from '@emotion/styled';
 import { notFound, useParams } from 'next/navigation';
-import { useTeamFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
 import { tokens } from '@/shared/tokens';
 import { Button } from '@/shared/ui';
@@ -22,13 +21,13 @@ const FolderRoadmapsContent = () => {
   const teamId = params.teamId;
   const folderId = params.folderId;
 
-  const { teams } = useTeamSpaceData();
+  const { teams } = useTeamSpaceData(teamId);
 
   const currentTeam = teams.find((team) => team.id === teamId);
-  const teamName = currentTeam?.name || '';
+  const _teamName = currentTeam?.name || '';
 
   // 팀 폴더 조회
-  const { data: currentFolder } = useTeamFolder(teamName, Number(folderId));
+  const currentFolder = currentTeam?.folders.find((folder) => folder.id.toString() === folderId);
 
   const handleAddRoadmap = () => {
     // TODO: 로드맵 생성 모달 구현

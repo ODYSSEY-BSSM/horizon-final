@@ -15,10 +15,11 @@ export const roadmapKeys = {
   details: () => [...roadmapKeys.all, 'detail'] as const,
   detail: (id: number) => [...roadmapKeys.details(), id] as const,
   count: () => [...roadmapKeys.all, 'count'] as const,
-  team: (teamName: string) => [...roadmapKeys.all, 'team', teamName] as const,
-  teamList: (teamName: string) => [...roadmapKeys.team(teamName), 'list'] as const,
-  teamDetail: (teamName: string, id: number) => [...roadmapKeys.team(teamName), id] as const,
-  teamCount: (teamName: string) => [...roadmapKeys.team(teamName), 'count'] as const,
+  lastAccessed: () => [...roadmapKeys.all, 'lastAccessed'] as const,
+  team: (teamId: number) => [...roadmapKeys.all, 'team', teamId] as const,
+  teamList: (teamId: number) => [...roadmapKeys.team(teamId), 'list'] as const,
+  teamDetail: (teamId: number, id: number) => [...roadmapKeys.team(teamId), id] as const,
+  teamCount: (teamId: number) => [...roadmapKeys.team(teamId), 'count'] as const,
 };
 
 // ===================================
@@ -112,14 +113,10 @@ export function useRemoveFavorite() {
   });
 }
 
-export function useUpdateLastAccessed() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (roadmapUuid: number) => roadmapApi.updateLastAccessed(roadmapUuid),
-    onSuccess: (_, roadmapUuid) => {
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.detail(roadmapUuid) });
-    },
+export function useGetLastAccessed() {
+  return useQuery({
+    queryKey: roadmapKeys.lastAccessed(),
+    queryFn: () => roadmapApi.getLastAccessed(),
   });
 }
 
@@ -127,27 +124,27 @@ export function useUpdateLastAccessed() {
 // Team Roadmap Queries
 // ===================================
 
-export function useTeamRoadmaps(teamName: string) {
+export function useTeamRoadmaps(teamId: number) {
   return useQuery({
-    queryKey: roadmapKeys.teamList(teamName),
-    queryFn: () => roadmapApi.getTeamRoadmaps(teamName),
-    enabled: !!teamName,
+    queryKey: roadmapKeys.teamList(teamId),
+    queryFn: () => roadmapApi.getTeamRoadmaps(teamId),
+    enabled: !!teamId,
   });
 }
 
-export function useTeamRoadmap(teamName: string, roadmapUuid: number) {
+export function useTeamRoadmap(teamId: number, roadmapId: number) {
   return useQuery({
-    queryKey: roadmapKeys.teamDetail(teamName, roadmapUuid),
-    queryFn: () => roadmapApi.getTeamRoadmap(teamName, roadmapUuid),
-    enabled: !!teamName && !!roadmapUuid,
+    queryKey: roadmapKeys.teamDetail(teamId, roadmapId),
+    queryFn: () => roadmapApi.getTeamRoadmap(teamId, roadmapId),
+    enabled: !!teamId && !!roadmapId,
   });
 }
 
-export function useTeamRoadmapCount(teamName: string) {
+export function useTeamRoadmapCount(teamId: number) {
   return useQuery({
-    queryKey: roadmapKeys.teamCount(teamName),
-    queryFn: () => roadmapApi.getTeamRoadmapCount(teamName),
-    enabled: !!teamName,
+    queryKey: roadmapKeys.teamCount(teamId),
+    queryFn: () => roadmapApi.getTeamRoadmapCount(teamId),
+    enabled: !!teamId,
   });
 }
 
@@ -155,41 +152,41 @@ export function useTeamRoadmapCount(teamName: string) {
 // Team Roadmap Mutations
 // ===================================
 
-export function useCreateTeamRoadmap(teamName: string) {
+export function useCreateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TeamRoadmapCreateRequest) => roadmapApi.createTeamRoadmap(teamName, data),
+    mutationFn: (data: TeamRoadmapCreateRequest) => roadmapApi.createTeamRoadmap(teamId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamName) });
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamName) });
+      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
+      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamId) });
     },
   });
 }
 
-export function useUpdateTeamRoadmap(teamName: string) {
+export function useUpdateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ roadmapUuid, data }: { roadmapUuid: number; data: TeamRoadmapUpdateRequest }) =>
-      roadmapApi.updateTeamRoadmap(teamName, roadmapUuid, data),
+    mutationFn: ({ roadmapId, data }: { roadmapId: number; data: TeamRoadmapUpdateRequest }) =>
+      roadmapApi.updateTeamRoadmap(teamId, roadmapId, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: roadmapKeys.teamDetail(teamName, variables.roadmapUuid),
+        queryKey: roadmapKeys.teamDetail(teamId, variables.roadmapId),
       });
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamName) });
+      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
     },
   });
 }
 
-export function useDeleteTeamRoadmap(teamName: string) {
+export function useDeleteTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (roadmapUuid: number) => roadmapApi.deleteTeamRoadmap(teamName, roadmapUuid),
+    mutationFn: (roadmapId: number) => roadmapApi.deleteTeamRoadmap(teamId, roadmapId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamName) });
-      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamName) });
+      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
+      queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamId) });
     },
   });
 }
