@@ -1,4 +1,4 @@
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
+import type { RoadmapItem } from '@/feature/dashboard';
 import type { Roadmap } from '@/feature/roadmap';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
 import type { RoadmapColor } from '@/shared/types/roadmap';

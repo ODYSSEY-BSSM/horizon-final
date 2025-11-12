@@ -1,8 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { RoadmapCard } from '@/feature/dashboard';
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
+import { RoadmapCard, type RoadmapItem } from '@/feature/dashboard';
 import { FilterTabs, FOLDER_FILTER_TABS, Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';

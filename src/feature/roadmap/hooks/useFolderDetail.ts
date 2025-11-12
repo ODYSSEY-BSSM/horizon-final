@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRootFolder } from '@/feature/folder/hooks/useFolderQueries';
+import { useRootFolder } from '@/feature/folder';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 const ITEMS_PER_PAGE = 10;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
+import { useTeamRootFolder } from '@/feature/folder';
 import type { Roadmap } from '@/feature/team/types/team';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 

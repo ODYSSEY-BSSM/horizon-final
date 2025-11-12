@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { folderKeys } from '@/feature/folder/hooks/useFolderQueries';
+import { folderKeys } from '@/feature/folder';
 import { roadmapApi } from '../api';
 import type {
   RoadmapCreateRequest,

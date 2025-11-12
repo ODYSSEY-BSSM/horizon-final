@@ -7,6 +7,7 @@ export { AddFolderCard } from './components/AddFolderCard';
 
 // Hooks
 export {
+  folderKeys,
   useCreateFolder,
   useUpdateFolder,
   useDeleteFolder,
