@@ -8,6 +8,7 @@ export type {
   TeamApplyRequest,
   TeamApplyResponse,
   TeamCreateRequest,
+  TeamInviteRequest,
   TeamMemberResponse,
   TeamMembersResponse,
   TeamResponse,

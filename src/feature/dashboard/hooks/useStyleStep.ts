@@ -3,24 +3,24 @@ import {
   COLOR_OPTIONS,
   ICON_OPTIONS,
 } from '@/feature/dashboard/constants/RoadmapFormModal.constants';
+import { useRoadmapSubmit, useTeamRoadmapSubmit } from '@/feature/roadmap/hooks/useRoadmapSubmit';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 import { tokens } from '@/shared/tokens';
 import type { RoadmapColor } from '@/shared/types/roadmap';
-import { useStyleStepForm } from './useRoadmapForm';
 
 export const useStyleStep = () => {
-  const {
-    control,
-    onComplete,
-    onPrevious,
-    formState: { isValid },
-    watch,
-  } = useStyleStepForm();
+  const { formData, updateField, previousStep, isStepValid } = useRoadmapFormStore();
+
+  // Get submission hooks
+  const { submitRoadmap, isLoading: isPersonalLoading } = useRoadmapSubmit();
+  const teamId = formData.teamId ? Number(formData.teamId) : 0;
+  const { submitTeamRoadmap, isLoading: isTeamLoading } = useTeamRoadmapSubmit(teamId);
 
   const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
   const [iconDropdownOpen, setIconDropdownOpen] = useState(false);
 
-  const color = watch('color');
-  const icon = watch('icon');
+  const color = formData.color;
+  const icon = formData.icon;
 
   const selectedColor = COLOR_OPTIONS.find((option) => option.value === color) || COLOR_OPTIONS[0];
   const selectedIcon = ICON_OPTIONS.find((option) => option.value === icon) || ICON_OPTIONS[0];
@@ -46,14 +46,38 @@ export const useStyleStep = () => {
     setColorDropdownOpen(false);
   };
 
+  const handlePrevious = () => {
+    previousStep();
+  };
+
+  const handleComplete = async () => {
+    if (!isStepValid()) {
+      return;
+    }
+
+    try {
+      if (formData.category === 'team' && formData.teamId) {
+        await submitTeamRoadmap();
+      } else {
+        await submitRoadmap();
+      }
+    } catch (_error) {
+      // Error already handled by mutation onError callback
+    }
+  };
+
+  const isValid = isStepValid();
+
   return {
     // Form state
-    control,
     isValid,
 
     // Navigation
-    onComplete,
-    onPrevious,
+    onComplete: handleComplete,
+    onPrevious: handlePrevious,
+
+    // Loading state
+    isLoading: isPersonalLoading || isTeamLoading,
 
     // Dropdown state
     colorDropdownOpen,
@@ -66,6 +90,9 @@ export const useStyleStep = () => {
     icon,
     selectedColor,
     selectedIcon,
+
+    // Field update
+    updateField,
 
     // Handlers
     getGradient,

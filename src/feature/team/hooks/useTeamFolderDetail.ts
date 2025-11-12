@@ -15,26 +15,42 @@ const useFolderDetail = (teamId: string, folderId: string) => {
   const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
 
   const allRoadmaps: Roadmap[] = useMemo(() => {
-    if (!teamRootFolder?.items) {
+    if (!teamRootFolder?.directories) {
       return [];
     }
 
-    // 로드맵만 추출하고 해당 폴더의 것만 필터링
-    return teamRootFolder.items
-      .filter((item) => item.type === 'roadmap' && item.parentUuid === Number(folderId))
-      .map((item) => ({
-        id: item.uuid.toString(),
-        folderId: folderId,
-        name: item.name,
-        description: '', // TODO: API에서 description 제공 필요
-        icon: item.icon.toLowerCase(),
-        color: item.color.toLowerCase() as RoadmapColor,
-        type: 'team' as 'personal' | 'team',
-        totalSteps: 0,
-        completedSteps: 0,
-        status: 'in-progress' as 'completed' | 'in-progress',
-        progress: 0,
-      }));
+    // 재귀적으로 특정 디렉토리 찾기
+    const findDirectory = (dirs: typeof teamRootFolder.directories, id: number): any => {
+      for (const dir of dirs) {
+        if (dir.id === id) {
+          return dir;
+        }
+        if (dir.directories?.length) {
+          const found = findDirectory(dir.directories, id);
+          if (found) {
+            return found;
+          }
+        }
+      }
+      return null;
+    };
+
+    const targetDir = findDirectory(teamRootFolder.directories, Number(folderId));
+    const roadmapList = targetDir?.roadmaps || [];
+
+    return roadmapList.map((roadmap: any) => ({
+      id: roadmap.id?.toString() || '',
+      folderId: folderId,
+      name: roadmap.title || '',
+      description: '', // TODO: API에서 description 제공 필요
+      icon: 'folder',
+      color: 'blue' as RoadmapColor,
+      type: 'team' as 'personal' | 'team',
+      totalSteps: 0,
+      completedSteps: 0,
+      status: 'in-progress' as 'completed' | 'in-progress',
+      progress: 0,
+    }));
   }, [teamRootFolder, folderId]);
 
   const filteredRoadmaps = useMemo(() => {

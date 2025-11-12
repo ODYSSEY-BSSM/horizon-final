@@ -1,50 +1,57 @@
-import type { Color, Icon, NodeType, Subject } from '@/shared/api/types';
+import type { Color, NodeType, Subject } from '@/shared/api/types';
 
 // ===================================
-// Node API Types
+// Node API Types (Swagger API)
 // ===================================
 
 // Node Create (노드 생성)
 export interface NodeCreateRequest {
-  name: string;
-  description?: string;
-  color: Color;
-  icon: Icon;
+  title: string; // 0-64자
+  description: string; // 0-1500자
+  height: number; // int32
+  width: number; // int32
   type: NodeType;
-  parentUuid?: number; // 부모 노드 UUID (선택)
+  x: number; // int32 - 위치
+  y: number; // int32 - 위치
+  color: Color;
+  parentNodeId?: number; // 부모 노드 ID (선택)
 }
 
 // Education Node Convert (교육과정 노드 전환)
 export interface EducationNodeConvertRequest {
-  parentUuid?: number; // 부모 노드 UUID (선택)
+  subject: Subject; // 교과목 (필수)
 }
 
 // Node Response (노드 응답)
 export interface NodeResponse {
-  uuid: number;
-  name: string;
-  description?: string;
-  color: Color;
-  icon: Icon;
+  id: number;
+  title: string;
+  description: string;
+  height: number;
+  width: number;
   type: NodeType;
-  parentUuid?: number;
-  childUuids: number[]; // 자식 노드 UUID 배열
-  roadmapUuid: number;
-  educationUuid?: number; // 교육과정 UUID (교육과정 노드인 경우)
-  subject?: Subject; // 교과목 (교육과정 노드인 경우)
-  isResolved: boolean; // 문제 해결 여부
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
+  x: number;
+  y: number;
+  color: string;
+  roadmapId: number;
+  parentNodeId?: number;
+  childNode: NodeResponse[]; // 자식 노드 배열 (재귀 구조)
+  progress: number; // int32
+  isEducation: boolean; // 교육과정 노드 여부
+  subject?: string; // 교과목 (교육과정 노드인 경우)
 }
 
 // Node Update (노드 수정)
 export interface NodeUpdateRequest {
-  name?: string;
+  title?: string;
   description?: string;
-  color?: Color;
-  icon?: Icon;
+  height?: number;
+  width?: number;
   type?: NodeType;
-  parentUuid?: number;
+  x?: number;
+  y?: number;
+  color?: Color;
+  parentNodeId?: number;
 }
 
 // Node List Response (노드 전체 조회)

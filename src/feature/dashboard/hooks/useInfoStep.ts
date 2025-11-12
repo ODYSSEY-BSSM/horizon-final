@@ -1,17 +1,31 @@
-import { useInfoStepForm } from './useRoadmapForm';
+import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
 
 export const useInfoStep = () => {
-  const {
-    control,
-    onNext,
-    onPrevious,
-    formState: { isValid },
-  } = useInfoStepForm();
+  const { formData, updateField, nextStep, previousStep, isStepValid } = useRoadmapFormStore();
+
+  const handleNext = () => {
+    nextStep();
+  };
+
+  const handlePrevious = () => {
+    previousStep();
+  };
+
+  const isValid = isStepValid();
 
   return {
-    control,
-    onNext,
-    onPrevious,
+    // Form data
+    name: formData.name,
+    description: formData.description,
+
+    // Field update
+    updateField,
+
+    // Navigation
+    onNext: handleNext,
+    onPrevious: handlePrevious,
+
+    // Validation
     isValid,
   };
 };

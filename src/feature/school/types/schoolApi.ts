@@ -11,7 +11,7 @@ export interface SchoolConnectRequest {
 
 // School Response (학교 정보)
 export interface SchoolResponse {
-  uuid: number;
+  id: number;
   name: string;
   code: string;
   logoUrl?: string;
@@ -20,8 +20,8 @@ export interface SchoolResponse {
 
 // Education Node (교육과정 노드)
 export interface EducationNodeResponse {
-  uuid: number;
-  name: string;
+  id: number;
+  title: string;
   description?: string;
   subject: Subject;
   teacher?: string; // 교사 이름

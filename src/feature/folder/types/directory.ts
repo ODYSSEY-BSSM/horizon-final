@@ -1,99 +1,47 @@
-import type { Color, Icon } from '@/shared/api/types';
-
 // ===================================
-// Directory API Types
+// Directory API Types (Swagger API)
 // ===================================
 
 // Directory Create (디렉토리 생성)
 export interface DirectoryCreateRequest {
-  name: string;
-  color: Color;
-  icon: Icon;
-  parentUuid?: number; // 부모 디렉토리 UUID (선택)
+  name: string; // 0-64자
+  parentId?: number; // 부모 디렉토리 ID (선택)
 }
 
-// Directory Response (디렉토리 응답)
+// Directory Response (디렉토리 응답) - 재귀 구조
 export interface DirectoryResponse {
-  uuid: number;
+  id: number;
   name: string;
-  color: Color;
-  icon: Icon;
-  parentUuid?: number;
-  childUuids: number[]; // 자식 디렉토리 UUID 배열
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
+  parentId?: number;
+  directories: DirectoryResponse[]; // 중첩된 하위 디렉토리들
+  roadmaps: SimpleRoadmapResponse[]; // 디렉토리 내 로드맵들
+}
+
+// Simple Roadmap Response (디렉토리 내 로드맵 간소 정보)
+export interface SimpleRoadmapResponse {
+  id: number;
+  title: string;
 }
 
 // Directory Update (디렉토리 수정)
 export interface DirectoryUpdateRequest {
   name?: string;
-  color?: Color;
-  icon?: Icon;
-  parentUuid?: number;
+  parentId?: number;
 }
 
-// Directory Content Response (디렉토리 컨텐츠 조회)
-export interface DirectoryContentItem {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  type: 'directory' | 'roadmap'; // 디렉토리 또는 로드맵
-  parentUuid?: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
+// Directory Content Response (루트 컨텐츠 조회)
 export interface DirectoryContentResponse {
-  items: DirectoryContentItem[];
+  directories: DirectoryResponse[];
 }
 
 // ===================================
-// Team Directory API Types
+// Team Directory API Types (Swagger API)
 // ===================================
 
-// Team Directory Create (팀 디렉토리 생성)
-export interface TeamDirectoryCreateRequest {
-  name: string;
-  color: Color;
-  icon: Icon;
-  parentUuid?: number; // 부모 디렉토리 UUID (선택)
+// Team Directory - 동일한 구조 사용
+export interface TeamDirectoryCreateRequest extends DirectoryCreateRequest {}
+export interface TeamDirectoryResponse extends DirectoryResponse {
+  teamId: number;
 }
-
-// Team Directory Response (팀 디렉토리 응답)
-export interface TeamDirectoryResponse {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  parentUuid?: number;
-  childUuids: number[]; // 자식 디렉토리 UUID 배열
-  teamName: string;
-  createdAt: string; // ISO 8601 format
-  updatedAt: string; // ISO 8601 format
-}
-
-// Team Directory Update (팀 디렉토리 수정)
-export interface TeamDirectoryUpdateRequest {
-  name?: string;
-  color?: Color;
-  icon?: Icon;
-  parentUuid?: number;
-}
-
-// Team Directory Content Response (팀 디렉토리 컨텐츠 조회)
-export interface TeamDirectoryContentItem {
-  uuid: number;
-  name: string;
-  color: Color;
-  icon: Icon;
-  type: 'directory' | 'roadmap'; // 디렉토리 또는 로드맵
-  parentUuid?: number;
-  teamName: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TeamDirectoryContentResponse {
-  items: TeamDirectoryContentItem[];
-}
+export interface TeamDirectoryUpdateRequest extends DirectoryUpdateRequest {}
+export interface TeamDirectoryContentResponse extends DirectoryContentResponse {}

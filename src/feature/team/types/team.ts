@@ -6,6 +6,7 @@ export type Team = {
   description: string;
   memberCount: number;
   createdAt: string;
+  inviteCode?: string; // API에서 받은 초대 코드
 };
 
 export type TeamFolder = {

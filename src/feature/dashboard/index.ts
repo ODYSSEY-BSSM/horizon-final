@@ -23,12 +23,10 @@ export { InfoStep } from './forms/RoadmapFormModal/steps/InfoStep';
 export { StyleStep } from './forms/RoadmapFormModal/steps/StyleStep';
 export { TeamStep } from './forms/RoadmapFormModal/steps/TeamStep';
 // Hooks
-export { useCategoryStep } from './hooks/useCategoryStep';
 export { useDashboard } from './hooks/useDashboard';
 export { useDashboardData } from './hooks/useDashboardData';
 export { useFolderStep } from './hooks/useFolderStep';
 export { useInfoStep } from './hooks/useInfoStep';
-export { useRoadmapForm } from './hooks/useRoadmapForm';
 export { useStyleStep } from './hooks/useStyleStep';
 export { useTeamStep } from './hooks/useTeamStep';
 // Sections

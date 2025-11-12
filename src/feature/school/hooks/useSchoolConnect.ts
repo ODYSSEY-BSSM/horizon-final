@@ -30,7 +30,7 @@ export const useSchoolConnect = () => {
 
   // 학교 연동
   const { mutateAsync: connectSchool, isPending: isConnecting } = useMutation({
-    mutationFn: () => schoolApi.connectSchool(),
+    mutationFn: schoolApi.connectSchool,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['school'] });
     },
@@ -68,7 +68,7 @@ export const useSchoolConnect = () => {
     if (schoolData) {
       // API 응답을 UI 타입으로 변환
       const schoolInfo: SchoolInfo = {
-        id: String(schoolData.uuid),
+        id: String(schoolData.id),
         name: schoolData.name,
         logoUrl: schoolData.logoUrl || '',
         nodeCount: nodesData?.nodes.length || 0,
@@ -76,8 +76,8 @@ export const useSchoolConnect = () => {
 
       const nodes: SchoolNode[] =
         nodesData?.nodes.map((node) => ({
-          id: String(node.uuid),
-          name: node.name,
+          id: String(node.id),
+          name: node.title,
           teacher: node.teacher || '담당자 미지정',
           usageCount: 0, // TODO: 실제 사용 횟수는 별도 API에서 조회 필요
         })) || [];
@@ -96,11 +96,11 @@ export const useSchoolConnect = () => {
     }
   }, [schoolData, nodesData, isLoadingSchool, isLoadingNodes, isConnecting]);
 
-  const handleConnect = async () => {
+  const handleConnect = async (schoolCode: string) => {
     try {
-      await connectSchool();
+      await connectSchool({ schoolCode });
     } catch (_error) {
-      // 에러를 의도적으로 무시합니다.
+      // 에러를 의도적으로 무시합니다 (모달로 표시됨).
     }
   };
 
