@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { folderKeys } from '@/feature/folder/hooks/useFolderQueries';
 import { roadmapApi } from '../api';
 import type {
   RoadmapCreateRequest,
@@ -160,6 +161,7 @@ export function useCreateTeamRoadmap(teamId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamId) });
+      queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
     },
   });
 }

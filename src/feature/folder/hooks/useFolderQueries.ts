@@ -81,6 +81,13 @@ export function useDeleteFolder() {
 // Team Directory Queries
 // ===================================
 
+export function useTeamRootFolder(teamId: number) {
+  return useQuery({
+    queryKey: folderKeys.team(teamId),
+    queryFn: () => folderApi.getTeamRootDirectory(teamId),
+  });
+}
+
 // ===================================
 // Team Directory Mutations
 // ===================================
@@ -92,6 +99,7 @@ export function useCreateTeamFolder(teamId: number) {
     mutationFn: (data: TeamDirectoryCreateRequest) => folderApi.createTeamDirectory(teamId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: folderKeys.teamList(teamId) });
+      queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
     },
   });
 }
