@@ -45,7 +45,7 @@ export function useConnectSchool() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: SchoolConnectRequest) => schoolApi.connectSchool(data),
+    mutationFn: () => schoolApi.connectSchool(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: schoolKeys.connect() });
       queryClient.invalidateQueries({ queryKey: schoolKeys.educationNodes() });

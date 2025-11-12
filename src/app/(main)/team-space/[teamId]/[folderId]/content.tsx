@@ -21,13 +21,13 @@ const FolderRoadmapsContent = () => {
   const teamId = params.teamId;
   const folderId = params.folderId;
 
-  const { teams } = useTeamSpaceData(teamId);
+  const { teams } = useTeamSpaceData();
 
   const currentTeam = teams.find((team) => team.id === teamId);
   const _teamName = currentTeam?.name || '';
 
-  // 팀 폴더 조회
-  const currentFolder = currentTeam?.folders.find((folder) => folder.id.toString() === folderId);
+  // TODO: 팀 폴더 조회는 별도 API 호출 필요
+  // const currentFolder = ...;
 
   const handleAddRoadmap = () => {
     // TODO: 로드맵 생성 모달 구현
@@ -39,13 +39,10 @@ const FolderRoadmapsContent = () => {
     }
   };
 
-  if (!currentTeam || !currentFolder) {
+  if (!currentTeam) {
     return (
       <StyledContainer>
-        <StyledErrorMessage>
-          {!currentTeam && '팀을 찾을 수 없습니다.'}
-          {!currentFolder && '폴더를 찾을 수 없습니다.'}
-        </StyledErrorMessage>
+        <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
       </StyledContainer>
     );
   }

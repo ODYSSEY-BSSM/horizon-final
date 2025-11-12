@@ -8,9 +8,9 @@ export const teamKeys = {
   lists: () => [...teamKeys.all, 'list'] as const,
   list: () => [...teamKeys.lists()] as const,
   details: () => [...teamKeys.all, 'detail'] as const,
-  detail: (teamName: string) => [...teamKeys.details(), teamName] as const,
-  members: (teamName: string) => [...teamKeys.detail(teamName), 'members'] as const,
-  applications: (teamName: string) => [...teamKeys.detail(teamName), 'applications'] as const,
+  detail: (teamId: number) => [...teamKeys.details(), teamId] as const,
+  members: (teamId: number) => [...teamKeys.detail(teamId), 'members'] as const,
+  applications: (teamId: number) => [...teamKeys.detail(teamId), 'applications'] as const,
 };
 
 // ===================================
@@ -24,25 +24,25 @@ export function useTeams() {
   });
 }
 
-export function useTeam(teamName: string) {
+export function useTeam(teamId: number) {
   return useQuery({
-    queryKey: teamKeys.detail(teamName),
-    queryFn: () => teamApi.getTeam(teamName),
-    enabled: !!teamName,
+    queryKey: teamKeys.detail(teamId),
+    queryFn: () => teamApi.getTeam(teamId),
+    enabled: !!teamId,
   });
 }
 
-export function useTeamMembers(teamName: string) {
+export function useTeamMembers(teamId: number) {
   return useQuery({
-    queryKey: teamKeys.members(teamName),
-    queryFn: () => teamApi.getTeamMembers(teamName),
-    enabled: !!teamName,
+    queryKey: teamKeys.members(teamId),
+    queryFn: () => teamApi.getTeamMembers(teamId),
+    enabled: !!teamId,
   });
 }
 
 export function useTeamApplications(teamId: number) {
   return useQuery({
-    queryKey: teamKeys.applications(teamId.toString()),
+    queryKey: teamKeys.applications(teamId),
     queryFn: () => teamApi.getTeamApplications(teamId),
     enabled: !!teamId,
   });
@@ -63,13 +63,13 @@ export function useCreateTeam() {
   });
 }
 
-export function useUpdateTeam(teamName: string) {
+export function useUpdateTeam(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TeamUpdateRequest) => teamApi.updateTeam(teamName, data),
+    mutationFn: (data: TeamUpdateRequest) => teamApi.updateTeam(teamId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamName) });
+      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
   });
@@ -79,21 +79,21 @@ export function useDeleteTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (teamName: string) => teamApi.deleteTeam(teamName),
+    mutationFn: (teamId: number) => teamApi.deleteTeam(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
   });
 }
 
-export function useRemoveTeamMember(teamName: string) {
+export function useRemoveTeamMember(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (memberUuid: number) => teamApi.removeTeamMember(teamName, memberUuid),
+    mutationFn: (memberUuid: number) => teamApi.removeTeamMember(teamId, memberUuid),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.members(teamName) });
-      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamName) });
+      queryClient.invalidateQueries({ queryKey: teamKeys.members(teamId) });
+      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });
     },
   });
 }
@@ -106,8 +106,7 @@ export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ teamId, data }: { teamId: number; data: TeamApplyRequest }) =>
-      teamApi.applyToTeam(teamId, data),
+    mutationFn: (teamId: number) => teamApi.applyToTeam(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
@@ -120,7 +119,7 @@ export function useApproveTeamApplication(teamId: number) {
   return useMutation({
     mutationFn: (applyId: number) => teamApi.approveTeamApplication(applyId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId.toString()) });
+      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },
   });
@@ -132,7 +131,7 @@ export function useRejectTeamApplication(teamId: number) {
   return useMutation({
     mutationFn: (applyId: number) => teamApi.rejectTeamApplication(applyId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId.toString()) });
+      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
     },
   });
 }

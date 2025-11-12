@@ -30,7 +30,7 @@ export const useSchoolConnect = () => {
 
   // 학교 연동
   const { mutateAsync: connectSchool, isPending: isConnecting } = useMutation({
-    mutationFn: (schoolCode: string) => schoolApi.connectSchool({ schoolCode }),
+    mutationFn: () => schoolApi.connectSchool(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['school'] });
     },
@@ -96,9 +96,9 @@ export const useSchoolConnect = () => {
     }
   }, [schoolData, nodesData, isLoadingSchool, isLoadingNodes, isConnecting]);
 
-  const handleConnect = async (schoolCode: string) => {
+  const handleConnect = async () => {
     try {
-      await connectSchool(schoolCode);
+      await connectSchool();
     } catch (_error) {
       // 에러를 의도적으로 무시합니다.
     }

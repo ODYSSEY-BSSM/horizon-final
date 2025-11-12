@@ -14,22 +14,22 @@ const useFolderDetail = () => {
   const { data: rootFolder, isLoading } = useRootFolder();
 
   const roadmaps = useMemo(() => {
-    if (!rootFolder?.directories) {
+    if (!rootFolder?.items) {
       return [];
     }
 
-    // 모든 디렉토리를 순회하며 로드맵만 추출
-    const allRoadmaps = rootFolder.directories.flatMap((dir) => dir.roadmaps || []);
+    // 로드맵만 추출
+    const allRoadmaps = rootFolder.items.filter((item) => item.type === 'roadmap');
 
     return allRoadmaps.map((item) => ({
-      id: item.id.toString(),
-      title: item.title,
+      id: item.uuid.toString(),
+      title: item.name,
       icon: item.icon.toLowerCase(),
       color: item.color.toLowerCase() as RoadmapColor,
       category: 'personal' as 'personal' | 'team',
-      steps: item.progress,
-      status: item.progress === 100 ? ('completed' as const) : ('in-progress' as const),
-      progress: item.progress,
+      steps: 0, // TODO: progress 데이터 필요
+      status: ('in-progress' as 'completed' | 'in-progress'), // TODO: status 데이터 필요
+      progress: 0, // TODO: progress 데이터 필요
     }));
   }, [rootFolder]);
 

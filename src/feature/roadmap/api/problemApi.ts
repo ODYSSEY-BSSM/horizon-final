@@ -8,21 +8,21 @@ export const problemApi = {
 
   // 문제 생성
   createProblem: async (
-    roadmapId: number,
+    nodeId: number,
     data: ProblemCreateRequest,
   ): Promise<ProblemResponse> => {
-    const response = await apiClient.post<ProblemResponse>(`/roadmap/${roadmapId}/problems`, data);
+    const response = await apiClient.post<ProblemResponse>(`/${nodeId}/problems`, data);
     return response.data;
   },
 
   // 문제 풀이
   solveProblem: async (
-    roadmapId: number,
+    nodeId: number,
     problemId: number,
     data: ProblemSolveRequest,
   ): Promise<ProblemResponse> => {
     const response = await apiClient.patch<ProblemResponse>(
-      `/roadmap/${roadmapId}/problems?problemId=${problemId}`,
+      `/${nodeId}/problems?problemId=${problemId}`,
       data,
     );
     return response.data;

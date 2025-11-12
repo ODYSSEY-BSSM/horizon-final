@@ -82,7 +82,7 @@ export function useMoveNode(roadmapId: number) {
 
   return useMutation({
     mutationFn: ({ nodeId, data }: { nodeId: number; data: NodeUpdateRequest }) =>
-      nodeApi.moveNode(roadmapId, nodeId, data),
+      nodeApi.updateNode(roadmapId, nodeId, data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: nodeKeys.detail(roadmapId, data.uuid) });
       queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
