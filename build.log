@@ -1,0 +1,60 @@
+$ next build
+   ▲ Next.js 15.4.6
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 1000ms
+
+./src/feature/roadmap/components/FolderList/FolderList.tsx
+Attempted import error: 'FILTER_TABS' is not exported from '@/feature/roadmap' (imported as 'FILTER_TABS').
+
+Import trace for requested module:
+./src/feature/roadmap/components/FolderList/FolderList.tsx
+./src/feature/roadmap/components/FolderList/index.ts
+./src/feature/roadmap/index.ts
+./src/app/(main)/my-roadmaps/content.tsx
+
+./src/feature/roadmap/components/RoadmapList/RoadmapList.tsx
+Attempted import error: 'FILTER_TABS' is not exported from '@/feature/roadmap' (imported as 'FILTER_TABS').
+
+Import trace for requested module:
+./src/feature/roadmap/components/RoadmapList/RoadmapList.tsx
+./src/feature/roadmap/components/RoadmapList/index.ts
+./src/feature/roadmap/index.ts
+./src/app/(main)/my-roadmaps/content.tsx
+
+ ⚠ Compiled with warnings in 0ms
+
+./src/feature/roadmap/components/FolderList/FolderList.tsx
+Attempted import error: 'FILTER_TABS' is not exported from '@/feature/roadmap' (imported as 'FILTER_TABS').
+
+Import trace for requested module:
+./src/feature/roadmap/components/FolderList/FolderList.tsx
+./src/feature/roadmap/components/FolderList/index.ts
+./src/feature/roadmap/index.ts
+./src/app/(main)/my-roadmaps/content.tsx
+
+./src/feature/roadmap/components/RoadmapList/RoadmapList.tsx
+Attempted import error: 'FILTER_TABS' is not exported from '@/feature/roadmap' (imported as 'FILTER_TABS').
+
+Import trace for requested module:
+./src/feature/roadmap/components/RoadmapList/RoadmapList.tsx
+./src/feature/roadmap/components/RoadmapList/index.ts
+./src/feature/roadmap/index.ts
+./src/app/(main)/my-roadmaps/content.tsx
+
+ ✓ Compiled successfully in 1000ms
+   Linting and checking validity of types ...
+Failed to compile.
+
+./src/feature/roadmap/components/FolderList/FolderList.tsx:7:10
+Type error: '"@/feature/roadmap"' has no exported member named 'FILTER_TABS'. Did you mean 'FilterTabs'?
+
+[0m [90m  5 |[39m [36mimport[39m { [33mAddFolderCard[39m } [36mfrom[39m [32m'@/feature/folder'[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m type { [33mFolder[39m } [36mfrom[39m [32m'@/feature/roadmap'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { [33mFILTER_TABS[39m[33m,[39m [33mFilterTabs[39m[33m,[39m [33mFolderCard[39m[33m,[39m [33mPagination[39m } [36mfrom[39m [32m'@/feature/roadmap'[39m[33m;[39m
+ [90m    |[39m          [31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { tokens } [36mfrom[39m [32m'@/shared/tokens'[39m[33m;[39m
+ [90m  9 |[39m
+ [90m 10 |[39m [36mexport[39m [36minterface[39m [33mFolderListProps[39m {[0m
+Next.js build worker exited with code: 1 and signal: null
+error: script "build" exited with code 1
