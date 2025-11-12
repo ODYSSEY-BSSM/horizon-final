@@ -83,8 +83,8 @@ const TeamFoldersContent = () => {
     setShowCreateTeamModal(true);
   };
 
-  const handleTeamCreate = ({ name }: { name: string }) => {
-    const newTeam = addTeam({ name, description: '' });
+  const handleTeamCreate = async ({ name }: { name: string }) => {
+    const newTeam = await addTeam({ name, description: '' });
     router.push(`/team-space/${newTeam.id}`);
     return newTeam;
   };
@@ -94,6 +94,11 @@ const TeamFoldersContent = () => {
   };
 
   const inviteCode = useMemo(() => {
+    // API에서 받은 초대 코드 우선 사용
+    if (currentTeam?.inviteCode) {
+      return currentTeam.inviteCode;
+    }
+    // Fallback: 로컬에서 생성
     return currentTeam ? generateInviteCode(currentTeam.id) : undefined;
   }, [currentTeam]);
 

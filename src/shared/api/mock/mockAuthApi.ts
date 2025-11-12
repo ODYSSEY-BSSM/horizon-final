@@ -167,13 +167,25 @@ export const mockAuthApi = {
       throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
+    // 팀 정보 가져오기
+    const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
+    const userTeams = teams
+      .filter((team) => team.memberIds?.includes(currentUser.id))
+      .map((team) => team.name);
+
+    // 학교 정보 가져오기
+    const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
+    const userSchool = currentUser.schoolId
+      ? schools.find((s) => s.id === currentUser.schoolId)
+      : null;
+
     return {
       username: currentUser.username,
       email: currentUser.email,
       role: currentUser.role,
-      teams: [],
-      school: undefined,
-      isConnectedSchool: false,
+      teams: userTeams,
+      school: userSchool?.name,
+      isConnectedSchool: !!userSchool,
     };
   },
 };

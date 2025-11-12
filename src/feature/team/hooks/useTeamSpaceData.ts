@@ -21,6 +21,7 @@ export const useTeamSpaceData = () => {
       description: '', // Swagger에 description 필드 없음
       memberCount: team.members?.length || 0,
       createdAt: new Date().toISOString(), // Swagger에 createdAt 필드 없음
+      inviteCode: team.inviteCode, // API에서 받은 초대 코드
     }));
   }, [teamsData]);
 
@@ -36,16 +37,17 @@ export const useTeamSpaceData = () => {
     // TODO: 폴더 추가 기능 구현
   };
 
-  const addTeam = (data: { name: string; description: string }): Team => {
-    // TODO: 팀 추가 기능 구현
-    createTeamMutation.mutate(data);
+  const addTeam = async (data: { name: string; description: string }): Promise<Team> => {
+    // 팀 생성 API 호출 및 응답 대기
+    const teamResponse = await createTeamMutation.mutateAsync(data);
 
     return {
-      id: Date.now().toString(),
-      name: data.name,
-      description: data.description,
-      memberCount: 1,
+      id: teamResponse.id.toString(),
+      name: teamResponse.name,
+      description: '', // Swagger에 description 없음
+      memberCount: teamResponse.members?.length || 1,
       createdAt: new Date().toISOString(),
+      inviteCode: teamResponse.inviteCode, // API에서 받은 초대 코드 사용
     };
   };
 

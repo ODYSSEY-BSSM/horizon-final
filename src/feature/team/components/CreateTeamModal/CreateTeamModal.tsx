@@ -34,6 +34,11 @@ export const CreateTeamModal = ({
   const isSubmitDisabled = trimmedName.length === 0;
 
   const resolvedInviteCode = useMemo(() => {
+    // API에서 받은 초대 코드 우선 사용
+    if (createdTeam?.inviteCode) {
+      return createdTeam.inviteCode;
+    }
+    // Fallback: 로컬에서 생성 (주로 개발 중)
     if (createdTeam?.id) {
       return generateInviteCode(createdTeam.id);
     }
