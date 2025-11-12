@@ -1,14 +1,2 @@
-import type {
-  DirectoryContentResponse,
-  DirectoryCreateRequest,
-  DirectoryResponse,
-  DirectoryUpdateRequest,
-  TeamDirectoryCreateRequest,
-  TeamDirectoryResponse,
-  TeamDirectoryUpdateRequest,
-} from '../types';
-import { mockFolderApi, mockTeamFolderApi } from '@/shared/api/mock/mockFolderApi';
-
 // Mock API 사용 (실제 API 대신)
-export const folderApi = mockFolderApi;
-export const teamFolderApi = mockTeamFolderApi;
+export { mockFolderApi as folderApi, mockTeamFolderApi as teamFolderApi } from '@/shared/api/mock/mockFolderApi';
