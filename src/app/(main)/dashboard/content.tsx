@@ -49,7 +49,13 @@ const DashboardContent = () => {
       <StyledContentContainer>
         <GreetingSection userName={userData.name} />
 
-        <InfoCardsGrid infoData={userData} />
+        <InfoCardsGrid
+          myRoadmapsCount={userData['my-roadmap-count'].count}
+          myRoadmapsInProgress={userData['my-roadmap-in-progress'].count}
+          teamRoadmapsCount={userData['team-roadmap-count'].count}
+          teamRoadmapsInProgress={userData['team-roadmap-in-progress'].count}
+          connectedSchool={userData['connected-school'].schoolName}
+        />
 
         <RoadmapSection items={roadmapsData} onAddRoadmap={handleAddRoadmap} />
       </StyledContentContainer>

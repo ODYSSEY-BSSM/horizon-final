@@ -55,8 +55,6 @@ export class MockStorage {
     } catch (_error) {
       // localStorage quota exceeded or other storage error
       // In production, this should be logged to a monitoring service
-      if (process.env.NODE_ENV === 'development') {
-      }
     }
   }
 
