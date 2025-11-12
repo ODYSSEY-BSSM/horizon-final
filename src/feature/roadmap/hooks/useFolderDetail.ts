@@ -14,7 +14,9 @@ const useFolderDetail = (folderId: string) => {
   const { data: folderContent, isLoading } = useFolderContent(Number(folderId));
 
   const roadmaps = useMemo(() => {
-    if (!folderContent?.items) return [];
+    if (!folderContent?.items) {
+      return [];
+    }
 
     return folderContent.items
       .filter((item) => item.type === 'roadmap')

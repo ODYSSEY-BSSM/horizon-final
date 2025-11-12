@@ -1,25 +1,21 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { DeleteMessage, NodeUpdateMessage, RoadmapNodeMessage } from '@/shared/api/stompTypes';
 import { useStompWebSocket } from '@/shared/hooks/useStompWebSocket';
-import type {
-  RoadmapNodeMessage,
-  NodeUpdateMessage,
-  DeleteMessage,
-} from '@/shared/api/stompTypes';
 
 export interface UseRoadmapNodesWebSocketOptions {
-    roadmapId: number;
+  roadmapId: number;
 
-    onCreated?: (node: RoadmapNodeMessage) => void;
+  onCreated?: (node: RoadmapNodeMessage) => void;
 
-    onUpdated?: (nodeId: number, updates: NodeUpdateMessage) => void;
+  onUpdated?: (nodeId: number, updates: NodeUpdateMessage) => void;
 
-    onDeleted?: (nodeId: number) => void;
+  onDeleted?: (nodeId: number) => void;
 
-    autoSubscribe?: boolean;
+  autoSubscribe?: boolean;
 }
 
 export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOptions) {
-  const { roadmapId, onCreated, onUpdated, onDeleted, autoSubscribe = true } = options;
+  const { roadmapId, onCreated, onDeleted, autoSubscribe = true } = options;
 
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { isConnected, subscribe, unsubscribe, send } = useStompWebSocket();
@@ -59,10 +55,9 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     };
   }, [isConnected, autoSubscribe, roadmapId, subscribe, unsubscribe, handleCreated, handleDeleted]);
 
-    const subscribeNodeUpdate = useCallback(
+  const subscribeNodeUpdate = useCallback(
     (nodeId: number, handler: (updates: NodeUpdateMessage) => void) => {
       if (!isConnected) {
-        console.warn('[useRoadmapNodesWebSocket] Cannot subscribe: not connected');
         return;
       }
 
@@ -72,7 +67,7 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     [isConnected, roadmapId, subscribe],
   );
 
-    const unsubscribeNodeUpdate = useCallback(
+  const unsubscribeNodeUpdate = useCallback(
     (nodeId: number) => {
       const updateTopic = `/topic/roadmap/${roadmapId}/nodes/${nodeId}`;
       unsubscribe(updateTopic);
@@ -80,10 +75,9 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     [roadmapId, unsubscribe],
   );
 
-    const sendNodeUpdate = useCallback(
+  const sendNodeUpdate = useCallback(
     (nodeId: number, updates: NodeUpdateMessage) => {
       if (!isConnected) {
-        console.warn('[useRoadmapNodesWebSocket] Cannot send: not connected');
         return;
       }
 

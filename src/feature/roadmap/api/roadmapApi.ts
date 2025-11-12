@@ -1,9 +1,9 @@
 import { apiClient } from '@/shared/api';
 import type {
+  RoadmapCountResponse,
   RoadmapCreateRequest,
   RoadmapResponse,
   RoadmapUpdateRequest,
-  RoadmapCountResponse,
   TeamRoadmapCreateRequest,
   TeamRoadmapResponse,
   TeamRoadmapUpdateRequest,
@@ -33,7 +33,10 @@ export const roadmapApi = {
   },
 
   // 개인 로드맵 수정
-  updateRoadmap: async (roadmapUuid: number, data: RoadmapUpdateRequest): Promise<RoadmapResponse> => {
+  updateRoadmap: async (
+    roadmapUuid: number,
+    data: RoadmapUpdateRequest,
+  ): Promise<RoadmapResponse> => {
     const response = await apiClient.put<RoadmapResponse>(`/roadmaps/${roadmapUuid}`, data);
     return response.data;
   },
@@ -69,7 +72,10 @@ export const roadmapApi = {
   // ===================================
 
   // 팀 로드맵 생성
-  createTeamRoadmap: async (teamName: string, data: TeamRoadmapCreateRequest): Promise<TeamRoadmapResponse> => {
+  createTeamRoadmap: async (
+    teamName: string,
+    data: TeamRoadmapCreateRequest,
+  ): Promise<TeamRoadmapResponse> => {
     const response = await apiClient.post<TeamRoadmapResponse>(`/roadmaps/teams/${teamName}`, data);
     return response.data;
   },

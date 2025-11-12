@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { nodeApi } from '../api';
-import type { NodeCreateRequest, NodeUpdateRequest, EducationNodeConvertRequest } from '../types';
+import type { EducationNodeConvertRequest, NodeCreateRequest, NodeUpdateRequest } from '../types';
 
 // Query Keys
 export const nodeKeys = {

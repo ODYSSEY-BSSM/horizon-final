@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getWebSocketClient,
   removeWebSocketClient,
@@ -81,8 +81,8 @@ export function useWebSocket(
       try {
         const message: WebSocketMessage = JSON.parse((event as MessageEvent).data);
         handlersRef.current.onMessage?.(message);
-      } catch (error) {
-        console.error('[useWebSocket] Failed to parse message:', error);
+      } catch (_error) {
+        // JSON 파싱 오류는 무시합니다.
       }
     };
 
@@ -128,11 +128,11 @@ export function useWebSocket(
   }, []);
 
   // Send function
-  const send = useCallback(<T,>(type: string, data: T) => {
+  const send = useCallback(<T>(type: string, data: T) => {
     if (clientRef.current?.isConnected()) {
       clientRef.current.send(type, data);
     } else {
-      console.warn('[useWebSocket] Cannot send message: WebSocket is not connected');
+      // 연결되지 않았을 때의 처리를 여기에 추가할 수 있습니다.
     }
   }, []);
 

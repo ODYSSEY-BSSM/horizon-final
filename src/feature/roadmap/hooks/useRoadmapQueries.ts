@@ -159,8 +159,7 @@ export function useCreateTeamRoadmap(teamName: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TeamRoadmapCreateRequest) =>
-      roadmapApi.createTeamRoadmap(teamName, data),
+    mutationFn: (data: TeamRoadmapCreateRequest) => roadmapApi.createTeamRoadmap(teamName, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamName) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamName) });
@@ -172,13 +171,8 @@ export function useUpdateTeamRoadmap(teamName: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      roadmapUuid,
-      data,
-    }: {
-      roadmapUuid: number;
-      data: TeamRoadmapUpdateRequest;
-    }) => roadmapApi.updateTeamRoadmap(teamName, roadmapUuid, data),
+    mutationFn: ({ roadmapUuid, data }: { roadmapUuid: number; data: TeamRoadmapUpdateRequest }) =>
+      roadmapApi.updateTeamRoadmap(teamName, roadmapUuid, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: roadmapKeys.teamDetail(teamName, variables.roadmapUuid),

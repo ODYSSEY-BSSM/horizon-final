@@ -1,6 +1,6 @@
-import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
-import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
 import { useMemo } from 'react';
+import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
+import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
@@ -9,12 +9,12 @@ export const useDashboardData = () => {
   const { data: roadmapsData, isLoading: isLoadingRoadmaps, error: roadmapsError } = useRoadmaps();
 
   const userData = useMemo(() => {
-    if (!userProfile) return null;
+    if (!userProfile) {
+      return null;
+    }
 
     const myRoadmapsCount = roadmapsData?.length || 0;
-    const myRoadmapsInProgress = roadmapsData?.filter(
-      (roadmap) => roadmap.isFavorite
-    ).length || 0;
+    const myRoadmapsInProgress = roadmapsData?.filter((roadmap) => roadmap.isFavorite).length || 0;
 
     return {
       name: userProfile.username,
@@ -27,7 +27,9 @@ export const useDashboardData = () => {
   }, [userProfile, roadmapsData]);
 
   const roadmaps = useMemo(() => {
-    if (!roadmapsData) return [];
+    if (!roadmapsData) {
+      return [];
+    }
 
     return roadmapsData.map((roadmap) => ({
       id: roadmap.uuid.toString(),

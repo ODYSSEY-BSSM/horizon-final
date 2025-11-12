@@ -20,13 +20,13 @@ type EventHandler = (event: Event) => void;
 export class WebSocketClient {
   private ws: WebSocket | null = null;
   private url: string;
-  private reconnectAttempts: number = 0;
+  private reconnectAttempts = 0;
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private messageHandlers: Map<string, MessageHandler[]> = new Map();
   private eventHandlers: Map<WebSocketEventType, EventHandler[]> = new Map();
-  private isManualClose: boolean = false;
-  private isConnecting: boolean = false;
+  private isManualClose = false;
+  private isConnecting = false;
 
   constructor(endpoint: string) {
     this.url = `${WS_BASE_URL}${endpoint}`;
@@ -34,7 +34,6 @@ export class WebSocketClient {
 
   connect(): void {
     if (this.ws?.readyState === WebSocket.OPEN || this.isConnecting) {
-      console.warn('[WebSocket] Already connected or connecting');
       return;
     }
 
@@ -52,8 +51,7 @@ export class WebSocketClient {
       this.ws.onclose = this.handleClose.bind(this);
       this.ws.onerror = this.handleError.bind(this);
       this.ws.onmessage = this.handleMessage.bind(this);
-    } catch (error) {
-      console.error('[WebSocket] Connection error:', error);
+    } catch (_error) {
       this.isConnecting = false;
       this.scheduleReconnect();
     }
@@ -74,7 +72,6 @@ export class WebSocketClient {
 
   send<T>(type: string, data: T): void {
     if (this.ws?.readyState !== WebSocket.OPEN) {
-      console.error('[WebSocket] Cannot send message: WebSocket is not open');
       return;
     }
 
@@ -136,7 +133,6 @@ export class WebSocketClient {
   // ===================================
 
   private handleOpen(event: Event): void {
-    console.log('[WebSocket] Connected');
     this.isConnecting = false;
     this.reconnectAttempts = 0;
     this.startHeartbeat();
@@ -146,7 +142,6 @@ export class WebSocketClient {
   }
 
   private handleClose(event: CloseEvent): void {
-    console.log('[WebSocket] Disconnected', event.code, event.reason);
     this.isConnecting = false;
     this.clearHeartbeat();
 
@@ -160,7 +155,6 @@ export class WebSocketClient {
   }
 
   private handleError(event: Event): void {
-    console.error('[WebSocket] Error:', event);
     this.isConnecting = false;
 
     // Trigger error event handlers
@@ -177,30 +171,30 @@ export class WebSocketClient {
       // Trigger specific message type handlers
       const handlers = this.messageHandlers.get(message.type);
       if (handlers) {
-        handlers.forEach((handler) => handler(message));
+        for (const handler of handlers) {
+          handler(message);
+        }
       }
-    } catch (error) {
-      console.error('[WebSocket] Failed to parse message:', error);
+    } catch (_error) {
+      // JSON 파싱 오류는 무시합니다.
     }
   }
 
   private triggerEventHandlers(event: WebSocketEventType, data: Event): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
-      handlers.forEach((handler) => handler(data));
+      for (const handler of handlers) {
+        handler(data);
+      }
     }
   }
 
   private scheduleReconnect(): void {
     if (this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
-      console.error('[WebSocket] Max reconnect attempts reached');
       return;
     }
 
     this.reconnectAttempts++;
-    console.log(
-      `[WebSocket] Reconnecting... (${this.reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`,
-    );
 
     this.reconnectTimeout = setTimeout(() => {
       this.connect();
@@ -242,7 +236,11 @@ export function getWebSocketClient(endpoint: string): WebSocketClient {
   if (!wsClients.has(endpoint)) {
     wsClients.set(endpoint, new WebSocketClient(endpoint));
   }
-  return wsClients.get(endpoint)!;
+  const client = wsClients.get(endpoint);
+  if (!client) {
+    throw new Error(`WebSocket client for endpoint "${endpoint}" not found.`);
+  }
+  return client;
 }
 
 export function removeWebSocketClient(endpoint: string): void {
@@ -254,6 +252,8 @@ export function removeWebSocketClient(endpoint: string): void {
 }
 
 export function disconnectAllWebSockets(): void {
-  wsClients.forEach((client) => client.disconnect());
+  wsClients.forEach((client) => {
+    client.disconnect();
+  });
   wsClients.clear();
 }

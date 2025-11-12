@@ -1,11 +1,4 @@
 // UI Types
-export type {
-  ConnectionStatus,
-  ModalState,
-  SchoolConnectState,
-  SchoolInfo,
-  SchoolNode,
-} from './schoolConnect.types';
 
 // API Types
 export type {
@@ -15,3 +8,10 @@ export type {
   SchoolDisconnectResponse,
   SchoolResponse,
 } from './schoolApi';
+export type {
+  ConnectionStatus,
+  ModalState,
+  SchoolConnectState,
+  SchoolInfo,
+  SchoolNode,
+} from './schoolConnect.types';

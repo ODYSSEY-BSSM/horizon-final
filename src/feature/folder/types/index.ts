@@ -1,12 +1,12 @@
 export type {
+  DirectoryContentItem,
+  DirectoryContentResponse,
   DirectoryCreateRequest,
   DirectoryResponse,
   DirectoryUpdateRequest,
-  DirectoryContentItem,
-  DirectoryContentResponse,
+  TeamDirectoryContentItem,
+  TeamDirectoryContentResponse,
   TeamDirectoryCreateRequest,
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
-  TeamDirectoryContentItem,
-  TeamDirectoryContentResponse,
 } from './directory';
