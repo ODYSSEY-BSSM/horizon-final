@@ -3,7 +3,10 @@
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { useCreateTeamFolder } from '@/feature/folder/hooks/useFolderQueries';
+import {
+  useCreateTeamFolder,
+  useTeamRootFolder,
+} from '@/feature/folder/hooks/useFolderQueries';
 import {
   CreateTeamModal,
   FolderGrid,
@@ -37,9 +40,28 @@ const TeamFoldersContent = () => {
   const _teamName = currentTeam?.name || '';
 
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
+  const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
 
-  // TODO: 팀 폴더 조회는 별도 API 호출 필요
-  const folders: TeamFolder[] = [];
+  const folders: TeamFolder[] = useMemo(() => {
+    if (!teamRootFolder?.items) {
+      return [];
+    }
+
+    // 디렉토리만 추출
+    return teamRootFolder.items
+      .filter((item) => item.type === 'directory')
+      .map((item) => ({
+        id: item.uuid.toString(),
+        name: item.name,
+        teamId: teamId,
+        description: '', // TODO: API에서 description 제공 필요
+        color: item.color.toLowerCase(),
+        icon: item.icon.toLowerCase(),
+        roadmapCount: 0, // TODO: 폴더 내 로드맵 개수 계산 필요
+        createdRoadmapCount: 0, // TODO: 생성된 로드맵 개수 계산 필요
+        progress: 0, // TODO: 진행률 계산 필요
+      }));
+  }, [teamRootFolder, teamId]);
 
   const handleTeamChange = (newTeamId: string) => {
     router.push(`/team-space/${newTeamId}`);

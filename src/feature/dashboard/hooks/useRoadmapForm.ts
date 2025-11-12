@@ -44,7 +44,6 @@ export const useRoadmapForm = () => {
 
   const _handleSubmit = async (_data: RoadmapFormData) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       closeModal();
     } catch (_error) {
       // Error handled silently for now
