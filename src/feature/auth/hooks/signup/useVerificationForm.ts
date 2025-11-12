@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { authApi } from '@/feature/auth';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type VerificationFormData, verificationSchema } from '@/feature/auth/validations/signup';
+import { ApiError } from '@/shared/api/errors';
 
 export const useVerificationForm = () => {
   const { goToStep, saveStepData, completedData } = useSignupFlow();
@@ -40,7 +41,23 @@ export const useVerificationForm = () => {
       saveStepData({ verificationCode: data.verificationCode });
       goToStep('password');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '인증번호가 올바르지 않습니다';
+      let errorMessage = '인증번호가 올바르지 않습니다';
+
+      if (error instanceof ApiError) {
+        // Handle specific API errors
+        if (error.isNetworkError() || error.status === 0) {
+          errorMessage = '네트워크 연결을 확인해주세요';
+        } else if (error.status === 400 || error.status === 401) {
+          errorMessage = '인증번호가 올바르지 않거나 만료되었습니다';
+        } else {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
       form.setError('verificationCode', {
         type: 'manual',
         message: errorMessage,
@@ -52,7 +69,23 @@ export const useVerificationForm = () => {
     try {
       await resendCode();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '인증번호 전송에 실패했습니다';
+      let errorMessage = '인증번호 전송에 실패했습니다';
+
+      if (error instanceof ApiError) {
+        // Handle specific API errors
+        if (error.isNetworkError() || error.status === 0) {
+          errorMessage = '네트워크 연결을 확인해주세요';
+        } else if (error.status === 429) {
+          errorMessage = '요청이 너무 많습니다. 잠시 후 다시 시도해주세요';
+        } else {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
       form.setError('verificationCode', {
         type: 'manual',
         message: errorMessage,

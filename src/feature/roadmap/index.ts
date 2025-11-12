@@ -40,6 +40,9 @@ export { RoadmapListSection } from './sections/RoadmapListSection';
 // Stores
 export { useRoadmapFormFlow } from './stores/roadmapFormFlow';
 
+// Utils
+export { toColorEnum, toIconEnum } from './utils/styleConverter';
+
 // Types
 export type {
   CreateRoadmapRequest,

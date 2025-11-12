@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useRegister } from '@/feature/auth/hooks/useSignUp';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type UsernameFormData, usernameSchema } from '@/feature/auth/validations/signup';
+import { ApiError } from '@/shared/api/errors';
 
 export const useUsernameForm = () => {
   const router = useRouter();
@@ -32,8 +33,22 @@ export const useUsernameForm = () => {
 
       router.push('/signin');
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다';
+      let errorMessage = '알 수 없는 오류가 발생했습니다';
+
+      if (error instanceof ApiError) {
+        // Handle specific API errors
+        if (error.isNetworkError() || error.status === 0) {
+          errorMessage = '네트워크 연결을 확인해주세요';
+        } else if (error.status === 409) {
+          errorMessage = '이미 사용 중인 사용자명입니다';
+        } else {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
 
       form.setError('username', {
         type: 'manual',

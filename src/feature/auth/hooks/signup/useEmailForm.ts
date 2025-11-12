@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { authApi } from '@/feature/auth';
 import { useSignupFlow } from '@/feature/auth/store/signupFlow';
 import { type EmailFormData, emailSchema } from '@/feature/auth/validations/signup';
+import { ApiError } from '@/shared/api/errors';
 
 export const useEmailForm = () => {
   const { goToStep, saveStepData } = useSignupFlow();
@@ -25,8 +26,23 @@ export const useEmailForm = () => {
       saveStepData({ email: data.email });
       goToStep('verification');
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : '이메일 인증 요청에 실패했습니다';
+      let errorMessage = '이메일 인증 요청에 실패했습니다';
+
+      if (error instanceof ApiError) {
+        // Handle specific API errors
+        if (error.isNetworkError() || error.status === 0) {
+          errorMessage = '네트워크 연결을 확인해주세요';
+        } else if (error.status === 429) {
+          errorMessage = '요청이 너무 많습니다. 잠시 후 다시 시도해주세요';
+        } else {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
       form.setError('email', {
         type: 'manual',
         message: errorMessage,

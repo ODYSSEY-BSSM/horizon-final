@@ -1,4 +1,5 @@
 import { tokenStore } from '@/feature/auth';
+import { ApiError } from './errors';
 import type { ApiResponse } from './types';
 
 export interface ApiClientRequestInit extends RequestInit {
@@ -36,6 +37,7 @@ class ApiClient {
     options: ApiClientRequestInit = {},
   ): Promise<ApiResponse<T>> {
     const { auth = true, ...restOptions } = options;
+    const method = (options.method as string) || 'GET';
     // Always get the latest token from tokenStore (in-memory)
     if (typeof window !== 'undefined') {
       const token = tokenStore.getAccessToken();
@@ -82,7 +84,13 @@ class ApiClient {
 
         const retryResponse = await fetch(url, retryConfig);
         if (!retryResponse.ok) {
-          throw new Error(`HTTP ${retryResponse.status}: ${retryResponse.statusText}`);
+          throw new ApiError(
+            retryResponse.status,
+            `HTTP_${retryResponse.status}`,
+            retryResponse.statusText,
+            endpoint,
+            method,
+          );
         }
 
         // Handle empty response body
@@ -95,13 +103,27 @@ class ApiClient {
         let retryResult: ApiResponse<T>;
         try {
           retryResult = JSON.parse(retryText);
-        } catch (_error) {
-          throw new Error('Failed to parse response JSON');
+        } catch (error) {
+          const parseError = error instanceof Error ? error.message : 'Unknown error';
+          throw new ApiError(
+            retryResponse.status,
+            'JSON_PARSE_ERROR',
+            `Failed to parse JSON response: ${parseError}`,
+            endpoint,
+            method,
+          );
         }
 
         // Check API response code
         if (retryResult.code !== 'OK') {
-          throw new Error(retryResult.message || `API Error: ${retryResult.code}`);
+          throw new ApiError(
+            retryResponse.status,
+            retryResult.code,
+            retryResult.message || 'API Error',
+            endpoint,
+            method,
+            retryResult,
+          );
         }
 
         return retryResult;
@@ -109,7 +131,13 @@ class ApiClient {
     }
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new ApiError(
+        response.status,
+        `HTTP_${response.status}`,
+        response.statusText,
+        endpoint,
+        method,
+      );
     }
 
     // Handle empty response body
@@ -122,13 +150,27 @@ class ApiClient {
     let result: ApiResponse<T>;
     try {
       result = JSON.parse(text);
-    } catch (_error) {
-      throw new Error('Failed to parse response JSON');
+    } catch (error) {
+      const parseError = error instanceof Error ? error.message : 'Unknown error';
+      throw new ApiError(
+        response.status,
+        'JSON_PARSE_ERROR',
+        `Failed to parse JSON response: ${parseError}`,
+        endpoint,
+        method,
+      );
     }
 
     // Check API response code (서버가 200 OK지만 body에 에러를 담아 보낼 수 있음)
     if (result.code !== 'OK') {
-      throw new Error(result.message || `API Error: ${result.code}`);
+      throw new ApiError(
+        response.status,
+        result.code,
+        result.message || 'API Error',
+        endpoint,
+        method,
+        result,
+      );
     }
 
     return result;
@@ -164,8 +206,11 @@ class ApiClient {
 
         return true;
       }
-    } catch (_error) {
-      // Token refresh failed
+    } catch (error) {
+      // Token refresh failed - log for debugging
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[ApiClient] Token refresh failed:', error);
+      }
     }
 
     // Refresh failed, clear tokens

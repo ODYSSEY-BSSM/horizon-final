@@ -5,6 +5,8 @@ import {
   useCreateRoadmap,
   useCreateTeamRoadmap,
   useRoadmapFormFlow,
+  toColorEnum,
+  toIconEnum,
   type CategoryStepFormData,
   categoryStepSchema,
   type FolderStepFormData,
@@ -201,8 +203,8 @@ export const useStyleStepForm = () => {
       // 로드맵 생성
       const roadmapData = {
         name: formData.name || '',
-        color: styleData.color.toUpperCase() as any,
-        icon: styleData.icon.toUpperCase() as any,
+        color: toColorEnum(styleData.color),
+        icon: toIconEnum(styleData.icon),
         directoryUuid: directoryId,
       };
 

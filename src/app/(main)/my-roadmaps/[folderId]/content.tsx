@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { notFound, useParams } from 'next/navigation';
 import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
-import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
+import { RoadmapListSection, RoadmapStyleModal, toColorEnum, toIconEnum } from '@/feature/roadmap';
 import { useCreateRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal, Text } from '@/shared/ui';
@@ -62,8 +62,8 @@ const FolderDetailContent = () => {
     createRoadmapMutation.mutate(
       {
         name: roadmapData.title,
-        color: data.color.toUpperCase() as any,
-        icon: data.icon.toUpperCase() as any,
+        color: toColorEnum(data.color),
+        icon: toIconEnum(data.icon),
         directoryUuid: Number(folderId),
       },
       {
