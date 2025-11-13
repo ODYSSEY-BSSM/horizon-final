@@ -21,6 +21,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@stomp/stompjs": "^7.2.1",
     "@tanstack/react-query": "^5.90.5",
+    "@xyflow/react": "^12.9.2",
     "dayjs": "1.11.19",
     "local-ssl-proxy": "^2.0.5",
     "next": "15.4.6",
