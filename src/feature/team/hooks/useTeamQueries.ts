@@ -10,7 +10,6 @@ export const teamKeys = {
   details: () => [...teamKeys.all, 'detail'] as const,
   detail: (teamId: number) => [...teamKeys.details(), teamId] as const,
   members: (teamId: number) => [...teamKeys.detail(teamId), 'members'] as const,
-  applications: (teamId: number) => [...teamKeys.detail(teamId), 'applications'] as const,
 };
 
 export function useTeams() {
@@ -34,16 +33,6 @@ export function useTeamMembers(teamId: number) {
     queryFn: async () => {
       const team = await teamApi.getTeam(teamId);
       return team.members;
-    },
-    enabled: !!teamId,
-  });
-}
-
-export function useTeamApplications(teamId: number) {
-  return useQuery({
-    queryKey: teamKeys.applications(teamId),
-    queryFn: async () => {
-      return [];
     },
     enabled: !!teamId,
   });

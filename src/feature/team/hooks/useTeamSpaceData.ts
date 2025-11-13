@@ -25,17 +25,6 @@ export const useTeamSpaceData = () => {
     }));
   }, [teamsData]);
 
-  const getTeamFolders = (_teamId: string | null, _filterTab?: string): TeamFolder[] => {
-    return [];
-  };
-
-  const getFolderRoadmaps = (_folderId: string) => {
-    return [];
-  };
-
-  const addFolder = (_data: { teamId: string; name: string; description: string }) => {
-    // TODO: 폴더 추가 기능 구현
-  };
 
   const addTeam = (data: { name: string; description: string }): Promise<Team> => {
     return createTeamMutation.mutateAsync(data).then((teamResponse) => ({
@@ -73,11 +62,6 @@ export const useTeamSpaceData = () => {
 
   return {
     teams,
-    folders: [] as TeamFolder[],
-    roadmaps: [],
-    getTeamFolders,
-    getFolderRoadmaps,
-    addFolder,
     addTeam,
     joinTeam,
     isLoading: isLoadingTeams,
