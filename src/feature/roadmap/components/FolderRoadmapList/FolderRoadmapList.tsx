@@ -136,7 +136,12 @@ const FolderRoadmapList = ({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={onPageChange || (() => {})}
+              onPageChange={
+                onPageChange ||
+                (() => {
+                  // onPageChange가 없을 경우 아무 작업도 하지 않음
+                })
+              }
             />
           </StyledPaginationWrapper>
         </StyledContentSection>

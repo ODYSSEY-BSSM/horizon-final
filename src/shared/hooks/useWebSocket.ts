@@ -78,7 +78,9 @@ export function useWebSocket(
       try {
         const message: WebSocketMessage = JSON.parse((event as MessageEvent).data);
         handlersRef.current.onMessage?.(message);
-      } catch (_error) {}
+      } catch (_error) {
+        // 메시지 파싱에 실패한 경우 무시
+      }
     };
 
     client.addEventListener('open', handleOpen);

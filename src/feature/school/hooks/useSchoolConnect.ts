@@ -93,7 +93,9 @@ export const useSchoolConnect = () => {
   const handleConnect = async (schoolCode: string) => {
     try {
       await connectSchool({ schoolCode });
-    } catch (_error) {}
+    } catch (_error) {
+      // 에러는 useMutation의 onError에서 처리됩니다.
+    }
   };
 
   const handleConnectFail = () => {
@@ -107,7 +109,9 @@ export const useSchoolConnect = () => {
   const handleDisconnect = async () => {
     try {
       await disconnectSchool();
-    } catch (_error) {}
+    } catch (_error) {
+      // 에러는 useMutation의 onError에서 처리됩니다.
+    }
   };
 
   const closeModal = (modalName: keyof ModalState) => {
