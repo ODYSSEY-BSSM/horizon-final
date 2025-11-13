@@ -22,8 +22,9 @@ export { EmailStep } from './steps/EmailStep';
 export { PasswordStep } from './steps/PasswordStep';
 export { UsernameStep } from './steps/UsernameStep';
 export { VerificationStep } from './steps/VerificationStep';
-export { useSignupFlow } from './store/signupFlow';
+
 // Store
+export { useSignupFlow } from './store/signupFlow';
 export { tokenStore } from './store/tokenStore';
 
 // Types

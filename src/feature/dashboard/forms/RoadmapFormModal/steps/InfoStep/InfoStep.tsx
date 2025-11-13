@@ -29,7 +29,15 @@ const InfoStep = () => {
         />
         <TextField
           value={categories.join(',')}
-          onChange={(e) => updateField('categories', e.target.value.split(','))}
+          onChange={(e) =>
+            updateField(
+              'categories',
+              e.target.value
+                .split(',')
+                .map((cat) => cat.trim())
+                .filter((cat) => cat.length > 0),
+            )
+          }
           placeholder="카테고리를 입력해주세요 (쉼표로 구분)"
           aria-label="로드맵 카테고리"
           label="카테고리"
