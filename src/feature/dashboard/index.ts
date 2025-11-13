@@ -18,7 +18,6 @@ export { FolderStep } from './forms/RoadmapFormModal/steps/FolderStep';
 export { InfoStep } from './forms/RoadmapFormModal/steps/InfoStep';
 export { StyleStep } from './forms/RoadmapFormModal/steps/StyleStep';
 export { TeamStep } from './forms/RoadmapFormModal/steps/TeamStep';
-export { useDashboard } from './hooks/useDashboard';
 export { useDashboardData } from './hooks/useDashboardData';
 export { useFolderStep } from './hooks/useFolderStep';
 export { useInfoStep } from './hooks/useInfoStep';
