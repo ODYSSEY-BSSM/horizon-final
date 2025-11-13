@@ -6,10 +6,13 @@ const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080'
 const WS_ENDPOINT = '/ws';
 
 export type StompMessageHandler<T = unknown> = (message: T) => void;
+export type StompEventHandler = () => void;
+export type StompEventType = 'connect' | 'disconnect' | 'error';
 
 export class StompWebSocketClient {
   private client: Client;
   private subscriptions: Map<string, StompSubscription> = new Map();
+  private eventListeners: Map<StompEventType, Set<StompEventHandler>> = new Map();
   private isConnected = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
@@ -105,6 +108,26 @@ export class StompWebSocketClient {
     return this.isConnected;
   }
 
+  addEventListener(event: StompEventType, handler: StompEventHandler): void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set());
+    }
+    this.eventListeners.get(event)?.add(handler);
+  }
+
+  removeEventListener(event: StompEventType, handler: StompEventHandler): void {
+    this.eventListeners.get(event)?.delete(handler);
+  }
+
+  private emitEvent(event: StompEventType): void {
+    const handlers = this.eventListeners.get(event);
+    if (handlers) {
+      for (const handler of handlers) {
+        handler();
+      }
+    }
+  }
+
   // ===================================
   // Private Methods
   // ===================================
@@ -112,11 +135,13 @@ export class StompWebSocketClient {
   private onConnect(_frame: IFrame): void {
     this.isConnected = true;
     this.reconnectAttempts = 0;
+    this.emitEvent('connect');
   }
 
   private onDisconnect(_frame: IFrame): void {
     this.isConnected = false;
     this.subscriptions.clear();
+    this.emitEvent('disconnect');
 
     // Auto-reconnect
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
@@ -128,7 +153,7 @@ export class StompWebSocketClient {
   }
 
   private onError(_frame: IFrame): void {
-    // 소켓 에러 처리
+    this.emitEvent('error');
   }
 }
 

@@ -1,20 +1,38 @@
+import Cookies from 'js-cookie';
+
 class TokenStore {
   private accessToken: string | null = null;
+  private readonly ACCESS_TOKEN_KEY = 'accessToken';
   private readonly REFRESH_TOKEN_KEY = 'refreshToken';
 
   getAccessToken(): string | null {
+    // 메모리에 없으면 쿠키에서 읽기 시도
+    if (!this.accessToken && typeof window !== 'undefined') {
+      this.accessToken = Cookies.get(this.ACCESS_TOKEN_KEY) || null;
+    }
     return this.accessToken;
   }
 
   setAccessToken(token: string | null): void {
     this.accessToken = token;
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (token) {
+      // 쿠키에 저장 (7일 유효)
+      Cookies.set(this.ACCESS_TOKEN_KEY, token, { expires: 7 });
+    } else {
+      Cookies.remove(this.ACCESS_TOKEN_KEY);
+    }
   }
 
   getRefreshToken(): string | null {
     if (typeof window === 'undefined') {
       return null;
     }
-    return sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+    return Cookies.get(this.REFRESH_TOKEN_KEY) || null;
   }
 
   setRefreshToken(token: string | null): void {
@@ -23,9 +41,10 @@ class TokenStore {
     }
 
     if (token) {
-      sessionStorage.setItem(this.REFRESH_TOKEN_KEY, token);
+      // 쿠키에 저장 (7일 유효)
+      Cookies.set(this.REFRESH_TOKEN_KEY, token, { expires: 7 });
     } else {
-      sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
+      Cookies.remove(this.REFRESH_TOKEN_KEY);
     }
   }
 
@@ -40,7 +59,7 @@ class TokenStore {
   }
 
   hasTokens(): boolean {
-    return !!this.accessToken && !!this.getRefreshToken();
+    return !!this.getAccessToken() && !!this.getRefreshToken();
   }
 }
 

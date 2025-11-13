@@ -1,3 +1,16 @@
+/**
+ * @deprecated This file is deprecated. Use stompWebSocket.ts instead.
+ *
+ * SECURITY WARNING:
+ * This implementation passes JWT tokens via query string, which can be logged
+ * in browser history and server logs. This is a security risk for production use.
+ *
+ * The STOMP WebSocket implementation (stompWebSocket.ts) properly sends tokens
+ * via Authorization headers and should be used for all new code.
+ *
+ * @see {@link ./stompWebSocket.ts}
+ */
+
 import { tokenStore } from '@/feature/auth';
 
 // WebSocket configuration
@@ -42,6 +55,9 @@ export class WebSocketClient {
 
     try {
       // Get access token for authentication
+      // WARNING: Passing tokens via query string is insecure (logged in browser/server)
+      // Native WebSocket doesn't support custom headers, so this is unavoidable
+      // Use STOMP WebSocket (stompWebSocket.ts) for secure token transmission
       const token = tokenStore.getAccessToken();
       const wsUrl = token ? `${this.url}?token=${token}` : this.url;
 

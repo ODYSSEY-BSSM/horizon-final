@@ -1,3 +1,4 @@
+import type { StateCreator } from 'zustand';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -16,6 +17,18 @@ export interface RoadmapFormData {
   description: string;
   color: string;
   icon: string;
+}
+
+export interface RoadmapSubmitData {
+  title: string;
+  description: string;
+  categories: string[];
+  color: string;
+  icon: string;
+  category: 'personal' | 'team' | '';
+  folderId?: string;
+  folderName?: string;
+  teamId?: string;
 }
 
 interface RoadmapFormState {
@@ -52,7 +65,7 @@ interface RoadmapFormActions {
   clearErrors: () => void;
 
   // Submission actions (will be called with mutations from component)
-  getSubmitData: () => Promise<any>;
+  getSubmitData: () => Promise<RoadmapSubmitData>;
 
   // Reset
   reset: () => void;
@@ -163,7 +176,7 @@ function validateStep(step: RoadmapFormStep, formData: RoadmapFormData): string 
 // Store Implementation
 // ===================================
 
-const createStore = () => (set: any, get: any) => ({
+const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
   ...initialState,
 
   // Modal actions

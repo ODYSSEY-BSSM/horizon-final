@@ -24,8 +24,16 @@ import { initialMockData } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
-function getRoadmaps(): RoadmapResponse[] {
+// Union type for roadmaps storage (supports both personal and team roadmaps)
+type StoredRoadmap = RoadmapResponse | TeamRoadmapResponse;
+
+function getRoadmaps(): StoredRoadmap[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
+}
+
+// Type guard to check if a roadmap is a team roadmap
+function isTeamRoadmap(roadmap: StoredRoadmap): roadmap is TeamRoadmapResponse {
+  return 'teamId' in roadmap && 'teamName' in roadmap;
 }
 
 function getNodes(): NodeResponse[] {
@@ -136,7 +144,7 @@ export const mockRoadmapApi = {
   ): Promise<TeamRoadmapResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const newRoadmap: any = {
+    const newRoadmap: TeamRoadmapResponse = {
       id: mockStorage.getNextId(),
       title: data.title,
       description: data.description,
@@ -157,7 +165,9 @@ export const mockRoadmapApi = {
 
   getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
     await delay(MOCK_DELAYS.FAST);
-    return getRoadmaps().filter((r: any) => r.teamId === teamId) as any;
+    return getRoadmaps().filter(
+      (r): r is TeamRoadmapResponse => isTeamRoadmap(r) && r.teamId === teamId,
+    );
   },
 };
 

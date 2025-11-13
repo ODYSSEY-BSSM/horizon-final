@@ -22,30 +22,38 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
 
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef(getStompClient());
-  const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check connection status periodically
+  // Event-based connection status tracking (replaces polling)
   useEffect(() => {
-    checkIntervalRef.current = setInterval(() => {
-      const connected = clientRef.current.getIsConnected();
-      setIsConnected((prev) => {
-        if (prev !== connected) {
-          if (connected) {
-            onConnect?.();
-          } else {
-            onDisconnect?.();
-          }
-        }
-        return connected;
-      });
-    }, 500);
-
-    return () => {
-      if (checkIntervalRef.current) {
-        clearInterval(checkIntervalRef.current);
-      }
+    const handleConnect = () => {
+      setIsConnected(true);
+      onConnect?.();
     };
-  }, [onConnect, onDisconnect]);
+
+    const handleDisconnect = () => {
+      setIsConnected(false);
+      onDisconnect?.();
+    };
+
+    const handleError = () => {
+      onError?.(new Error('WebSocket error'));
+    };
+
+    // Register event listeners
+    clientRef.current.addEventListener('connect', handleConnect);
+    clientRef.current.addEventListener('disconnect', handleDisconnect);
+    clientRef.current.addEventListener('error', handleError);
+
+    // Initialize connection state
+    setIsConnected(clientRef.current.getIsConnected());
+
+    // Cleanup listeners on unmount
+    return () => {
+      clientRef.current.removeEventListener('connect', handleConnect);
+      clientRef.current.removeEventListener('disconnect', handleDisconnect);
+      clientRef.current.removeEventListener('error', handleError);
+    };
+  }, [onConnect, onDisconnect, onError]);
 
   // Auto connect
   useEffect(() => {

@@ -21,7 +21,7 @@ export { EmailStep } from './steps/EmailStep';
 export { PasswordStep } from './steps/PasswordStep';
 export { UsernameStep } from './steps/UsernameStep';
 export { VerificationStep } from './steps/VerificationStep';
-
+export { useSignupFlow } from './store/signupFlow';
 // Store
 export { tokenStore } from './store/tokenStore';
 
@@ -34,3 +34,13 @@ export type {
   TokenRefreshResponse,
   UserInfoResponse,
 } from './types/auth';
+
+export type {
+  EmailStepProps,
+  PasswordStepProps,
+  SignUpData,
+  SignUpStep,
+  StepProps,
+  UsernameStepProps,
+  VerificationStepProps,
+} from './types/signup';
