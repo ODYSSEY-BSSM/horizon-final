@@ -10,12 +10,12 @@ export { VerificationInput } from './components/signup/VerificationInput';
 export { TokenInitializer } from './components/TokenInitializer';
 
 // Hooks
-export { useEmailForm } from './hooks/signup/useEmailForm';
-export { usePasswordForm } from './hooks/signup/usePasswordForm';
-export { useUsernameForm } from './hooks/signup/useUsernameForm';
-export { useVerificationForm } from './hooks/signup/useVerificationForm';
+export { useEmailForm } from './hooks/useEmailForm';
+export { usePasswordForm } from './hooks/usePasswordForm';
 export { useLogin } from './hooks/useSignIn';
 export { useRegister } from './hooks/useSignUp';
+export { useUsernameForm } from './hooks/useUsernameForm';
+export { useVerificationForm } from './hooks/useVerificationForm';
 
 // Steps
 export { EmailStep } from './steps/EmailStep';

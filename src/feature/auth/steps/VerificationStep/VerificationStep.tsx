@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
 import { VerificationInput } from '@/feature/auth/components/signup/VerificationInput';
-import { useVerificationForm } from '@/feature/auth/hooks/signup/useVerificationForm';
+import { useVerificationForm } from '@/feature/auth/hooks/useVerificationForm';
 import { tokens } from '@/shared/tokens';
 import { Text } from '@/shared/ui';
 
