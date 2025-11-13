@@ -1,6 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import {
   GreetingMessage as GreetingSection,
   InfoCardsGrid,
@@ -9,11 +11,23 @@ import {
   useDashboardData,
 } from '@/feature/dashboard';
 import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
+import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 
 const DashboardContent = () => {
   const { userData, roadmapsData, isLoading, error } = useDashboardData();
   const { openModal } = useRoadmapFormStore();
+  const { showToast } = useToast();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message === 'alreadyLoggedIn') {
+      showToast('이미 로그인되어 있습니다.');
+      router.replace('/dashboard', { scroll: false });
+    }
+  }, [searchParams, router, showToast]);
 
   const handleAddRoadmap = () => {
     openModal();
