@@ -1,5 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useLogout } from '@/feature/auth/hooks/useSignIn';
+import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
 import { Icon } from '@/shared/ui';
 import { DEFAULT_SEARCH_PLACEHOLDER } from './Header.constants';
@@ -7,9 +10,12 @@ import { useHeader } from './Header.hooks';
 import {
   BreadcrumbItem,
   BreadcrumbNav,
+  DropdownItem,
   HeaderActions,
   HeaderContainer,
   ProfileButton,
+  ProfileContainer,
+  ProfileDropdown,
   SearchBarContainer,
   SearchIconButton,
   SearchInput,
@@ -58,10 +64,42 @@ const SearchBar = ({ onSearch, placeholder = DEFAULT_SEARCH_PLACEHOLDER }: Searc
 };
 
 const Profile = () => {
+  const router = useRouter();
+  const { mutate: logout } = useLogout();
+  const { isOpen, dropdownRef, handleToggle, highlightedIndex, handleKeyDown } = useDropdown({
+    itemCount: 1,
+    onSelect: (index) => {
+      if (index === 0) {
+        handleLogout();
+      }
+    },
+  });
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        router.push('/signin');
+      },
+    });
+  };
+
   return (
-    <ProfileButton aria-label="프로필">
-      <Icon name="person" variant="LG" filled color={tokens.colors.neutral[200]} decorative />
-    </ProfileButton>
+    <ProfileContainer ref={dropdownRef} onKeyDown={handleKeyDown}>
+      <ProfileButton onClick={handleToggle} aria-label="프로필" aria-expanded={isOpen}>
+        <Icon name="person" variant="LG" filled color={tokens.colors.neutral[200]} decorative />
+      </ProfileButton>
+      {isOpen && (
+        <ProfileDropdown>
+          <DropdownItem
+            onClick={handleLogout}
+            $isHighlighted={highlightedIndex === 0}
+            type="button"
+          >
+            로그아웃
+          </DropdownItem>
+        </ProfileDropdown>
+      )}
+    </ProfileContainer>
   );
 };
 
