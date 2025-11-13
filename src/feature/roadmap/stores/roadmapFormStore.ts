@@ -2,10 +2,6 @@ import type { StateCreator } from 'zustand';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-// ===================================
-// Types
-// ===================================
-
 export type RoadmapFormStep = 'category' | 'folder' | 'team' | 'info' | 'style';
 
 export interface RoadmapFormData {
@@ -33,50 +29,36 @@ export interface RoadmapSubmitData {
 }
 
 interface RoadmapFormState {
-  // Modal state
   isModalOpen: boolean;
 
-  // Navigation state
   currentStep: RoadmapFormStep;
 
-  // Form data
   formData: RoadmapFormData;
 
-  // Validation state
   errors: Partial<Record<RoadmapFormStep, string>>;
 }
 
 interface RoadmapFormActions {
-  // Modal actions
   openModal: () => void;
   closeModal: () => void;
 
-  // Navigation actions
   nextStep: () => void;
   previousStep: () => void;
   goToStep: (step: RoadmapFormStep) => void;
 
-  // Data actions
   updateField: <K extends keyof RoadmapFormData>(field: K, value: RoadmapFormData[K]) => void;
   updateFormData: (data: Partial<RoadmapFormData>) => void;
 
-  // Validation actions
-  isStepValid: () => boolean; // Pure function - no side effects
-  validateCurrentStep: () => boolean; // Sets errors - use only on submit
+  isStepValid: () => boolean;
+  validateCurrentStep: () => boolean;
   clearErrors: () => void;
 
-  // Submission actions (will be called with mutations from component)
   getSubmitData: () => Promise<RoadmapSubmitData>;
 
-  // Reset
   reset: () => void;
 }
 
 type RoadmapFormStore = RoadmapFormState & RoadmapFormActions;
-
-// ===================================
-// Constants
-// ===================================
 
 const STEP_FLOWS = {
   personal: ['category', 'folder', 'info', 'style'] as const,
@@ -102,10 +84,6 @@ const initialState: RoadmapFormState = {
   errors: {},
 };
 
-// ===================================
-// Helper Functions
-// ===================================
-
 function getStepFlow(category: string): readonly RoadmapFormStep[] {
   return category === 'team' ? STEP_FLOWS.team : STEP_FLOWS.personal;
 }
@@ -121,10 +99,6 @@ function getPreviousStep(currentStep: RoadmapFormStep, category: string): Roadma
   const currentIndex = flow.indexOf(currentStep);
   return flow[currentIndex - 1] || null;
 }
-
-// ===================================
-// Validation Functions
-// ===================================
 
 function validateStep(step: RoadmapFormStep, formData: RoadmapFormData): string | null {
   switch (step) {
@@ -174,14 +148,9 @@ function validateStep(step: RoadmapFormStep, formData: RoadmapFormData): string 
   return null;
 }
 
-// ===================================
-// Store Implementation
-// ===================================
-
 const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
   ...initialState,
 
-  // Modal actions
   openModal: () => set({ isModalOpen: true }, false, 'openModal'),
 
   closeModal: () =>
@@ -196,16 +165,13 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
       'closeModal',
     ),
 
-  // Navigation actions
   nextStep: () => {
     const state = get() as RoadmapFormStore;
 
-    // Validate current step
     if (!state.validateCurrentStep()) {
       return;
     }
 
-    // Get next step based on category
     const next = getNextStep(state.currentStep, state.formData.category);
     if (next) {
       set({ currentStep: next, errors: {} }, false, 'nextStep');
@@ -223,12 +189,11 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
 
   goToStep: (step: RoadmapFormStep) => set({ currentStep: step }, false, 'goToStep'),
 
-  // Data actions
   updateField: <K extends keyof RoadmapFormData>(field: K, value: RoadmapFormData[K]) =>
     set(
       (state: RoadmapFormStore) => ({
         formData: { ...state.formData, [field]: value },
-        errors: {}, // Clear errors on field update
+        errors: {},
       }),
       false,
       'updateField',
@@ -243,15 +208,12 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
       'updateFormData',
     ),
 
-  // Validation actions
-  // Pure function - safe to call during render
   isStepValid: () => {
     const state = get() as RoadmapFormStore;
     const error = validateStep(state.currentStep, state.formData);
     return !error;
   },
 
-  // Sets errors - only use on form submit
   validateCurrentStep: () => {
     const state = get() as RoadmapFormStore;
     const error = validateStep(state.currentStep, state.formData);
@@ -267,7 +229,6 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
 
   clearErrors: () => set({ errors: {} }, false, 'clearErrors'),
 
-  // Submission data preparation
   getSubmitData: async () => {
     const state = get() as RoadmapFormStore;
     const { formData } = state;
@@ -285,13 +246,8 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
     };
   },
 
-  // Reset
   reset: () => set(initialState, false, 'reset'),
 });
-
-// ===================================
-// Store Export
-// ===================================
 
 export const useRoadmapFormStore =
   process.env.NODE_ENV !== 'production'

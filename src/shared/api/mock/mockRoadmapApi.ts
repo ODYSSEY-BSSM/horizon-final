@@ -1,6 +1,3 @@
-/**
- * Mock Roadmap/Node/Problem API (Swagger 완벽 일치)
- */
 
 import type {
   EducationNodeConvertRequest,
@@ -24,14 +21,12 @@ import { initialMockData } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
-// Union type for roadmaps storage (supports both personal and team roadmaps)
 type StoredRoadmap = RoadmapResponse | TeamRoadmapResponse;
 
 function getRoadmaps(): StoredRoadmap[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
 }
 
-// Type guard to check if a roadmap is a team roadmap
 function isTeamRoadmap(roadmap: StoredRoadmap): roadmap is TeamRoadmapResponse {
   return 'teamId' in roadmap && 'teamName' in roadmap;
 }

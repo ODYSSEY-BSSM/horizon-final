@@ -1,4 +1,3 @@
-// Components
 export { AddRoadmapCard } from './components/AddRoadmapCard';
 export { CreateTeamModal } from './components/CreateTeamModal';
 export { EmptyTeamState } from './components/EmptyTeamState';
@@ -10,19 +9,15 @@ export { RoadmapListContainer } from './components/RoadmapListContainer';
 export { TeamDropdown } from './components/TeamDropdown';
 export { TeamFolderRoadmapList } from './components/TeamFolderRoadmapList';
 
-// Constants
 export * from './constants/RoadmapFilterTabs.constants';
 export * from './constants/TeamFilterTabs.constants';
 export * from './constants/TeamFolderFilterTabs.constants';
 
-// Forms
 export { TeamFolderDeleteModal } from './forms/TeamFolderDeleteModal';
 export type { UseTeamDirectoryWebSocketOptions } from './hooks/useTeamDirectoryWebSocket';
 export { useTeamDirectoryWebSocket } from './hooks/useTeamDirectoryWebSocket';
-// Hooks
 export { useTeamFolderDetail } from './hooks/useTeamFolderDetail';
 export { useTeamSpaceData } from './hooks/useTeamSpaceData';
 
-// Sections
 export { TeamFolderRoadmapListSection } from './sections/TeamFolderRoadmapListSection';
 export { TeamSpaceHeader } from './sections/TeamSpaceHeader';

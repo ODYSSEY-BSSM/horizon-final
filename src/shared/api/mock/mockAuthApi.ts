@@ -1,6 +1,3 @@
-/**
- * Mock Auth API (Swagger 완벽 일치)
- */
 
 import type {
   LoginRequest,
@@ -19,7 +16,6 @@ import { initialMockData, type MockUser } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
-// localStorage에서 데이터 가져오기
 function getUsers(): MockUser[] {
   return mockStorage.getOrDefault('users', initialMockData.users);
 }
@@ -41,7 +37,6 @@ function setVerificationCodes(codes: Map<string, string>): void {
   mockStorage.set('verificationCodes', Array.from(codes.entries()));
 }
 
-// 가짜 JWT 생성
 const generateToken = (userId: number): string => {
   return `mock_token_${userId}_${Date.now()}`;
 };
@@ -132,7 +127,6 @@ export const mockAuthApi = {
       throw new Error(MOCK_ERRORS.INVALID_VERIFICATION_CODE);
     }
 
-    // 인증 성공 후 코드 삭제
     verificationCodes.delete(data.email);
     setVerificationCodes(verificationCodes);
   },
@@ -161,13 +155,11 @@ export const mockAuthApi = {
       throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
-    // 팀 정보 가져오기
     const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
     const userTeams = teams
       .filter((team) => team.memberIds?.includes(currentUser.id))
       .map((team) => team.name);
 
-    // 학교 정보 가져오기
     const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
     const userSchool = currentUser.schoolId
       ? schools.find((s) => s.id === currentUser.schoolId)

@@ -41,7 +41,7 @@ export const useButton = <T extends React.ElementType = 'button'>(
   const semantics = isNativeButton
     ? { type }
     : isLink
-      ? {} // 링크는 본연의 시맨틱 유지
+      ? {}
       : { role: 'button', tabIndex: disabled ? -1 : 0 };
 
   const finalRestProps = {

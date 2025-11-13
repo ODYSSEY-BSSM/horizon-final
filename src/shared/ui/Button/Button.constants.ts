@@ -30,23 +30,23 @@ export const BUTTON_ICON_CONFIGS = {
 } as const;
 
 export const GAP_SIZES = {
-  small: spacing.gap.small, // 6px
-  medium: spacing.gap.medium, // 8px
-  large: spacing.gap.large, // 10px
+  small: spacing.gap.small,
+  medium: spacing.gap.medium,
+  large: spacing.gap.large,
 } as const;
 
 export const HORIZONTAL_PADDINGS = {
-  small: spacing.padding.horizontal.small, // 16px
-  medium: spacing.padding.horizontal.medium, // 20px
-  large: spacing.padding.horizontal.large, // 24px
+  small: spacing.padding.horizontal.small,
+  medium: spacing.padding.horizontal.medium,
+  large: spacing.padding.horizontal.large,
 } as const;
 
-export const VERTICAL_PADDING = spacing.padding.vertical; // 10px
+export const VERTICAL_PADDING = spacing.padding.vertical;
 
 export const ICON_PADDINGS = {
-  small: spacing.padding.icon.small, // 10px
-  medium: spacing.padding.icon.medium, // 12px
-  large: spacing.padding.icon.large, // 14px
+  small: spacing.padding.icon.small,
+  medium: spacing.padding.icon.medium,
+  large: spacing.padding.icon.large,
 } as const;
 
 export const buttonStyles = {

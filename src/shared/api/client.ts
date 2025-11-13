@@ -8,10 +8,6 @@ interface RequestOptions {
   params?: Record<string, string | number | boolean | undefined>;
 }
 
-/**
- * API Client with HTTP methods
- * Supports both mock and real API calls
- */
 class ApiClient {
   private accessToken: string | null = null;
   private baseURL: string;
@@ -83,25 +79,20 @@ class ApiClient {
 
     const response = await fetch(url, requestOptions);
 
-    // Handle 401 - Try to refresh token
     if (response.status === 401 && endpoint !== '/auth/token') {
       const refreshed = await this.tryRefreshToken();
       if (refreshed) {
-        // Retry the request with new token
         return this.request<T>(method, endpoint, data, options);
       }
       throw new Error('Authentication failed');
     }
 
-    // Handle 204 No Content
     if (response.status === 204) {
       return undefined as T;
     }
 
-    // Parse JSON response
     const result: ApiResponse<T> = await response.json();
 
-    // Handle non-OK responses
     if (!response.ok || result.code !== 'OK') {
       throw new Error(result.message || 'Request failed');
     }
@@ -167,7 +158,6 @@ class ApiClient {
 
       return true;
     } catch (_error) {
-      // Token refresh failed
       tokenStore.clearTokens();
       this.accessToken = null;
 

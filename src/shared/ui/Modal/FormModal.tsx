@@ -29,7 +29,6 @@ export const FormModal = <T extends Record<string, string>>({
 
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
-  // Reset form data when modal closes or when initialData changes
   useEffect(() => {
     if (isOpen && mode === 'edit' && initialData) {
       const updated: Record<string, string> = {};
@@ -46,7 +45,6 @@ export const FormModal = <T extends Record<string, string>>({
     }
   }, [isOpen, initialData, mode, fields]);
 
-  // Focus first field when modal opens
   useEffect(() => {
     if (isOpen) {
       firstFieldRef.current?.focus();
@@ -65,7 +63,6 @@ export const FormModal = <T extends Record<string, string>>({
     onSubmit(formData as T);
   };
 
-  // Check if form is valid (all required fields filled)
   const isFormValid = fields
     .filter((field) => field.required)
     .every((field) => formData[field.name]?.trim());

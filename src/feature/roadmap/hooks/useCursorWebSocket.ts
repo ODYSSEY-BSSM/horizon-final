@@ -24,20 +24,17 @@ export function useCursorWebSocket(options: UseCursorWebSocketOptions) {
 
   const handleCursorMove = useCallback(
     (cursor: CursorReceiveMessage) => {
-      // Update other cursors map
       setOtherCursors((prev) => {
         const next = new Map(prev);
         next.set(cursor.userId, cursor);
         return next;
       });
 
-      // Call user callback
       onCursorMove?.(cursor);
     },
     [onCursorMove],
   );
 
-  // Subscribe to cursor topic
   useEffect(() => {
     if (!isConnected || !autoSubscribe || !roadmapId) {
       return;

@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { teamApi } from '../api';
 import type { TeamCreateRequest, TeamUpdateRequest } from '../types';
 
-// Query Keys
 export const teamKeys = {
   all: ['teams'] as const,
   lists: () => [...teamKeys.all, 'list'] as const,
@@ -12,10 +11,6 @@ export const teamKeys = {
   members: (teamId: number) => [...teamKeys.detail(teamId), 'members'] as const,
   applications: (teamId: number) => [...teamKeys.detail(teamId), 'applications'] as const,
 };
-
-// ===================================
-// Team Queries
-// ===================================
 
 export function useTeams() {
   return useQuery({
@@ -47,16 +42,11 @@ export function useTeamApplications(teamId: number) {
   return useQuery({
     queryKey: teamKeys.applications(teamId),
     queryFn: async () => {
-      // Swagger에는 지원/승인 시스템이 없음 (초대 코드만 사용)
       return [];
     },
     enabled: !!teamId,
   });
 }
-
-// ===================================
-// Team Mutations
-// ===================================
 
 export function useCreateTeam() {
   const queryClient = useQueryClient();
@@ -104,10 +94,6 @@ export function useRemoveTeamMember(teamId: number) {
   });
 }
 
-// ===================================
-// Team Apply Mutations
-// ===================================
-
 export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
@@ -124,7 +110,6 @@ export function useApproveTeamApplication(teamId: number) {
 
   return useMutation({
     mutationFn: async (_applyId: number) => {
-      // Swagger에는 승인 시스템이 없음 (초대 코드로 즉시 가입)
       throw new Error('Team approval is not supported. Use invite codes instead.');
     },
     onSuccess: () => {
@@ -139,7 +124,6 @@ export function useRejectTeamApplication(teamId: number) {
 
   return useMutation({
     mutationFn: async (_applyId: number) => {
-      // Swagger에는 거절 시스템이 없음 (초대 코드로 즉시 가입)
       throw new Error('Team rejection is not supported. Use invite codes instead.');
     },
     onSuccess: () => {
@@ -153,7 +137,6 @@ export function useDeleteTeamApplication() {
 
   return useMutation({
     mutationFn: async (_applyId: number) => {
-      // Swagger에는 지원 삭제 시스템이 없음 (초대 코드로 즉시 가입)
       throw new Error('Team application deletion is not supported. Use invite codes instead.');
     },
     onSuccess: () => {

@@ -26,9 +26,6 @@ export const STEP_DESCRIPTIONS = {
   [FORM_STEPS.STYLE]: '로드맵 스타일을 지정해주세요.',
 } as const;
 
-// NOTE: FOLDER_OPTIONS과 TEAM_OPTIONS는 실제 API에서 가져옵니다.
-// useFolderStep과 useTeamStep 훅에서 folderApi.getDirectories()와 teamApi.getTeams()를 사용합니다.
-
 export const CATEGORY_OPTIONS = [
   { id: 'personal', label: '개인 로드맵', value: 'personal' },
   { id: 'team', label: '팀 로드맵', value: 'team' },

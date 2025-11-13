@@ -1,9 +1,5 @@
 import type React from 'react';
 
-// ===================================
-// SignUp Flow Types
-// ===================================
-
 export type SignUpStep = 'email' | 'verification' | 'password' | 'username';
 
 export interface SignUpData {

@@ -46,14 +46,12 @@ export function useTeamDirectoryWebSocket(options: UseTeamDirectoryWebSocketOpti
     const updatedTopic = `/topic/directory/team/${teamId}/updated`;
     const deletedTopic = `/topic/directory/team/${teamId}/deleted`;
 
-    // Subscribe to topics
     subscribe(createdTopic, handleCreated);
     subscribe(updatedTopic, handleUpdated);
     subscribe(deletedTopic, handleDeleted);
 
     setIsSubscribed(true);
 
-    // Cleanup
     return () => {
       unsubscribe(createdTopic);
       unsubscribe(updatedTopic);

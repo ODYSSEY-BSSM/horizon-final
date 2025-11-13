@@ -1,4 +1,3 @@
-// Auth API types
 export type {
   LoginRequest,
   LoginResponse,
@@ -11,7 +10,6 @@ export type {
   VerificationRequest,
 } from './auth';
 
-// SignUp flow types
 export type {
   EmailStepProps,
   PasswordStepProps,

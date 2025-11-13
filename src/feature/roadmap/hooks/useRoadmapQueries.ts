@@ -8,7 +8,6 @@ import type {
   TeamRoadmapUpdateRequest,
 } from '../types';
 
-// Query Keys
 export const roadmapKeys = {
   all: ['roadmaps'] as const,
   lists: () => [...roadmapKeys.all, 'list'] as const,
@@ -22,10 +21,6 @@ export const roadmapKeys = {
   teamDetail: (teamId: number, id: number) => [...roadmapKeys.team(teamId), id] as const,
   teamCount: (teamId: number) => [...roadmapKeys.team(teamId), 'count'] as const,
 };
-
-// ===================================
-// Personal Roadmap Queries
-// ===================================
 
 export function useRoadmaps() {
   return useQuery({
@@ -48,10 +43,6 @@ export function useRoadmapCount() {
     queryFn: () => roadmapApi.getRoadmapCount(),
   });
 }
-
-// ===================================
-// Personal Roadmap Mutations
-// ===================================
 
 export function useCreateRoadmap() {
   const queryClient = useQueryClient();
@@ -125,10 +116,6 @@ export function useGetLastAccessed() {
   });
 }
 
-// ===================================
-// Team Roadmap Queries
-// ===================================
-
 export function useTeamRoadmaps(teamId: number) {
   return useQuery({
     queryKey: roadmapKeys.teamList(teamId),
@@ -153,10 +140,6 @@ export function useTeamRoadmapCount(teamId: number) {
     enabled: false, // TODO: API doesn't support this endpoint yet
   });
 }
-
-// ===================================
-// Team Roadmap Mutations
-// ===================================
 
 export function useCreateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();

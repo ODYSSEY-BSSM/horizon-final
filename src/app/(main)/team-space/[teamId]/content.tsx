@@ -44,14 +44,13 @@ const TeamFoldersContent = () => {
       return [];
     }
 
-    // 디렉토리 매핑 (Swagger 구조 사용)
     return teamRootFolder.directories.map((directory: DirectoryResponse) => ({
       id: directory.id.toString(),
       name: directory.name,
       teamId: teamId,
       description: '',
-      color: 'blue', // 기본값
-      icon: 'folder', // 기본값
+      color: 'blue',
+      icon: 'folder',
       roadmapCount: directory.roadmaps?.length || 0,
       createdRoadmapCount: directory.roadmaps?.length || 0,
       progress: 0,
@@ -94,11 +93,9 @@ const TeamFoldersContent = () => {
   };
 
   const inviteCode = useMemo(() => {
-    // API에서 받은 초대 코드 우선 사용
     if (currentTeam?.inviteCode) {
       return currentTeam.inviteCode;
     }
-    // Fallback: 로컬에서 생성
     return currentTeam ? generateInviteCode(currentTeam.id) : undefined;
   }, [currentTeam]);
 

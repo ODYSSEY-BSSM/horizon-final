@@ -41,7 +41,6 @@ export const useDashboardData = () => {
     }
 
     return roadmapsData.map((roadmap) => {
-      // teamId가 있으면 팀 로드맵, 없으면 개인 로드맵
       const isTeamRoadmap = 'teamId' in roadmap && roadmap.teamId !== undefined;
 
       const category = isTeamRoadmap ? ('team' as const) : ('personal' as const);

@@ -14,7 +14,7 @@ export interface Roadmap {
   totalSteps: number;
   completedSteps: number;
   status: RoadmapStatus;
-  progress: number; // 0-100
+  progress: number;
   folderId?: string;
   createdAt?: string;
   updatedAt?: string;

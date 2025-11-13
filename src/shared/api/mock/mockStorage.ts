@@ -1,7 +1,3 @@
-/**
- * Mock Storage System (Swagger API 기준)
- * localStorage 기반 데이터 영속성 관리 (SSR-safe)
- */
 
 const STORAGE_PREFIX = 'horizon_swagger_';
 
@@ -53,8 +49,6 @@ export class MockStorage {
         this.memoryStorage.set(fullKey, serialized);
       }
     } catch (_error) {
-      // localStorage quota exceeded or other storage error
-      // In production, this should be logged to a monitoring service
     }
   }
 
@@ -89,7 +83,6 @@ export class MockStorage {
     this.initializeStorage();
   }
 
-  // ID 생성기
   getNextId(): number {
     const currentId = this.get<number>('lastId') || 0;
     const nextId = currentId + 1;
@@ -97,7 +90,6 @@ export class MockStorage {
     return nextId;
   }
 
-  // Helper: get with default value
   getOrDefault<T>(key: string, defaultValue: T): T {
     return this.get<T>(key) || defaultValue;
   }
