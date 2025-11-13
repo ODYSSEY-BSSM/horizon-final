@@ -21,13 +21,17 @@ export function useRoadmapSubmit() {
       directoryId = newFolder.id;
     }
 
+    if (!directoryId) {
+      throw new Error('Directory is required. Please select a folder.');
+    }
+
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
       color: submitData.color as Color,
       icon: submitData.icon as Icon,
-      directoryId: directoryId || 1,
+      directoryId,
     };
 
     await createRoadmapMutation.mutateAsync(roadmapData);
@@ -59,13 +63,17 @@ export function useTeamRoadmapSubmit(teamId: number) {
       directoryId = newFolder.id;
     }
 
+    if (!directoryId) {
+      throw new Error('Directory is required. Please select a folder.');
+    }
+
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
       color: submitData.color as Color,
       icon: submitData.icon as Icon,
-      directoryId: directoryId || 1,
+      directoryId,
     };
 
     await createTeamRoadmapMutation.mutateAsync(roadmapData);

@@ -93,9 +93,7 @@ export const useSchoolConnect = () => {
   const handleConnect = async (schoolCode: string) => {
     try {
       await connectSchool({ schoolCode });
-    } catch (_error) {
-      // ignore error
-    }
+    } catch (_error) {}
   };
 
   const handleConnectFail = () => {
@@ -109,9 +107,7 @@ export const useSchoolConnect = () => {
   const handleDisconnect = async () => {
     try {
       await disconnectSchool();
-    } catch (_error) {
-      // ignore error
-    }
+    } catch (_error) {}
   };
 
   const closeModal = (modalName: keyof ModalState) => {

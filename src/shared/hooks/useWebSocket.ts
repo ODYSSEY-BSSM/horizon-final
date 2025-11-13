@@ -78,9 +78,7 @@ export function useWebSocket(
       try {
         const message: WebSocketMessage = JSON.parse((event as MessageEvent).data);
         handlersRef.current.onMessage?.(message);
-      } catch (_error) {
-        // ignore error
-      }
+      } catch (_error) {}
     };
 
     client.addEventListener('open', handleOpen);
@@ -123,8 +121,6 @@ export function useWebSocket(
   const send = useCallback(<T>(type: string, data: T) => {
     if (clientRef.current?.isConnected()) {
       clientRef.current.send(type, data);
-    } else {
-      // do nothing
     }
   }, []);
 
