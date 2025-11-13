@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Team, TeamFolder } from '@/feature/team/types/team';
+import type { Team } from '@/feature/team/types/team';
 import { decodeInviteCode } from '../utils/inviteCode';
 import { useApplyToTeam, useCreateTeam, useTeams } from './useTeamQueries';
 
@@ -24,7 +24,6 @@ export const useTeamSpaceData = () => {
       inviteCode: team.inviteCode,
     }));
   }, [teamsData]);
-
 
   const addTeam = (data: { name: string; description: string }): Promise<Team> => {
     return createTeamMutation.mutateAsync(data).then((teamResponse) => ({
@@ -52,7 +51,7 @@ export const useTeamSpaceData = () => {
         success: true,
         teamId: teamId && !Number.isNaN(teamId) ? teamId : undefined,
       };
-    } catch (error) {
+    } catch (_error) {
       callbacks?.onError?.('팀 가입에 실패했습니다.');
       return {
         success: false,

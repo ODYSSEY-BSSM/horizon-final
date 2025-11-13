@@ -8,23 +8,17 @@ import { tokens } from '@/shared/tokens';
 export default function DashboardLoading() {
   return (
     <SkeletonTheme
-      baseColor={tokens.colors.neutral[200]}
-      highlightColor={tokens.colors.neutral[100]}
+      baseColor={tokens.colors.neutral[100]}
+      highlightColor={tokens.colors.neutral[200]}
     >
       <StyledPageContainer>
-        <StyledHeaderContainer>
-          <Skeleton height={48} width={240} />
-          <Skeleton height={48} width={300} />
-        </StyledHeaderContainer>
-
         <StyledContentContainer>
           <StyledGreetingContainer>
             <Skeleton height={32} width={250} />
           </StyledGreetingContainer>
 
           <StyledInfoCardsContainer>
-            {Array.from({ length: 5 }, (_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
+            {Array.from({ length: 5 }).map((_, i) => (
               <StyledInfoCardSkeleton key={i}>
                 <Skeleton height={24} width={120} />
                 <Skeleton height={20} width={60} />
@@ -40,8 +34,7 @@ export default function DashboardLoading() {
             </StyledRoadmapHeaderSkeleton>
 
             <StyledRoadmapGridSkeleton>
-              {Array.from({ length: 6 }, (_, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't need stable keys
+              {Array.from({ length: 6 }).map((_, i) => (
                 <StyledRoadmapCardSkeleton key={i}>
                   <StyledRoadmapCardTop>
                     <Skeleton height={16} width={80} />
@@ -74,22 +67,15 @@ const StyledPageContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const StyledHeaderContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${tokens.spacing.large} 0;
-  margin-bottom: ${tokens.spacing.large};
-`;
-
 const StyledContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${tokens.spacing.xxlarge};
-  width: 1080px;
+  width: 100%;
 `;
 
 const StyledGreetingContainer = styled.div`
+  margin-top: 48px;
   margin-bottom: ${tokens.spacing.medium};
 `;
 
@@ -101,7 +87,7 @@ const StyledInfoCardsContainer = styled.div`
 
 const StyledInfoCardSkeleton = styled.div`
   background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[200]};
+  border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};
   padding: ${tokens.spacing.large};
   display: flex;
@@ -124,13 +110,13 @@ const StyledRoadmapHeaderSkeleton = styled.div`
 
 const StyledRoadmapGridSkeleton = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(333px, 1fr));
   gap: ${tokens.spacing.large};
 `;
 
 const StyledRoadmapCardSkeleton = styled.div`
   background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[200]};
+  border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};
   padding: ${tokens.spacing.large};
   display: flex;

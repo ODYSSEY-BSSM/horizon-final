@@ -7,13 +7,20 @@ import { Text } from '@/shared/ui';
 interface ContinueWithGoogleProps {
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
-const ContinueWithGoogle = ({ onClick, className }: ContinueWithGoogleProps) => {
+const ContinueWithGoogle = ({ onClick, className, disabled = false }: ContinueWithGoogleProps) => {
   return (
-    <StyledButton onClick={onClick} className={className} aria-label="구글 계정으로 계속하기">
-      <GoogleIcon />
-      <Text variant="B2" color={tokens.colors.black}>
+    <StyledButton
+      onClick={disabled ? undefined : onClick}
+      className={className}
+      aria-label="구글 계정으로 계속하기"
+      disabled={disabled}
+      title={disabled ? '현재는 지원하지 않아요... ㅠㅠ' : undefined}
+    >
+      <GoogleIcon disabled={disabled} />
+      <Text variant="B2" color={disabled ? tokens.colors.neutral[400] : tokens.colors.black}>
         구글로 계속하기
       </Text>
     </StyledButton>
@@ -22,24 +29,29 @@ const ContinueWithGoogle = ({ onClick, className }: ContinueWithGoogleProps) => 
 
 export default ContinueWithGoogle;
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<{ disabled?: boolean }>`
   width: 100%;
   height: 48px;
-  background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.black};
+  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[100] : tokens.colors.white)};
+  border: 1px solid ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.black)};
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  transition: all 0.2s ease;
   
   &:hover {
-    background-color: ${tokens.colors.neutral[100]};
+    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[100] : tokens.colors.neutral[100])};
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 `;
 
-const GoogleIcon = () => (
+const GoogleIcon = ({ disabled }: { disabled?: boolean }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="17"
@@ -47,6 +59,7 @@ const GoogleIcon = () => (
     viewBox="0 0 17 16"
     fill="none"
     aria-hidden="true"
+    style={{ opacity: disabled ? 0.4 : 1 }}
   >
     <path
       fillRule="evenodd"
