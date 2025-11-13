@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/shared/hooks/useToast';
 import { teamApi } from '../api';
 import type { TeamCreateRequest, TeamUpdateRequest } from '../types';
 
@@ -50,11 +51,24 @@ export function useTeamApplications(teamId: number) {
 
 export function useCreateTeam() {
   const queryClient = useQueryClient();
+  const { addToast } = useToast();
 
   return useMutation({
     mutationFn: (data: TeamCreateRequest) => teamApi.createTeam(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
+      addToast({
+        title: '팀 생성 성공',
+        description: '새로운 팀이 생성되었습니다.',
+        variant: 'success',
+      });
+    },
+    onError: (error: Error) => {
+      addToast({
+        title: '팀 생성 실패',
+        description: error.message || '팀 생성 중 오류가 발생했습니다.',
+        variant: 'error',
+      });
     },
   });
 }
@@ -105,42 +119,5 @@ export function useApplyToTeam() {
   });
 }
 
-export function useApproveTeamApplication(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      throw new Error('Team approval is not supported. Use invite codes instead.');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
-    },
-  });
-}
-
-export function useRejectTeamApplication(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      throw new Error('Team rejection is not supported. Use invite codes instead.');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
-    },
-  });
-}
-
-export function useDeleteTeamApplication() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      throw new Error('Team application deletion is not supported. Use invite codes instead.');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
-    },
-  });
-}
+// 팀 승인/거부 기능은 API에서 지원하지 않음 (초대 코드 방식만 지원)
+// 필요 시 UI에서 이 기능들을 제거하거나 비활성화해야 함

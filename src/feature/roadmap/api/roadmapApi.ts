@@ -1,1 +1,1 @@
-export { mockRoadmapApi as roadmapApi } from '@/shared/api/mock/mockRoadmapApi';
+export { realRoadmapApi as roadmapApi } from './realRoadmapApi';

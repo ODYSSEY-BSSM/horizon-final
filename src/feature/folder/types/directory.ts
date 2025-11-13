@@ -1,4 +1,3 @@
-
 export interface DirectoryCreateRequest {
   name: string;
   parentId?: number;
@@ -15,6 +14,7 @@ export interface DirectoryResponse {
 export interface SimpleRoadmapResponse {
   id: number;
   title: string;
+  progress: number;
 }
 
 export interface DirectoryUpdateRequest {

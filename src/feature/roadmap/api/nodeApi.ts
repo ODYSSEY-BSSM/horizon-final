@@ -1,1 +1,1 @@
-export { mockNodeApi as nodeApi } from '@/shared/api/mock/mockRoadmapApi';
+export { realNodeApi as nodeApi } from './realNodeApi';

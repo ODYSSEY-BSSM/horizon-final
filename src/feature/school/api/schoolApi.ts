@@ -1,1 +1,1 @@
-export { mockSchoolApi as schoolApi } from '@/shared/api/mock/mockSchoolApi';
+export { realSchoolApi as schoolApi } from './realSchoolApi';

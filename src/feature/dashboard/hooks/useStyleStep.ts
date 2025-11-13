@@ -61,6 +61,7 @@ export const useStyleStep = () => {
         await submitRoadmap();
       }
     } catch (_error) {
+      // ignore error
     }
   };
 

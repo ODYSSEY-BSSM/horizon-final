@@ -7,7 +7,7 @@ import { useInfoStep } from '@/feature/dashboard/hooks/useInfoStep';
 import { TextField } from '@/shared/ui';
 
 const InfoStep = () => {
-  const { name, description, categories, updateField, onNext, onPrevious, isValid } = useInfoStep();
+  const { name, description, updateField, onNext, onPrevious, isValid } = useInfoStep();
 
   return (
     <StyledFormContainer>
@@ -26,21 +26,6 @@ const InfoStep = () => {
           placeholder="설명을 입력해주세요"
           aria-label="로드맵 설명"
           label="설명"
-        />
-        <TextField
-          value={categories.join(',')}
-          onChange={(e) =>
-            updateField(
-              'categories',
-              e.target.value
-                .split(',')
-                .map((cat) => cat.trim())
-                .filter((cat) => cat.length > 0),
-            )
-          }
-          placeholder="카테고리를 입력해주세요 (쉼표로 구분)"
-          aria-label="로드맵 카테고리"
-          label="카테고리"
         />
       </StyledFieldContainer>
 

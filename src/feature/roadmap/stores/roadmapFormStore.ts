@@ -1,4 +1,3 @@
-import type { StateCreator } from 'zustand';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -11,7 +10,6 @@ export interface RoadmapFormData {
   teamId?: string;
   name: string;
   description: string;
-  categories: string[];
   color: string;
   icon: string;
 }
@@ -36,6 +34,9 @@ interface RoadmapFormState {
   formData: RoadmapFormData;
 
   errors: Partial<Record<RoadmapFormStep, string>>;
+
+  isLoading: boolean;
+  globalError: string | null;
 }
 
 interface RoadmapFormActions {
@@ -52,6 +53,9 @@ interface RoadmapFormActions {
   isStepValid: () => boolean;
   validateCurrentStep: () => boolean;
   clearErrors: () => void;
+
+  setIsLoading: (loading: boolean) => void;
+  setGlobalError: (error: string | null) => void;
 
   getSubmitData: () => Promise<RoadmapSubmitData>;
 
@@ -72,7 +76,6 @@ const initialFormData: RoadmapFormData = {
   teamId: undefined,
   name: '',
   description: '',
-  categories: [],
   color: 'red',
   icon: 'language',
 };
@@ -82,6 +85,8 @@ const initialState: RoadmapFormState = {
   currentStep: 'category',
   formData: initialFormData,
   errors: {},
+  isLoading: false,
+  globalError: null,
 };
 
 function getStepFlow(category: string): readonly RoadmapFormStep[] {
@@ -148,108 +153,139 @@ function validateStep(step: RoadmapFormStep, formData: RoadmapFormData): string 
   return null;
 }
 
-const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
-  ...initialState,
+export const useRoadmapFormStore = create<RoadmapFormStore>()(
+  devtools(
+    (set, get) => ({
+      ...initialState,
 
-  openModal: () => set({ isModalOpen: true }, false, 'openModal'),
+      openModal: () => set({ isModalOpen: true }, false, 'openModal'),
 
-  closeModal: () =>
-    set(
-      {
-        isModalOpen: false,
-        currentStep: 'category',
-        formData: initialFormData,
-        errors: {},
+      closeModal: () =>
+        set(
+          {
+            isModalOpen: false,
+            currentStep: 'category',
+            formData: initialFormData,
+            errors: {},
+          },
+          false,
+          'closeModal',
+        ),
+
+      nextStep: () => {
+        const state = get() as RoadmapFormStore;
+
+        if (!state.validateCurrentStep()) {
+          return;
+        }
+
+        const next = getNextStep(state.currentStep, state.formData.category);
+        if (next) {
+          set({ currentStep: next, errors: {} }, false, 'nextStep');
+        }
       },
-      false,
-      'closeModal',
-    ),
 
-  nextStep: () => {
-    const state = get() as RoadmapFormStore;
+      previousStep: () => {
+        const state = get() as RoadmapFormStore;
+        const prev = getPreviousStep(state.currentStep, state.formData.category);
 
-    if (!state.validateCurrentStep()) {
-      return;
-    }
+        if (prev) {
+          set({ currentStep: prev, errors: {} }, false, 'previousStep');
+        }
+      },
 
-    const next = getNextStep(state.currentStep, state.formData.category);
-    if (next) {
-      set({ currentStep: next, errors: {} }, false, 'nextStep');
-    }
-  },
+      goToStep: (step: RoadmapFormStep) => set({ currentStep: step }, false, 'goToStep'),
 
-  previousStep: () => {
-    const state = get() as RoadmapFormStore;
-    const prev = getPreviousStep(state.currentStep, state.formData.category);
+      updateField: <K extends keyof RoadmapFormData>(field: K, value: RoadmapFormData[K]) =>
+        set(
+          (state: RoadmapFormStore) => ({
+            formData: { ...state.formData, [field]: value },
+            errors: {},
+          }),
+          false,
+          'updateField',
+        ),
 
-    if (prev) {
-      set({ currentStep: prev, errors: {} }, false, 'previousStep');
-    }
-  },
+      updateFormData: (data: Partial<RoadmapFormData>) =>
+        set(
+          (state: RoadmapFormStore) => ({
+            formData: { ...state.formData, ...data },
+          }),
+          false,
+          'updateFormData',
+        ),
 
-  goToStep: (step: RoadmapFormStep) => set({ currentStep: step }, false, 'goToStep'),
+      isStepValid: () => {
+        const state = get() as RoadmapFormStore;
+        const error = validateStep(state.currentStep, state.formData);
+        return !error;
+      },
 
-  updateField: <K extends keyof RoadmapFormData>(field: K, value: RoadmapFormData[K]) =>
-    set(
-      (state: RoadmapFormStore) => ({
-        formData: { ...state.formData, [field]: value },
-        errors: {},
-      }),
-      false,
-      'updateField',
-    ),
+      validateCurrentStep: () => {
+        const state = get() as RoadmapFormStore;
+        const error = validateStep(state.currentStep, state.formData);
 
-  updateFormData: (data: Partial<RoadmapFormData>) =>
-    set(
-      (state: RoadmapFormStore) => ({
-        formData: { ...state.formData, ...data },
-      }),
-      false,
-      'updateFormData',
-    ),
+        if (error) {
+          set({ errors: { [state.currentStep]: error } }, false, 'validateCurrentStep');
+          return false;
+        }
 
-  isStepValid: () => {
-    const state = get() as RoadmapFormStore;
-    const error = validateStep(state.currentStep, state.formData);
-    return !error;
-  },
+        set({ errors: {} }, false, 'validateCurrentStep');
+        return true;
+      },
 
-  validateCurrentStep: () => {
-    const state = get() as RoadmapFormStore;
-    const error = validateStep(state.currentStep, state.formData);
+      clearErrors: () => set({ errors: {}, globalError: null }, false, 'clearErrors'),
 
-    if (error) {
-      set({ errors: { [state.currentStep]: error } }, false, 'validateCurrentStep');
-      return false;
-    }
+      setIsLoading: (loading: boolean) => set({ isLoading: loading }, false, 'setIsLoading'),
 
-    set({ errors: {} }, false, 'validateCurrentStep');
-    return true;
-  },
+      setGlobalError: (error: string | null) =>
+        set({ globalError: error }, false, 'setGlobalError'),
 
-  clearErrors: () => set({ errors: {} }, false, 'clearErrors'),
+      getSubmitData: async () => {
+        const state = get() as RoadmapFormStore;
+        const { formData } = state;
 
-  getSubmitData: async () => {
-    const state = get() as RoadmapFormStore;
-    const { formData } = state;
+        try {
+          set({ isLoading: true, globalError: null }, false, 'getSubmitData:start');
 
-    return {
-      title: formData.name,
-      description: formData.description || '',
-      categories: formData.categories,
-      color: formData.color.toUpperCase(),
-      icon: formData.icon.toUpperCase(),
-      category: formData.category,
-      folderId: formData.folderId,
-      folderName: formData.folderName,
-      teamId: formData.teamId,
-    };
-  },
+          // 폼 데이터 검증
+          if (!formData.name.trim()) {
+            throw new Error('이름을 입력해주세요');
+          }
+          if (!formData.color) {
+            throw new Error('색상을 선택해주세요');
+          }
+          if (!formData.icon) {
+            throw new Error('아이콘을 선택해주세요');
+          }
 
-  reset: () => set(initialState, false, 'reset'),
-});
+          const submitData = {
+            title: formData.name,
+            description: formData.description || '',
+            categories: [],
+            color: formData.color.toUpperCase(),
+            icon: formData.icon.toUpperCase(),
+            category: formData.category,
+            folderId: formData.folderId,
+            folderName: formData.folderName,
+            teamId: formData.teamId,
+          };
 
-export const useRoadmapFormStore =
-  process.env.NODE_ENV !== 'production'
-    ? create<RoadmapFormStore>()(devtools(createStore(), { name: 'roadmap-form' }))
-    : create<RoadmapFormStore>()(createStore());
+          set({ isLoading: false }, false, 'getSubmitData:success');
+          return submitData;
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : '제출 데이터 생성에 실패했습니다';
+          set({ globalError: errorMessage, isLoading: false }, false, 'getSubmitData:error');
+          throw error;
+        }
+      },
+
+      reset: () => set(initialState, false, 'reset'),
+    }),
+    {
+      name: 'roadmap-form',
+      enabled: process.env.NODE_ENV !== 'production',
+    },
+  ),
+);

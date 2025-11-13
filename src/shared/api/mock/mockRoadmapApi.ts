@@ -1,4 +1,3 @@
-
 import type {
   EducationNodeConvertRequest,
   NodeCreateRequest,
@@ -14,6 +13,7 @@ import type {
   RoadmapUpdateRequest,
   TeamRoadmapCreateRequest,
   TeamRoadmapResponse,
+  TeamRoadmapUpdateRequest,
 } from '@/feature/roadmap/types';
 import { ProblemStatus } from '@/shared/api/types';
 import { delay, MOCK_DELAYS } from './mockConstants';
@@ -113,14 +113,16 @@ export const mockRoadmapApi = {
     mockStorage.set('roadmaps', filtered);
   },
 
-  toggleFavorite: async (roadmapId: number): Promise<void> => {
+  toggleFavorite: async (roadmapId: number): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
-    if (roadmap && !isTeamRoadmap(roadmap)) {
-      roadmap.isFavorite = !roadmap.isFavorite;
-      mockStorage.set('roadmaps', roadmaps);
+    if (!roadmap || isTeamRoadmap(roadmap)) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
+    roadmap.isFavorite = !roadmap.isFavorite;
+    mockStorage.set('roadmaps', roadmaps);
+    return roadmap as RoadmapResponse;
   },
 
   getLastAccessed: async (): Promise<RoadmapResponse> => {
@@ -170,6 +172,58 @@ export const mockRoadmapApi = {
     return getRoadmaps().filter(
       (r): r is TeamRoadmapResponse => isTeamRoadmap(r) && r.teamId === teamId,
     );
+  },
+
+  getTeamRoadmap: async (teamId: number, roadmapId: number): Promise<TeamRoadmapResponse> => {
+    await delay(MOCK_DELAYS.FAST);
+    const roadmaps = getRoadmaps();
+    const roadmap = roadmaps.find(
+      (r): r is TeamRoadmapResponse =>
+        isTeamRoadmap(r) && r.teamId === teamId && r.id === roadmapId,
+    );
+    if (!roadmap) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    }
+    return roadmap;
+  },
+
+  getTeamRoadmapCount: async (teamId: number): Promise<RoadmapCountResponse> => {
+    await delay(MOCK_DELAYS.FAST);
+    const count = getRoadmaps().filter(
+      (r): r is TeamRoadmapResponse => isTeamRoadmap(r) && r.teamId === teamId,
+    ).length;
+    return { count };
+  },
+
+  updateTeamRoadmap: async (
+    teamId: number,
+    roadmapId: number,
+    data: TeamRoadmapUpdateRequest,
+  ): Promise<TeamRoadmapResponse> => {
+    await delay(MOCK_DELAYS.NORMAL);
+    const roadmaps = getRoadmaps();
+    const index = roadmaps.findIndex(
+      (r): r is TeamRoadmapResponse =>
+        isTeamRoadmap(r) && r.teamId === teamId && r.id === roadmapId,
+    );
+
+    if (index === -1) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
+    }
+
+    const updatedRoadmap = { ...(roadmaps[index] as TeamRoadmapResponse), ...data };
+    roadmaps[index] = updatedRoadmap;
+    mockStorage.set('roadmaps', roadmaps);
+    return updatedRoadmap;
+  },
+
+  deleteTeamRoadmap: async (teamId: number, roadmapId: number): Promise<void> => {
+    await delay(MOCK_DELAYS.NORMAL);
+    const roadmaps = getRoadmaps();
+    const filtered = roadmaps.filter(
+      (r) => !(isTeamRoadmap(r) && r.teamId === teamId && r.id === roadmapId),
+    );
+    mockStorage.set('roadmaps', filtered);
   },
 };
 

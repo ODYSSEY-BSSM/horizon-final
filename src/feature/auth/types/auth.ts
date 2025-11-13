@@ -44,7 +44,7 @@ export interface UserInfoResponse {
   username: string;
   email: string;
   role: UserRole;
-  teams: string[];
+  teams: Array<{ id: number; name: string }>;
   school?: string;
   isConnectedSchool?: boolean;
 }

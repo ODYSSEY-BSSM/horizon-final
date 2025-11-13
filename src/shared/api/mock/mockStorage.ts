@@ -1,4 +1,3 @@
-
 const STORAGE_PREFIX = 'horizon_swagger_';
 
 export class MockStorage {
@@ -49,6 +48,7 @@ export class MockStorage {
         this.memoryStorage.set(fullKey, serialized);
       }
     } catch (_error) {
+      // ignore error
     }
   }
 

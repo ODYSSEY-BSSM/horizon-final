@@ -1,4 +1,3 @@
-
 import type { DirectoryResponse } from '@/feature/folder/types';
 import type {
   NodeResponse,
@@ -42,8 +41,8 @@ export const initialMockData = {
           parentId: 1,
           directories: [],
           roadmaps: [
-            { id: 1, title: 'React 마스터하기' },
-            { id: 2, title: 'Next.js 완전정복' },
+            { id: 1, title: 'React 마스터하기', progress: 30 },
+            { id: 2, title: 'Next.js 완전정복', progress: 50 },
           ],
         },
       ],
@@ -78,7 +77,21 @@ export const initialMockData = {
       progress: 30,
       directoryId: 2,
     },
-  ] as RoadmapResponse[],
+    {
+      id: 3,
+      title: '팀 프로젝트 로드맵',
+      description: '팀 협업을 위한 로드맵 예시',
+      categories: ['팀', '프로젝트'],
+      lastModifiedAt: new Date().toISOString().split('T')[0],
+      lastAccessedAt: new Date().toISOString(),
+      color: 'PURPLE',
+      icon: 'TEAM',
+      progress: 10,
+      directoryId: 1,
+      teamId: 1,
+      teamName: '개발 스터디',
+    },
+  ] as (RoadmapResponse | TeamRoadmapResponse)[],
 
   nodes: [
     {
@@ -144,8 +157,6 @@ export const initialMockData = {
   ],
 
   teamDirectories: [] as DirectoryResponse[],
-
-  teamRoadmaps: [] as TeamRoadmapResponse[],
 
   schools: [
     {

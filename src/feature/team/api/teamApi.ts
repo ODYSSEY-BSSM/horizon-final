@@ -1,1 +1,1 @@
-export { mockTeamApi as teamApi } from '@/shared/api/mock/mockTeamApi';
+export { realTeamApi as teamApi } from './realTeamApi';

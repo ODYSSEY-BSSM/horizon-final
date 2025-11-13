@@ -1,4 +1,3 @@
-
 import type {
   LoginRequest,
   LoginResponse,
@@ -158,7 +157,7 @@ export const mockAuthApi = {
     const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
     const userTeams = teams
       .filter((team) => team.memberIds?.includes(currentUser.id))
-      .map((team) => team.name);
+      .map((team) => ({ id: team.id, name: team.name }));
 
     const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
     const userSchool = currentUser.schoolId

@@ -70,6 +70,7 @@ export class StompWebSocketClient {
         const data = JSON.parse(message.body) as T;
         handler(data);
       } catch (_error) {
+        // ignore error
       }
     });
 
@@ -115,9 +116,9 @@ export class StompWebSocketClient {
   private emitEvent(event: StompEventType, payload?: unknown): void {
     const handlers = this.eventListeners.get(event);
     if (handlers) {
-      for (const handler of handlers) {
+      handlers.forEach((handler) => {
         handler(payload);
-      }
+      });
     }
   }
 
@@ -136,6 +137,7 @@ export class StompWebSocketClient {
       this.reconnectAttempts++;
       setTimeout(() => this.connect(), this.reconnectDelay);
     } else {
+      // do nothing
     }
   }
 

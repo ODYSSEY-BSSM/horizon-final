@@ -94,6 +94,7 @@ export const useSchoolConnect = () => {
     try {
       await connectSchool({ schoolCode });
     } catch (_error) {
+      // ignore error
     }
   };
 
@@ -109,6 +110,7 @@ export const useSchoolConnect = () => {
     try {
       await disconnectSchool();
     } catch (_error) {
+      // ignore error
     }
   };
 
