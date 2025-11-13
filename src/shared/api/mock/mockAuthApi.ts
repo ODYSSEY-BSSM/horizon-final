@@ -218,7 +218,7 @@ export const mockAuthApi = {
     const user = users.find((u) => u.email === data.email);
 
     if (!user) {
-      throw new Error(MOCK_ERRORS.USER_NOT_FOUND);
+      throw new Error(MOCK_ERRORS.INVALID_CREDENTIALS);
     }
 
     const code = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE || '123456';

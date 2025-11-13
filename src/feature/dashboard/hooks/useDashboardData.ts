@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
 import { useAllTeamRoadmaps, useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
-import type { AnyRoadmapResponse } from '@/feature/roadmap/types';
+import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/types';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
@@ -16,63 +16,52 @@ export const useDashboardData = () => {
   } = useRoadmaps();
   const {
     data: teamRoadmaps,
-    isLoading: isLoadingTeam,
+    isLoading: isLoadingTeamRoadmaps,
     error: teamError,
   } = useAllTeamRoadmaps(teamIds);
 
-  const roadmapsData = useMemo(() => {
-    const allRoadmaps: AnyRoadmapResponse[] = [
-      ...(personalRoadmaps || []),
-      ...(teamRoadmaps || []),
-    ];
-    return allRoadmaps.sort((a, b) => {
-      const dateA = new Date(a.lastAccessedAt ?? 0).getTime();
-      const dateB = new Date(b.lastAccessedAt ?? 0).getTime();
-      return dateB - dateA;
-    });
-  }, [personalRoadmaps, teamRoadmaps]);
+  const roadmapsData: RoadmapResponse[] = useMemo(() => {
+    return personalRoadmaps || [];
+  }, [personalRoadmaps]);
 
   const userData = useMemo(() => {
     if (!userProfile) {
       return null;
     }
+    const myRoadmapsCount = roadmapsData?.length || 0;
+    const myRoadmapsInProgress = roadmapsData?.filter((roadmap) => roadmap.isFavorite).length || 0;
 
-    const myRoadmapsCount = personalRoadmaps?.length || 0;
-    const myRoadmapsInProgress =
-      personalRoadmaps?.filter((roadmap) => roadmap.progress > 0 && roadmap.progress < 100)
-        .length || 0;
-    const myFavoriteInProgress =
-      personalRoadmaps?.filter(
-        (roadmap) => roadmap.isFavorite && roadmap.progress > 0 && roadmap.progress < 100,
-      ).length || 0;
-
+    const teamRoadmapsCount = teamRoadmaps?.length || 0;
     const teamRoadmapsInProgress =
-      teamRoadmaps?.filter((roadmap) => roadmap.progress > 0 && roadmap.progress < 100).length || 0;
-
-    const teamFavoriteInProgress = 0;
+      teamRoadmaps?.filter((roadmap) => roadmap.progress < 100).length || 0;
 
     return {
       name: userProfile.username,
       'my-roadmap-count': { count: myRoadmapsCount },
       'my-roadmap-in-progress': {
         count: myRoadmapsInProgress,
-        subCount: myFavoriteInProgress,
+        subCount: myRoadmapsInProgress,
       },
-      'team-roadmap-count': { count: teamRoadmaps?.length || 0 },
+      'team-roadmap-count': { count: teamRoadmapsCount },
       'team-roadmap-in-progress': {
         count: teamRoadmapsInProgress,
-        subCount: teamFavoriteInProgress,
+        subCount: teamRoadmapsInProgress,
       },
       'connected-school': {
         schoolName: userProfile.school || '',
         hasItem: !!userProfile.school,
       },
     };
-  }, [userProfile, personalRoadmaps, teamRoadmaps]);
+  }, [userProfile, roadmapsData, teamRoadmaps]);
 
   const roadmaps = useMemo(() => {
-    return roadmapsData.map((roadmap) => {
-      const isTeamRoadmap = 'teamId' in roadmap && roadmap.teamId !== undefined;
+    const combinedRoadmaps: (RoadmapResponse | TeamRoadmapResponse)[] = [
+      ...(personalRoadmaps || []),
+      ...(teamRoadmaps || []),
+    ];
+
+    return combinedRoadmaps.map((roadmap) => {
+      const isTeamRoadmap = 'teamId' in roadmap;
 
       const category = isTeamRoadmap ? ('team' as const) : ('personal' as const);
       const status = 'in-progress' as const;
@@ -83,17 +72,17 @@ export const useDashboardData = () => {
         icon: roadmap.icon.toLowerCase(),
         color: roadmap.color.toLowerCase() as RoadmapColor,
         category,
-        steps: 0, // TODO: API에서 단계 정보를 제공하면 업데이트 필요
+        steps: 0,
         status,
         progress: roadmap.progress || 0,
       };
     });
-  }, [roadmapsData]);
+  }, [personalRoadmaps, teamRoadmaps]);
 
   return {
     userData,
     roadmapsData: roadmaps,
-    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeam,
+    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeamRoadmaps,
     error: userError || personalError || teamError,
   };
 };

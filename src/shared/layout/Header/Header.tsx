@@ -79,9 +79,9 @@ const Profile = () => {
     try {
       await logout();
       router.push('/signin');
-    } catch (error) {
-      // 로그아웃 실패 시 에러 처리 (예: 사용자에게 알림)
-      console.error('Logout failed:', error);
+    } catch (_error) {
+      // biome-ignore lint/suspicious/noConsole: error logging
+      console.error('Logout failed:', _error);
     }
   };
 
