@@ -84,7 +84,6 @@ const VerificationInput = ({ value, onChange, error }: VerificationInputProps) =
           const isFocused = focusedIndex === index;
           return (
             <StyledInput
-              // biome-ignore lint/suspicious/noArrayIndexKey: OTP 입력 필드는 길이가 고정되어 있어 항목의 순서가 변경되지 않으므로 안전함.
               key={`otp-${index}`}
               ref={(el) => {
                 inputRefs.current[index] = el;
