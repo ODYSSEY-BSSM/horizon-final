@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
 import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
-import { useEmailForm } from '@/feature/auth/hooks/signup/useEmailForm';
+import { useEmailForm } from '@/feature/auth/hooks/useEmailForm';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
 
