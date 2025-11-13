@@ -102,7 +102,7 @@ export default function SignInContent() {
             </StyledDividerText>
           </StyledDividerWrapper>
 
-          <ContinueWithGoogle onClick={handleGoogleLogin} />
+          <ContinueWithGoogle onClick={handleGoogleLogin} disabled />
         </StyledButtonGroup>
 
         <SecondaryAction onSignUpClick={handleSignUp} />
