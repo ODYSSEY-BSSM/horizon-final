@@ -1,5 +1,6 @@
 // API
 export { authApi } from './api/authApi';
+export { realAuthApi } from './api/realAuthApi';
 
 // Components
 export { SecondaryAction as SignInSecondaryAction } from './components/signin/SecondaryAction';
