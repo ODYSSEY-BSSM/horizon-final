@@ -690,11 +690,6 @@ const { isConnected, isSubscribed } = useTeamDirectoryWebSocket({
   - 노드 기반 에디터 특화
   - 줌/패닝/미니맵/연결선 자동 처리
 
-- **Konva.js** (`react-konva`)
-  - Canvas 기반 렌더링
-  - 높은 성능
-  - 세밀한 커스터마이징 가능
-
 ### 유틸리티
 - **lodash** - `throttle`, `debounce` 함수
 - **immer** - 불변성 관리 (Undo/Redo)

@@ -6,7 +6,7 @@ const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080'
 const WS_ENDPOINT = '/ws';
 
 export type StompMessageHandler<T = unknown> = (message: T) => void;
-export type StompEventHandler = () => void;
+export type StompEventHandler = (error?: unknown) => void;
 export type StompEventType = 'connect' | 'disconnect' | 'error';
 
 export class StompWebSocketClient {
@@ -119,11 +119,11 @@ export class StompWebSocketClient {
     this.eventListeners.get(event)?.delete(handler);
   }
 
-  private emitEvent(event: StompEventType): void {
+  private emitEvent(event: StompEventType, payload?: unknown): void {
     const handlers = this.eventListeners.get(event);
     if (handlers) {
       for (const handler of handlers) {
-        handler();
+        handler(payload);
       }
     }
   }
@@ -152,8 +152,8 @@ export class StompWebSocketClient {
     }
   }
 
-  private onError(_frame: IFrame): void {
-    this.emitEvent('error');
+  private onError(frame: IFrame): void {
+    this.emitEvent('error', new Error(frame.body || 'STOMP error'));
   }
 }
 

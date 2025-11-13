@@ -17,6 +17,7 @@ export const useInfoStep = () => {
     // Form data
     name: formData.name,
     description: formData.description,
+    categories: formData.categories,
 
     // Field update
     updateField,

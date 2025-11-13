@@ -15,6 +15,7 @@ export interface RoadmapFormData {
   teamId?: string;
   name: string;
   description: string;
+  categories: string[];
   color: string;
   icon: string;
 }
@@ -89,6 +90,7 @@ const initialFormData: RoadmapFormData = {
   teamId: undefined,
   name: '',
   description: '',
+  categories: [],
   color: 'red',
   icon: 'language',
 };
@@ -273,7 +275,7 @@ const createStore: StateCreator<RoadmapFormStore> = (set, get) => ({
     return {
       title: formData.name,
       description: formData.description || '',
-      categories: [],
+      categories: formData.categories,
       color: formData.color.toUpperCase(),
       icon: formData.icon.toUpperCase(),
       category: formData.category,

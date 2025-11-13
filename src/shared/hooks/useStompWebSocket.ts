@@ -35,8 +35,8 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
       onDisconnect?.();
     };
 
-    const handleError = () => {
-      onError?.(new Error('WebSocket error'));
+    const handleError = (error?: unknown) => {
+      onError?.(error instanceof Error ? error : new Error('WebSocket error'));
     };
 
     // Register event listeners
