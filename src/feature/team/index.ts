@@ -17,7 +17,8 @@ export * from './constants/TeamFolderFilterTabs.constants';
 
 // Forms
 export { TeamFolderDeleteModal } from './forms/TeamFolderDeleteModal';
-
+export type { UseTeamDirectoryWebSocketOptions } from './hooks/useTeamDirectoryWebSocket';
+export { useTeamDirectoryWebSocket } from './hooks/useTeamDirectoryWebSocket';
 // Hooks
 export { useTeamFolderDetail } from './hooks/useTeamFolderDetail';
 export { useTeamSpaceData } from './hooks/useTeamSpaceData';
