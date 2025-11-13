@@ -3,7 +3,7 @@ import type { ProblemCreateRequest, ProblemResponse, ProblemSolveRequest } from 
 
 export const realProblemApi = {
   createProblem: async (nodeId: number, data: ProblemCreateRequest): Promise<ProblemResponse> => {
-    return apiClient.post<ProblemResponse>(`/nodes/${nodeId}/problems`, data);
+    return apiClient.post<ProblemResponse>(`/${nodeId}/problems`, data);
   },
 
   solveProblem: async (
@@ -11,6 +11,8 @@ export const realProblemApi = {
     problemId: number,
     data: ProblemSolveRequest,
   ): Promise<ProblemResponse> => {
-    return apiClient.patch<ProblemResponse>(`/nodes/${nodeId}/problems/${problemId}`, data);
+    return apiClient.patch<ProblemResponse>(`/${nodeId}/problems`, data, {
+      params: { problemId },
+    });
   },
 };
