@@ -65,7 +65,7 @@ const SearchBar = ({ onSearch, placeholder = DEFAULT_SEARCH_PLACEHOLDER }: Searc
 
 const Profile = () => {
   const router = useRouter();
-  const { mutate: logout } = useLogout();
+  const { mutateAsync: logout } = useLogout();
   const { isOpen, dropdownRef, handleToggle, highlightedIndex, handleKeyDown } = useDropdown({
     itemCount: 1,
     onSelect: (index) => {
@@ -75,12 +75,14 @@ const Profile = () => {
     },
   });
 
-  const handleLogout = () => {
-    logout(undefined, {
-      onSuccess: () => {
-        router.push('/signin');
-      },
-    });
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/signin');
+    } catch (error) {
+      // 로그아웃 실패 시 에러 처리 (예: 사용자에게 알림)
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
