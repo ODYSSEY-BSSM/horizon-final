@@ -91,6 +91,11 @@ class ApiClient {
       return undefined as T;
     }
 
+    const contentLength = response.headers.get('Content-Length');
+    if (contentLength === '0') {
+      return undefined as T;
+    }
+
     const result: ApiResponse<T> = await response.json();
 
     if (!response.ok || result.code !== 'OK') {

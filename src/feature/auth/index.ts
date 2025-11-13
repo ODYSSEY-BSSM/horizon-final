@@ -1,5 +1,4 @@
 export { authApi } from './api/authApi';
-export { realAuthApi } from './api/realAuthApi';
 
 export { SecondaryAction as SignInSecondaryAction } from './components/signin/SecondaryAction';
 export { PasswordValidation } from './components/signup/PasswordValidation';
