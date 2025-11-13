@@ -2,94 +2,96 @@
 
 import styled from '@emotion/styled';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { tokens } from '@/shared/tokens';
-import { Text } from '@/shared/ui';
 
 export default function SignInLoading() {
   return (
     <SkeletonTheme
-      baseColor={tokens.colors.neutral[200]}
-      highlightColor={tokens.colors.neutral[100]}
+      baseColor={tokens.colors.neutral[100]}
+      highlightColor={tokens.colors.neutral[200]}
     >
-      <StyledContainer>
-        <StyledHeaderSection>
-          <Text variant="H2" color={tokens.colors.primary[500]}>
-            HORIZON
-          </Text>
-          <Skeleton height={20} width={200} />
-        </StyledHeaderSection>
+      <StyledPageWrapper>
+        <StyledContentWrapper>
+          <StyledHeaderWrapper>
+            <Skeleton height={34} width={150} />
+            <Skeleton height={20} width={250} />
+          </StyledHeaderWrapper>
 
-        <StyledFormSection>
-          <StyledFieldContainer>
-            <StyledLabelSkeleton>
-              <Skeleton height={16} width={60} />
-            </StyledLabelSkeleton>
-            <Skeleton height={48} />
-          </StyledFieldContainer>
+          <StyledFormWrapper>
+            <StyledFieldContainer>
+              <Skeleton height={20} width={60} style={{ marginBottom: '8px' }} />
+              <Skeleton height={48} />
+            </StyledFieldContainer>
+            <StyledFieldContainer>
+              <Skeleton height={20} width={80} style={{ marginBottom: '8px' }} />
+              <Skeleton height={48} />
+            </StyledFieldContainer>
+          </StyledFormWrapper>
 
-          <StyledFieldContainer>
-            <StyledLabelSkeleton>
-              <Skeleton height={16} width={80} />
-            </StyledLabelSkeleton>
-            <Skeleton height={48} />
-          </StyledFieldContainer>
-        </StyledFormSection>
-
-        <StyledActionSection>
-          <Skeleton height={48} />
-
-          <StyledDivider>
-            <Skeleton height={1} />
-          </StyledDivider>
-
-          <Skeleton height={48} />
-
-          <StyledLinkSkeleton>
-            <Skeleton height={16} width={150} />
-          </StyledLinkSkeleton>
-        </StyledActionSection>
-      </StyledContainer>
+          <StyledActionsWrapper>
+            <StyledButtonGroup>
+              <Skeleton height={48} />
+              <StyledDividerWrapper>
+                <Skeleton height={1} />
+              </StyledDividerWrapper>
+              <Skeleton height={48} />
+            </StyledButtonGroup>
+            <div style={{ alignSelf: 'center' }}>
+              <Skeleton height={16} width={200} />
+            </div>
+          </StyledActionsWrapper>
+        </StyledContentWrapper>
+      </StyledPageWrapper>
     </SkeletonTheme>
   );
 }
 
-const StyledContainer = styled.div`
+const StyledPageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+`;
+
+const StyledContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 60px;
   width: 400px;
 `;
 
-const StyledHeaderSection = styled.div`
+const StyledHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: flex-start;
 `;
 
-const StyledFormSection = styled.div`
+const StyledFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-const StyledFieldContainer = styled.div``;
-
-const StyledLabelSkeleton = styled.div`
-  margin-bottom: 8px;
+const StyledFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
-const StyledActionSection = styled.div`
+const StyledActionsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+`;
+
+const StyledButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
 `;
 
-const StyledDivider = styled.div`
-  padding: 20px 0;
-`;
-
-const StyledLinkSkeleton = styled.div`
-  text-align: center;
-  margin-top: 20px;
+const StyledDividerWrapper = styled.div`
+  padding: 8px 0;
 `;
