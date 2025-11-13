@@ -2,52 +2,44 @@
 
 import styled from '@emotion/styled';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { tokens } from '@/shared/tokens';
-import { Text } from '@/shared/ui';
 
 export default function SignUpLoading() {
   return (
     <SkeletonTheme
-      baseColor={tokens.colors.neutral[200]}
-      highlightColor={tokens.colors.neutral[100]}
+      baseColor={tokens.colors.neutral[100]}
+      highlightColor={tokens.colors.neutral[200]}
     >
       <StyledContainer>
-        <StyledHeaderSection>
-          <Skeleton circle width={24} height={24} />
-          <Skeleton height={24} width={120} />
-        </StyledHeaderSection>
+        <StyledCard>
+          <StyledFormWrapper>
+            <StyledContentWrapper>
+              <StyledHeaderWrapper>
+                <Skeleton height={34} width={150} />
+                <Skeleton height={20} width={280} />
+              </StyledHeaderWrapper>
+              <StyledFieldAndButtonWrapper>
+                <StyledFieldContainer>
+                  <Skeleton height={20} width={60} style={{ marginBottom: '8px' }} />
+                  <Skeleton height={48} />
+                </StyledFieldContainer>
+                <Skeleton height={48} />
+              </StyledFieldAndButtonWrapper>
 
-        <StyledBrandingSection>
-          <Text variant="H2" color={tokens.colors.primary[500]}>
-            HORIZON
-          </Text>
-          <Skeleton height={20} width={180} />
-        </StyledBrandingSection>
+              <StyledDividerWrapper>
+                <Skeleton height={1} />
+              </StyledDividerWrapper>
 
-        <StyledFormSection>
-          <StyledFieldContainer>
-            <StyledLabelSkeleton>
-              <Skeleton height={16} width={80} />
-            </StyledLabelSkeleton>
-            <Skeleton height={48} />
-          </StyledFieldContainer>
-
-          <StyledDescriptionContainer>
-            <StyledDescriptionSkeleton>
-              <Skeleton height={14} width={250} />
-            </StyledDescriptionSkeleton>
-            <Skeleton height={14} width={200} />
-          </StyledDescriptionContainer>
-
-          <StyledActionSection>
-            <Skeleton height={48} />
-            <Skeleton height={40} />
-          </StyledActionSection>
-        </StyledFormSection>
-
-        <StyledFooterLink>
-          <Skeleton height={16} width={160} />
-        </StyledFooterLink>
+              <StyledActionsWrapper>
+                <Skeleton height={48} />
+                <div style={{ alignSelf: 'center' }}>
+                  <Skeleton height={16} width={200} />
+                </div>
+              </StyledActionsWrapper>
+            </StyledContentWrapper>
+          </StyledFormWrapper>
+        </StyledCard>
       </StyledContainer>
     </SkeletonTheme>
   );
@@ -56,49 +48,61 @@ export default function SignUpLoading() {
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  width: 400px;
-`;
-
-const StyledHeaderSection = styled.div`
-  display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: ${tokens.colors.background};
 `;
 
-const StyledBrandingSection = styled.div`
+const StyledCard = styled.div`
+  width: 720px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  background-color: ${tokens.colors.white};
+  align-items: center;
+  box-shadow: ${tokens.shadow[0]};
+`;
+
+const StyledFormWrapper = styled.div`
+  margin-top: 140px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 `;
 
-const StyledFormSection = styled.div`
+const StyledContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 400px;
 `;
 
-const StyledFieldContainer = styled.div``;
-
-const StyledLabelSkeleton = styled.div`
+const StyledHeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
   margin-bottom: 8px;
 `;
 
-const StyledDescriptionContainer = styled.div``;
-
-const StyledDescriptionSkeleton = styled.div`
-  margin-bottom: 4px;
+const StyledFieldAndButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 `;
 
-const StyledActionSection = styled.div`
+const StyledFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 20px;
 `;
 
-const StyledFooterLink = styled.div`
-  text-align: center;
+const StyledDividerWrapper = styled.div`
+  padding: 8px 0;
 `;
