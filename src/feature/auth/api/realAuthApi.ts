@@ -13,7 +13,11 @@ import type {
 
 export const realAuthApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    return apiClient.post<LoginResponse>('/auth', credentials);
+    const response = await apiClient.post<LoginResponse>('/auth', credentials);
+    return {
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+    };
   },
 
   logout: async (): Promise<void> => {
