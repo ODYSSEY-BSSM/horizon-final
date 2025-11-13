@@ -47,7 +47,9 @@ export class MockStorage {
       } else {
         this.memoryStorage.set(fullKey, serialized);
       }
-    } catch (_error) {}
+    } catch (_error) {
+      // localStorage 사용 불가 등 예외적인 경우 무시
+    }
   }
 
   has(key: string): boolean {

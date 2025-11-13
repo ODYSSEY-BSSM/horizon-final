@@ -60,7 +60,9 @@ export const useStyleStep = () => {
       } else {
         await submitRoadmap();
       }
-    } catch (_error) {}
+    } catch (_error) {
+      // 에러를 의도적으로 무시합니다.
+    }
   };
 
   const isValid = isStepValid();
