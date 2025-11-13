@@ -1,4 +1,3 @@
-
 import { tokenStore } from '@/feature/auth';
 
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080';
@@ -165,6 +164,8 @@ export class WebSocketClient {
         }
       }
     } catch (_error) {
+      // biome-ignore lint: reason
+      console.error('Error parsing WebSocket message:', _error);
     }
   }
 

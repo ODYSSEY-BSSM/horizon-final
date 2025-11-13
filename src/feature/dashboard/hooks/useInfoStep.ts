@@ -14,10 +14,11 @@ export const useInfoStep = () => {
   const isValid = isStepValid();
 
   return {
+    // Form data
     name: formData.name,
     description: formData.description,
-    categories: formData.categories,
 
+    // Field update
     updateField,
 
     onNext: handleNext,

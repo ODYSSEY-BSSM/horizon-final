@@ -1,4 +1,3 @@
-
 import { apiClient } from '@/shared/api/client';
 import type {
   RoadmapCountResponse,
@@ -54,5 +53,25 @@ export const realRoadmapApi = {
     data: TeamRoadmapCreateRequest,
   ): Promise<TeamRoadmapResponse> => {
     return apiClient.post<TeamRoadmapResponse>(`/teams/${teamId}/roadmap`, data);
+  },
+
+  getTeamRoadmap: async (teamId: number, roadmapId: number): Promise<TeamRoadmapResponse> => {
+    return apiClient.get<TeamRoadmapResponse>(`/teams/${teamId}/roadmap/${roadmapId}`);
+  },
+
+  getTeamRoadmapCount: async (teamId: number): Promise<RoadmapCountResponse> => {
+    return apiClient.get<RoadmapCountResponse>(`/teams/${teamId}/roadmap/count`);
+  },
+
+  updateTeamRoadmap: async (
+    teamId: number,
+    roadmapId: number,
+    data: RoadmapUpdateRequest,
+  ): Promise<TeamRoadmapResponse> => {
+    return apiClient.put<TeamRoadmapResponse>(`/teams/${teamId}/roadmap/${roadmapId}`, data);
+  },
+
+  deleteTeamRoadmap: async (teamId: number, roadmapId: number): Promise<void> => {
+    return apiClient.delete<void>(`/teams/${teamId}/roadmap/${roadmapId}`);
   },
 };

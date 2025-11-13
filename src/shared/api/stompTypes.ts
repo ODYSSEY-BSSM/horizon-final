@@ -1,4 +1,3 @@
-
 export interface TeamDirectoryMessage {
   id: number;
   name: string;

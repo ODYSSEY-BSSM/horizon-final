@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getWebSocketClient,
@@ -80,6 +79,7 @@ export function useWebSocket(
         const message: WebSocketMessage = JSON.parse((event as MessageEvent).data);
         handlersRef.current.onMessage?.(message);
       } catch (_error) {
+        // ignore error
       }
     };
 
@@ -124,6 +124,7 @@ export function useWebSocket(
     if (clientRef.current?.isConnected()) {
       clientRef.current.send(type, data);
     } else {
+      // do nothing
     }
   }, []);
 

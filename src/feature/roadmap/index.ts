@@ -1,4 +1,3 @@
-
 export type { ColorOption } from './components/ColorDropdown';
 export { ColorDropdown } from './components/ColorDropdown';
 export type { FilterTab, FilterTabsProps } from './components/FilterTabs';

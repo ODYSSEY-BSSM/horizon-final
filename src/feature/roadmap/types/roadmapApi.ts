@@ -68,3 +68,15 @@ export interface TeamRoadmapUpdateRequest {
   icon?: Icon;
   directoryId?: number;
 }
+
+// 통합 타입: 개인 로드맵과 팀 로드맵을 함께 다룰 때 사용
+export type AnyRoadmapResponse = RoadmapResponse | TeamRoadmapResponse;
+
+// 타입 가드
+export function isTeamRoadmap(roadmap: AnyRoadmapResponse): roadmap is TeamRoadmapResponse {
+  return 'teamId' in roadmap && 'teamName' in roadmap;
+}
+
+export function isPersonalRoadmap(roadmap: AnyRoadmapResponse): roadmap is RoadmapResponse {
+  return 'isFavorite' in roadmap;
+}

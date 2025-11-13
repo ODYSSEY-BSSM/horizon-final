@@ -1,1 +1,1 @@
-export { mockProblemApi as problemApi } from '@/shared/api/mock/mockRoadmapApi';
+export { realProblemApi as problemApi } from './realProblemApi';

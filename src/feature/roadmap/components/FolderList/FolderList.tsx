@@ -29,15 +29,24 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
       return [];
     }
 
-    return rootFolder.directories.map((folder) => ({
-      id: folder.id,
-      name: folder.name,
-      description: '',
-      progress: 0, // TODO: 진행률 계산 로직 필요
-      roadmapCount: folder.roadmaps?.length || 0,
-      completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
-      lastRoadmap: folder.roadmaps?.[0]?.title || '',
-    }));
+    return rootFolder.directories.map((folder) => {
+      const roadmapCount = folder.roadmaps?.length || 0;
+      // 완료된 로드맵 = progress가 100인 로드맵
+      const completedCount =
+        folder.roadmaps?.filter((roadmap) => roadmap.progress >= 100).length || 0;
+      // 진행률 = (완료된 로드맵 수 / 전체 로드맵 수) * 100
+      const progress = roadmapCount > 0 ? Math.round((completedCount / roadmapCount) * 100) : 0;
+
+      return {
+        id: folder.id,
+        name: folder.name,
+        description: '',
+        progress,
+        roadmapCount,
+        completedCount,
+        lastRoadmap: folder.roadmaps?.[0]?.title || '',
+      };
+    });
   }, [rootFolder]);
 
   const sortedFolders = useMemo(() => {
@@ -52,7 +61,14 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
     });
   }, [folders, activeTab]);
 
-  const totalPages = 1; // TODO: 페이지네이션 로직 추가 필요
+  const itemsPerPage = 12; // 한 페이지에 표시할 폴더 개수 (3x4 그리드)
+  const totalPages = Math.max(1, Math.ceil(sortedFolders.length / itemsPerPage));
+
+  const paginatedFolders = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedFolders.slice(startIndex, endIndex);
+  }, [sortedFolders, currentPage]);
 
   if (isLoading) {
     return (
@@ -86,7 +102,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>
-            {sortedFolders.map((folder) => (
+            {paginatedFolders.map((folder) => (
               <FolderCard key={folder.id} folder={folder} />
             ))}
             <AddFolderCard key="add-folder" onClick={onAddFolderClick} />

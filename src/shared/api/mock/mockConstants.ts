@@ -1,4 +1,3 @@
-
 export const MOCK_DELAYS = {
   FAST: 100,
   NORMAL: 200,

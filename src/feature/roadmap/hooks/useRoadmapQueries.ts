@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { folderKeys } from '@/feature/folder/hooks/useFolderQueries';
+import { useToast } from '@/shared/hooks/useToast';
 import { roadmapApi } from '../api';
 import type {
   RoadmapCreateRequest,
@@ -37,6 +38,22 @@ export function useRoadmap(roadmapUuid: number) {
   });
 }
 
+export function useAllTeamRoadmaps(teamIds: number[]) {
+  return useQuery({
+    queryKey: [...roadmapKeys.lists(), 'teams', ...teamIds],
+    queryFn: async () => {
+      if (!teamIds || teamIds.length === 0) {
+        return [];
+      }
+
+      const roadmapsPromises = teamIds.map((teamId) => roadmapApi.getTeamRoadmaps(teamId));
+      const roadmapsArrays = await Promise.all(roadmapsPromises);
+      return roadmapsArrays.flat();
+    },
+    enabled: teamIds && teamIds.length > 0,
+  });
+}
+
 export function useRoadmapCount() {
   return useQuery({
     queryKey: roadmapKeys.count(),
@@ -46,22 +63,31 @@ export function useRoadmapCount() {
 
 export function useCreateRoadmap() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: RoadmapCreateRequest) => roadmapApi.createRoadmap(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.count() });
+      toast({
+        title: '로드맵 생성 완료',
+        description: '새로운 로드맵이 성공적으로 생성되었습니다.',
+      });
     },
     onError: (error) => {
-      // TODO: 토스트 라이브러리 등으로 교체
-      alert(`로드맵 생성에 실패했습니다: ${error.message}`);
+      toast({
+        variant: 'destructive',
+        title: '로드맵 생성 실패',
+        description: error.message,
+      });
     },
   });
 }
 
 export function useUpdateRoadmap() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: ({ roadmapUuid, data }: { roadmapUuid: number; data: RoadmapUpdateRequest }) =>
@@ -69,24 +95,48 @@ export function useUpdateRoadmap() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.detail(variables.roadmapUuid) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
+      toast({
+        title: '로드맵 수정 완료',
+        description: '로드맵이 성공적으로 수정되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '로드맵 수정 실패',
+        description: error.message,
+      });
     },
   });
 }
 
 export function useDeleteRoadmap() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (roadmapUuid: number) => roadmapApi.deleteRoadmap(roadmapUuid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.count() });
+      toast({
+        title: '로드맵 삭제 완료',
+        description: '로드맵이 성공적으로 삭제되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '로드맵 삭제 실패',
+        description: error.message,
+      });
     },
   });
 }
 
 export function useAddFavorite() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (roadmapUuid: number) => roadmapApi.toggleFavorite(roadmapUuid),
@@ -94,17 +144,32 @@ export function useAddFavorite() {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.detail(roadmapUuid) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
     },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '즐겨찾기 실패',
+        description: error.message,
+      });
+    },
   });
 }
 
 export function useRemoveFavorite() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (roadmapUuid: number) => roadmapApi.toggleFavorite(roadmapUuid),
     onSuccess: (_, roadmapUuid) => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.detail(roadmapUuid) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '즐겨찾기 해제 실패',
+        description: error.message,
+      });
     },
   });
 }
@@ -127,22 +192,22 @@ export function useTeamRoadmaps(teamId: number) {
 export function useTeamRoadmap(teamId: number, roadmapId: number) {
   return useQuery({
     queryKey: roadmapKeys.teamDetail(teamId, roadmapId),
-    queryFn: () =>
-      Promise.reject(new Error('Team roadmap single item endpoint not implemented in API')),
-    enabled: false, // TODO: API doesn't support this endpoint yet
+    queryFn: () => roadmapApi.getTeamRoadmap(teamId, roadmapId),
+    enabled: !!teamId && !!roadmapId,
   });
 }
 
 export function useTeamRoadmapCount(teamId: number) {
   return useQuery({
     queryKey: roadmapKeys.teamCount(teamId),
-    queryFn: () => Promise.reject(new Error('Team roadmap count endpoint not implemented in API')),
-    enabled: false, // TODO: API doesn't support this endpoint yet
+    queryFn: () => roadmapApi.getTeamRoadmapCount(teamId),
+    enabled: !!teamId,
   });
 }
 
 export function useCreateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: TeamRoadmapCreateRequest) => roadmapApi.createTeamRoadmap(teamId, data),
@@ -150,34 +215,68 @@ export function useCreateTeamRoadmap(teamId: number) {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
+      toast({
+        title: '팀 로드맵 생성 완료',
+        description: '새로운 팀 로드맵이 성공적으로 생성되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '팀 로드맵 생성 실패',
+        description: error.message,
+      });
     },
   });
 }
 
 export function useUpdateTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (_params: { roadmapId: number; data: TeamRoadmapUpdateRequest }) =>
-      Promise.reject(new Error('Team roadmap update endpoint not implemented in API')),
+    mutationFn: (params: { roadmapId: number; data: TeamRoadmapUpdateRequest }) =>
+      roadmapApi.updateTeamRoadmap(teamId, params.roadmapId, params.data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: roadmapKeys.teamDetail(teamId, variables.roadmapId),
       });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
+      toast({
+        title: '팀 로드맵 수정 완료',
+        description: '팀 로드맵이 성공적으로 수정되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '팀 로드맵 수정 실패',
+        description: error.message,
+      });
     },
   });
 }
 
 export function useDeleteTeamRoadmap(teamId: number) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (_roadmapId: number) =>
-      Promise.reject(new Error('Team roadmap delete endpoint not implemented in API')),
+    mutationFn: (roadmapId: number) => roadmapApi.deleteTeamRoadmap(teamId, roadmapId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamCount(teamId) });
+      toast({
+        title: '팀 로드맵 삭제 완료',
+        description: '팀 로드맵이 성공적으로 삭제되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '팀 로드맵 삭제 실패',
+        description: error.message,
+      });
     },
   });
 }
