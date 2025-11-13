@@ -173,4 +173,71 @@ export const mockAuthApi = {
       isConnectedSchool: !!userSchool,
     };
   },
+
+  connectSchool: async (): Promise<UserInfoResponse> => {
+    await delay(MOCK_DELAYS.NORMAL);
+
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+
+    const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
+    const defaultSchool = schools[0];
+
+    if (defaultSchool) {
+      const users = getUsers();
+      const userIndex = users.findIndex((u) => u.id === currentUser.id);
+      if (userIndex !== -1) {
+        users[userIndex].schoolId = defaultSchool.id;
+        mockStorage.set('users', users);
+        currentUser.schoolId = defaultSchool.id;
+        setCurrentUser(currentUser);
+      }
+    }
+
+    const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
+    const userTeams = teams
+      .filter((team) => team.memberIds?.includes(currentUser.id))
+      .map((team) => ({ id: team.id, name: team.name }));
+
+    return {
+      username: currentUser.username,
+      email: currentUser.email,
+      role: currentUser.role,
+      teams: userTeams,
+      school: defaultSchool?.name,
+      isConnectedSchool: !!defaultSchool,
+    };
+  },
+
+  requestPasswordResetCode: async (data: VerificationCodeRequest): Promise<void> => {
+    await delay(MOCK_DELAYS.SLOW);
+
+    const users = getUsers();
+    const user = users.find((u) => u.email === data.email);
+
+    if (!user) {
+      throw new Error(MOCK_ERRORS.USER_NOT_FOUND);
+    }
+
+    const code = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE || '123456';
+    const verificationCodes = getVerificationCodes();
+    verificationCodes.set(data.email, code);
+    setVerificationCodes(verificationCodes);
+  },
+
+  verifyPasswordUpdate: async (data: VerificationRequest): Promise<void> => {
+    await delay(MOCK_DELAYS.NORMAL);
+
+    const verificationCodes = getVerificationCodes();
+    const storedCode = verificationCodes.get(data.email);
+
+    if (!storedCode || storedCode !== data.code) {
+      throw new Error(MOCK_ERRORS.INVALID_VERIFICATION_CODE);
+    }
+
+    verificationCodes.delete(data.email);
+    setVerificationCodes(verificationCodes);
+  },
 };

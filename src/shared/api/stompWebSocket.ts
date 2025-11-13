@@ -69,9 +69,7 @@ export class StompWebSocketClient {
       try {
         const data = JSON.parse(message.body) as T;
         handler(data);
-      } catch (_error) {
-        // ignore error
-      }
+      } catch (_error) {}
     });
 
     this.subscriptions.set(destination, subscription);
@@ -136,8 +134,6 @@ export class StompWebSocketClient {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       setTimeout(() => this.connect(), this.reconnectDelay);
-    } else {
-      // do nothing
     }
   }
 

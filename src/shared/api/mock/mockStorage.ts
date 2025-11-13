@@ -47,9 +47,7 @@ export class MockStorage {
       } else {
         this.memoryStorage.set(fullKey, serialized);
       }
-    } catch (_error) {
-      // ignore error
-    }
+    } catch (_error) {}
   }
 
   has(key: string): boolean {

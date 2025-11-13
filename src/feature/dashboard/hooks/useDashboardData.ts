@@ -38,7 +38,6 @@ export const useDashboardData = () => {
     }
 
     const myRoadmapsCount = personalRoadmaps?.length || 0;
-    // 진행 중 = progress가 0보다 크고 100 미만인 로드맵
     const myRoadmapsInProgress =
       personalRoadmaps?.filter((roadmap) => roadmap.progress > 0 && roadmap.progress < 100)
         .length || 0;
@@ -50,7 +49,6 @@ export const useDashboardData = () => {
     const teamRoadmapsInProgress =
       teamRoadmaps?.filter((roadmap) => roadmap.progress > 0 && roadmap.progress < 100).length || 0;
 
-    // 팀 로드맵은 isFavorite가 없으므로 teamFavoriteInProgress는 항상 0
     const teamFavoriteInProgress = 0;
 
     return {

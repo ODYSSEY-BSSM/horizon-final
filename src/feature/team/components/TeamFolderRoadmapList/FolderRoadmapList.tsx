@@ -122,12 +122,7 @@ const FolderRoadmapList = ({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={
-                onPageChange ||
-                (() => {
-                  /* empty */
-                })
-              }
+              onPageChange={onPageChange || (() => {})}
             />
           </StyledPaginationWrapper>
         </StyledContentSection>

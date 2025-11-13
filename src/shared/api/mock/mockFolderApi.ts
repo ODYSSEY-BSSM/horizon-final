@@ -92,7 +92,7 @@ export const mockFolderApi = {
     };
   },
 
-  getDirectories: async (): Promise<DirectoryContentResponse> => {
+  getRoot: async (): Promise<DirectoryContentResponse> => {
     await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
@@ -193,7 +193,7 @@ export const mockTeamFolderApi = {
     };
   },
 
-  getTeamDirectories: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
+  getTeamRoot: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
     await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
@@ -228,8 +228,8 @@ export const mockTeamFolderApi = {
   },
 
   updateTeamDirectory: async (
-    teamId: number,
     directoryId: number,
+    teamId: number,
     data: TeamDirectoryUpdateRequest,
   ): Promise<TeamDirectoryResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
@@ -258,7 +258,7 @@ export const mockTeamFolderApi = {
     };
   },
 
-  deleteTeamDirectory: async (teamId: number, directoryId: number): Promise<void> => {
+  deleteTeamDirectory: async (directoryId: number, teamId: number): Promise<void> => {
     await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();

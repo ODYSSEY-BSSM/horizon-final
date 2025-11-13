@@ -48,29 +48,27 @@ export const useTeamSpaceData = () => {
     }));
   };
 
-  const joinTeam = (
+  const joinTeam = async (
     inviteCode: string,
     callbacks?: { onSuccess?: () => void; onError?: (error: string) => void },
-  ): { success: boolean; teamId?: number } => {
-    applyToTeamMutation.mutate(
-      { inviteCode },
-      {
-        onSuccess: () => {
-          callbacks?.onSuccess?.();
-        },
-        onError: () => {
-          callbacks?.onError?.('팀 가입에 실패했습니다.');
-        },
-      },
-    );
+  ): Promise<{ success: boolean; teamId?: number }> => {
+    try {
+      await applyToTeamMutation.mutateAsync({ inviteCode });
+      callbacks?.onSuccess?.();
 
-    const teamIdStr = decodeInviteCode(inviteCode);
-    const teamId = teamIdStr ? parseInt(teamIdStr, 10) : undefined;
+      const teamIdStr = decodeInviteCode(inviteCode);
+      const teamId = teamIdStr ? parseInt(teamIdStr, 10) : undefined;
 
-    return {
-      success: true,
-      teamId: teamId && !Number.isNaN(teamId) ? teamId : undefined,
-    };
+      return {
+        success: true,
+        teamId: teamId && !Number.isNaN(teamId) ? teamId : undefined,
+      };
+    } catch (error) {
+      callbacks?.onError?.('팀 가입에 실패했습니다.');
+      return {
+        success: false,
+      };
+    }
   };
 
   return {
