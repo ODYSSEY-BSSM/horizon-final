@@ -1,11 +1,8 @@
 import { useCreateFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { useCreateRoadmap, useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
+import type { Color, Icon } from '@/shared/api/types';
 
-/**
- * Hook for handling roadmap submission with mutations.
- * This needs to be a hook because it uses TanStack Query mutations.
- */
 export function useRoadmapSubmit() {
   const createRoadmapMutation = useCreateRoadmap();
   const createFolderMutation = useCreateFolder();
@@ -15,7 +12,6 @@ export function useRoadmapSubmit() {
   const submitRoadmap = async () => {
     const submitData = await getSubmitData();
 
-    // Step 1: Create folder if needed
     let directoryId = formData.folderId ? Number(formData.folderId) : undefined;
 
     if (formData.folderName && !formData.folderId) {
@@ -25,14 +21,17 @@ export function useRoadmapSubmit() {
       directoryId = newFolder.id;
     }
 
-    // Step 2: Create roadmap
+    if (!directoryId) {
+      throw new Error('Directory is required. Please select a folder.');
+    }
+
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
-      color: submitData.color as any,
-      icon: submitData.icon as any,
-      directoryId: directoryId || 1, // Default directory
+      color: submitData.color as Color,
+      icon: submitData.icon as Icon,
+      directoryId,
     };
 
     await createRoadmapMutation.mutateAsync(roadmapData);
@@ -46,9 +45,6 @@ export function useRoadmapSubmit() {
   };
 }
 
-/**
- * Hook for handling team roadmap submission with mutations.
- */
 export function useTeamRoadmapSubmit(teamId: number) {
   const createTeamRoadmapMutation = useCreateTeamRoadmap(teamId);
   const createFolderMutation = useCreateFolder();
@@ -58,7 +54,6 @@ export function useTeamRoadmapSubmit(teamId: number) {
   const submitTeamRoadmap = async () => {
     const submitData = await getSubmitData();
 
-    // Step 1: Create folder if needed
     let directoryId = formData.folderId ? Number(formData.folderId) : undefined;
 
     if (formData.folderName && !formData.folderId) {
@@ -68,14 +63,17 @@ export function useTeamRoadmapSubmit(teamId: number) {
       directoryId = newFolder.id;
     }
 
-    // Step 2: Create team roadmap
+    if (!directoryId) {
+      throw new Error('Directory is required. Please select a folder.');
+    }
+
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
-      color: submitData.color as any,
-      icon: submitData.icon as any,
-      directoryId: directoryId || 1,
+      color: submitData.color as Color,
+      icon: submitData.icon as Icon,
+      directoryId,
     };
 
     await createTeamRoadmapMutation.mutateAsync(roadmapData);

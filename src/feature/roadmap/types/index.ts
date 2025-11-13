@@ -1,6 +1,3 @@
-// UI Types
-
-// API Types - Node
 export type {
   EducationNodeConvertRequest,
   NodeCreateRequest,
@@ -8,7 +5,6 @@ export type {
   NodeResponse,
   NodeUpdateRequest,
 } from './node';
-// API Types - Problem
 export type {
   ProblemCreateRequest,
   ProblemListResponse,
@@ -25,7 +21,6 @@ export type {
   UpdateRoadmapRequest,
   ViewType,
 } from './roadmap';
-// API Types - Roadmap
 export type {
   RoadmapCountResponse,
   RoadmapCreateRequest,

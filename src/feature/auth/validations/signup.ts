@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
-// Email step validation
 export const emailSchema = z.object({
   email: z.string().min(1, '이메일을 입력해주세요').email('올바른 이메일 형식이 아닙니다'),
 });
 
-// Verification step validation
 export const verificationSchema = z.object({
   verificationCode: z
     .string()
@@ -14,7 +12,6 @@ export const verificationSchema = z.object({
     .regex(/^\d{6}$/, '인증번호는 숫자 6자리입니다'),
 });
 
-// Password step validation
 export const passwordSchema = z
   .object({
     password: z
@@ -29,7 +26,6 @@ export const passwordSchema = z
     path: ['confirmPassword'],
   });
 
-// Username step validation
 export const usernameSchema = z.object({
   username: z
     .string()
@@ -38,7 +34,6 @@ export const usernameSchema = z.object({
     .regex(/^[가-힣a-zA-Z]+$/, '한글 또는 영어만 입력 가능합니다'),
 });
 
-// Type exports for form data
 export type EmailFormData = z.infer<typeof emailSchema>;
 export type VerificationFormData = z.infer<typeof verificationSchema>;
 export type PasswordFormData = z.infer<typeof passwordSchema>;

@@ -23,7 +23,6 @@ export const usePasswordForm = () => {
     goToStep('username');
   };
 
-  // Password validation helpers for UI
   const password = form.watch('password');
   const hasMinLength = password.length >= 8;
   const hasNumber = /\d/.test(password);

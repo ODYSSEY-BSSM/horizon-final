@@ -2,10 +2,14 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { EmailStep, PasswordStep, UsernameStep, VerificationStep } from '@/feature/auth';
-import { useSignupFlow } from '@/feature/auth/store/signupFlow';
-// TODO: SignUpStep 타입을 @/feature/auth/types로 이전해야 합니다.
-import type { SignUpStep } from '@/lib/types';
+import {
+  EmailStep,
+  PasswordStep,
+  type SignUpStep,
+  UsernameStep,
+  useSignupFlow,
+  VerificationStep,
+} from '@/feature/auth';
 import { tokens } from '@/shared/tokens';
 import { Icon, Text } from '@/shared/ui';
 

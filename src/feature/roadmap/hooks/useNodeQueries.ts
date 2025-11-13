@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { nodeApi } from '../api';
 import type { EducationNodeConvertRequest, NodeCreateRequest, NodeUpdateRequest } from '../types';
 
-// Query Keys
 export const nodeKeys = {
   all: ['nodes'] as const,
   lists: () => [...nodeKeys.all, 'list'] as const,
@@ -11,10 +10,6 @@ export const nodeKeys = {
   detail: (roadmapId: number, nodeId: number) =>
     [...nodeKeys.details(), roadmapId, nodeId] as const,
 };
-
-// ===================================
-// Node Queries
-// ===================================
 
 export function useNodes(roadmapId: number) {
   return useQuery({
@@ -31,10 +26,6 @@ export function useNode(roadmapId: number, nodeId: number) {
     enabled: !!roadmapId && !!nodeId,
   });
 }
-
-// ===================================
-// Node Mutations
-// ===================================
 
 export function useCreateNode(roadmapId: number) {
   const queryClient = useQueryClient();

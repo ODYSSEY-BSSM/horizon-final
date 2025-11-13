@@ -9,7 +9,7 @@ export interface Folder {
   id: number;
   name: string;
   description: string;
-  progress: number; // 0-100 범위
+  progress: number;
   roadmapCount: number;
   completedCount: number;
   lastRoadmap: string;

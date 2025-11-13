@@ -1,7 +1,3 @@
-/**
- * Mock Auth API (Swagger 완벽 일치)
- */
-
 import type {
   LoginRequest,
   LoginResponse,
@@ -19,7 +15,6 @@ import { initialMockData, type MockUser } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
-// localStorage에서 데이터 가져오기
 function getUsers(): MockUser[] {
   return mockStorage.getOrDefault('users', initialMockData.users);
 }
@@ -41,7 +36,6 @@ function setVerificationCodes(codes: Map<string, string>): void {
   mockStorage.set('verificationCodes', Array.from(codes.entries()));
 }
 
-// 가짜 JWT 생성
 const generateToken = (userId: number): string => {
   return `mock_token_${userId}_${Date.now()}`;
 };
@@ -132,7 +126,6 @@ export const mockAuthApi = {
       throw new Error(MOCK_ERRORS.INVALID_VERIFICATION_CODE);
     }
 
-    // 인증 성공 후 코드 삭제
     verificationCodes.delete(data.email);
     setVerificationCodes(verificationCodes);
   },
@@ -161,13 +154,11 @@ export const mockAuthApi = {
       throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
-    // 팀 정보 가져오기
     const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
     const userTeams = teams
       .filter((team) => team.memberIds?.includes(currentUser.id))
-      .map((team) => team.name);
+      .map((team) => ({ id: team.id, name: team.name }));
 
-    // 학교 정보 가져오기
     const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
     const userSchool = currentUser.schoolId
       ? schools.find((s) => s.id === currentUser.schoolId)
@@ -181,5 +172,72 @@ export const mockAuthApi = {
       school: userSchool?.name,
       isConnectedSchool: !!userSchool,
     };
+  },
+
+  connectSchool: async (): Promise<UserInfoResponse> => {
+    await delay(MOCK_DELAYS.NORMAL);
+
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
+    }
+
+    const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
+    const defaultSchool = schools[0];
+
+    if (defaultSchool) {
+      const users = getUsers();
+      const userIndex = users.findIndex((u) => u.id === currentUser.id);
+      if (userIndex !== -1) {
+        users[userIndex].schoolId = defaultSchool.id;
+        mockStorage.set('users', users);
+        currentUser.schoolId = defaultSchool.id;
+        setCurrentUser(currentUser);
+      }
+    }
+
+    const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
+    const userTeams = teams
+      .filter((team) => team.memberIds?.includes(currentUser.id))
+      .map((team) => ({ id: team.id, name: team.name }));
+
+    return {
+      username: currentUser.username,
+      email: currentUser.email,
+      role: currentUser.role,
+      teams: userTeams,
+      school: defaultSchool?.name,
+      isConnectedSchool: !!defaultSchool,
+    };
+  },
+
+  requestPasswordResetCode: async (data: VerificationCodeRequest): Promise<void> => {
+    await delay(MOCK_DELAYS.SLOW);
+
+    const users = getUsers();
+    const user = users.find((u) => u.email === data.email);
+
+    if (!user) {
+      throw new Error(MOCK_ERRORS.INVALID_CREDENTIALS);
+    }
+
+    const code = process.env.NEXT_PUBLIC_DEV_VERIFICATION_CODE || '123456';
+    const verificationCodes = getVerificationCodes();
+    verificationCodes.set(data.email, code);
+    setVerificationCodes(verificationCodes);
+  },
+
+  verifyPasswordUpdate: async (data: VerificationRequest): Promise<void> => {
+    await delay(MOCK_DELAYS.NORMAL);
+
+    const verificationCodes = getVerificationCodes();
+    const storedCode = verificationCodes.get(data.email);
+
+    if (!storedCode || storedCode !== data.code) {
+      throw new Error(MOCK_ERRORS.INVALID_VERIFICATION_CODE);
+    }
+
+    verificationCodes.delete(data.email);
+    setVerificationCodes(verificationCodes);
   },
 };

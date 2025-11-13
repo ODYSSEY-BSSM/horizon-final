@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { folderApi, teamFolderApi } from '../api';
+import { folderApi } from '../api';
 import type {
   DirectoryCreateRequest,
   DirectoryUpdateRequest,
@@ -7,7 +7,6 @@ import type {
   TeamDirectoryUpdateRequest,
 } from '../types';
 
-// Query Keys
 export const folderKeys = {
   all: ['folders'] as const,
   root: () => [...folderKeys.all, 'root'] as const,
@@ -24,20 +23,12 @@ export const folderKeys = {
     [...folderKeys.teamDetail(teamId, directoryId), 'content'] as const,
 };
 
-// ===================================
-// Personal Directory Queries
-// ===================================
-
 export function useRootFolder() {
   return useQuery({
     queryKey: folderKeys.root(),
-    queryFn: () => folderApi.getDirectories(),
+    queryFn: () => folderApi.getRoot(),
   });
 }
-
-// ===================================
-// Personal Directory Mutations
-// ===================================
 
 export function useCreateFolder() {
   const queryClient = useQueryClient();
@@ -77,27 +68,18 @@ export function useDeleteFolder() {
   });
 }
 
-// ===================================
-// Team Directory Queries
-// ===================================
-
 export function useTeamRootFolder(teamId: number) {
   return useQuery({
     queryKey: folderKeys.team(teamId),
-    queryFn: () => teamFolderApi.getTeamDirectories(teamId),
+    queryFn: () => folderApi.getTeamRoot(teamId),
   });
 }
-
-// ===================================
-// Team Directory Mutations
-// ===================================
 
 export function useCreateTeamFolder(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: TeamDirectoryCreateRequest) =>
-      teamFolderApi.createTeamDirectory(teamId, data),
+    mutationFn: (data: TeamDirectoryCreateRequest) => folderApi.createTeamDirectory(teamId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: folderKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
@@ -115,7 +97,7 @@ export function useUpdateTeamFolder(teamId: number) {
     }: {
       directoryId: number;
       data: TeamDirectoryUpdateRequest;
-    }) => teamFolderApi.updateTeamDirectory(directoryId, teamId, data),
+    }) => folderApi.updateTeamDirectory(directoryId, teamId, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: folderKeys.teamDetail(teamId, variables.directoryId),
@@ -129,7 +111,7 @@ export function useDeleteTeamFolder(teamId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (directoryId: number) => teamFolderApi.deleteTeamDirectory(directoryId, teamId),
+    mutationFn: (directoryId: number) => folderApi.deleteTeamDirectory(directoryId, teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: folderKeys.teamList(teamId) });
     },

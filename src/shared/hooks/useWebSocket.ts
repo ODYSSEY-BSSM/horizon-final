@@ -49,17 +49,14 @@ export function useWebSocket(
     onMessage?: (message: WebSocketMessage) => void;
   }>({});
 
-  // Update handlers ref when callbacks change
   useEffect(() => {
     handlersRef.current = { onOpen, onClose, onError, onMessage };
   }, [onOpen, onClose, onError, onMessage]);
 
-  // Initialize WebSocket client
   useEffect(() => {
     const client = getWebSocketClient(endpoint);
     clientRef.current = client;
 
-    // Setup event handlers
     const handleOpen = () => {
       setIsConnected(true);
       setIsConnecting(false);
@@ -82,7 +79,7 @@ export function useWebSocket(
         const message: WebSocketMessage = JSON.parse((event as MessageEvent).data);
         handlersRef.current.onMessage?.(message);
       } catch (_error) {
-        // JSON 파싱 오류는 무시합니다.
+        // 메시지 파싱에 실패한 경우 무시
       }
     };
 
@@ -91,13 +88,11 @@ export function useWebSocket(
     client.addEventListener('error', handleError);
     client.addEventListener('message', handleMessage);
 
-    // Auto connect
     if (autoConnect) {
       setIsConnecting(true);
       client.connect();
     }
 
-    // Cleanup
     return () => {
       client.removeEventListener('open', handleOpen);
       client.removeEventListener('close', handleClose);
@@ -110,7 +105,6 @@ export function useWebSocket(
     };
   }, [endpoint, autoConnect, autoDisconnect]);
 
-  // Connect function
   const connect = useCallback(() => {
     if (clientRef.current) {
       setIsConnecting(true);
@@ -118,7 +112,6 @@ export function useWebSocket(
     }
   }, []);
 
-  // Disconnect function
   const disconnect = useCallback(() => {
     if (clientRef.current) {
       clientRef.current.disconnect();
@@ -127,16 +120,12 @@ export function useWebSocket(
     }
   }, []);
 
-  // Send function
   const send = useCallback(<T>(type: string, data: T) => {
     if (clientRef.current?.isConnected()) {
       clientRef.current.send(type, data);
-    } else {
-      // 연결되지 않았을 때의 처리를 여기에 추가할 수 있습니다.
     }
   }, []);
 
-  // Subscribe function
   const subscribe = useCallback(
     (messageType: string, handler: (data: WebSocketMessage) => void) => {
       if (clientRef.current) {
@@ -146,7 +135,6 @@ export function useWebSocket(
     [],
   );
 
-  // Unsubscribe function
   const unsubscribe = useCallback(
     (messageType: string, handler: (data: WebSocketMessage) => void) => {
       if (clientRef.current) {

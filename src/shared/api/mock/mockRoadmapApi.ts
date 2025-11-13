@@ -1,7 +1,3 @@
-/**
- * Mock Roadmap/Node/Problem API (Swagger 완벽 일치)
- */
-
 import type {
   EducationNodeConvertRequest,
   NodeCreateRequest,
@@ -24,8 +20,18 @@ import { initialMockData } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
-function getRoadmaps(): RoadmapResponse[] {
+type StoredRoadmap = RoadmapResponse | TeamRoadmapResponse;
+
+function getRoadmaps(): StoredRoadmap[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
+}
+
+function isTeamRoadmap(roadmap: StoredRoadmap): roadmap is TeamRoadmapResponse {
+  return 'teamId' in roadmap && 'teamName' in roadmap;
+}
+
+function getPersonalRoadmaps(): RoadmapResponse[] {
+  return getRoadmaps().filter((r): r is RoadmapResponse => !isTeamRoadmap(r));
 }
 
 function getNodes(): NodeResponse[] {
@@ -67,12 +73,12 @@ export const mockRoadmapApi = {
 
   getRoadmaps: async (): Promise<RoadmapResponse[]> => {
     await delay(MOCK_DELAYS.FAST);
-    return getRoadmaps();
+    return getPersonalRoadmaps();
   },
 
   getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
-    const roadmaps = getRoadmaps();
+    const roadmaps = getPersonalRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
     if (!roadmap) {
       throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
@@ -86,36 +92,41 @@ export const mockRoadmapApi = {
   ): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const index = roadmaps.findIndex((r) => r.id === roadmapId);
+    const index = roadmaps.findIndex((r) => r.id === roadmapId && !isTeamRoadmap(r));
+
     if (index === -1) {
       throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
 
-    roadmaps[index] = { ...roadmaps[index], ...data };
+    const updatedRoadmap = { ...(roadmaps[index] as RoadmapResponse), ...data };
+    roadmaps[index] = updatedRoadmap;
+
     mockStorage.set('roadmaps', roadmaps);
-    return roadmaps[index];
+    return updatedRoadmap;
   },
 
   deleteRoadmap: async (roadmapId: number): Promise<void> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const filtered = roadmaps.filter((r) => r.id !== roadmapId);
+    const filtered = roadmaps.filter((r) => isTeamRoadmap(r) || r.id !== roadmapId);
     mockStorage.set('roadmaps', filtered);
   },
 
-  toggleFavorite: async (roadmapId: number): Promise<void> => {
+  toggleFavorite: async (roadmapId: number): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
     const roadmap = roadmaps.find((r) => r.id === roadmapId);
-    if (roadmap) {
-      roadmap.isFavorite = !roadmap.isFavorite;
-      mockStorage.set('roadmaps', roadmaps);
+    if (!roadmap || isTeamRoadmap(roadmap)) {
+      throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
+    roadmap.isFavorite = !roadmap.isFavorite;
+    mockStorage.set('roadmaps', roadmaps);
+    return roadmap as RoadmapResponse;
   },
 
   getLastAccessed: async (): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
-    const roadmaps = getRoadmaps();
+    const roadmaps = getPersonalRoadmaps();
     const sorted = [...roadmaps].sort(
       (a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime(),
     );
@@ -127,7 +138,7 @@ export const mockRoadmapApi = {
 
   getRoadmapCount: async (): Promise<RoadmapCountResponse> => {
     await delay(MOCK_DELAYS.FAST);
-    return { count: getRoadmaps().length };
+    return { count: getPersonalRoadmaps().length };
   },
 
   createTeamRoadmap: async (
@@ -136,7 +147,7 @@ export const mockRoadmapApi = {
   ): Promise<TeamRoadmapResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const newRoadmap: any = {
+    const newRoadmap: TeamRoadmapResponse = {
       id: mockStorage.getNextId(),
       title: data.title,
       description: data.description,
@@ -157,7 +168,9 @@ export const mockRoadmapApi = {
 
   getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
     await delay(MOCK_DELAYS.FAST);
-    return getRoadmaps().filter((r: any) => r.teamId === teamId) as any;
+    return getRoadmaps().filter(
+      (r): r is TeamRoadmapResponse => isTeamRoadmap(r) && r.teamId === teamId,
+    );
   },
 };
 

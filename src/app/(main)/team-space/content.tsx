@@ -7,32 +7,26 @@ import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/tea
 import type { Team } from '@/feature/team/types/team';
 import { FormModal } from '@/shared/ui';
 
-type ModalState = {
-  teamCreate: boolean;
-  teamJoin: boolean;
-};
-
 const TeamSpaceContent = () => {
-  const router = useRouter();
   const { teams, addTeam, joinTeam } = useTeamSpaceData();
-
-  const [modals, setModals] = useState<ModalState>({
+  const [modals, setModals] = useState({
     teamCreate: false,
     teamJoin: false,
   });
+  const [inviteCode, setInviteCode] = useState('');
+  const router = useRouter();
 
-  // 팀이 있으면 첫 번째 팀으로 리다이렉트
   useEffect(() => {
     if (teams.length > 0) {
       router.replace(`/team-space/${teams[0].id}`);
     }
   }, [teams, router]);
 
-  const openModal = (modal: keyof ModalState) => {
+  const openModal = (modal: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modal]: true }));
   };
 
-  const closeModal = (modal: keyof ModalState) => {
+  const closeModal = (modal: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modal]: false }));
   };
 
@@ -49,19 +43,19 @@ const TeamSpaceContent = () => {
     router.push(`/team-space/${team.id}`);
   };
 
-  const handleJoinTeam = () => {
-    openModal('teamJoin');
+  const _handleInviteCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInviteCode(e.target.value);
   };
 
-  const handleTeamJoinSubmit = (data: { inviteCode: string }) => {
-    const result = joinTeam(data.inviteCode, {
-      onSuccess: () => {
-        closeModal('teamJoin');
-        alert('팀 가입 신청이 완료되었습니다. 팀장의 승인을 기다려주세요.');
-        // 팀 목록 새로고침을 위해 현재 페이지 유지
-      },
-      onError: (error) => {
-        alert(error);
+  const handleJoinTeam = async () => {
+    if (!inviteCode) {
+      alert('초대 코드를 입력해주세요.');
+      return;
+    }
+
+    const result = await joinTeam(inviteCode, {
+      onError: (message) => {
+        alert(message);
       },
     });
 
@@ -70,7 +64,6 @@ const TeamSpaceContent = () => {
     }
   };
 
-  // 팀이 있으면 리다이렉트되므로 빈 상태만 보여줌
   return (
     <StyledPageContainer>
       <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleJoinTeam} />
@@ -84,7 +77,7 @@ const TeamSpaceContent = () => {
       <FormModal
         isOpen={modals.teamJoin}
         onClose={() => closeModal('teamJoin')}
-        onSubmit={handleTeamJoinSubmit}
+        onSubmit={handleJoinTeam}
         title="팀 참여하기"
         description="초대코드를 입력하여 팀에 참여하세요."
         fields={[

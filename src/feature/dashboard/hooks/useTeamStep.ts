@@ -6,16 +6,14 @@ import { teamApi } from '@/feature/team/api/teamApi';
 export const useTeamStep = () => {
   const { formData, updateField, nextStep, previousStep, isStepValid } = useRoadmapFormStore();
 
-  // 내가 속한 팀 목록 조회
   const { data: teams, isLoading } = useQuery({
     queryKey: ['teams'],
     queryFn: teamApi.getTeams,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
   });
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // API 데이터를 드롭다운 옵션 형식으로 변환
   const TEAM_OPTIONS =
     teams?.map((team) => ({
       id: String(team.id),
@@ -46,28 +44,22 @@ export const useTeamStep = () => {
   const isValid = isStepValid();
 
   return {
-    // Form state
     isValid,
 
-    // Navigation
     onNext: handleNext,
     onPrevious: handlePrevious,
 
-    // Dropdown state
     isOpen,
     setIsOpen,
 
-    // Data
     teamId,
     selectedTeam,
     hasSelection,
     isLoading,
     TEAM_OPTIONS,
 
-    // Field update
     updateField,
 
-    // Handlers
     getDisplayText,
   };
 };

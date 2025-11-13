@@ -51,7 +51,6 @@ const FolderDetailContent = () => {
   const handleRoadmapSubmit = (data: { title: string; description: string }) => {
     setRoadmapData(data);
     closeModal('roadmapCreate');
-    // Open style modal for next step
     openModal('roadmapStyle');
   };
 

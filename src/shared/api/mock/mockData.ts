@@ -1,7 +1,3 @@
-/**
- * Mock Data (Swagger API 완벽 일치)
- */
-
 import type { DirectoryResponse } from '@/feature/folder/types';
 import type {
   NodeResponse,
@@ -12,10 +8,8 @@ import type {
 import type { NodeType, ProblemStatus, Subject, UserRole } from '@/shared/api/types';
 import type { MockSchool, MockUser } from './mockTypes';
 
-// Re-export types for backward compatibility
 export type { MockSchool, MockUser } from './mockTypes';
 
-// Swagger API 초기 데이터
 export const initialMockData = {
   users: [
     {
@@ -47,8 +41,8 @@ export const initialMockData = {
           parentId: 1,
           directories: [],
           roadmaps: [
-            { id: 1, title: 'React 마스터하기' },
-            { id: 2, title: 'Next.js 완전정복' },
+            { id: 1, title: 'React 마스터하기', progress: 30 },
+            { id: 2, title: 'Next.js 완전정복', progress: 50 },
           ],
         },
       ],
@@ -83,7 +77,21 @@ export const initialMockData = {
       progress: 30,
       directoryId: 2,
     },
-  ] as RoadmapResponse[],
+    {
+      id: 3,
+      title: '팀 프로젝트 로드맵',
+      description: '팀 협업을 위한 로드맵 예시',
+      categories: ['팀', '프로젝트'],
+      lastModifiedAt: new Date().toISOString().split('T')[0],
+      lastAccessedAt: new Date().toISOString(),
+      color: 'PURPLE',
+      icon: 'TEAM',
+      progress: 10,
+      directoryId: 1,
+      teamId: 1,
+      teamName: '개발 스터디',
+    },
+  ] as (RoadmapResponse | TeamRoadmapResponse)[],
 
   nodes: [
     {
@@ -133,7 +141,6 @@ export const initialMockData = {
     },
   ] as ProblemResponse[],
 
-  // 문제의 정답 저장 (별도 관리)
   problemAnswers: new Map<number, string>([
     [1, 'Counter 앱 완성'],
     [2, 'API 데이터 표시'],
@@ -150,8 +157,6 @@ export const initialMockData = {
   ],
 
   teamDirectories: [] as DirectoryResponse[],
-
-  teamRoadmaps: [] as TeamRoadmapResponse[],
 
   schools: [
     {

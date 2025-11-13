@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import QueryProvider from '@/shared/providers/QueryProvider';
+import { Toaster } from '@/shared/ui/Toast';
 import './globals.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body>
         <QueryProvider>{children}</QueryProvider>
+        <Toaster />
       </body>
     </html>
   );

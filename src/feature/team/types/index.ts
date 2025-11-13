@@ -1,7 +1,5 @@
-// UI Types
 export type { FilterTab, Roadmap, Team, TeamFolder } from './team';
 
-// API Types
 export type {
   TeamApplyActionRequest,
   TeamApplyListResponse,
