@@ -11,7 +11,6 @@ import type { RoadmapColor } from '@/shared/types/roadmap';
 export const useStyleStep = () => {
   const { formData, updateField, previousStep, isStepValid } = useRoadmapFormStore();
 
-  // Get submission hooks
   const { submitRoadmap, isLoading: isPersonalLoading } = useRoadmapSubmit();
   const teamId = formData.teamId ? Number(formData.teamId) : 0;
   const { submitTeamRoadmap, isLoading: isTeamLoading } = useTeamRoadmapSubmit(teamId);
@@ -62,39 +61,31 @@ export const useStyleStep = () => {
         await submitRoadmap();
       }
     } catch (_error) {
-      // Error already handled by mutation onError callback
     }
   };
 
   const isValid = isStepValid();
 
   return {
-    // Form state
     isValid,
 
-    // Navigation
     onComplete: handleComplete,
     onPrevious: handlePrevious,
 
-    // Loading state
     isLoading: isPersonalLoading || isTeamLoading,
 
-    // Dropdown state
     colorDropdownOpen,
     iconDropdownOpen,
     setColorDropdownOpen,
     setIconDropdownOpen,
 
-    // Data
     color,
     icon,
     selectedColor,
     selectedIcon,
 
-    // Field update
     updateField,
 
-    // Handlers
     getGradient,
     handleColorDropdownToggle,
     handleIconDropdownToggle,

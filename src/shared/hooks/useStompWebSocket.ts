@@ -23,7 +23,6 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef(getStompClient());
 
-  // Event-based connection status tracking (replaces polling)
   useEffect(() => {
     const handleConnect = () => {
       setIsConnected(true);
@@ -39,15 +38,12 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
       onError?.(error instanceof Error ? error : new Error('WebSocket error'));
     };
 
-    // Register event listeners
     clientRef.current.addEventListener('connect', handleConnect);
     clientRef.current.addEventListener('disconnect', handleDisconnect);
     clientRef.current.addEventListener('error', handleError);
 
-    // Initialize connection state
     setIsConnected(clientRef.current.getIsConnected());
 
-    // Cleanup listeners on unmount
     return () => {
       clientRef.current.removeEventListener('connect', handleConnect);
       clientRef.current.removeEventListener('disconnect', handleDisconnect);
@@ -55,7 +51,6 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     };
   }, [onConnect, onDisconnect, onError]);
 
-  // Auto connect
   useEffect(() => {
     if (autoConnect && !isConnected) {
       try {
@@ -66,7 +61,6 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     }
   }, [autoConnect, isConnected, onError]);
 
-  // Connect function
   const connect = useCallback(() => {
     try {
       clientRef.current.connect();
@@ -75,12 +69,10 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     }
   }, [onError]);
 
-  // Disconnect function
   const disconnect = useCallback(() => {
     clientRef.current.disconnect();
   }, []);
 
-  // Subscribe function
   const subscribe = useCallback(
     <T>(destination: string, handler: StompMessageHandler<T>) => {
       if (!isConnected) {
@@ -97,12 +89,10 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     [isConnected, onError],
   );
 
-  // Unsubscribe function
   const unsubscribe = useCallback((destination: string) => {
     clientRef.current.unsubscribe(destination);
   }, []);
 
-  // Send function
   const send = useCallback(
     <T>(destination: string, body: T) => {
       if (!isConnected) {

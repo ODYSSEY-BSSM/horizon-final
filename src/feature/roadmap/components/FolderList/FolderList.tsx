@@ -32,11 +32,11 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
     return rootFolder.directories.map((folder) => ({
       id: folder.id,
       name: folder.name,
-      description: '', // API 응답에 설명이 없으므로 빈 문자열로 설정
+      description: '',
       progress: 0, // TODO: 진행률 계산 로직 필요
       roadmapCount: folder.roadmaps?.length || 0,
       completedCount: 0, // TODO: 완료된 로드맵 개수 계산 필요
-      lastRoadmap: folder.roadmaps?.[0]?.title || '', // 첫 번째 로드맵 이름
+      lastRoadmap: folder.roadmaps?.[0]?.title || '',
     }));
   }, [rootFolder]);
 

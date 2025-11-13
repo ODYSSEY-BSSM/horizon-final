@@ -36,7 +36,6 @@ export const useMyRoadmaps = () => {
   const handleRoadmapSubmit = useCallback(
     (_data: { title: string; description: string }) => {
       closeModal('roadmapCreate');
-      // Open style setting modal for next step
       openModal('styleSetting');
     },
     [closeModal, openModal],

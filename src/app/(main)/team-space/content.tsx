@@ -21,7 +21,6 @@ const TeamSpaceContent = () => {
     teamJoin: false,
   });
 
-  // 팀이 있으면 첫 번째 팀으로 리다이렉트
   useEffect(() => {
     if (teams.length > 0) {
       router.replace(`/team-space/${teams[0].id}`);
@@ -58,7 +57,6 @@ const TeamSpaceContent = () => {
       onSuccess: () => {
         closeModal('teamJoin');
         alert('팀 가입 신청이 완료되었습니다. 팀장의 승인을 기다려주세요.');
-        // 팀 목록 새로고침을 위해 현재 페이지 유지
       },
       onError: (error) => {
         alert(error);
@@ -70,7 +68,6 @@ const TeamSpaceContent = () => {
     }
   };
 
-  // 팀이 있으면 리다이렉트되므로 빈 상태만 보여줌
   return (
     <StyledPageContainer>
       <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleJoinTeam} />

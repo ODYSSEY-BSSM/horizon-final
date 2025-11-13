@@ -9,7 +9,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: (loginResponse: LoginResponse) => {
-      // 보안 개선: accessToken은 메모리, refreshToken은 sessionStorage
       tokenStore.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
       apiClient.setAccessToken(loginResponse.accessToken);
 
@@ -24,7 +23,6 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: authApi.logout,
     onSettled: () => {
-      // 보안 개선: tokenStore에서 토큰 제거
       tokenStore.clearTokens();
       apiClient.setAccessToken(null);
 

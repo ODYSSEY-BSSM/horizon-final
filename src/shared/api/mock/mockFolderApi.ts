@@ -1,6 +1,3 @@
-/**
- * Mock Folder/Directory API (Swagger 완벽 일치)
- */
 
 import type {
   DirectoryContentResponse,
@@ -33,7 +30,6 @@ function getRoadmaps(): RoadmapResponse[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
 }
 
-// 재귀적으로 디렉토리 트리 구조 생성
 function buildDirectoryTree(
   directories: StoredDirectory[],
   roadmaps: RoadmapResponse[],
@@ -52,7 +48,6 @@ function buildDirectoryTree(
   }));
 }
 
-// 팀 디렉토리 트리 구조 생성
 function buildTeamDirectoryTree(
   directories: StoredDirectory[],
   roadmaps: RoadmapResponse[],

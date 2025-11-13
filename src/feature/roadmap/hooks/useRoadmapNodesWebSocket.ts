@@ -34,7 +34,6 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     [onDeleted],
   );
 
-  // Subscribe to node creation and deletion
   useEffect(() => {
     if (!isConnected || !autoSubscribe || !roadmapId) {
       return;

@@ -9,7 +9,7 @@ export interface SchoolNode {
   id: string;
   name: string;
   teacher: string;
-  usageCount: number; // 0이면 "사용되지 않음"
+  usageCount: number;
 }
 
 export type ConnectionStatus = 'disconnected' | 'connected' | 'connecting' | 'error';

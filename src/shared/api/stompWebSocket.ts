@@ -1,7 +1,6 @@
 import { Client, type IFrame, type IMessage, type StompSubscription } from '@stomp/stompjs';
 import { tokenStore } from '@/feature/auth';
 
-// STOMP WebSocket configuration
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080';
 const WS_ENDPOINT = '/ws';
 
@@ -26,7 +25,6 @@ export class StompWebSocketClient {
       heartbeatOutgoing: 10000,
     });
 
-    // Setup callbacks
     this.client.onConnect = this.onConnect.bind(this);
     this.client.onDisconnect = this.onDisconnect.bind(this);
     this.client.onStompError = this.onError.bind(this);
@@ -37,13 +35,11 @@ export class StompWebSocketClient {
       return;
     }
 
-    // Get JWT token for authentication
     const token = tokenStore.getAccessToken();
     if (!token) {
       return;
     }
 
-    // Set authorization header
     this.client.connectHeaders = {
       Authorization: `Bearer ${token}`,
     };
@@ -55,13 +51,11 @@ export class StompWebSocketClient {
       return;
     }
 
-    // Unsubscribe all
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
     this.subscriptions.clear();
 
-    // Deactivate client
     this.client.deactivate();
     this.isConnected = false;
   }
@@ -76,7 +70,6 @@ export class StompWebSocketClient {
         const data = JSON.parse(message.body) as T;
         handler(data);
       } catch (_error) {
-        // JSON 파싱 오류는 무시합니다.
       }
     });
 
@@ -128,10 +121,6 @@ export class StompWebSocketClient {
     }
   }
 
-  // ===================================
-  // Private Methods
-  // ===================================
-
   private onConnect(_frame: IFrame): void {
     this.isConnected = true;
     this.reconnectAttempts = 0;
@@ -143,12 +132,10 @@ export class StompWebSocketClient {
     this.subscriptions.clear();
     this.emitEvent('disconnect');
 
-    // Auto-reconnect
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       setTimeout(() => this.connect(), this.reconnectDelay);
     } else {
-      // 최대 재연결 시도 횟수를 초과했습니다.
     }
   }
 
@@ -156,10 +143,6 @@ export class StompWebSocketClient {
     this.emitEvent('error', new Error(frame.body || 'STOMP error'));
   }
 }
-
-// ===================================
-// Singleton Instance
-// ===================================
 
 let stompClient: StompWebSocketClient | null = null;
 

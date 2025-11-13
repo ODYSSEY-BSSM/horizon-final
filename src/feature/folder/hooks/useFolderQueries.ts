@@ -7,7 +7,6 @@ import type {
   TeamDirectoryUpdateRequest,
 } from '../types';
 
-// Query Keys
 export const folderKeys = {
   all: ['folders'] as const,
   root: () => [...folderKeys.all, 'root'] as const,
@@ -24,20 +23,12 @@ export const folderKeys = {
     [...folderKeys.teamDetail(teamId, directoryId), 'content'] as const,
 };
 
-// ===================================
-// Personal Directory Queries
-// ===================================
-
 export function useRootFolder() {
   return useQuery({
     queryKey: folderKeys.root(),
     queryFn: () => folderApi.getDirectories(),
   });
 }
-
-// ===================================
-// Personal Directory Mutations
-// ===================================
 
 export function useCreateFolder() {
   const queryClient = useQueryClient();
@@ -77,20 +68,12 @@ export function useDeleteFolder() {
   });
 }
 
-// ===================================
-// Team Directory Queries
-// ===================================
-
 export function useTeamRootFolder(teamId: number) {
   return useQuery({
     queryKey: folderKeys.team(teamId),
     queryFn: () => teamFolderApi.getTeamDirectories(teamId),
   });
 }
-
-// ===================================
-// Team Directory Mutations
-// ===================================
 
 export function useCreateTeamFolder(teamId: number) {
   const queryClient = useQueryClient();

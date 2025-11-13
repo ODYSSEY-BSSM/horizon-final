@@ -18,10 +18,10 @@ export const useTeamSpaceData = () => {
     return teamsData.map((team) => ({
       id: team.id.toString(),
       name: team.name,
-      description: '', // Swagger에 description 필드 없음
+      description: '',
       memberCount: team.members?.length || 0,
-      createdAt: new Date().toISOString(), // Swagger에 createdAt 필드 없음
-      inviteCode: team.inviteCode, // API에서 받은 초대 코드
+      createdAt: new Date().toISOString(),
+      inviteCode: team.inviteCode,
     }));
   }, [teamsData]);
 
@@ -38,14 +38,13 @@ export const useTeamSpaceData = () => {
   };
 
   const addTeam = (data: { name: string; description: string }): Promise<Team> => {
-    // 팀 생성 API 호출 및 응답을 Promise로 반환
     return createTeamMutation.mutateAsync(data).then((teamResponse) => ({
       id: teamResponse.id.toString(),
       name: teamResponse.name,
-      description: '', // Swagger에 description 없음
+      description: '',
       memberCount: teamResponse.members?.length || 1,
       createdAt: new Date().toISOString(),
-      inviteCode: teamResponse.inviteCode, // API에서 받은 초대 코드 사용
+      inviteCode: teamResponse.inviteCode,
     }));
   };
 
@@ -53,7 +52,6 @@ export const useTeamSpaceData = () => {
     inviteCode: string,
     callbacks?: { onSuccess?: () => void; onError?: (error: string) => void },
   ): { success: boolean; teamId?: number } => {
-    // 팀 가입 (초대 코드 사용)
     applyToTeamMutation.mutate(
       { inviteCode },
       {
@@ -66,7 +64,6 @@ export const useTeamSpaceData = () => {
       },
     );
 
-    // 초대 코드에서 팀 ID 추출 (선택사항)
     const teamIdStr = decodeInviteCode(inviteCode);
     const teamId = teamIdStr ? parseInt(teamIdStr, 10) : undefined;
 

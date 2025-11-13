@@ -1,6 +1,3 @@
-/**
- * Mock Team API (Swagger 완벽 일치)
- */
 
 import type {
   TeamCreateRequest,
@@ -34,7 +31,6 @@ function generateInviteCode(): string {
   return Math.random().toString(36).substring(2, 10).toUpperCase();
 }
 
-// StoredTeam을 TeamResponse로 변환 (멤버 이름 포함)
 function toTeamResponse(team: StoredTeam, users: MockUser[]): TeamResponse {
   const leader = users.find((u) => u.id === team.leaderId);
   const members = users.filter((u) => team.memberIds.includes(u.id));
@@ -71,7 +67,6 @@ export const mockTeamApi = {
     teams.push(newTeam);
     mockStorage.set('teams', teams);
 
-    // 사용자의 팀 목록 업데이트
     currentUser.teamIds = [...currentUser.teamIds, newTeam.id];
     mockStorage.set('currentUser', currentUser);
 
@@ -96,7 +91,6 @@ export const mockTeamApi = {
       return [];
     }
 
-    // 현재 사용자가 속한 팀만 반환
     const userTeams = teams.filter((t) => t.memberIds.includes(currentUser.id));
 
     return userTeams.map((t) => toTeamResponse(t, users));
@@ -144,18 +138,15 @@ export const mockTeamApi = {
       throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
     }
 
-    // 팀 삭제
     const filtered = teams.filter((t) => t.id !== teamId);
     mockStorage.set('teams', filtered);
 
-    // 모든 사용자의 팀 목록에서 제거
     const updatedUsers = users.map((u) => ({
       ...u,
       teamIds: u.teamIds.filter((id) => id !== teamId),
     }));
     mockStorage.set('users', updatedUsers);
 
-    // 현재 사용자도 업데이트
     const currentUser = mockStorage.get<MockUser>('currentUser');
     if (currentUser) {
       currentUser.teamIds = currentUser.teamIds.filter((id) => id !== teamId);
@@ -179,16 +170,13 @@ export const mockTeamApi = {
       throw new Error(MOCK_ERRORS.INVALID_INVITE_CODE);
     }
 
-    // 이미 팀 멤버인지 확인
     if (team.memberIds.includes(currentUser.id)) {
       throw new Error(MOCK_ERRORS.ALREADY_TEAM_MEMBER);
     }
 
-    // 팀에 사용자 추가
     team.memberIds.push(currentUser.id);
     mockStorage.set('teams', teams);
 
-    // 사용자의 팀 목록에 추가
     currentUser.teamIds = [...currentUser.teamIds, team.id];
     mockStorage.set('currentUser', currentUser);
 
@@ -218,16 +206,13 @@ export const mockTeamApi = {
       throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
     }
 
-    // 팀장은 탈퇴 불가
     if (team.leaderId === currentUser.id) {
       throw new Error(MOCK_ERRORS.LEADER_CANNOT_LEAVE);
     }
 
-    // 팀에서 사용자 제거
     team.memberIds = team.memberIds.filter((id) => id !== currentUser.id);
     mockStorage.set('teams', teams);
 
-    // 사용자의 팀 목록에서 제거
     currentUser.teamIds = currentUser.teamIds.filter((id) => id !== teamId);
     mockStorage.set('currentUser', currentUser);
 
@@ -255,21 +240,17 @@ export const mockTeamApi = {
       throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
     }
 
-    // 팀장만 멤버 제거 가능
     if (team.leaderId !== currentUser.id) {
       throw new Error(MOCK_ERRORS.ONLY_LEADER_CAN_REMOVE);
     }
 
-    // 팀장 자신은 제거 불가
     if (memberId === currentUser.id) {
       throw new Error(MOCK_ERRORS.LEADER_CANNOT_REMOVE_SELF);
     }
 
-    // 팀에서 사용자 제거
     team.memberIds = team.memberIds.filter((id) => id !== memberId);
     mockStorage.set('teams', teams);
 
-    // 해당 사용자의 팀 목록에서 제거
     const allUsers = getUsers();
     const userIndex = allUsers.findIndex((u) => u.id === memberId);
     if (userIndex !== -1) {

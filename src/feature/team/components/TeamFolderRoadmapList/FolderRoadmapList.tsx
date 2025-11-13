@@ -125,7 +125,6 @@ const FolderRoadmapList = ({
               onPageChange={
                 onPageChange ||
                 (() => {
-                  /* no-op */
                 })
               }
             />

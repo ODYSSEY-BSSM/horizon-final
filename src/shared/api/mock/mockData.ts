@@ -1,6 +1,3 @@
-/**
- * Mock Data (Swagger API 완벽 일치)
- */
 
 import type { DirectoryResponse } from '@/feature/folder/types';
 import type {
@@ -12,10 +9,8 @@ import type {
 import type { NodeType, ProblemStatus, Subject, UserRole } from '@/shared/api/types';
 import type { MockSchool, MockUser } from './mockTypes';
 
-// Re-export types for backward compatibility
 export type { MockSchool, MockUser } from './mockTypes';
 
-// Swagger API 초기 데이터
 export const initialMockData = {
   users: [
     {
@@ -133,7 +128,6 @@ export const initialMockData = {
     },
   ] as ProblemResponse[],
 
-  // 문제의 정답 저장 (별도 관리)
   problemAnswers: new Map<number, string>([
     [1, 'Counter 앱 완성'],
     [2, 'API 데이터 표시'],
