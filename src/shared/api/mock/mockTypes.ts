@@ -1,7 +1,3 @@
-/**
- * Mock API Types
- */
-
 import type { UserRole } from '@/shared/api/types';
 
 export interface MockUser {

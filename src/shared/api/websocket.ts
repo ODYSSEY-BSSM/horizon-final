@@ -1,9 +1,8 @@
 import { tokenStore } from '@/feature/auth';
 
-// WebSocket configuration
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080';
-const HEARTBEAT_INTERVAL = 30000; // 30 seconds
-const RECONNECT_DELAY = 3000; // 3 seconds
+const HEARTBEAT_INTERVAL = 30000;
+const RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_ATTEMPTS = 5;
 
 export type WebSocketEventType = 'open' | 'close' | 'error' | 'message';
@@ -41,7 +40,6 @@ export class WebSocketClient {
     this.isManualClose = false;
 
     try {
-      // Get access token for authentication
       const token = tokenStore.getAccessToken();
       const wsUrl = token ? `${this.url}?token=${token}` : this.url;
 
@@ -128,16 +126,11 @@ export class WebSocketClient {
     return this.ws?.readyState ?? null;
   }
 
-  // ===================================
-  // Private Methods
-  // ===================================
-
   private handleOpen(event: Event): void {
     this.isConnecting = false;
     this.reconnectAttempts = 0;
     this.startHeartbeat();
 
-    // Trigger open event handlers
     this.triggerEventHandlers('open', event);
   }
 
@@ -145,10 +138,8 @@ export class WebSocketClient {
     this.isConnecting = false;
     this.clearHeartbeat();
 
-    // Trigger close event handlers
     this.triggerEventHandlers('close', event);
 
-    // Auto-reconnect if not manual close
     if (!this.isManualClose) {
       this.scheduleReconnect();
     }
@@ -157,7 +148,6 @@ export class WebSocketClient {
   private handleError(event: Event): void {
     this.isConnecting = false;
 
-    // Trigger error event handlers
     this.triggerEventHandlers('error', event);
   }
 
@@ -165,10 +155,8 @@ export class WebSocketClient {
     try {
       const message: WebSocketMessage = JSON.parse(event.data);
 
-      // Trigger message event handlers
       this.triggerEventHandlers('message', event);
 
-      // Trigger specific message type handlers
       const handlers = this.messageHandlers.get(message.type);
       if (handlers) {
         for (const handler of handlers) {
@@ -176,7 +164,8 @@ export class WebSocketClient {
         }
       }
     } catch (_error) {
-      // JSON 파싱 오류는 무시합니다.
+      // biome-ignore lint: reason
+      console.error('Error parsing WebSocket message:', _error);
     }
   }
 
@@ -225,10 +214,6 @@ export class WebSocketClient {
     }
   }
 }
-
-// ===================================
-// WebSocket Factory
-// ===================================
 
 const wsClients: Map<string, WebSocketClient> = new Map();
 

@@ -22,32 +22,35 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
 
   const [isConnected, setIsConnected] = useState(false);
   const clientRef = useRef(getStompClient());
-  const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check connection status periodically
   useEffect(() => {
-    checkIntervalRef.current = setInterval(() => {
-      const connected = clientRef.current.getIsConnected();
-      setIsConnected((prev) => {
-        if (prev !== connected) {
-          if (connected) {
-            onConnect?.();
-          } else {
-            onDisconnect?.();
-          }
-        }
-        return connected;
-      });
-    }, 500);
+    const handleConnect = () => {
+      setIsConnected(true);
+      onConnect?.();
+    };
+
+    const handleDisconnect = () => {
+      setIsConnected(false);
+      onDisconnect?.();
+    };
+
+    const handleError = (error?: unknown) => {
+      onError?.(error instanceof Error ? error : new Error('WebSocket error'));
+    };
+
+    clientRef.current.addEventListener('connect', handleConnect);
+    clientRef.current.addEventListener('disconnect', handleDisconnect);
+    clientRef.current.addEventListener('error', handleError);
+
+    setIsConnected(clientRef.current.getIsConnected());
 
     return () => {
-      if (checkIntervalRef.current) {
-        clearInterval(checkIntervalRef.current);
-      }
+      clientRef.current.removeEventListener('connect', handleConnect);
+      clientRef.current.removeEventListener('disconnect', handleDisconnect);
+      clientRef.current.removeEventListener('error', handleError);
     };
-  }, [onConnect, onDisconnect]);
+  }, [onConnect, onDisconnect, onError]);
 
-  // Auto connect
   useEffect(() => {
     if (autoConnect && !isConnected) {
       try {
@@ -58,7 +61,6 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     }
   }, [autoConnect, isConnected, onError]);
 
-  // Connect function
   const connect = useCallback(() => {
     try {
       clientRef.current.connect();
@@ -67,12 +69,10 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     }
   }, [onError]);
 
-  // Disconnect function
   const disconnect = useCallback(() => {
     clientRef.current.disconnect();
   }, []);
 
-  // Subscribe function
   const subscribe = useCallback(
     <T>(destination: string, handler: StompMessageHandler<T>) => {
       if (!isConnected) {
@@ -89,12 +89,10 @@ export function useStompWebSocket(options: UseStompWebSocketOptions = {}): UseSt
     [isConnected, onError],
   );
 
-  // Unsubscribe function
   const unsubscribe = useCallback((destination: string) => {
     clientRef.current.unsubscribe(destination);
   }, []);
 
-  // Send function
   const send = useCallback(
     <T>(destination: string, body: T) => {
       if (!isConnected) {

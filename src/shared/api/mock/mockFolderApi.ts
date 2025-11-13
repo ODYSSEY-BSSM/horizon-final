@@ -1,7 +1,3 @@
-/**
- * Mock Folder/Directory API (Swagger 완벽 일치)
- */
-
 import type {
   DirectoryContentResponse,
   DirectoryCreateRequest,
@@ -12,7 +8,7 @@ import type {
   TeamDirectoryResponse,
   TeamDirectoryUpdateRequest,
 } from '@/feature/folder/types';
-import type { RoadmapResponse } from '@/feature/roadmap/types';
+import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/types';
 import { delay, MOCK_DELAYS } from './mockConstants';
 import { initialMockData } from './mockData';
 import { MOCK_ERRORS } from './mockErrors';
@@ -29,14 +25,13 @@ function getDirectories(): StoredDirectory[] {
   return mockStorage.getOrDefault('directories', initialMockData.directories);
 }
 
-function getRoadmaps(): RoadmapResponse[] {
+function getRoadmaps(): (RoadmapResponse | TeamRoadmapResponse)[] {
   return mockStorage.getOrDefault('roadmaps', initialMockData.roadmaps);
 }
 
-// 재귀적으로 디렉토리 트리 구조 생성
 function buildDirectoryTree(
   directories: StoredDirectory[],
-  roadmaps: RoadmapResponse[],
+  roadmaps: (RoadmapResponse | TeamRoadmapResponse)[],
   parentId?: number,
 ): DirectoryResponse[] {
   const children = directories.filter((d) => d.parentId === parentId && !d.teamId);
@@ -48,14 +43,13 @@ function buildDirectoryTree(
     directories: buildDirectoryTree(directories, roadmaps, dir.id),
     roadmaps: roadmaps
       .filter((r) => r.directoryId === dir.id)
-      .map((r) => ({ id: r.id, title: r.title })),
+      .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
   }));
 }
 
-// 팀 디렉토리 트리 구조 생성
 function buildTeamDirectoryTree(
   directories: StoredDirectory[],
-  roadmaps: RoadmapResponse[],
+  roadmaps: (RoadmapResponse | TeamRoadmapResponse)[],
   teamId: number,
   parentId?: number,
 ): TeamDirectoryResponse[] {
@@ -69,7 +63,7 @@ function buildTeamDirectoryTree(
     directories: buildTeamDirectoryTree(directories, roadmaps, teamId, dir.id),
     roadmaps: roadmaps
       .filter((r) => r.directoryId === dir.id)
-      .map((r) => ({ id: r.id, title: r.title })),
+      .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
   }));
 }
 
@@ -98,7 +92,7 @@ export const mockFolderApi = {
     };
   },
 
-  getDirectories: async (): Promise<DirectoryContentResponse> => {
+  getRoot: async (): Promise<DirectoryContentResponse> => {
     await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
@@ -127,7 +121,7 @@ export const mockFolderApi = {
       directories: buildDirectoryTree(directories, roadmaps, directory.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === directory.id)
-        .map((r) => ({ id: r.id, title: r.title })),
+        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
     };
   },
 
@@ -156,7 +150,7 @@ export const mockFolderApi = {
       directories: buildDirectoryTree(directories, roadmaps, updated.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === updated.id)
-        .map((r) => ({ id: r.id, title: r.title })),
+        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
     };
   },
 
@@ -199,7 +193,7 @@ export const mockTeamFolderApi = {
     };
   },
 
-  getTeamDirectories: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
+  getTeamRoot: async (teamId: number): Promise<TeamDirectoryContentResponse> => {
     await delay(MOCK_DELAYS.FAST);
 
     const directories = getDirectories();
@@ -229,13 +223,13 @@ export const mockTeamFolderApi = {
       directories: buildTeamDirectoryTree(directories, roadmaps, teamId, directory.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === directory.id)
-        .map((r) => ({ id: r.id, title: r.title })),
+        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
     };
   },
 
   updateTeamDirectory: async (
-    teamId: number,
     directoryId: number,
+    teamId: number,
     data: TeamDirectoryUpdateRequest,
   ): Promise<TeamDirectoryResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
@@ -260,11 +254,11 @@ export const mockTeamFolderApi = {
       directories: buildTeamDirectoryTree(directories, roadmaps, teamId, updated.id),
       roadmaps: roadmaps
         .filter((r) => r.directoryId === updated.id)
-        .map((r) => ({ id: r.id, title: r.title })),
+        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
     };
   },
 
-  deleteTeamDirectory: async (teamId: number, directoryId: number): Promise<void> => {
+  deleteTeamDirectory: async (directoryId: number, teamId: number): Promise<void> => {
     await delay(MOCK_DELAYS.NORMAL);
 
     const directories = getDirectories();

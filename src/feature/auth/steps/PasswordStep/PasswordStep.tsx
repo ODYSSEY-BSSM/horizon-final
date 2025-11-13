@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { PasswordValidation } from '@/feature/auth/components/signup/PasswordValidation';
-import { usePasswordForm } from '@/feature/auth/hooks/signup/usePasswordForm';
+import { usePasswordForm } from '@/feature/auth/hooks/usePasswordForm';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
 

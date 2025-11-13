@@ -139,7 +139,7 @@ const FolderRoadmapList = ({
               onPageChange={
                 onPageChange ||
                 (() => {
-                  /* no-op */
+                  // onPageChange가 없을 경우 아무 작업도 하지 않음
                 })
               }
             />

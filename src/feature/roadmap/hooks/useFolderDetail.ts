@@ -22,10 +22,8 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
       return [];
     }
 
-    // folderId가 제공되면 해당 폴더의 로드맵만 반환
     if (options?.folderId) {
       const folderIdNum = Number(options.folderId);
-      // 재귀적으로 디렉토리 찾기
       const findDirectory = (dirs: typeof rootFolder.directories, id: number): any => {
         for (const dir of dirs) {
           if (dir.id === id) {
@@ -56,7 +54,6 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
       }));
     }
 
-    // folderId가 없으면 모든 디렉토리의 로드맵 수집
     const collectAllRoadmaps = (dirs: typeof rootFolder.directories): any[] => {
       let all: any[] = [];
       for (const dir of dirs) {

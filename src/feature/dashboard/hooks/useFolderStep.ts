@@ -8,10 +8,8 @@ export const useFolderStep = () => {
   const isTeamRoadmap = formData.category === 'team';
   const teamId = formData.teamId ? Number(formData.teamId) : 0;
 
-  // 개인 디렉토리 목록 조회
   const { data: personalRootContent, isLoading: isPersonalLoading } = useRootFolder();
 
-  // 팀 디렉토리 목록 조회 (팀 로드맵이고 teamId가 있을 때만)
   const { data: teamRootContent, isLoading: isTeamLoading } = useTeamRootFolder(teamId);
 
   const rootContent = isTeamRoadmap ? teamRootContent : personalRootContent;
@@ -24,7 +22,6 @@ export const useFolderStep = () => {
   const folderId = formData.folderId;
   const folderName = formData.folderName;
 
-  // API 데이터를 드롭다운 옵션 형식으로 변환 (Swagger 구조 사용)
   const directories = rootContent?.directories || [];
   const FOLDER_OPTIONS = directories.map((dir) => ({
     id: String(dir.id),
@@ -91,27 +88,22 @@ export const useFolderStep = () => {
   const isValid = isStepValid();
 
   return {
-    // Form state
     isValid,
     onNext: handleNext,
     onPrevious: handlePrevious,
 
-    // Dropdown state
     isOpen,
     setIsOpen,
 
-    // New folder state
     newFolderMode,
     newFolderName,
     setNewFolderName,
 
-    // Data
     selectedFolder,
     hasSelection,
     isLoading,
     FOLDER_OPTIONS,
 
-    // Handlers
     handleFolderSelect,
     handleNewFolderClick,
     handleNewFolderSubmit,

@@ -1,7 +1,3 @@
-/**
- * Mock School API (Swagger 완벽 일치)
- */
-
 import type {
   EducationNodeListResponse,
   EducationNodeResponse,
@@ -39,22 +35,18 @@ export const mockSchoolApi = {
       throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
     }
 
-    // 학교 코드로 학교 찾기
     const school = schools.find((s) => s.code === data.schoolCode);
     if (!school) {
       throw new Error(MOCK_ERRORS.INVALID_SCHOOL_CODE);
     }
 
-    // 이미 연동된 학교가 있는지 확인
     if (currentUser.schoolId) {
       throw new Error(MOCK_ERRORS.SCHOOL_ALREADY_CONNECTED);
     }
 
-    // 사용자에 학교 연동
     currentUser.schoolId = school.id;
     mockStorage.set('currentUser', currentUser);
 
-    // 전체 사용자 목록 업데이트
     const allUsers = getUsers();
     const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
     if (userIndex !== -1) {
@@ -111,11 +103,9 @@ export const mockSchoolApi = {
       throw new Error(MOCK_ERRORS.NO_SCHOOL_CONNECTED);
     }
 
-    // 사용자의 학교 연동 해제
     currentUser.schoolId = undefined;
     mockStorage.set('currentUser', currentUser);
 
-    // 전체 사용자 목록 업데이트
     const allUsers = getUsers();
     const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
     if (userIndex !== -1) {
@@ -143,7 +133,6 @@ export const mockSchoolApi = {
 
     const educationNodes = getEducationNodes();
 
-    // 현재 사용자의 학교에 해당하는 교육과정 노드만 반환
     const schoolNodes = educationNodes.filter(
       (node: any) => node.schoolId === currentUser.schoolId,
     );

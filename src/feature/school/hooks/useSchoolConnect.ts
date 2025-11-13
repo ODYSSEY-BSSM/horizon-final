@@ -11,24 +11,21 @@ export const useSchoolConnect = () => {
     disconnectConfirm: false,
   });
 
-  // 학교 연동 정보 조회
   const { data: schoolData, isLoading: isLoadingSchool } = useQuery({
     queryKey: ['school', 'connected'],
     queryFn: schoolApi.getConnectedSchool,
     retry: false,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
   });
 
-  // 교육과정 노드 목록 조회
   const { data: nodesData, isLoading: isLoadingNodes } = useQuery({
     queryKey: ['school', 'education-nodes'],
     queryFn: schoolApi.getEducationNodes,
-    enabled: !!schoolData, // 학교 연동이 있을 때만 조회
+    enabled: !!schoolData,
     retry: false,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: 1000 * 60 * 5,
   });
 
-  // 학교 연동
   const { mutateAsync: connectSchool, isPending: isConnecting } = useMutation({
     mutationFn: schoolApi.connectSchool,
     onSuccess: () => {
@@ -39,7 +36,6 @@ export const useSchoolConnect = () => {
     },
   });
 
-  // 학교 연동 해제
   const { mutateAsync: disconnectSchool } = useMutation({
     mutationFn: schoolApi.disconnectSchool,
     onSuccess: () => {
@@ -48,7 +44,6 @@ export const useSchoolConnect = () => {
     },
   });
 
-  // UI 상태 계산
   const [state, setState] = useState<SchoolConnectState>({
     status: 'disconnected',
     school: null,
@@ -62,11 +57,10 @@ export const useSchoolConnect = () => {
     }
 
     if (isLoadingSchool || isLoadingNodes) {
-      return; // 로딩 중에는 상태 변경 안 함
+      return;
     }
 
     if (schoolData) {
-      // API 응답을 UI 타입으로 변환
       const schoolInfo: SchoolInfo = {
         id: String(schoolData.id),
         name: schoolData.name,
@@ -100,7 +94,7 @@ export const useSchoolConnect = () => {
     try {
       await connectSchool({ schoolCode });
     } catch (_error) {
-      // 에러를 의도적으로 무시합니다 (모달로 표시됨).
+      // 에러는 useMutation의 onError에서 처리됩니다.
     }
   };
 
@@ -116,7 +110,7 @@ export const useSchoolConnect = () => {
     try {
       await disconnectSchool();
     } catch (_error) {
-      // 에러를 의도적으로 무시합니다.
+      // 에러는 useMutation의 onError에서 처리됩니다.
     }
   };
 

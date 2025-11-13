@@ -19,7 +19,6 @@ const DashboardContent = () => {
     openModal();
   };
 
-  // 로딩 상태
   if (isLoading) {
     return (
       <StyledPageContainer>
@@ -30,7 +29,6 @@ const DashboardContent = () => {
     );
   }
 
-  // 에러 상태
   if (error || !userData) {
     // biome-ignore lint: reason
     console.error('[Dashboard] Error or no user data:', { error, userData });

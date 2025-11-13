@@ -1,6 +1,3 @@
-// UI Types
-
-// API Types
 export type {
   EducationNodeListResponse,
   EducationNodeResponse,

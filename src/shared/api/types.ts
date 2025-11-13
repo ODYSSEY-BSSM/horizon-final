@@ -1,6 +1,3 @@
-// ===================================
-// API Response Types
-// ===================================
 export interface ApiResponse<T = unknown> {
   code: string;
   message: string;
@@ -21,11 +18,6 @@ export interface ApiErrorResponse {
   details?: unknown;
 }
 
-// ===================================
-// Common Enums (from HTML API spec)
-// ===================================
-
-// Roadmap & Node Colors (Swagger API)
 export enum Color {
   RED = 'RED',
   ORANGE = 'ORANGE',
@@ -35,7 +27,6 @@ export enum Color {
   PURPLE = 'PURPLE',
 }
 
-// Color Hex Mapping (from API response)
 export const ColorHexMap: Record<string, string> = {
   DC2626: 'RED',
   EA580C: 'ORANGE',
@@ -45,7 +36,6 @@ export const ColorHexMap: Record<string, string> = {
   A855F7: 'PURPLE',
 };
 
-// Roadmap & Node Icons (Swagger API - 16 icons)
 export enum Icon {
   LANGUAGE = 'LANGUAGE',
   CODE = 'CODE',
@@ -65,7 +55,6 @@ export enum Icon {
   GO = 'GO',
 }
 
-// Icon Lowercase Mapping (from API response)
 export const IconMap: Record<string, Icon> = {
   language: Icon.LANGUAGE,
   code: Icon.CODE,
@@ -85,9 +74,8 @@ export const IconMap: Record<string, Icon> = {
   go: Icon.GO,
 };
 
-// Education Subject Types
 export enum Subject {
-  AI_GENERAL = 'AI_GENERAL', // 인공지능 일반
+  AI_GENERAL = 'AI_GENERAL',
   AI_MATHEMATICS = 'AI_MATHEMATICS',
   AI_PROGRAMMING = 'AI_PROGRAMMING',
   DATA_STRUCTURES = 'DATA_STRUCTURES',
@@ -97,22 +85,17 @@ export enum Subject {
   SOFTWARE_ENGINEERING = 'SOFTWARE_ENGINEERING',
 }
 
-// Node Types
 export enum NodeType {
   TOP = 'TOP',
   MIDDLE = 'MIDDLE',
   BOTTOM = 'BOTTOM',
 }
 
-// Problem Status
 export enum ProblemStatus {
   UNRESOLVED = 'UNRESOLVED',
   RESOLVED = 'RESOLVED',
 }
 
-// Team Apply Status - 제거됨 (Swagger API는 초대 코드 방식 사용)
-
-// User Role
 export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',

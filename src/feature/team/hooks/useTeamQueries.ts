@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/shared/hooks/useToast';
 import { teamApi } from '../api';
 import type { TeamCreateRequest, TeamUpdateRequest } from '../types';
 
-// Query Keys
 export const teamKeys = {
   all: ['teams'] as const,
   lists: () => [...teamKeys.all, 'list'] as const,
@@ -10,12 +10,7 @@ export const teamKeys = {
   details: () => [...teamKeys.all, 'detail'] as const,
   detail: (teamId: number) => [...teamKeys.details(), teamId] as const,
   members: (teamId: number) => [...teamKeys.detail(teamId), 'members'] as const,
-  applications: (teamId: number) => [...teamKeys.detail(teamId), 'applications'] as const,
 };
-
-// ===================================
-// Team Queries
-// ===================================
 
 export function useTeams() {
   return useQuery({
@@ -43,28 +38,26 @@ export function useTeamMembers(teamId: number) {
   });
 }
 
-export function useTeamApplications(teamId: number) {
-  return useQuery({
-    queryKey: teamKeys.applications(teamId),
-    queryFn: async () => {
-      // Swagger에는 지원/승인 시스템이 없음 (초대 코드만 사용)
-      return [];
-    },
-    enabled: !!teamId,
-  });
-}
-
-// ===================================
-// Team Mutations
-// ===================================
-
 export function useCreateTeam() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: TeamCreateRequest) => teamApi.createTeam(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
+      toast({
+        variant: 'default',
+        title: '팀 생성 완료',
+        description: `"${data.name}" 팀이 성공적으로 생성되었습니다.`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        title: '팀 생성 실패',
+        description: error.message || '알 수 없는 오류가 발생했습니다.',
+      });
     },
   });
 }
@@ -104,58 +97,11 @@ export function useRemoveTeamMember(teamId: number) {
   });
 }
 
-// ===================================
-// Team Apply Mutations
-// ===================================
-
 export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ inviteCode }: { inviteCode: string }) => teamApi.joinTeam({ inviteCode }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
-    },
-  });
-}
-
-export function useApproveTeamApplication(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      // Swagger에는 승인 시스템이 없음 (초대 코드로 즉시 가입)
-      throw new Error('Team approval is not supported. Use invite codes instead.');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
-    },
-  });
-}
-
-export function useRejectTeamApplication(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      // Swagger에는 거절 시스템이 없음 (초대 코드로 즉시 가입)
-      throw new Error('Team rejection is not supported. Use invite codes instead.');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.applications(teamId) });
-    },
-  });
-}
-
-export function useDeleteTeamApplication() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (_applyId: number) => {
-      // Swagger에는 지원 삭제 시스템이 없음 (초대 코드로 즉시 가입)
-      throw new Error('Team application deletion is not supported. Use invite codes instead.');
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.list() });
     },

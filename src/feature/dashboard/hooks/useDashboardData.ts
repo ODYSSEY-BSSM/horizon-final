@@ -1,20 +1,39 @@
 import { useMemo } from 'react';
 import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
-import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { useAllTeamRoadmaps, useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/types';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
   const { data: userProfile, isLoading: isLoadingUser, error: userError } = useUserProfile();
 
-  const { data: roadmapsData, isLoading: isLoadingRoadmaps, error: roadmapsError } = useRoadmaps();
+  const teamIds = useMemo(() => userProfile?.teams?.map((team) => team.id) || [], [userProfile]);
+
+  const {
+    data: personalRoadmaps,
+    isLoading: isLoadingPersonal,
+    error: personalError,
+  } = useRoadmaps();
+  const {
+    data: teamRoadmaps,
+    isLoading: isLoadingTeamRoadmaps,
+    error: teamError,
+  } = useAllTeamRoadmaps(teamIds);
+
+  const roadmapsData: RoadmapResponse[] = useMemo(() => {
+    return personalRoadmaps || [];
+  }, [personalRoadmaps]);
 
   const userData = useMemo(() => {
     if (!userProfile) {
       return null;
     }
-
     const myRoadmapsCount = roadmapsData?.length || 0;
     const myRoadmapsInProgress = roadmapsData?.filter((roadmap) => roadmap.isFavorite).length || 0;
+
+    const teamRoadmapsCount = teamRoadmaps?.length || 0;
+    const teamRoadmapsInProgress =
+      teamRoadmaps?.filter((roadmap) => roadmap.progress < 100).length || 0;
 
     return {
       name: userProfile.username,
@@ -23,26 +42,26 @@ export const useDashboardData = () => {
         count: myRoadmapsInProgress,
         subCount: myRoadmapsInProgress,
       },
-      'team-roadmap-count': { count: userProfile.teams?.length || 0 },
+      'team-roadmap-count': { count: teamRoadmapsCount },
       'team-roadmap-in-progress': {
-        count: 0, // TODO: 팀 로드맵 진행 중 개수 계산
-        subCount: 0,
+        count: teamRoadmapsInProgress,
+        subCount: teamRoadmapsInProgress,
       },
       'connected-school': {
         schoolName: userProfile.school || '',
         hasItem: !!userProfile.school,
       },
     };
-  }, [userProfile, roadmapsData]);
+  }, [userProfile, roadmapsData, teamRoadmaps]);
 
   const roadmaps = useMemo(() => {
-    if (!roadmapsData) {
-      return [];
-    }
+    const combinedRoadmaps: (RoadmapResponse | TeamRoadmapResponse)[] = [
+      ...(personalRoadmaps || []),
+      ...(teamRoadmaps || []),
+    ];
 
-    return roadmapsData.map((roadmap) => {
-      // teamId가 있으면 팀 로드맵, 없으면 개인 로드맵
-      const isTeamRoadmap = 'teamId' in roadmap && roadmap.teamId !== undefined;
+    return combinedRoadmaps.map((roadmap) => {
+      const isTeamRoadmap = 'teamId' in roadmap;
 
       const category = isTeamRoadmap ? ('team' as const) : ('personal' as const);
       const status = 'in-progress' as const;
@@ -53,17 +72,17 @@ export const useDashboardData = () => {
         icon: roadmap.icon.toLowerCase(),
         color: roadmap.color.toLowerCase() as RoadmapColor,
         category,
-        steps: 0, // TODO: API에서 단계 정보를 제공하면 업데이트 필요
+        steps: 0,
         status,
         progress: roadmap.progress || 0,
       };
     });
-  }, [roadmapsData]);
+  }, [personalRoadmaps, teamRoadmaps]);
 
   return {
     userData,
     roadmapsData: roadmaps,
-    isLoading: isLoadingUser || isLoadingRoadmaps,
-    error: userError || roadmapsError,
+    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeamRoadmaps,
+    error: userError || personalError || teamError,
   };
 };

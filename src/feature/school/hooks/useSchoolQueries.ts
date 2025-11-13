@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { schoolApi } from '../api';
 
-// Query Keys
 export const schoolKeys = {
   all: ['school'] as const,
   connect: () => [...schoolKeys.all, 'connect'] as const,
@@ -9,15 +8,11 @@ export const schoolKeys = {
   educationNode: (id: number) => [...schoolKeys.educationNodes(), id] as const,
 };
 
-// ===================================
-// School Connect Queries
-// ===================================
-
 export function useConnectedSchool() {
   return useQuery({
     queryKey: schoolKeys.connect(),
     queryFn: () => schoolApi.getConnectedSchool(),
-    retry: false, // 연동되지 않은 경우 에러가 발생하므로 재시도하지 않음
+    retry: false,
   });
 }
 
@@ -35,10 +30,6 @@ export function useEducationNode(educationUuid: number) {
     enabled: !!educationUuid,
   });
 }
-
-// ===================================
-// School Connect Mutations
-// ===================================
 
 export function useConnectSchool() {
   const queryClient = useQueryClient();
