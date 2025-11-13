@@ -117,22 +117,23 @@ import type { NodeUpdateMessage, RoadmapNodeMessage } from '@/shared/api';
 function RoadmapCanvas({ roadmapId }: { roadmapId: number }) {
   const [nodes, setNodes] = useState<Map<number, RoadmapNodeMessage>>(new Map());
 
-  const { isConnected, isSubscribed, subscribeNodeUpdate, sendNodeUpdate } = useRoadmapNodesWebSocket({
-    roadmapId,
-    autoSubscribe: true,
-    onCreated: (node) => {
-      console.log('노드 생성:', node);
-      setNodes((prev) => new Map(prev).set(node.id, node));
-    },
-    onDeleted: (nodeId) => {
-      console.log('노드 삭제:', nodeId);
-      setNodes((prev) => {
-        const next = new Map(prev);
-        next.delete(nodeId);
-        return next;
-      });
-    },
-  });
+  const { isConnected, isSubscribed, subscribeNodeUpdate, unsubscribeNodeUpdate, sendNodeUpdate } =
+    useRoadmapNodesWebSocket({
+      roadmapId,
+      autoSubscribe: true,
+      onCreated: (node) => {
+        console.log('노드 생성:', node);
+        setNodes((prev) => new Map(prev).set(node.id, node));
+      },
+      onDeleted: (nodeId) => {
+        console.log('노드 삭제:', nodeId);
+        setNodes((prev) => {
+          const next = new Map(prev);
+          next.delete(nodeId);
+          return next;
+        });
+      },
+    });
 
   // 특정 노드의 수정 사항 구독
   useEffect(() => {
@@ -147,7 +148,7 @@ function RoadmapCanvas({ roadmapId }: { roadmapId: number }) {
     return () => {
       unsubscribeNodeUpdate(nodeId);
     };
-  }, [isConnected, subscribeNodeUpdate]);
+  }, [isConnected, subscribeNodeUpdate, unsubscribeNodeUpdate]);
 
   // 노드 수정사항 전송
   const handleNodeUpdate = (nodeId: number, updates: NodeUpdateMessage) => {
