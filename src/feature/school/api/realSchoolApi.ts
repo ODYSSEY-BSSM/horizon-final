@@ -9,7 +9,7 @@ import type {
 
 export const realSchoolApi = {
   connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
-    return apiClient.post<SchoolResponse>('/schools/connect', data);
+    return apiClient.put<SchoolResponse>('/users/school', data);
   },
 
   getConnectedSchool: async (): Promise<SchoolResponse> => {

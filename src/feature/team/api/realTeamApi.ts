@@ -29,7 +29,7 @@ export const realTeamApi = {
   },
 
   joinTeam: async (data: TeamInviteRequest): Promise<TeamResponse> => {
-    return apiClient.patch<TeamResponse>('/teams/join', data);
+    return apiClient.patch<TeamResponse>('/teams', data);
   },
 
   leaveTeam: async (teamId: number): Promise<void> => {
