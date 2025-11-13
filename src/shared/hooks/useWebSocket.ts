@@ -1,3 +1,12 @@
+/**
+ * @deprecated Use useStompWebSocket instead for secure WebSocket connections.
+ *
+ * This hook uses the legacy WebSocket implementation which has security issues
+ * (tokens passed via query string). Use useStompWebSocket for all new code.
+ *
+ * @see {@link ./useStompWebSocket.ts}
+ */
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getWebSocketClient,

@@ -1,6 +1,7 @@
 import { useCreateFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { useCreateRoadmap, useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { useRoadmapFormStore } from '@/feature/roadmap/stores/roadmapFormStore';
+import type { Color, Icon } from '@/shared/api/types';
 
 /**
  * Hook for handling roadmap submission with mutations.
@@ -30,8 +31,8 @@ export function useRoadmapSubmit() {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
-      color: submitData.color as any,
-      icon: submitData.icon as any,
+      color: submitData.color as Color,
+      icon: submitData.icon as Icon,
       directoryId: directoryId || 1, // Default directory
     };
 
@@ -73,8 +74,8 @@ export function useTeamRoadmapSubmit(teamId: number) {
       title: submitData.title,
       description: submitData.description,
       categories: submitData.categories,
-      color: submitData.color as any,
-      icon: submitData.icon as any,
+      color: submitData.color as Color,
+      icon: submitData.icon as Icon,
       directoryId: directoryId || 1,
     };
 

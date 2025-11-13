@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { SignUpData, SignUpStep } from '@/lib/types';
+import type { SignUpData, SignUpStep } from '../types/signup';
 
 interface SignupFlowState {
   currentStep: SignUpStep;
