@@ -142,3 +142,45 @@ export const ProfileIcon = styled.span`
   font-variation-settings: 'FILL' ${tokens.icons.fill[1]}, 'GRAD' ${tokens.icons.grade[0]},
     'opsz' ${tokens.icons.opticalSize[40]};
 `;
+
+export const ProfileContainer = styled.div`
+  position: relative;
+`;
+
+export const ProfileDropdown = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[100]};
+  border-radius: 4px;
+  box-shadow: ${tokens.shadow[0]};
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 88px;
+`;
+
+export const DropdownItem = styled.button<{ $isHighlighted?: boolean }>`
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background-color: ${({ $isHighlighted }) =>
+    $isHighlighted ? tokens.colors.neutral[100] : tokens.colors.white};
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[13]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  line-height: ${tokens.typos.lineHeight[18]};
+  color: ${tokens.colors.neutral[900]};
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${tokens.colors.neutral[100]};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.colors.primary[500]};
+    outline-offset: -2px;
+  }
+`;

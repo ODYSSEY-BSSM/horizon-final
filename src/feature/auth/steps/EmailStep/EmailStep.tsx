@@ -51,7 +51,7 @@ const EmailStep = ({ onGoogleSignUp, onSignIn }: EmailStepProps) => {
           </Text>
         </StyledDividerText>
       </StyledDividerWrapper>
-      <ContinueWithGoogle onClick={onGoogleSignUp} />
+      <ContinueWithGoogle onClick={onGoogleSignUp} disabled />
       <SecondaryAction
         primaryText="이미 계정이 있으신가요?"
         actionText="로그인하기"

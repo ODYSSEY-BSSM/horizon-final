@@ -19,45 +19,43 @@ const VerificationStep = () => {
   const verificationCode = watch('verificationCode');
 
   return (
-    <StyledContainer>
-      <form onSubmit={onSubmit}>
-        <VerificationInput
-          value={verificationCode}
-          onChange={(value) => setValue('verificationCode', value)}
-          error={errors.verificationCode?.message}
-        />
-        <StyledButtonSection>
-          <StyledSubmitButton type="submit" disabled={isSubmitting}>
-            <Text variant="ST" color={tokens.colors.white}>
-              {isSubmitting ? '인증 중...' : '확인'}
-            </Text>
-          </StyledSubmitButton>
+    <StyledContainer onSubmit={onSubmit}>
+      <VerificationInput
+        value={verificationCode}
+        onChange={(value) => setValue('verificationCode', value)}
+        error={errors.verificationCode?.message}
+      />
+      <StyledButtonSection>
+        <StyledSubmitButton type="submit" disabled={isSubmitting}>
+          <Text variant="ST" color={tokens.colors.white}>
+            {isSubmitting ? '인증 중...' : '확인'}
+          </Text>
+        </StyledSubmitButton>
 
-          <SecondaryAction
-            primaryText="인증번호를 받지 못했나요?"
-            actionText="다시 보내기"
-            onActionClick={onResendCode}
-            showTimer={true}
-            timerDuration={30}
-          />
-        </StyledButtonSection>
-      </form>
+        <SecondaryAction
+          primaryText="인증번호를 받지 못했나요?"
+          actionText="다시 보내기"
+          onActionClick={onResendCode}
+          showTimer={true}
+          timerDuration={30}
+        />
+      </StyledButtonSection>
     </StyledContainer>
   );
 };
 
 export default VerificationStep;
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 60px;
 `;
 
 const StyledButtonSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 40px;
 `;
 
 const StyledSubmitButton = styled.button<{ disabled: boolean }>`
