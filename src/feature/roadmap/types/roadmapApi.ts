@@ -23,6 +23,7 @@ export interface RoadmapResponse {
   directoryId?: number;
 }
 
+// Personal Roadmap Update (개인 로드맵 수정)
 export interface RoadmapUpdateRequest {
   title?: string;
   description?: string;
@@ -36,6 +37,7 @@ export interface RoadmapCountResponse {
   count: number;
 }
 
+// Team Roadmap Create (팀 로드맵 생성)
 export interface TeamRoadmapCreateRequest {
   title: string;
   description: string;
@@ -60,6 +62,7 @@ export interface TeamRoadmapResponse {
   teamName: string;
 }
 
+// Team Roadmap Update (팀 로드맵 수정)
 export interface TeamRoadmapUpdateRequest {
   title?: string;
   description?: string;
