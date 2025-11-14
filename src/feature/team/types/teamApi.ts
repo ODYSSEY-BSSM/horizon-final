@@ -3,11 +3,11 @@ export interface TeamCreateRequest {
 }
 
 export interface TeamResponse {
-  id: number;
-  name: string;
-  leader: string;
-  inviteCode: string;
-  members: string[];
+  id?: number;
+  name?: string;
+  leader?: string;
+  inviteCode?: string;
+  members?: string[];
 }
 
 export interface TeamListResponse {
