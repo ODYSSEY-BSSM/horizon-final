@@ -46,8 +46,6 @@ function buildDirectoryTree(
       .map((r) => ({
         id: r.roadmapInfo.id,
         title: r.roadmapInfo.title,
-        color: r.color,
-        icon: r.icon,
       })),
   }));
 }

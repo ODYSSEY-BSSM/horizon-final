@@ -50,8 +50,8 @@ export const useDashboardData = () => {
         subCount: teamRoadmapsInProgress,
       },
       'connected-school': {
-        schoolName: userProfile.school || '',
-        hasItem: !!userProfile.isConnectedSchool,
+        schoolName: userProfile.school,
+        hasItem: userProfile.isConnectedSchool,
       },
     };
   }, [userProfile, roadmapsData, teamRoadmaps]);
@@ -76,7 +76,7 @@ export const useDashboardData = () => {
         category,
         steps: 0,
         status,
-        progress: roadmap.progress || 0,
+        progress: roadmap.progress,
       };
     });
   }, [personalRoadmaps, teamRoadmaps]);
