@@ -52,21 +52,25 @@ export const mockRoadmapApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const roadmaps = getRoadmaps();
-    const newRoadmap: RoadmapResponse = {
-      id: mockStorage.getNextId(),
-      title: data.title,
-      description: data.description,
-      categories: data.categories,
-      lastModifiedAt: new Date().toISOString().split('T')[0],
-      lastAccessedAt: new Date().toISOString(),
-      isFavorite: false,
+    const newId = mockStorage.getNextId();
+    const newRoadmap: RoadmapResponse & { directoryId?: number } = {
+      roadmapInfo: {
+        id: newId,
+        title: data.title,
+        description: data.description,
+        categories: data.categories.map((c) => c.name),
+        lastModifiedAt: new Date().toISOString().split('T')[0],
+        lastAccessedAt: new Date().toISOString(),
+        isFavorite: false,
+      },
+      uuid: newId,
       color: data.color,
       icon: data.icon,
       progress: 0,
       directoryId: data.directoryId,
     };
 
-    roadmaps.push(newRoadmap);
+    roadmaps.push(newRoadmap as any);
     mockStorage.set('roadmaps', roadmaps);
     return newRoadmap;
   },

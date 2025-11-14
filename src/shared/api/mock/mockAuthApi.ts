@@ -157,7 +157,7 @@ export const mockAuthApi = {
     const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
     const userTeams = teams
       .filter((team) => team.memberIds?.includes(currentUser.id))
-      .map((team) => ({ id: team.id, name: team.name }));
+      .map((team) => team.name);
 
     const schools = mockStorage.getOrDefault('schools', initialMockData.schools);
     const userSchool = currentUser.schoolId
@@ -165,11 +165,13 @@ export const mockAuthApi = {
       : null;
 
     return {
-      username: currentUser.username,
-      email: currentUser.email,
-      role: currentUser.role,
+      userInfo: {
+        uuid: currentUser.id,
+        username: currentUser.username,
+        email: currentUser.email,
+      },
       teams: userTeams,
-      school: userSchool?.name,
+      school: userSchool?.name || '',
       isConnectedSchool: !!userSchool,
     };
   },
@@ -199,14 +201,16 @@ export const mockAuthApi = {
     const teams = mockStorage.getOrDefault('teams', initialMockData.teams);
     const userTeams = teams
       .filter((team) => team.memberIds?.includes(currentUser.id))
-      .map((team) => ({ id: team.id, name: team.name }));
+      .map((team) => team.name);
 
     return {
-      username: currentUser.username,
-      email: currentUser.email,
-      role: currentUser.role,
+      userInfo: {
+        uuid: currentUser.id,
+        username: currentUser.username,
+        email: currentUser.email,
+      },
       teams: userTeams,
-      school: defaultSchool?.name,
+      school: defaultSchool?.name || '',
       isConnectedSchool: !!defaultSchool,
     };
   },

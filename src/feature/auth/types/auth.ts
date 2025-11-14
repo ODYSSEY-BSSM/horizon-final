@@ -1,5 +1,3 @@
-import type { UserRole } from '@/shared/api/types';
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -37,14 +35,26 @@ export interface RegisterResponse {
 }
 
 export interface PasswordChangeRequest {
+  email: string;
   password: string;
 }
 
-export interface UserInfoResponse {
+export interface UpdatePasswordVerifyRequest {
+  email: string;
+  code: string;
+}
+
+export interface DeleteUserRequest {}
+
+export interface UserInfo {
+  uuid: number;
   username: string;
   email: string;
-  role: UserRole;
-  teams: Array<{ id: number; name: string }>;
-  school?: string;
-  isConnectedSchool?: boolean;
+}
+
+export interface UserInfoResponse {
+  userInfo: UserInfo;
+  teams: string[];
+  school: string;
+  isConnectedSchool: boolean;
 }
