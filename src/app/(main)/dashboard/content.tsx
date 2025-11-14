@@ -17,17 +17,17 @@ import { tokens } from '@/shared/tokens';
 const DashboardContent = () => {
   const { userData, roadmapsData, isLoading, error } = useDashboardData();
   const { openModal } = useRoadmapFormStore();
-  const { showToast } = useToast();
+  const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const message = searchParams.get('message');
     if (message === 'alreadyLoggedIn') {
-      showToast('이미 로그인되어 있습니다.');
+      toast({ description: '이미 로그인되어 있습니다.' });
       router.replace('/dashboard', { scroll: false });
     }
-  }, [searchParams, router, showToast]);
+  }, [searchParams, router, toast]);
 
   const handleAddRoadmap = () => {
     openModal();
