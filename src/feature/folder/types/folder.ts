@@ -9,7 +9,6 @@ export interface SimpleRoadmapResponse {
   title: string;
   color: string;
   icon: string;
-  progress: number;
 }
 
 export interface SimpleDirectoryResponse {

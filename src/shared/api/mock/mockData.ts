@@ -41,8 +41,8 @@ export const initialMockData = {
           parentId: 1,
           directories: [],
           roadmaps: [
-            { id: 1, title: 'React 마스터하기', progress: 30 },
-            { id: 2, title: 'Next.js 완전정복', progress: 50 },
+            { id: 1, title: 'React 마스터하기', color: 'blue', icon: 'code' },
+            { id: 2, title: 'Next.js 완전정복', color: 'green', icon: 'rocket' },
           ],
         },
       ],
@@ -101,7 +101,7 @@ export const initialMockData = {
       teamId: 1,
       teamName: '개발 스터디',
     },
-  ] as (RoadmapResponse | TeamRoadmapResponse & { directoryId?: number })[],
+  ] as (RoadmapResponse | (TeamRoadmapResponse & { directoryId?: number }))[],
 
   nodes: [
     {

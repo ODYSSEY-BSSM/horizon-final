@@ -14,7 +14,8 @@ export interface DirectoryResponse {
 export interface SimpleRoadmapResponse {
   id: number;
   title: string;
-  progress: number;
+  color: string;
+  icon: string;
 }
 
 export interface DirectoryUpdateRequest {

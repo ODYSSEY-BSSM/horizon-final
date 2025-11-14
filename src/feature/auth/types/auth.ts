@@ -29,9 +29,7 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  id: number;
-  email: string;
-  username: string;
+  userInfo: UserInfo;
 }
 
 export interface PasswordChangeRequest {
@@ -44,12 +42,13 @@ export interface UpdatePasswordVerifyRequest {
   code: string;
 }
 
-export interface DeleteUserRequest {}
+export type DeleteUserRequest = Record<string, never>;
 
 export interface UserInfo {
   uuid: number;
   username: string;
   email: string;
+  role: string;
 }
 
 export interface UserInfoResponse {

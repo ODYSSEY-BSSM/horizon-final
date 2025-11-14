@@ -110,9 +110,12 @@ export const mockAuthApi = {
     mockStorage.set('users', users);
 
     return {
-      id: newUser.id,
-      email: newUser.email,
-      username: newUser.username,
+      userInfo: {
+        uuid: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+      },
     };
   },
 
@@ -169,6 +172,7 @@ export const mockAuthApi = {
         uuid: currentUser.id,
         username: currentUser.username,
         email: currentUser.email,
+        role: currentUser.role,
       },
       teams: userTeams,
       school: userSchool?.name || '',
@@ -208,6 +212,7 @@ export const mockAuthApi = {
         uuid: currentUser.id,
         username: currentUser.username,
         email: currentUser.email,
+        role: currentUser.role,
       },
       teams: userTeams,
       school: defaultSchool?.name || '',
