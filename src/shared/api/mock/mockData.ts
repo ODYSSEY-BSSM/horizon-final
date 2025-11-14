@@ -38,15 +38,12 @@ export const initialMockData = {
         {
           id: 2,
           name: '웹 개발',
-          parentId: 1,
-          directories: [],
-          roadmaps: [
-            { id: 1, title: 'React 마스터하기', color: 'blue', icon: 'code' },
-            { id: 2, title: 'Next.js 완전정복', color: 'green', icon: 'rocket' },
-          ],
         },
       ],
-      roadmaps: [],
+      roadmaps: [
+        { id: 1, title: 'React 마스터하기' },
+        { id: 2, title: 'Next.js 완전정복' },
+      ],
     },
   ] as DirectoryResponse[],
 

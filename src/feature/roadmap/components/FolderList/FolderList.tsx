@@ -37,13 +37,13 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
       const progress = roadmapCount > 0 ? Math.round((completedCount / roadmapCount) * 100) : 0;
 
       return {
-        id: folder.id,
-        name: folder.name,
+        id: folder.id ?? 0,
+        name: folder.name ?? '',
         description: '',
         progress,
         roadmapCount,
         completedCount,
-        lastRoadmap: folder.roadmaps?.[0]?.title || '',
+        lastRoadmap: folder.roadmaps?.[0]?.title ?? '',
       };
     });
   }, [rootFolder]);

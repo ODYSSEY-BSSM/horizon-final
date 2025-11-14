@@ -1,7 +1,7 @@
 import type { Color, Icon } from '@/shared/api/types';
 
 export interface CategoryRequest {
-  name: string;
+  name?: string;
 }
 
 export interface RoadmapCreateRequest {
