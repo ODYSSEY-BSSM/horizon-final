@@ -1,11 +1,13 @@
 import { apiClient } from '@/shared/api/client';
 import type {
+  DeleteUserRequest,
   LoginRequest,
   LoginResponse,
   PasswordChangeRequest,
   RegisterRequest,
   RegisterResponse,
   TokenRefreshResponse,
+  UpdatePasswordVerifyRequest,
   UserInfoResponse,
   VerificationCodeRequest,
   VerificationRequest,
@@ -44,6 +46,10 @@ export const realAuthApi = {
     return apiClient.put<void>('/users', data);
   },
 
+  deleteUser: async (_data: DeleteUserRequest): Promise<void> => {
+    return apiClient.delete<void>('/users', { headers: { 'Content-Type': 'application/json' } });
+  },
+
   getProfile: async (): Promise<UserInfoResponse> => {
     return apiClient.get<UserInfoResponse>('/users');
   },
@@ -64,7 +70,7 @@ export const realAuthApi = {
     return apiClient.patch<void>('/verification', data);
   },
 
-  verifyPasswordUpdate: async (data: VerificationRequest): Promise<void> => {
+  verifyPasswordUpdate: async (data: UpdatePasswordVerifyRequest): Promise<void> => {
     return apiClient.put<void>('/verification', data);
   },
 };

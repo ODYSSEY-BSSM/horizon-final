@@ -3,18 +3,22 @@ export interface DirectoryCreateRequest {
   parentId?: number;
 }
 
+export interface SimpleDirectoryResponse {
+  id?: number;
+  name?: string;
+}
+
 export interface DirectoryResponse {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
   parentId?: number;
-  directories: DirectoryResponse[];
-  roadmaps: SimpleRoadmapResponse[];
+  directories?: SimpleDirectoryResponse[];
+  roadmaps?: SimpleRoadmapResponse[];
 }
 
 export interface SimpleRoadmapResponse {
-  id: number;
-  title: string;
-  progress: number;
+  id?: number;
+  title?: string;
 }
 
 export interface DirectoryUpdateRequest {
@@ -27,8 +31,13 @@ export interface DirectoryContentResponse {
 }
 
 export interface TeamDirectoryCreateRequest extends DirectoryCreateRequest {}
-export interface TeamDirectoryResponse extends DirectoryResponse {
-  teamId: number;
+
+export interface TeamDirectoryResponse {
+  id?: number;
+  name?: string;
+  teamId?: number;
+  roadmaps?: SimpleRoadmapResponse[];
 }
+
 export interface TeamDirectoryUpdateRequest extends DirectoryUpdateRequest {}
 export interface TeamDirectoryContentResponse extends DirectoryContentResponse {}

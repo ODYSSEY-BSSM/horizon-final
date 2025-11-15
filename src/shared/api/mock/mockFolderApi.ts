@@ -15,8 +15,8 @@ import { MOCK_ERRORS } from './mockErrors';
 import { mockStorage } from './mockStorage';
 
 interface StoredDirectory {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
   parentId?: number;
   teamId?: number;
 }
@@ -42,8 +42,11 @@ function buildDirectoryTree(
     parentId: dir.parentId,
     directories: buildDirectoryTree(directories, roadmaps, dir.id),
     roadmaps: roadmaps
-      .filter((r) => r.directoryId === dir.id)
-      .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+      .filter((r) => (r as any).directoryId === dir.id)
+      .map((r) => ({
+        id: r.roadmapInfo.id,
+        title: r.roadmapInfo.title,
+      })),
   }));
 }
 
@@ -58,12 +61,13 @@ function buildTeamDirectoryTree(
   return children.map((dir) => ({
     id: dir.id,
     name: dir.name,
-    parentId: dir.parentId,
     teamId: dir.teamId ?? teamId,
-    directories: buildTeamDirectoryTree(directories, roadmaps, teamId, dir.id),
     roadmaps: roadmaps
-      .filter((r) => r.directoryId === dir.id)
-      .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+      .filter((r) => (r as any).directoryId === dir.id)
+      .map((r) => ({
+        id: r.roadmapInfo.id,
+        title: r.roadmapInfo.title,
+      })),
   }));
 }
 
@@ -120,8 +124,13 @@ export const mockFolderApi = {
       parentId: directory.parentId,
       directories: buildDirectoryTree(directories, roadmaps, directory.id),
       roadmaps: roadmaps
-        .filter((r) => r.directoryId === directory.id)
-        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+        .filter((r) => (r as any).directoryId === directory.id)
+        .map((r) => ({
+          id: r.roadmapInfo.id,
+          title: r.roadmapInfo.title,
+          color: r.color,
+          icon: r.icon,
+        })),
     };
   },
 
@@ -149,8 +158,13 @@ export const mockFolderApi = {
       parentId: updated.parentId,
       directories: buildDirectoryTree(directories, roadmaps, updated.id),
       roadmaps: roadmaps
-        .filter((r) => r.directoryId === updated.id)
-        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+        .filter((r) => (r as any).directoryId === updated.id)
+        .map((r) => ({
+          id: r.roadmapInfo.id,
+          title: r.roadmapInfo.title,
+          color: r.color,
+          icon: r.icon,
+        })),
     };
   },
 
@@ -186,9 +200,7 @@ export const mockTeamFolderApi = {
     return {
       id: newDirectory.id,
       name: newDirectory.name,
-      parentId: newDirectory.parentId,
       teamId,
-      directories: [],
       roadmaps: [],
     };
   },
@@ -218,12 +230,13 @@ export const mockTeamFolderApi = {
     return {
       id: directory.id,
       name: directory.name,
-      parentId: directory.parentId,
       teamId: directory.teamId ?? teamId,
-      directories: buildTeamDirectoryTree(directories, roadmaps, teamId, directory.id),
       roadmaps: roadmaps
-        .filter((r) => r.directoryId === directory.id)
-        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+        .filter((r) => (r as any).directoryId === directory.id)
+        .map((r) => ({
+          id: r.roadmapInfo.id,
+          title: r.roadmapInfo.title,
+        })),
     };
   },
 
@@ -249,12 +262,13 @@ export const mockTeamFolderApi = {
     return {
       id: updated.id,
       name: updated.name,
-      parentId: updated.parentId,
       teamId: updated.teamId ?? teamId,
-      directories: buildTeamDirectoryTree(directories, roadmaps, teamId, updated.id),
       roadmaps: roadmaps
-        .filter((r) => r.directoryId === updated.id)
-        .map((r) => ({ id: r.id, title: r.title, progress: r.progress })),
+        .filter((r) => (r as any).directoryId === updated.id)
+        .map((r) => ({
+          id: r.roadmapInfo.id,
+          title: r.roadmapInfo.title,
+        })),
     };
   },
 

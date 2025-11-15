@@ -74,7 +74,7 @@ const FolderRoadmapsContent = () => {
       {
         title: roadmapData.title,
         description: roadmapData.description || '',
-        categories: roadmapData.categories || [],
+        categories: (roadmapData.categories || []).map((name) => ({ name })),
         color: data.color.toUpperCase() as any,
         icon: data.icon.toUpperCase() as any,
         directoryId: Number(folderId),

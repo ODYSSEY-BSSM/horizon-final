@@ -16,23 +16,23 @@ export const useTeamSpaceData = () => {
     }
 
     return teamsData.map((team) => ({
-      id: team.id.toString(),
-      name: team.name,
+      id: team.id?.toString() ?? '',
+      name: team.name ?? '',
       description: '',
-      memberCount: team.members?.length || 0,
+      memberCount: team.members?.length ?? 0,
       createdAt: new Date().toISOString(),
-      inviteCode: team.inviteCode,
+      inviteCode: team.inviteCode ?? '',
     }));
   }, [teamsData]);
 
   const addTeam = (data: { name: string; description: string }): Promise<Team> => {
     return createTeamMutation.mutateAsync(data).then((teamResponse) => ({
-      id: teamResponse.id.toString(),
-      name: teamResponse.name,
+      id: teamResponse.id?.toString() ?? '',
+      name: teamResponse.name ?? '',
       description: '',
-      memberCount: teamResponse.members?.length || 1,
+      memberCount: teamResponse.members?.length ?? 1,
       createdAt: new Date().toISOString(),
-      inviteCode: teamResponse.inviteCode,
+      inviteCode: teamResponse.inviteCode ?? '',
     }));
   };
 

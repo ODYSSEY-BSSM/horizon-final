@@ -22,12 +22,18 @@ export { useSignupFlow } from './store/signupFlow';
 export { tokenStore } from './store/tokenStore';
 
 export type {
+  DeleteUserRequest,
   LoginRequest,
   LoginResponse,
+  PasswordChangeRequest,
   RegisterRequest,
   RegisterResponse,
   TokenRefreshResponse,
+  UpdatePasswordVerifyRequest,
+  UserInfo,
   UserInfoResponse,
+  VerificationCodeRequest,
+  VerificationRequest,
 } from './types/auth';
 
 export type {

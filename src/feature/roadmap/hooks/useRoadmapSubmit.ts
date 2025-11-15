@@ -28,7 +28,7 @@ export function useRoadmapSubmit() {
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
-      categories: submitData.categories,
+      categories: submitData.categories.map((name) => ({ name })),
       color: submitData.color as Color,
       icon: submitData.icon as Icon,
       directoryId,
@@ -70,7 +70,7 @@ export function useTeamRoadmapSubmit(teamId: number) {
     const roadmapData = {
       title: submitData.title,
       description: submitData.description,
-      categories: submitData.categories,
+      categories: submitData.categories.map((name) => ({ name })),
       color: submitData.color as Color,
       icon: submitData.icon as Icon,
       directoryId,

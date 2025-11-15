@@ -17,7 +17,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "bunx @biomejs/biome check --apply"
+      "bunx @biomejs/biome check --write"
     ]
   },
   "dependencies": {
@@ -29,7 +29,7 @@
     "dayjs": "1.11.19",
     "js-cookie": "^3.0.5",
     "local-ssl-proxy": "^2.0.5",
-    "next": "15.4.6",
+    "next": "15.4.7",
     "react": "^19",
     "react-dom": "^19",
     "react-hook-form": "^7.65.0",

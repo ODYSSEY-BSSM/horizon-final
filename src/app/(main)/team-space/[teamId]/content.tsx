@@ -45,8 +45,8 @@ const TeamFoldersContent = () => {
     }
 
     return teamRootFolder.directories.map((directory: DirectoryResponse) => ({
-      id: directory.id.toString(),
-      name: directory.name,
+      id: (directory.id ?? 0).toString(),
+      name: directory.name ?? '',
       teamId: teamId,
       description: '',
       color: 'blue',

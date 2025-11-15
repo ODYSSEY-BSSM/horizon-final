@@ -5,24 +5,17 @@ export interface FolderCreateRequest {
 }
 
 export interface SimpleRoadmapResponse {
-  id: number;
-  title: string;
-  color: string;
-  icon: string;
-  progress: number;
+  id?: number;
+  title?: string;
 }
 
 export interface SimpleDirectoryResponse {
-  id: number;
-  name: string;
-  description: string;
-  progress: number;
-  directories?: SimpleDirectoryResponse[];
-  roadmaps?: SimpleRoadmapResponse[];
+  id?: number;
+  name?: string;
 }
 
 export interface RootContentResponse {
-  directories: SimpleDirectoryResponse[];
+  directories?: SimpleDirectoryResponse[];
 }
 
 export interface Folder {

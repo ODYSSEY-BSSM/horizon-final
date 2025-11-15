@@ -31,20 +31,19 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
     return rootFolder.directories.map((folder) => {
       const roadmapCount = folder.roadmaps?.length || 0;
-      // 완료된 로드맵 = progress가 100인 로드맵
-      const completedCount =
-        folder.roadmaps?.filter((roadmap) => roadmap.progress >= 100).length || 0;
+      // SimpleRoadmapResponse에 progress 정보가 없으므로 완료된 로드맵을 계산할 수 없음
+      const completedCount = 0;
       // 진행률 = (완료된 로드맵 수 / 전체 로드맵 수) * 100
       const progress = roadmapCount > 0 ? Math.round((completedCount / roadmapCount) * 100) : 0;
 
       return {
-        id: folder.id,
-        name: folder.name,
+        id: folder.id ?? 0,
+        name: folder.name ?? '',
         description: '',
         progress,
         roadmapCount,
         completedCount,
-        lastRoadmap: folder.roadmaps?.[0]?.title || '',
+        lastRoadmap: folder.roadmaps?.[0]?.title ?? '',
       };
     });
   }, [rootFolder]);

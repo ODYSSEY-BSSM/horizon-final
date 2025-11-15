@@ -52,21 +52,25 @@ export const mockRoadmapApi = {
     await delay(MOCK_DELAYS.NORMAL);
 
     const roadmaps = getRoadmaps();
-    const newRoadmap: RoadmapResponse = {
-      id: mockStorage.getNextId(),
-      title: data.title,
-      description: data.description,
-      categories: data.categories,
-      lastModifiedAt: new Date().toISOString().split('T')[0],
-      lastAccessedAt: new Date().toISOString(),
-      isFavorite: false,
+    const newId = mockStorage.getNextId();
+    const newRoadmap: RoadmapResponse & { directoryId?: number } = {
+      roadmapInfo: {
+        id: newId,
+        title: data.title,
+        description: data.description,
+        categories: data.categories.map((c) => c.name ?? ''),
+        lastModifiedAt: new Date().toISOString().split('T')[0],
+        lastAccessedAt: new Date().toISOString(),
+        isFavorite: false,
+      },
+      uuid: newId,
       color: data.color,
       icon: data.icon,
       progress: 0,
       directoryId: data.directoryId,
     };
 
-    roadmaps.push(newRoadmap);
+    roadmaps.push(newRoadmap as any);
     mockStorage.set('roadmaps', roadmaps);
     return newRoadmap;
   },
@@ -79,7 +83,7 @@ export const mockRoadmapApi = {
   getRoadmap: async (roadmapId: number): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getPersonalRoadmaps();
-    const roadmap = roadmaps.find((r) => r.id === roadmapId);
+    const roadmap = roadmaps.find((r) => r.roadmapInfo.id === roadmapId);
     if (!roadmap) {
       throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
@@ -92,13 +96,24 @@ export const mockRoadmapApi = {
   ): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const index = roadmaps.findIndex((r) => r.id === roadmapId && !isTeamRoadmap(r));
+    const index = roadmaps.findIndex((r) => r.roadmapInfo.id === roadmapId && !isTeamRoadmap(r));
 
     if (index === -1) {
       throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
 
-    const updatedRoadmap = { ...(roadmaps[index] as RoadmapResponse), ...data };
+    const currentRoadmap = roadmaps[index] as RoadmapResponse;
+    const updatedRoadmap: RoadmapResponse = {
+      ...currentRoadmap,
+      roadmapInfo: {
+        ...currentRoadmap.roadmapInfo,
+        ...(data.title && { title: data.title }),
+        ...(data.description && { description: data.description }),
+        ...(data.categories && { categories: data.categories.map((c) => c.name ?? '') }),
+      },
+      ...(data.color && { color: data.color }),
+      ...(data.icon && { icon: data.icon }),
+    };
     roadmaps[index] = updatedRoadmap;
 
     mockStorage.set('roadmaps', roadmaps);
@@ -108,27 +123,30 @@ export const mockRoadmapApi = {
   deleteRoadmap: async (roadmapId: number): Promise<void> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const filtered = roadmaps.filter((r) => isTeamRoadmap(r) || r.id !== roadmapId);
+    const filtered = roadmaps.filter((r) => isTeamRoadmap(r) || r.roadmapInfo.id !== roadmapId);
     mockStorage.set('roadmaps', filtered);
   },
 
   toggleFavorite: async (roadmapId: number): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getRoadmaps();
-    const roadmap = roadmaps.find((r) => r.id === roadmapId);
+    const roadmap = roadmaps.find((r) => r.roadmapInfo.id === roadmapId);
     if (!roadmap || isTeamRoadmap(roadmap)) {
       throw new Error(MOCK_ERRORS.ROADMAP_NOT_FOUND);
     }
-    roadmap.isFavorite = !roadmap.isFavorite;
+    const personalRoadmap = roadmap as RoadmapResponse;
+    personalRoadmap.roadmapInfo.isFavorite = !personalRoadmap.roadmapInfo.isFavorite;
     mockStorage.set('roadmaps', roadmaps);
-    return roadmap as RoadmapResponse;
+    return personalRoadmap;
   },
 
   getLastAccessed: async (): Promise<RoadmapResponse> => {
     await delay(MOCK_DELAYS.FAST);
     const roadmaps = getPersonalRoadmaps();
     const sorted = [...roadmaps].sort(
-      (a, b) => new Date(b.lastAccessedAt).getTime() - new Date(a.lastAccessedAt).getTime(),
+      (a, b) =>
+        new Date(b.roadmapInfo.lastAccessedAt).getTime() -
+        new Date(a.roadmapInfo.lastAccessedAt).getTime(),
     );
     if (sorted.length === 0) {
       throw new Error(MOCK_ERRORS.NO_ROADMAPS);
@@ -147,21 +165,26 @@ export const mockRoadmapApi = {
   ): Promise<TeamRoadmapResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
     const roadmaps = getRoadmaps();
-    const newRoadmap: TeamRoadmapResponse = {
-      id: mockStorage.getNextId(),
-      title: data.title,
-      description: data.description,
-      categories: data.categories,
-      lastModifiedAt: new Date().toISOString().split('T')[0],
-      lastAccessedAt: new Date().toISOString(),
+    const newId = mockStorage.getNextId();
+    const newRoadmap: TeamRoadmapResponse & { directoryId?: number } = {
+      roadmapInfo: {
+        id: newId,
+        title: data.title,
+        description: data.description,
+        categories: data.categories.map((c) => c.name ?? ''),
+        lastModifiedAt: new Date().toISOString().split('T')[0],
+        lastAccessedAt: new Date().toISOString(),
+        isFavorite: false,
+      },
+      uuid: newId,
       color: data.color,
       icon: data.icon,
       progress: 0,
-      directoryId: data.directoryId,
       teamId,
       teamName: '팀',
+      directoryId: data.directoryId,
     };
-    roadmaps.push(newRoadmap);
+    roadmaps.push(newRoadmap as any);
     mockStorage.set('roadmaps', roadmaps);
     return newRoadmap;
   },
