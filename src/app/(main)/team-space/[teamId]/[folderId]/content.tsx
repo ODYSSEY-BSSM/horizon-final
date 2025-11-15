@@ -6,6 +6,7 @@ import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapStyleModal } from '@/feature/roadmap';
 import { useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { toRoadmapColor, toRoadmapIcon } from '@/feature/roadmap/utils/typeConverters';
 import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
@@ -75,8 +76,8 @@ const FolderRoadmapsContent = () => {
         title: roadmapData.title,
         description: roadmapData.description || '',
         categories: (roadmapData.categories || []).map((name) => ({ name })),
-        color: data.color.toUpperCase() as any,
-        icon: data.icon.toUpperCase() as any,
+        color: toRoadmapColor(data.color),
+        icon: toRoadmapIcon(data.icon),
         directoryId: Number(folderId),
       },
       {

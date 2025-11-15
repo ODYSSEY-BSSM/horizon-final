@@ -44,13 +44,11 @@ const DashboardContent = () => {
   }
 
   if (error || !userData) {
-    // biome-ignore lint: reason
-    console.error('[Dashboard] Error or no user data:', { error, userData });
     return (
       <StyledPageContainer>
         <StyledLoadingContainer>
           <StyledErrorText>대시보드를 불러오는데 실패했습니다.</StyledErrorText>
-          <StyledErrorHint>로그인이 필요합니다. (test@example.com / password123)</StyledErrorHint>
+          <StyledErrorHint>로그인 후 다시 시도해주세요.</StyledErrorHint>
         </StyledLoadingContainer>
       </StyledPageContainer>
     );

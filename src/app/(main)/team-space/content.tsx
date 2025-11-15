@@ -5,15 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/team';
 import type { Team } from '@/feature/team/types/team';
+import { useToast } from '@/shared/hooks/useToast';
 import { FormModal } from '@/shared/ui';
 
 const TeamSpaceContent = () => {
   const { teams, addTeam, joinTeam } = useTeamSpaceData();
+  const { toast } = useToast();
   const [modals, setModals] = useState({
     teamCreate: false,
     teamJoin: false,
   });
-  const [inviteCode, setInviteCode] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -43,30 +44,32 @@ const TeamSpaceContent = () => {
     router.push(`/team-space/${team.id}`);
   };
 
-  const _handleInviteCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInviteCode(e.target.value);
+  const handleOpenJoinModal = () => {
+    openModal('teamJoin');
   };
 
-  const handleJoinTeam = async () => {
-    if (!inviteCode) {
-      alert('초대 코드를 입력해주세요.');
+  const handleJoinTeam = async (data: { inviteCode: string }) => {
+    if (!data.inviteCode) {
+      toast({ description: '초대 코드를 입력해주세요.' });
       return;
     }
 
-    const result = await joinTeam(inviteCode, {
+    const result = await joinTeam(data.inviteCode, {
       onError: (message) => {
-        alert(message);
+        toast({ description: message });
       },
     });
 
     if (!result.success) {
-      alert('유효하지 않은 초대 코드입니다.');
+      toast({ description: '유효하지 않은 초대 코드입니다.' });
+    } else {
+      closeModal('teamJoin');
     }
   };
 
   return (
     <StyledPageContainer>
-      <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleJoinTeam} />
+      <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleOpenJoinModal} />
 
       <CreateTeamModal
         isOpen={modals.teamCreate}
