@@ -1,1 +1,1 @@
-export { default as SchoolCard } from './SchoolCard';
+export { SchoolCard } from './SchoolCard';

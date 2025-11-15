@@ -1,1 +1,1 @@
-export { default as SchoolInfoSection } from './SchoolInfoSection';
+export { SchoolInfoSection } from './SchoolInfoSection';

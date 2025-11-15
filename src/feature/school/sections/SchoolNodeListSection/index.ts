@@ -1,1 +1,1 @@
-export { default as SchoolNodeListSection } from './SchoolNodeListSection';
+export { SchoolNodeListSection } from './SchoolNodeListSection';
