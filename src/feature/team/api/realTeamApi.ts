@@ -7,9 +7,17 @@ import type {
 } from '../types/teamApi';
 
 export const realTeamApi = {
-  getTeams: async (): Promise<string[]> => {
+  getTeams: async (): Promise<TeamResponse[]> => {
     const response = await apiClient.get<{ teams: string[] }>('/teams');
-    return response.teams;
+
+    // API는 teams: string[] (팀 ID 배열)을 반환하므로, 각 팀의 상세 정보를 조회
+    const teamIds = response.teams.map((teamId) => parseInt(teamId, 10));
+    const teamDetailsPromises = teamIds.map((id) =>
+      apiClient.get<TeamResponse>(`/teams/${id}`).catch(() => null),
+    );
+
+    const teamDetails = await Promise.all(teamDetailsPromises);
+    return teamDetails.filter((team): team is TeamResponse => team !== null);
   },
 
   createTeam: async (data: TeamCreateRequest): Promise<TeamResponse> => {
