@@ -11,7 +11,7 @@ export interface TeamResponse {
 }
 
 export interface TeamListResponse {
-  teams: TeamResponse[];
+  teams: string[];
 }
 
 export interface TeamInviteRequest {

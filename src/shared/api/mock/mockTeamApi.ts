@@ -79,11 +79,10 @@ export const mockTeamApi = {
     return toTeamResponse(newTeam, users);
   },
 
-  getTeams: async (): Promise<TeamResponse[]> => {
+  getTeams: async (): Promise<string[]> => {
     await delay(MOCK_DELAYS.FAST);
 
     const teams = getTeams();
-    const users = getUsers();
     const currentUser = mockStorage.get<MockUser>('currentUser');
 
     if (!currentUser) {
@@ -92,7 +91,7 @@ export const mockTeamApi = {
 
     const userTeams = teams.filter((t) => t.memberIds.includes(currentUser.id));
 
-    return userTeams.map((t) => toTeamResponse(t, users));
+    return userTeams.map((t) => t.name);
   },
 
   getTeam: async (teamId: number): Promise<TeamResponse> => {
@@ -187,74 +186,5 @@ export const mockTeamApi = {
     }
 
     return toTeamResponse(team, users);
-  },
-
-  leaveTeam: async (teamId: number): Promise<void> => {
-    await delay(MOCK_DELAYS.NORMAL);
-
-    const teams = getTeams();
-    const _users = getUsers();
-    const currentUser = mockStorage.get<MockUser>('currentUser');
-
-    if (!currentUser) {
-      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    }
-
-    const team = teams.find((t) => t.id === teamId);
-    if (!team) {
-      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
-    }
-
-    if (team.leaderId === currentUser.id) {
-      throw new Error(MOCK_ERRORS.LEADER_CANNOT_LEAVE);
-    }
-
-    team.memberIds = team.memberIds.filter((id) => id !== currentUser.id);
-    mockStorage.set('teams', teams);
-
-    currentUser.teamIds = currentUser.teamIds.filter((id) => id !== teamId);
-    mockStorage.set('currentUser', currentUser);
-
-    const allUsers = getUsers();
-    const userIndex = allUsers.findIndex((u) => u.id === currentUser.id);
-    if (userIndex !== -1) {
-      allUsers[userIndex] = currentUser;
-      mockStorage.set('users', allUsers);
-    }
-  },
-
-  removeMember: async (teamId: number, memberId: number): Promise<void> => {
-    await delay(MOCK_DELAYS.NORMAL);
-
-    const teams = getTeams();
-    const _users = getUsers();
-    const currentUser = mockStorage.get<MockUser>('currentUser');
-
-    if (!currentUser) {
-      throw new Error(MOCK_ERRORS.AUTH_REQUIRED);
-    }
-
-    const team = teams.find((t) => t.id === teamId);
-    if (!team) {
-      throw new Error(MOCK_ERRORS.TEAM_NOT_FOUND);
-    }
-
-    if (team.leaderId !== currentUser.id) {
-      throw new Error(MOCK_ERRORS.ONLY_LEADER_CAN_REMOVE);
-    }
-
-    if (memberId === currentUser.id) {
-      throw new Error(MOCK_ERRORS.LEADER_CANNOT_REMOVE_SELF);
-    }
-
-    team.memberIds = team.memberIds.filter((id) => id !== memberId);
-    mockStorage.set('teams', teams);
-
-    const allUsers = getUsers();
-    const userIndex = allUsers.findIndex((u) => u.id === memberId);
-    if (userIndex !== -1) {
-      allUsers[userIndex].teamIds = allUsers[userIndex].teamIds.filter((id) => id !== teamId);
-      mockStorage.set('users', allUsers);
-    }
   },
 };

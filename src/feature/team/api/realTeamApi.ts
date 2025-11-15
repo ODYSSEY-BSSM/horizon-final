@@ -7,8 +7,8 @@ import type {
 } from '../types/teamApi';
 
 export const realTeamApi = {
-  getTeams: async (): Promise<TeamResponse[]> => {
-    const response = await apiClient.get<{ teams: TeamResponse[] }>('/teams');
+  getTeams: async (): Promise<string[]> => {
+    const response = await apiClient.get<{ teams: string[] }>('/teams');
     return response.teams;
   },
 
@@ -30,13 +30,5 @@ export const realTeamApi = {
 
   joinTeam: async (data: TeamInviteRequest): Promise<TeamResponse> => {
     return apiClient.patch<TeamResponse>('/teams', data);
-  },
-
-  leaveTeam: async (teamId: number): Promise<void> => {
-    return apiClient.delete<void>(`/teams/${teamId}/leave`);
-  },
-
-  removeMember: async (teamId: number, memberId: number): Promise<void> => {
-    return apiClient.delete<void>(`/teams/${teamId}/members/${memberId}`);
   },
 };

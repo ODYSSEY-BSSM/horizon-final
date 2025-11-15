@@ -85,18 +85,6 @@ export function useDeleteTeam() {
   });
 }
 
-export function useRemoveTeamMember(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (memberUuid: number) => teamApi.removeMember(teamId, memberUuid),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.members(teamId) });
-      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });
-    },
-  });
-}
-
 export function useApplyToTeam() {
   const queryClient = useQueryClient();
 
