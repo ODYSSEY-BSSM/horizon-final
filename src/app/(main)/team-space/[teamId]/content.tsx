@@ -1,12 +1,12 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import type { DirectoryResponse } from '@/feature/folder/types';
-import { FolderGrid, InviteTeamModal } from '@/feature/team';
-import { useTeam } from '@/feature/team/hooks/useTeamQueries';
+import { FolderGrid, InviteTeamModal, TeamDropdown } from '@/feature/team';
+import { useTeam, useTeams } from '@/feature/team/hooks/useTeamQueries';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
@@ -14,6 +14,7 @@ import { Button, FormModal } from '@/shared/ui';
 
 const TeamFoldersContent = () => {
   const params = useParams();
+  const router = useRouter();
 
   if (!params?.teamId || Array.isArray(params.teamId)) {
     notFound();
@@ -23,6 +24,7 @@ const TeamFoldersContent = () => {
 
   // GET /teams/{id} - 현재 팀 정보만 조회
   const { data: teamData, isLoading, isError } = useTeam(Number(teamId));
+  const { data: teams } = useTeams();
 
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -39,6 +41,18 @@ const TeamFoldersContent = () => {
 
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
   const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
+
+  const teamsList = useMemo(
+    () =>
+      (teams || []).map((team) => ({
+        id: team.id.toString(),
+        name: team.name,
+        description: '',
+        memberCount: 0,
+        createdAt: '',
+      })),
+    [teams],
+  );
 
   const folders: TeamFolder[] = useMemo(() => {
     if (!teamRootFolder?.directories) {
@@ -92,27 +106,32 @@ const TeamFoldersContent = () => {
 
   if (isLoading) {
     return (
-      <StyledContainer>
+      <StyledPageContainer>
         <StyledLoadingMessage>팀 정보를 불러오는 중...</StyledLoadingMessage>
-      </StyledContainer>
+      </StyledPageContainer>
     );
   }
 
   if (isError || !currentTeam) {
     return (
-      <StyledContainer>
+      <StyledPageContainer>
         <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
-      </StyledContainer>
+      </StyledPageContainer>
     );
   }
 
+  const handleTeamChange = (newTeamId: string) => {
+    router.push(`/team-space/${newTeamId}`);
+  };
+
   return (
-    <StyledContainer>
+    <StyledPageContainer>
       <StyledHeader>
-        <StyledTeamInfo>
-          <StyledTeamName>{currentTeam.name}</StyledTeamName>
-          <StyledMemberCount>{currentTeam.memberCount}명</StyledMemberCount>
-        </StyledTeamInfo>
+        <TeamDropdown
+          teams={teamsList}
+          selectedTeamId={currentTeam.id}
+          onChange={handleTeamChange}
+        />
         <StyledButtonGroup>
           <Button
             variant="contained"
@@ -163,13 +182,13 @@ const TeamFoldersContent = () => {
         inviteCode={inviteCode}
         onComplete={handleInviteComplete}
       />
-    </StyledContainer>
+    </StyledPageContainer>
   );
 };
 
 export default TeamFoldersContent;
 
-const StyledContainer = styled.div`
+const StyledPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -188,28 +207,6 @@ const StyledButtonGroup = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
-`;
-
-const StyledTeamInfo = styled.div`
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-`;
-
-const StyledTeamName = styled.h1`
-  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[24]};
-  font-weight: ${tokens.typos.fontWeight.extrabold};
-  line-height: ${tokens.typos.lineHeight[34]};
-  color: ${tokens.colors.black};
-  margin: 0;
-`;
-
-const StyledMemberCount = styled.span`
-  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[16]};
-  font-weight: ${tokens.typos.fontWeight.medium};
-  color: ${tokens.colors.neutral[600]};
 `;
 
 const StyledLoadingMessage = styled.div`

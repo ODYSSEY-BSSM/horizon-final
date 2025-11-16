@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { tokens } from '@/shared/tokens';
-import { Button, Icon, Text } from '@/shared/ui';
+import { Icon, Text, UnderlineButton } from '@/shared/ui';
 
 export interface Folder {
   id: number;
@@ -17,17 +17,28 @@ export interface Folder {
 
 interface FolderCardProps {
   folder: Folder;
+  /**
+   * Optional custom base path for navigation
+   * Defaults to '/my-roadmaps' for personal folders
+   * Use '/team-space/{teamId}' for team folders
+   */
+  basePath?: string;
 }
 
-const FolderCard = ({ folder }: FolderCardProps) => {
+const FolderCard = ({ folder, basePath = '/my-roadmaps' }: FolderCardProps) => {
   const router = useRouter();
 
-  const handleContinueClick = () => {
-    router.push(`/my-roadmaps/${folder.id}`);
+  const handleCardClick = () => {
+    router.push(`${basePath}/${folder.id}`);
+  };
+
+  const handleContinueClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`${basePath}/${folder.id}`);
   };
 
   return (
-    <StyledFolderItem>
+    <StyledFolderItem onClick={handleCardClick}>
       <StyledFolderHeader>
         <StyledFolderIcon>
           <Icon name="folder" variant="SM" color={tokens.colors.neutral[800]} filled decorative />
@@ -80,12 +91,10 @@ const FolderCard = ({ folder }: FolderCardProps) => {
               마지막 로드맵:{' '}
             </Text>
             <StyledRoadmapName as="span" variant="B2" color={tokens.colors.neutral[800]}>
-              {folder.lastRoadmap}
+              {folder.lastRoadmap || '-'}
             </StyledRoadmapName>
           </StyledLastRoadmapInfo>
-          <StyledContinueLink variant="outlined" size="medium" onClick={handleContinueClick}>
-            계속하기
-          </StyledContinueLink>
+          <UnderlineButton onClick={handleContinueClick}>계속하기</UnderlineButton>
         </StyledLastRoadmap>
       </StyledDetailsContainer>
     </StyledFolderItem>
@@ -104,6 +113,13 @@ const StyledFolderItem = styled.div`
   gap: ${tokens.spacing.medium};
   width: 336px;
   box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: ${tokens.colors.primary[300]};
+    box-shadow: 0 2px 8px rgba(74, 129, 240, 0.1);
+  }
 `;
 
 const StyledFolderHeader = styled.div`
@@ -190,22 +206,4 @@ const StyledRoadmapName = styled(Text)`
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 144px;
-`;
-
-const StyledContinueLink = styled(Button)`
-  cursor: pointer;
-  flex-shrink: 0;
-  padding: 0;
-  border: none;
-  outline: none;
-
-  &:hover {
-    background-color: transparent;
-    color: ${tokens.colors.primary[500]};
-  }
-
-  &:active {
-    background-color: transparent;
-    color: ${tokens.colors.primary[500]};
-  }
 `;

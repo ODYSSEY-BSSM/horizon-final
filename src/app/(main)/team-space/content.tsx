@@ -2,26 +2,20 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { CreateTeamModal, EmptyTeamState } from '@/feature/team';
+import { useEffect, useState } from 'react';
+import { CreateTeamModal, EmptyTeamState, useTeams } from '@/feature/team';
 import { useApplyToTeam, useCreateTeam } from '@/feature/team/hooks/useTeamQueries';
 import { decodeInviteCode } from '@/feature/team/utils/inviteCode';
 import { useToast } from '@/shared/hooks/useToast';
+import { tokens } from '@/shared/tokens';
 import { FormModal } from '@/shared/ui';
 
 const TeamSpaceContent = () => {
+  const { data: teams, isLoading, isError } = useTeams();
   const createTeamMutation = useCreateTeam();
   const applyToTeamMutation = useApplyToTeam();
   const { toast } = useToast();
   const router = useRouter();
-  const hasAlerted = useRef(false);
-
-  useEffect(() => {
-    if (!hasAlerted.current) {
-      alert('현재 백엔드가 미완성입니다.');
-      hasAlerted.current = true;
-    }
-  }, []);
 
   const [modals, setModals] = useState({
     teamCreate: false,
@@ -52,6 +46,16 @@ const TeamSpaceContent = () => {
     openModal('teamJoin');
   };
 
+  const hasTeams = teams && teams.length > 0;
+  const firstTeamId = teams?.[0]?.id;
+
+  // 팀이 있으면 첫 번째 팀으로 자동 리다이렉트
+  useEffect(() => {
+    if (firstTeamId) {
+      router.push(`/team-space/${firstTeamId}`);
+    }
+  }, [firstTeamId, router]);
+
   const handleJoinTeam = async (data: { inviteCode: string }) => {
     if (!data.inviteCode) {
       toast({ description: '초대 코드를 입력해주세요.' });
@@ -78,6 +82,27 @@ const TeamSpaceContent = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <StyledPageContainer>
+        <StyledLoadingMessage>팀 목록을 불러오는 중...</StyledLoadingMessage>
+      </StyledPageContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <StyledPageContainer>
+        <StyledErrorMessage>팀 목록을 불러오는데 실패했습니다.</StyledErrorMessage>
+      </StyledPageContainer>
+    );
+  }
+
+  // 팀이 있을 때는 리다이렉트 중이므로 아무것도 렌더링하지 않음
+  if (hasTeams) {
+    return null;
+  }
+
   return (
     <StyledPageContainer>
       <EmptyTeamState onCreateTeam={handleCreateTeam} onJoinTeam={handleOpenJoinModal} />
@@ -91,8 +116,8 @@ const TeamSpaceContent = () => {
         isOpen={modals.teamJoin}
         onClose={() => closeModal('teamJoin')}
         onSubmit={handleJoinTeam}
-        title="팀 참여하기"
-        description="초대코드를 입력하여 팀에 참여하세요."
+        title="팀 참가"
+        description="참가할 팀 초대코드를 입력해 주세요."
         fields={[
           {
             name: 'inviteCode',
@@ -101,7 +126,7 @@ const TeamSpaceContent = () => {
             required: true,
           },
         ]}
-        submitText="참여하기"
+        submitText="참가"
       />
     </StyledPageContainer>
   );
@@ -115,6 +140,22 @@ const StyledPageContainer = styled.div`
   gap: 40px;
   padding: 16px 60px 80px;
   box-sizing: border-box;
-  position: relative;
-  min-height: calc(100vh - 84px);
+`;
+
+const StyledLoadingMessage = styled.div`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[18]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  color: ${tokens.colors.neutral[600]};
+  text-align: center;
+  padding: 40px;
+`;
+
+const StyledErrorMessage = styled.div`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[18]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  color: ${tokens.colors.error[200]};
+  text-align: center;
+  padding: 40px;
 `;

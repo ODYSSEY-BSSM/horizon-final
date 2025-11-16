@@ -1,5 +1,10 @@
 // ===== Swagger 정의된 타입 =====
 
+export interface TeamInfo {
+  id: number;
+  name: string;
+}
+
 export interface TeamCreateRequest {
   name?: string;
 }
@@ -13,7 +18,7 @@ export interface TeamResponse {
 }
 
 export interface TeamListResponse {
-  teams: string[];
+  teams: TeamInfo[];
 }
 
 export interface TeamInviteRequest {

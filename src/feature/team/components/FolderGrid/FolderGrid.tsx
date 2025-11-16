@@ -1,10 +1,12 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { useMemo } from 'react';
 import { AddFolderCard } from '@/feature/folder';
-import { FilterTabs } from '@/feature/roadmap';
-import { FOLDER_FILTER_TABS, FolderListItem } from '@/feature/team';
+import { FilterTabs, FolderCard } from '@/feature/roadmap';
+import { FOLDER_FILTER_TABS } from '@/feature/team';
 import type { TeamFolder } from '@/feature/team/types/team';
+import { mapTeamFolderToFolder } from '@/feature/team/utils/folderMapper';
 import { tokens } from '@/shared/tokens';
 
 interface FolderGridProps {
@@ -22,51 +24,54 @@ export default function FolderGrid({
   onTabClick,
   onAddFolder,
 }: FolderGridProps) {
+  // 팀 폴더를 일반 폴더 형식으로 변환
+  const mappedFolders = useMemo(() => folders.map(mapTeamFolderToFolder), [folders]);
+
+  // 팀 폴더 네비게이션을 위한 base path
+  const basePath = `/team-space/${teamId}`;
+
   return (
     <StyledContainer>
       <FilterTabs tabs={FOLDER_FILTER_TABS} activeTab={activeTab} onTabClick={onTabClick} />
-      <StyledContent>
-        <StyledGrid>
-          {folders.map((folder) => (
-            <FolderListItem key={folder.id} folder={folder} teamId={teamId} />
-          ))}
-          <AddFolderCard onClick={onAddFolder} />
-        </StyledGrid>
-      </StyledContent>
+      <StyledMainContent>
+        <StyledContent>
+          <StyledGrid>
+            {mappedFolders.map((folder) => (
+              <FolderCard key={folder.id} folder={folder} basePath={basePath} />
+            ))}
+            <AddFolderCard onClick={onAddFolder} />
+          </StyledGrid>
+        </StyledContent>
+      </StyledMainContent>
     </StyledContainer>
   );
 }
 
 const StyledContainer = styled.div`
+  width: 100%;
+  border: 1px solid ${tokens.colors.neutral[200]};
+  border-radius: ${tokens.radius.large};
+  background-color: ${tokens.colors.white};
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: 12px;
-  padding: 12px 24px 24px;
+  overflow: hidden;
 `;
 
-const StyledContent = styled.div`
+const StyledMainContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  align-items: center;
+  gap: ${tokens.spacing.large};
   min-height: 524px;
 `;
 
+const StyledContent = styled.div`
+  padding: ${tokens.spacing.large};
+`;
+
 const StyledGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${tokens.spacing.medium};
   width: 100%;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  max-width: 1032px;
 `;
