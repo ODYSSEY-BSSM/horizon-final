@@ -7,28 +7,28 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isLoggedIn = !!(accessToken && refreshToken);
-
   const isAuthPage = pathname.startsWith('/signin') || pathname.startsWith('/signup');
 
+  // 로그인 안 됨: (auth) 페이지만 접근 가능
+  if (!isLoggedIn) {
+    // /signin, /signup만 허용
+    if (isAuthPage) {
+      return NextResponse.next();
+    }
+    // 나머지는 모두 /signin으로 리다이렉트
+    return NextResponse.redirect(new URL('/signin', request.url));
+  }
+
+  // 로그인 됨: (auth) 페이지 접근 시 대시보드로
   if (isLoggedIn) {
     if (isAuthPage) {
       const url = new URL('/dashboard', request.url);
       url.searchParams.set('message', 'alreadyLoggedIn');
       return NextResponse.redirect(url);
     }
+    // 루트 경로도 대시보드로
     if (pathname === '/') {
       return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-    return NextResponse.next();
-  }
-
-  if (!isLoggedIn) {
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/signin', request.url));
-    }
-
-    if (!isAuthPage) {
-      return NextResponse.redirect(new URL('/signin', request.url));
     }
     return NextResponse.next();
   }
@@ -37,12 +37,14 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * 페이지 라우트만 매칭 (정적 파일 제외)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/',
+    '/signin',
+    '/signup',
+    '/dashboard',
+    '/my-roadmaps/:path*',
+    '/school-connect',
+    '/team-space',
   ],
 };

@@ -14,6 +14,18 @@ const nextConfig: NextConfig = {
   compiler: {
     emotion: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
   async headers() {
     return [
       {
@@ -23,11 +35,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
+              "img-src 'self' data: http: https:",
               "font-src 'self' data:",
-              `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'} ${process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080'}`,
+              `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'} ${process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080'} https://vercel.live wss://ws-us3.pusher.com`,
             ].join('; '),
           },
           {

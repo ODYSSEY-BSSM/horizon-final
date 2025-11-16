@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { create } from 'zustand';
 
 export interface Toast {
@@ -32,9 +33,12 @@ export const useToastStore = create<ToastStore>((set) => ({
 export const useToast = () => {
   const { addToast } = useToastStore();
 
-  const toast = (options: Omit<Toast, 'id'>) => {
-    addToast(options);
-  };
+  const toast = useCallback(
+    (options: Omit<Toast, 'id'>) => {
+      addToast(options);
+    },
+    [addToast],
+  );
 
   return { toast };
 };

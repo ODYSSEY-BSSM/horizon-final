@@ -17,9 +17,9 @@ import { tokens } from '@/shared/tokens';
 const DashboardContent = () => {
   const { userData, roadmapsData, isLoading, error } = useDashboardData();
   const { openModal } = useRoadmapFormStore();
-  const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   useEffect(() => {
     const message = searchParams.get('message');
@@ -27,7 +27,7 @@ const DashboardContent = () => {
       toast({ description: '이미 로그인되어 있습니다.' });
       router.replace('/dashboard', { scroll: false });
     }
-  }, [searchParams, router, toast]);
+  }, [searchParams, toast, router]);
 
   const handleAddRoadmap = () => {
     openModal();
