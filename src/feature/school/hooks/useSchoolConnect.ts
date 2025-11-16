@@ -134,10 +134,15 @@ export const useSchoolConnect = () => {
 
   const handleDisconnect = async () => {
     // 연동 해제 기능은 Swagger에 없으므로 클라이언트 상태만 변경
-    queryClient.setQueryData(['user', 'profile'], (old: any) => ({
-      ...old,
-      isConnectedSchool: false,
-    }));
+    queryClient.setQueryData(['user', 'profile'], (old: any) =>
+      old
+        ? {
+            ...old,
+            isConnectedSchool: false,
+            school: null,
+          }
+        : old,
+    );
     setModals((prev) => ({ ...prev, disconnectConfirm: false }));
   };
 

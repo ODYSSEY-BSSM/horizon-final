@@ -41,16 +41,11 @@ const TeamSpaceContent = () => {
   };
 
   const handleTeamCreate = async ({ name }: { name: string }) => {
-    try {
-      const team = await createTeamMutation.mutateAsync({ name });
-      closeModal('teamCreate');
-      // 팀 생성 즉시 해당 팀 페이지로 이동
-      router.push(`/team-space/${team.id}`);
-      return team;
-    } catch (_error) {
-      toast({ description: '팀 생성에 실패했습니다.' });
-      throw _error;
-    }
+    const team = await createTeamMutation.mutateAsync({ name });
+    closeModal('teamCreate');
+    // 팀 생성 즉시 해당 팀 페이지로 이동
+    router.push(`/team-space/${team.id}`);
+    return team;
   };
 
   const handleOpenJoinModal = () => {

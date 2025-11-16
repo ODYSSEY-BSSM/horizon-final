@@ -22,7 +22,7 @@ const TeamFoldersContent = () => {
   const teamId = params.teamId;
 
   // GET /teams/{id} - 현재 팀 정보만 조회
-  const { data: teamData } = useTeam(Number(teamId));
+  const { data: teamData, isLoading, isError } = useTeam(Number(teamId));
 
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -32,9 +32,7 @@ const TeamFoldersContent = () => {
     ? {
         id: teamData.id?.toString() ?? '',
         name: teamData.name ?? '',
-        description: '',
         memberCount: teamData.members?.length ?? 0,
-        createdAt: new Date().toISOString(),
         inviteCode: teamData.inviteCode ?? '',
       }
     : null;
@@ -92,7 +90,15 @@ const TeamFoldersContent = () => {
     setShowInviteModal(false);
   };
 
-  if (!currentTeam) {
+  if (isLoading) {
+    return (
+      <StyledContainer>
+        <StyledLoadingMessage>팀 정보를 불러오는 중...</StyledLoadingMessage>
+      </StyledContainer>
+    );
+  }
+
+  if (isError || !currentTeam) {
     return (
       <StyledContainer>
         <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
@@ -204,6 +210,15 @@ const StyledMemberCount = styled.span`
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.medium};
   color: ${tokens.colors.neutral[600]};
+`;
+
+const StyledLoadingMessage = styled.div`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[18]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  color: ${tokens.colors.neutral[600]};
+  text-align: center;
+  padding: 40px;
 `;
 
 const StyledErrorMessage = styled.div`

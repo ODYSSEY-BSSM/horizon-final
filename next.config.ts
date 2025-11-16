@@ -1,5 +1,15 @@
 import type { NextConfig } from 'next';
 
+// 프로덕션 환경에서는 환경 변수가 필수
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    throw new Error('프로덕션 환경에서 NEXT_PUBLIC_API_BASE_URL은 필수입니다.');
+  }
+  if (!process.env.NEXT_PUBLIC_WS_BASE_URL) {
+    throw new Error('프로덕션 환경에서 NEXT_PUBLIC_WS_BASE_URL은 필수입니다.');
+  }
+}
+
 const nextConfig: NextConfig = {
   compiler: {
     emotion: true,
@@ -13,7 +23,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' data:",

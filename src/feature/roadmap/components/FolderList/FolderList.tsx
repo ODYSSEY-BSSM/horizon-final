@@ -22,6 +22,11 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('all');
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1); // 탭 변경 시 페이지를 1로 초기화
+  };
+
   const { data: rootFolder, isLoading, error } = useRootFolder();
 
   const folders: Folder[] = useMemo(() => {
@@ -78,7 +83,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   if (isLoading) {
     return (
       <StyledContainer className={className}>
-        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
         <StyledMainContent>
           <StyledContent>
             <StyledLoadingText>폴더를 불러오는 중...</StyledLoadingText>
@@ -91,7 +96,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   if (error) {
     return (
       <StyledContainer className={className}>
-        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
         <StyledMainContent>
           <StyledContent>
             <StyledErrorText>폴더를 불러오는데 실패했습니다.</StyledErrorText>
@@ -103,7 +108,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   return (
     <StyledContainer className={className}>
-      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>
