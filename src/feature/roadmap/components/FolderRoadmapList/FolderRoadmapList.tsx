@@ -5,7 +5,7 @@ import { RoadmapCard } from '@/feature/dashboard';
 import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import { FilterTabs, FOLDER_FILTER_TABS, Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
-import { Icon, Text } from '@/shared/ui';
+import { Icon, Text, UnderlineButton } from '@/shared/ui';
 
 export interface FolderRoadmapListProps {
   className?: string;
@@ -150,14 +150,7 @@ const FolderRoadmapList = ({
           <Text as="p" variant="ST" color={tokens.colors.neutral[600]}>
             아직 로드맵이 없습니다.
           </Text>
-          <StyledCreateLink
-            as="button"
-            variant="B1"
-            color={tokens.colors.primary[500]}
-            onClick={onCreateRoadmap}
-          >
-            새 로드맵 만들기
-          </StyledCreateLink>
+          <UnderlineButton onClick={onCreateRoadmap}>새 로드맵 만들기</UnderlineButton>
         </StyledEmptyState>
       )}
     </StyledContainer>
@@ -248,18 +241,4 @@ const StyledEmptyState = styled.div`
   gap: 20px;
   padding: 80px ${tokens.spacing.xlarge};
   background-color: ${tokens.colors.white};
-`;
-
-const StyledCreateLink = styled(Text)`
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-  font: inherit;
-  font-weight: ${tokens.typos.fontWeight.semibold};
-
-  &:focus-visible {
-    outline: 2px solid ${tokens.colors.primary[500]};
-    outline-offset: 2px;
-  }
 `;

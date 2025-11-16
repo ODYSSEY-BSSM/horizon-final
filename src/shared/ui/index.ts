@@ -20,3 +20,4 @@ export { default as Text } from './Text/Text';
 export type { TextProps } from './Text/Text.types';
 export { default as TextField } from './TextField/TextField';
 export type { TextFieldProps } from './TextField/TextField.types';
+export { UnderlineButton } from './UnderlineButton';

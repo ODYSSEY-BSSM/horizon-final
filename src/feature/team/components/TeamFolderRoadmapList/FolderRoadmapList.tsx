@@ -108,13 +108,25 @@ const FolderRoadmapList = ({
           {viewMode === 'list' ? (
             <StyledRoadmapList>
               {roadmaps.map((roadmap) => (
-                <RoadmapListItem key={roadmap.id} roadmap={mapTeamRoadmapToRoadmap(roadmap)} />
+                <RoadmapListItem
+                  key={roadmap.id}
+                  roadmap={mapTeamRoadmapToRoadmap(roadmap)}
+                  onClick={() => {
+                    alert('로드맵 기능은 아직 미완성입니다.');
+                  }}
+                />
               ))}
             </StyledRoadmapList>
           ) : (
             <StyledThumbnailGrid>
               {roadmaps.map((roadmap) => (
-                <RoadmapCard key={roadmap.id} item={mapTeamRoadmapToRoadmapItem(roadmap)} />
+                <RoadmapCard
+                  key={roadmap.id}
+                  item={mapTeamRoadmapToRoadmapItem(roadmap)}
+                  onClick={() => {
+                    alert('로드맵 기능은 아직 미완성입니다.');
+                  }}
+                />
               ))}
             </StyledThumbnailGrid>
           )}

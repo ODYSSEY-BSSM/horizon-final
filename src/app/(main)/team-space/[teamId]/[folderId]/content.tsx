@@ -10,7 +10,7 @@ import { toRoadmapColor, toRoadmapIcon } from '@/feature/roadmap/utils/typeConve
 import { TeamFolderRoadmapListSection } from '@/feature/team';
 import { useTeam } from '@/feature/team/hooks/useTeamQueries';
 import { tokens } from '@/shared/tokens';
-import { Button, FormModal } from '@/shared/ui';
+import { Button, FormModal, Text } from '@/shared/ui';
 
 type ModalState = {
   roadmapCreate: boolean;
@@ -105,24 +105,26 @@ const FolderRoadmapsContent = () => {
 
   if (isLoading) {
     return (
-      <StyledContainer>
+      <StyledPageContainer>
         <StyledLoadingMessage>팀 정보를 불러오는 중...</StyledLoadingMessage>
-      </StyledContainer>
+      </StyledPageContainer>
     );
   }
 
   if (isError || !currentTeam) {
     return (
-      <StyledContainer>
+      <StyledPageContainer>
         <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
-      </StyledContainer>
+      </StyledPageContainer>
     );
   }
 
   return (
-    <StyledContainer>
+    <StyledPageContainer>
       <StyledHeader>
-        <StyledTitle>로드맵을 선택해주세요.</StyledTitle>
+        <Text as="h2" variant="H2" color={tokens.colors.black}>
+          로드맵을 선택해주세요.
+        </Text>
         <Button
           variant="contained"
           size="medium"
@@ -159,13 +161,13 @@ const FolderRoadmapsContent = () => {
         onSubmit={handleStyleSubmit}
         onBack={handleStyleBack}
       />
-    </StyledContainer>
+    </StyledPageContainer>
   );
 };
 
 export default FolderRoadmapsContent;
 
-const StyledContainer = styled.div`
+const StyledPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -178,16 +180,6 @@ const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-`;
-
-const StyledTitle = styled.h2`
-  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[24]};
-  font-weight: ${tokens.typos.fontWeight.extrabold};
-  line-height: ${tokens.typos.lineHeight[34]};
-  letter-spacing: -0.015em;
-  color: ${tokens.colors.black};
-  margin: 0;
 `;
 
 const StyledLoadingMessage = styled.div`

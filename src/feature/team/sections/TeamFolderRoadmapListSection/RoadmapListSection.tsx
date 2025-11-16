@@ -1,6 +1,8 @@
 'use client';
 
-import { TeamFolderRoadmapList, useTeamFolderDetail } from '@/feature/team';
+import { useMemo } from 'react';
+import { FolderRoadmapList } from '@/feature/roadmap';
+import { mapTeamRoadmapToRoadmapItem, useTeamFolderDetail } from '@/feature/team';
 
 interface RoadmapListSectionProps {
   teamId: string;
@@ -20,14 +22,17 @@ const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapList
     onPageChange,
   } = useTeamFolderDetail(teamId, folderId);
 
+  // 팀 로드맵을 개인 로드맵 형식으로 변환
+  const mappedRoadmaps = useMemo(() => roadmaps.map(mapTeamRoadmapToRoadmapItem), [roadmaps]);
+
   return (
-    <TeamFolderRoadmapList
+    <FolderRoadmapList
       activeTab={activeFilter}
       onTabClick={setActiveFilter}
       viewMode={viewMode}
       onViewModeChange={setViewMode}
       onCreateRoadmap={onAddRoadmapClick}
-      roadmaps={roadmaps}
+      roadmaps={mappedRoadmaps}
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={onPageChange}

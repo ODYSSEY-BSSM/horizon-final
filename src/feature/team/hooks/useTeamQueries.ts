@@ -29,6 +29,16 @@ export function useTeamMembers(teamId: number) {
   });
 }
 
+export function useTeams() {
+  return useQuery({
+    queryKey: teamKeys.all,
+    queryFn: async () => {
+      const response = await teamApi.getTeams();
+      return response.teams;
+    },
+  });
+}
+
 export function useCreateTeam() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
