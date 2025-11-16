@@ -54,10 +54,6 @@ export const realAuthApi = {
     return apiClient.get<UserInfoResponse>('/users');
   },
 
-  connectSchool: async (): Promise<UserInfoResponse> => {
-    return apiClient.put<UserInfoResponse>('/users/school');
-  },
-
   requestVerificationCode: async (data: VerificationCodeRequest): Promise<void> => {
     return apiClient.post<void>('/verification', data);
   },

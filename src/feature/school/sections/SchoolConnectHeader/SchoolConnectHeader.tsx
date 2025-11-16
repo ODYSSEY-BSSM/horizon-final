@@ -7,7 +7,7 @@ import { Text } from '@/shared/ui';
 const SchoolConnectHeader = () => {
   return (
     <StyledHeader>
-      <Text as="h2" variant="H2" color={tokens.colors.black}>
+      <Text as="h1" variant="H2" color={tokens.colors.black}>
         학교에 연동되어있습니다.
       </Text>
     </StyledHeader>
@@ -19,5 +19,5 @@ export default SchoolConnectHeader;
 const StyledHeader = styled.div`
   display: flex;
   align-items: center;
-  padding: ${tokens.spacing.medium} 0;
+  margin-bottom: 0;
 `;

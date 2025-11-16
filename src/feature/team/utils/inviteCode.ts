@@ -1,7 +1,8 @@
 const PREFIX = 'horizon-';
 
 export const generateInviteCode = (teamId: string): string => {
-  return `${PREFIX}${Buffer.from(teamId).toString('base64')}`;
+  // 브라우저 환경에서는 btoa 사용
+  return `${PREFIX}${btoa(teamId)}`;
 };
 
 export const decodeInviteCode = (inviteCode: string): string | null => {
@@ -10,7 +11,8 @@ export const decodeInviteCode = (inviteCode: string): string | null => {
   }
   try {
     const base64 = inviteCode.slice(PREFIX.length);
-    const teamId = Buffer.from(base64, 'base64').toString('ascii');
+    // 브라우저 환경에서는 atob 사용
+    const teamId = atob(base64);
     return teamId;
   } catch (_error) {
     return null;

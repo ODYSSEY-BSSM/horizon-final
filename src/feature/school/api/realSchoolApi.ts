@@ -1,30 +1,9 @@
+import type { UserInfoResponse } from '@/feature/auth/types/auth';
 import { apiClient } from '@/shared/api/client';
-import type {
-  EducationNodeListResponse,
-  EducationNodeResponse,
-  SchoolConnectRequest,
-  SchoolDisconnectResponse,
-  SchoolResponse,
-} from '../types';
 
 export const realSchoolApi = {
-  connectSchool: async (data: SchoolConnectRequest): Promise<SchoolResponse> => {
-    return apiClient.put<SchoolResponse>('/users/school', data);
-  },
-
-  getConnectedSchool: async (): Promise<SchoolResponse> => {
-    return apiClient.get<SchoolResponse>('/schools/connected');
-  },
-
-  disconnectSchool: async (): Promise<SchoolDisconnectResponse> => {
-    return apiClient.delete<SchoolDisconnectResponse>('/schools/connected');
-  },
-
-  getEducationNodes: async (): Promise<EducationNodeListResponse> => {
-    return apiClient.get<EducationNodeListResponse>('/schools/education-nodes');
-  },
-
-  getEducationNode: async (nodeId: number): Promise<EducationNodeResponse> => {
-    return apiClient.get<EducationNodeResponse>(`/schools/education-nodes/${nodeId}`);
+  // PUT /users/school - Swagger 명세에 따라 빈 본문으로 호출
+  connectSchool: async (): Promise<UserInfoResponse> => {
+    return apiClient.put<UserInfoResponse>('/users/school', {});
   },
 };

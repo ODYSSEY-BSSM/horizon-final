@@ -5,6 +5,12 @@ class TokenStore {
   private readonly ACCESS_TOKEN_KEY = 'accessToken';
   private readonly REFRESH_TOKEN_KEY = 'refreshToken';
 
+  private readonly cookieOptions = {
+    expires: 7,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict' as const,
+  };
+
   getAccessToken(): string | null {
     if (!this.accessToken && typeof window !== 'undefined') {
       this.accessToken = Cookies.get(this.ACCESS_TOKEN_KEY) || null;
@@ -20,7 +26,7 @@ class TokenStore {
     }
 
     if (token) {
-      Cookies.set(this.ACCESS_TOKEN_KEY, token, { expires: 7 });
+      Cookies.set(this.ACCESS_TOKEN_KEY, token, this.cookieOptions);
     } else {
       Cookies.remove(this.ACCESS_TOKEN_KEY);
     }
@@ -39,7 +45,7 @@ class TokenStore {
     }
 
     if (token) {
-      Cookies.set(this.REFRESH_TOKEN_KEY, token, { expires: 7 });
+      Cookies.set(this.REFRESH_TOKEN_KEY, token, this.cookieOptions);
     } else {
       Cookies.remove(this.REFRESH_TOKEN_KEY);
     }

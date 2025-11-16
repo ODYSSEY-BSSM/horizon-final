@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { authApi } from '@/feature/auth';
+import { nodeApi, roadmapApi } from '@/feature/roadmap/api';
+import type { NodeResponse, RoadmapResponse } from '@/feature/roadmap/types';
 import { schoolApi } from '@/feature/school/api/schoolApi';
 import type { ModalState, SchoolConnectState, SchoolInfo, SchoolNode } from '../types';
 
@@ -11,17 +14,38 @@ export const useSchoolConnect = () => {
     disconnectConfirm: false,
   });
 
-  const { data: schoolData, isLoading: isLoadingSchool } = useQuery({
-    queryKey: ['school', 'connected'],
-    queryFn: schoolApi.getConnectedSchool,
+  const { data: userInfo, isLoading: isLoadingUser } = useQuery({
+    queryKey: ['user', 'profile'],
+    queryFn: authApi.getProfile,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: nodesData, isLoading: isLoadingNodes } = useQuery({
-    queryKey: ['school', 'education-nodes'],
-    queryFn: schoolApi.getEducationNodes,
-    enabled: !!schoolData,
+  // 모든 로드맵 조회
+  const { data: roadmaps, isLoading: isLoadingRoadmaps } = useQuery<RoadmapResponse[]>({
+    queryKey: ['roadmaps'],
+    queryFn: roadmapApi.getRoadmaps,
+    enabled: userInfo?.isConnectedSchool === true,
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  // 각 로드맵의 노드 조회
+  const roadmapNodesQueries = useQuery<NodeResponse[]>({
+    queryKey: ['roadmaps', 'all-nodes', roadmaps?.map((r) => r.uuid)],
+    queryFn: async () => {
+      if (!roadmaps || roadmaps.length === 0) {
+        return [];
+      }
+
+      const allNodesPromises = roadmaps.map((roadmap) => nodeApi.getNodes(roadmap.uuid));
+      const allNodesArrays = await Promise.all(allNodesPromises);
+
+      // 모든 노드를 하나의 배열로 합치고, 교육 노드만 필터링
+      const allNodes = allNodesArrays.flatMap((response) => response.nodes);
+      return allNodes.filter((node) => node.isEducation);
+    },
+    enabled: !!roadmaps && roadmaps.length > 0,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
@@ -29,18 +53,10 @@ export const useSchoolConnect = () => {
   const { mutateAsync: connectSchool, isPending: isConnecting } = useMutation({
     mutationFn: schoolApi.connectSchool,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['school'] });
+      queryClient.invalidateQueries({ queryKey: ['user', 'profile'] });
     },
     onError: () => {
       setModals((prev) => ({ ...prev, connectFail: true }));
-    },
-  });
-
-  const { mutateAsync: disconnectSchool } = useMutation({
-    mutationFn: schoolApi.disconnectSchool,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['school'] });
-      setModals((prev) => ({ ...prev, disconnectConfirm: false }));
     },
   });
 
@@ -56,25 +72,27 @@ export const useSchoolConnect = () => {
       return;
     }
 
-    if (isLoadingSchool || isLoadingNodes) {
+    if (isLoadingUser || isLoadingRoadmaps || roadmapNodesQueries.isLoading) {
       return;
     }
 
-    if (schoolData) {
+    // /users API의 isConnectedSchool과 school 정보 사용
+    if (userInfo?.isConnectedSchool && userInfo?.school) {
+      const educationNodes = roadmapNodesQueries.data || [];
+
       const schoolInfo: SchoolInfo = {
-        id: String(schoolData.id),
-        name: schoolData.name,
-        logoUrl: schoolData.logoUrl || '',
-        nodeCount: nodesData?.nodes.length || 0,
+        id: '1',
+        name: userInfo.school,
+        logoUrl: '',
+        nodeCount: educationNodes.length,
       };
 
-      const nodes: SchoolNode[] =
-        nodesData?.nodes.map((node) => ({
-          id: String(node.id),
-          name: node.title,
-          teacher: node.teacher || '담당자 미지정',
-          usageCount: 0, // TODO: 실제 사용 횟수는 별도 API에서 조회 필요
-        })) || [];
+      const nodes: SchoolNode[] = educationNodes.map((node) => ({
+        id: String(node.id),
+        name: node.title,
+        teacher: node.subject || '과목 미지정',
+        usageCount: 0,
+      }));
 
       setState({
         status: 'connected',
@@ -88,11 +106,19 @@ export const useSchoolConnect = () => {
         nodes: [],
       });
     }
-  }, [schoolData, nodesData, isLoadingSchool, isLoadingNodes, isConnecting]);
+  }, [
+    userInfo,
+    isLoadingUser,
+    isLoadingRoadmaps,
+    roadmapNodesQueries.data,
+    roadmapNodesQueries.isLoading,
+    isConnecting,
+  ]);
 
-  const handleConnect = async (schoolCode: string) => {
+  const handleConnect = async () => {
     try {
-      await connectSchool({ schoolCode });
+      // PUT /users/school는 빈 본문으로 호출 (Swagger 명세)
+      await connectSchool();
     } catch (_error) {
       // 에러는 useMutation의 onError에서 처리됩니다.
     }
@@ -107,11 +133,17 @@ export const useSchoolConnect = () => {
   };
 
   const handleDisconnect = async () => {
-    try {
-      await disconnectSchool();
-    } catch (_error) {
-      // 에러는 useMutation의 onError에서 처리됩니다.
-    }
+    // 연동 해제 기능은 Swagger에 없으므로 클라이언트 상태만 변경
+    queryClient.setQueryData(['user', 'profile'], (old: any) =>
+      old
+        ? {
+            ...old,
+            isConnectedSchool: false,
+            school: null,
+          }
+        : old,
+    );
+    setModals((prev) => ({ ...prev, disconnectConfirm: false }));
   };
 
   const closeModal = (modalName: keyof ModalState) => {
@@ -121,7 +153,7 @@ export const useSchoolConnect = () => {
   return {
     state,
     modals,
-    isLoading: isLoadingSchool || isLoadingNodes,
+    isLoading: isLoadingUser || isLoadingRoadmaps || roadmapNodesQueries.isLoading,
     handleConnect,
     handleConnectFail,
     handleDisconnectClick,
