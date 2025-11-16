@@ -47,13 +47,14 @@ const TeamSpaceContent = () => {
   };
 
   const hasTeams = teams && teams.length > 0;
+  const firstTeamId = teams?.[0]?.id;
 
   // 팀이 있으면 첫 번째 팀으로 자동 리다이렉트
   useEffect(() => {
-    if (hasTeams) {
-      router.push(`/team-space/${teams[0].id}`);
+    if (firstTeamId) {
+      router.push(`/team-space/${firstTeamId}`);
     }
-  }, [hasTeams, router, teams]);
+  }, [firstTeamId, router]);
 
   const handleJoinTeam = async (data: { inviteCode: string }) => {
     if (!data.inviteCode) {

@@ -12,7 +12,9 @@ export const mapTeamFolderToFolder = (teamFolder: TeamFolder): Folder => {
     description: teamFolder.description,
     progress: teamFolder.progress,
     roadmapCount: teamFolder.roadmapCount,
-    completedCount: teamFolder.createdRoadmapCount,
+    // TODO: Backend API doesn't provide completed roadmap count yet
+    // Update this mapping when API is updated to include completedRoadmapCount
+    completedCount: 0,
     lastRoadmap: teamFolder.lastRoadmapName || '-',
   };
 };
