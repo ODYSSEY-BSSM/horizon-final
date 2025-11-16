@@ -1,23 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/shared/hooks/useToast';
 import { teamApi } from '../api';
-import type { TeamCreateRequest, TeamUpdateRequest } from '../types';
+import type { TeamCreateRequest } from '../types';
 
 export const teamKeys = {
   all: ['teams'] as const,
-  lists: () => [...teamKeys.all, 'list'] as const,
-  list: () => [...teamKeys.lists()] as const,
   details: () => [...teamKeys.all, 'detail'] as const,
   detail: (teamId: number) => [...teamKeys.details(), teamId] as const,
   members: (teamId: number) => [...teamKeys.detail(teamId), 'members'] as const,
 };
-
-export function useTeams() {
-  return useQuery({
-    queryKey: teamKeys.list(),
-    queryFn: () => teamApi.getTeams(),
-  });
-}
 
 export function useTeam(teamId: number) {
   return useQuery({
@@ -45,7 +36,8 @@ export function useCreateTeam() {
   return useMutation({
     mutationFn: (data: TeamCreateRequest) => teamApi.createTeam(data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
+      // 모든 팀 관련 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: teamKeys.all });
       toast({
         variant: 'default',
         title: '팀 생성 완료',
@@ -62,25 +54,13 @@ export function useCreateTeam() {
   });
 }
 
-export function useUpdateTeam(teamId: number) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data: TeamUpdateRequest) => teamApi.updateTeam(teamId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
-    },
-  });
-}
-
 export function useDeleteTeam() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (teamId: number) => teamApi.deleteTeam(teamId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
+      queryClient.invalidateQueries({ queryKey: teamKeys.all });
     },
   });
 }
@@ -91,7 +71,7 @@ export function useApplyToTeam() {
   return useMutation({
     mutationFn: ({ inviteCode }: { inviteCode: string }) => teamApi.joinTeam({ inviteCode }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: teamKeys.list() });
+      queryClient.invalidateQueries({ queryKey: teamKeys.all });
     },
   });
 }

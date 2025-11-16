@@ -1,9 +1,4 @@
-import type {
-  TeamCreateRequest,
-  TeamInviteRequest,
-  TeamResponse,
-  TeamUpdateRequest,
-} from '@/feature/team/types';
+import type { TeamCreateRequest, TeamInviteRequest, TeamResponse } from '@/feature/team/types';
 import { delay, MOCK_DELAYS } from './mockConstants';
 import type { MockUser } from './mockData';
 import { initialMockData } from './mockData';
@@ -108,7 +103,7 @@ export const mockTeamApi = {
     return toTeamResponse(team, users);
   },
 
-  updateTeam: async (teamId: number, data: TeamUpdateRequest): Promise<TeamResponse> => {
+  updateTeam: async (teamId: number, data: TeamCreateRequest): Promise<TeamResponse> => {
     await delay(MOCK_DELAYS.NORMAL);
 
     const teams = getTeams();
