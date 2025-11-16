@@ -8,6 +8,9 @@ import { apiClient } from '@/shared/api';
 export function TokenInitializer() {
   useEffect(() => {
     const initializeAuth = async () => {
+      // Initialize token in apiClient first
+      apiClient.initializeToken();
+
       const refreshToken = tokenStore.getRefreshToken();
       const accessToken = tokenStore.getAccessToken();
 

@@ -1,4 +1,3 @@
-import { tokenStore } from '@/feature/auth';
 import type { ApiResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
@@ -14,12 +13,18 @@ class ApiClient {
 
   constructor(baseURL: string = API_BASE_URL) {
     this.baseURL = baseURL;
-    this.initializeToken();
   }
 
-  private initializeToken() {
+  private getTokenStore() {
+    // Lazy import to avoid circular dependency
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { tokenStore } = require('@/feature/auth');
+    return tokenStore;
+  }
+
+  initializeToken() {
     if (typeof window !== 'undefined') {
-      const token = tokenStore.getAccessToken();
+      const token = this.getTokenStore().getAccessToken();
       if (token) {
         this.accessToken = token;
       }
@@ -130,6 +135,7 @@ class ApiClient {
       return false;
     }
 
+    const tokenStore = this.getTokenStore();
     const refreshToken = tokenStore.getRefreshToken();
     if (!refreshToken) {
       return false;
