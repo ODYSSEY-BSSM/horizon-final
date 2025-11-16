@@ -17,32 +17,24 @@ const SchoolConnectContent = () => {
 
   const { currentNodes, currentPage, totalPages, goToPage } = useSchoolNodeList(state.nodes);
 
-  // Wrapper to handle school code input (TODO: should collect from user input)
-  const handleConnectWrapper = () => {
-    const schoolCode = prompt(
-      '학교 코드를 입력하세요:\n(개발용 코드: BSSM - 부산소프트웨어마이스터고등학교)',
-    );
-    if (schoolCode) {
-      handleConnect(schoolCode);
-    }
-  };
-
   return (
-    <StyledPageContainer>
-      {state.status === 'connected' && state.school ? (
-        <>
-          <SchoolConnectHeader />
-          <SchoolInfoSection school={state.school} onDisconnect={handleDisconnectClick} />
-          <SchoolNodeListSection
-            nodes={currentNodes}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-          />
-        </>
-      ) : (
-        <EmptyState onConnect={handleConnectWrapper} />
-      )}
+    <>
+      <StyledPageContainer>
+        {state.status === 'connected' && state.school ? (
+          <>
+            <SchoolConnectHeader />
+            <SchoolInfoSection school={state.school} onDisconnect={handleDisconnectClick} />
+            <SchoolNodeListSection
+              nodes={currentNodes}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+            />
+          </>
+        ) : (
+          <EmptyState onConnect={handleConnect} />
+        )}
+      </StyledPageContainer>
 
       <ConfirmModal
         isOpen={modals.connectFail}
@@ -59,7 +51,7 @@ const SchoolConnectContent = () => {
         description="연동을 해제해도 기존에 사용한 학교 노드와 내용은 유지됩니다."
         variant="confirm"
       />
-    </StyledPageContainer>
+    </>
   );
 };
 
