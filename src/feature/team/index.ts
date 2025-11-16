@@ -17,7 +17,6 @@ export { TeamFolderDeleteModal } from './forms/TeamFolderDeleteModal';
 export type { UseTeamDirectoryWebSocketOptions } from './hooks/useTeamDirectoryWebSocket';
 export { useTeamDirectoryWebSocket } from './hooks/useTeamDirectoryWebSocket';
 export { useTeamFolderDetail } from './hooks/useTeamFolderDetail';
-export { useTeamSpaceData } from './hooks/useTeamSpaceData';
 
 export { TeamFolderRoadmapListSection } from './sections/TeamFolderRoadmapListSection';
 export { TeamSpaceHeader } from './sections/TeamSpaceHeader';

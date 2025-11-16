@@ -6,6 +6,7 @@ import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
 import { useCreateRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { toRoadmapColor, toRoadmapIcon } from '@/feature/roadmap/utils/typeConverters';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal, Text } from '@/shared/ui';
 
@@ -64,8 +65,8 @@ const FolderDetailContent = () => {
         title: roadmapData.title,
         description: roadmapData.description || '',
         categories: (roadmapData.categories || []).map((name) => ({ name })),
-        color: data.color.toUpperCase() as any,
-        icon: data.icon.toUpperCase() as any,
+        color: toRoadmapColor(data.color),
+        icon: toRoadmapIcon(data.icon),
         directoryId: Number(folderId),
       },
       {

@@ -20,7 +20,12 @@ export interface FolderListProps {
 
 const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('latest');
+  const [activeTab, setActiveTab] = useState('all');
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1); // 탭 변경 시 페이지를 1로 초기화
+  };
 
   const { data: rootFolder, isLoading, error } = useRootFolder();
 
@@ -48,17 +53,23 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
     });
   }, [rootFolder]);
 
-  const sortedFolders = useMemo(() => {
-    return [...folders].sort((a, b) => {
-      if (activeTab === 'progress') {
-        return b.progress - a.progress;
-      }
-      if (activeTab === 'name') {
-        return a.name.localeCompare(b.name);
-      }
-      return b.id - a.id;
-    });
+  const filteredFolders = useMemo(() => {
+    if (activeTab === 'completed') {
+      // 학습 완료: 진행률 100%인 폴더
+      return folders.filter((folder) => folder.progress === 100);
+    }
+    if (activeTab === 'inProgress') {
+      // 학습 진행중: 로드맵이 있고 진행률이 100% 미만인 폴더
+      return folders.filter((folder) => folder.roadmapCount > 0 && folder.progress < 100);
+    }
+    // 'all' or default: 모든 폴더
+    return folders;
   }, [folders, activeTab]);
+
+  const sortedFolders = useMemo(() => {
+    // 최신순 정렬 (ID 내림차순)
+    return [...filteredFolders].sort((a, b) => b.id - a.id);
+  }, [filteredFolders]);
 
   const itemsPerPage = 12; // 한 페이지에 표시할 폴더 개수 (3x4 그리드)
   const totalPages = Math.max(1, Math.ceil(sortedFolders.length / itemsPerPage));
@@ -72,7 +83,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   if (isLoading) {
     return (
       <StyledContainer className={className}>
-        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
         <StyledMainContent>
           <StyledContent>
             <StyledLoadingText>폴더를 불러오는 중...</StyledLoadingText>
@@ -85,7 +96,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
   if (error) {
     return (
       <StyledContainer className={className}>
-        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+        <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
         <StyledMainContent>
           <StyledContent>
             <StyledErrorText>폴더를 불러오는데 실패했습니다.</StyledErrorText>
@@ -97,7 +108,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
 
   return (
     <StyledContainer className={className}>
-      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={setActiveTab} />
+      <FilterTabs tabs={FILTER_TABS} activeTab={activeTab} onTabClick={handleTabChange} />
       <StyledMainContent>
         <StyledContent>
           <StyledFolderGrid>

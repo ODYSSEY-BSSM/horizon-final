@@ -16,7 +16,13 @@ const SchoolCard = ({ school, onDisconnect }: SchoolCardProps) => {
     <StyledCardContainer>
       <StyledCardContent>
         <StyledSchoolImageWrapper>
-          <Image src={school.logoUrl} alt={school.name} width={100} height={100} />
+          {school.logoUrl ? (
+            <Image src={school.logoUrl} alt={school.name} width={100} height={100} />
+          ) : (
+            <Text variant="H3" color={tokens.colors.white}>
+              {school.name.charAt(0)}
+            </Text>
+          )}
         </StyledSchoolImageWrapper>
         <StyledSchoolInfo>
           <Text as="h3" variant="H3" color={tokens.colors.neutral[900]}>
@@ -43,7 +49,7 @@ const StyledCardContainer = styled.div`
   padding: 32px 40px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.medium};
+  border-radius: 8px;
 `;
 
 const StyledCardContent = styled.div`
@@ -62,17 +68,19 @@ const StyledSchoolImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 `;
 
 const StyledSchoolInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 260px;
+  min-width: 260px;
 `;
 
 const StyledButton = styled(Button)`
   background-color: ${tokens.colors.error[200]};
+  flex-shrink: 0;
 
   &:hover {
     background-color: ${tokens.colors.error[100]};

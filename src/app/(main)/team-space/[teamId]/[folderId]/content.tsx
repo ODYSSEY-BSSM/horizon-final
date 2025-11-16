@@ -6,7 +6,9 @@ import { useState } from 'react';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapStyleModal } from '@/feature/roadmap';
 import { useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
-import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
+import { toRoadmapColor, toRoadmapIcon } from '@/feature/roadmap/utils/typeConverters';
+import { TeamFolderRoadmapListSection } from '@/feature/team';
+import { useTeam } from '@/feature/team/hooks/useTeamQueries';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -30,9 +32,17 @@ const FolderRoadmapsContent = () => {
   const teamId = params.teamId;
   const folderId = params.folderId;
 
-  const { teams } = useTeamSpaceData();
+  // GET /teams/{id} - 특정 팀 정보만 가져오기
+  const { data: teamData, isLoading, isError } = useTeam(Number(teamId));
 
-  const currentTeam = teams.find((team) => team.id === teamId);
+  const currentTeam = teamData
+    ? {
+        id: teamData.id?.toString() ?? '',
+        name: teamData.name ?? '',
+        memberCount: teamData.members?.length ?? 0,
+        inviteCode: teamData.inviteCode ?? '',
+      }
+    : null;
 
   const [modals, setModals] = useState<ModalState>({
     roadmapCreate: false,
@@ -75,8 +85,8 @@ const FolderRoadmapsContent = () => {
         title: roadmapData.title,
         description: roadmapData.description || '',
         categories: (roadmapData.categories || []).map((name) => ({ name })),
-        color: data.color.toUpperCase() as any,
-        icon: data.icon.toUpperCase() as any,
+        color: toRoadmapColor(data.color),
+        icon: toRoadmapIcon(data.icon),
         directoryId: Number(folderId),
       },
       {
@@ -93,7 +103,15 @@ const FolderRoadmapsContent = () => {
     openModal('roadmapCreate');
   };
 
-  if (!currentTeam) {
+  if (isLoading) {
+    return (
+      <StyledContainer>
+        <StyledLoadingMessage>팀 정보를 불러오는 중...</StyledLoadingMessage>
+      </StyledContainer>
+    );
+  }
+
+  if (isError || !currentTeam) {
     return (
       <StyledContainer>
         <StyledErrorMessage>팀을 찾을 수 없습니다.</StyledErrorMessage>
@@ -170,6 +188,15 @@ const StyledTitle = styled.h2`
   letter-spacing: -0.015em;
   color: ${tokens.colors.black};
   margin: 0;
+`;
+
+const StyledLoadingMessage = styled.div`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[18]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  color: ${tokens.colors.neutral[600]};
+  text-align: center;
+  padding: 40px;
 `;
 
 const StyledErrorMessage = styled.div`

@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
-import type { Team } from '@/feature/team/types/team';
+import type { TeamResponse } from '@/feature/team/types/teamApi';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
@@ -10,8 +10,8 @@ import { Button, Icon, Text, TextField } from '@/shared/ui';
 interface CreateTeamModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (payload: { name: string }) => Team | Promise<Team>;
-  onComplete?: (team: Team) => void;
+  onCreate: (payload: { name: string }) => TeamResponse | Promise<TeamResponse>;
+  onComplete?: (team: TeamResponse) => void;
 }
 
 type Step = 1 | 2;
@@ -26,7 +26,7 @@ export const CreateTeamModal = ({
   const descriptionId = useId();
   const [step, setStep] = useState<Step>(1);
   const [teamName, setTeamName] = useState('');
-  const [createdTeam, setCreatedTeam] = useState<Team | null>(null);
+  const [createdTeam, setCreatedTeam] = useState<TeamResponse | null>(null);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,7 +38,7 @@ export const CreateTeamModal = ({
       return createdTeam.inviteCode;
     }
     if (createdTeam?.id) {
-      return generateInviteCode(createdTeam.id);
+      return generateInviteCode(String(createdTeam.id));
     }
     if (createdTeam?.name) {
       return generateInviteCode(createdTeam.name);

@@ -38,6 +38,7 @@ export default SchoolNodeListSection;
 const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const StyledListContainer = styled.div`
@@ -45,13 +46,13 @@ const StyledListContainer = styled.div`
   flex-direction: column;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[100]};
-  border-radius: ${tokens.radius.xlarge};
+  border-radius: 12px;
   overflow: hidden;
 `;
 
 const StyledList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.medium};
-  padding: ${tokens.spacing.xlarge};
+  gap: 16px;
+  padding: 24px;
 `;

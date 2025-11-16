@@ -54,7 +54,8 @@ const StyledItemContainer = styled.div`
   padding: 16px 32px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[100]};
-  border-radius: ${tokens.radius.medium};
+  border-radius: 8px;
+  position: relative;
 `;
 
 const StyledItemLeft = styled.div`
@@ -69,15 +70,18 @@ const StyledNodeInfo = styled.div`
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  white-space: pre;
 `;
 
 const StyledItemRight = styled.div`
   display: flex;
   align-items: center;
+  white-space: pre;
 `;
 
 const StyledUsageInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  white-space: pre;
 `;

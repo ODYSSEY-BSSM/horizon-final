@@ -6,14 +6,6 @@ export const FOLDER_FILTER_TABS: FilterTab[] = [
     label: '전체',
   },
   {
-    value: 'my',
-    label: '내 로드맵',
-  },
-  {
-    value: 'team',
-    label: '팀 로드맵',
-  },
-  {
     value: 'completed',
     label: '학습 완료',
   },

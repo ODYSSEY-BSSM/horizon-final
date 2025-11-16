@@ -11,6 +11,7 @@ interface RequestOptions {
 class ApiClient {
   private accessToken: string | null = null;
   private baseURL: string;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor(baseURL: string = API_BASE_URL) {
     this.baseURL = baseURL;
@@ -126,6 +127,22 @@ class ApiClient {
   }
 
   async tryRefreshToken(): Promise<boolean> {
+    // 이미 refresh 중이면 그 Promise 재사용
+    if (this.refreshPromise) {
+      return this.refreshPromise;
+    }
+
+    // 새로운 refresh 시작
+    this.refreshPromise = this.performRefresh();
+
+    try {
+      return await this.refreshPromise;
+    } finally {
+      this.refreshPromise = null;
+    }
+  }
+
+  private async performRefresh(): Promise<boolean> {
     if (typeof window === 'undefined') {
       return false;
     }
