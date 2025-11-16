@@ -8,35 +8,42 @@ interface EmptyStateProps {
   onConnect: () => void;
 }
 
-export const EmptyState = ({ onConnect }: EmptyStateProps) => {
+const EmptyState = ({ onConnect }: EmptyStateProps) => {
   return (
     <StyledContainer>
       <StyledContent>
-        <Text as="h2" variant="H2" color={tokens.colors.neutral[800]}>
-          학교 연동
+        <Text as="p" variant="H3" color={tokens.colors.black}>
+          연동된 학교가 없어요. 학교에서 지급받은 구글 계정으로 연동할 수 있어요.
         </Text>
-        <Text as="p" variant="B1" color={tokens.colors.neutral[600]}>
-          학교 코드를 입력하여 학교와 연동하세요.
-        </Text>
-        <Button onClick={onConnect} variant="primary" size="medium">
-          학교 연동하기
+        <Button
+          variant="contained"
+          size="medium"
+          iconPosition="left"
+          iconName="device_hub"
+          onClick={onConnect}
+        >
+          연동하기
         </Button>
       </StyledContent>
     </StyledContainer>
   );
 };
 
+export default EmptyState;
+
 const StyledContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 400px;
+  padding: ${tokens.spacing.xxlarge};
 `;
 
 const StyledContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${tokens.spacing.large};
+  gap: ${tokens.spacing.xlarge};
+  max-width: 395px;
   text-align: center;
 `;

@@ -1,1 +1,1 @@
-export { SchoolConnectHeader } from './SchoolConnectHeader';
+export { default as SchoolConnectHeader } from './SchoolConnectHeader';

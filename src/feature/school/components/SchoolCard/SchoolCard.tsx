@@ -1,48 +1,88 @@
 'use client';
 
 import styled from '@emotion/styled';
+import Image from 'next/image';
+import type { SchoolInfo } from '@/feature/school';
 import { tokens } from '@/shared/tokens';
-import { Text } from '@/shared/ui';
-import type { SchoolInfo } from '../../types';
+import { Button, Text } from '@/shared/ui';
 
 interface SchoolCardProps {
   school: SchoolInfo;
+  onDisconnect: () => void;
 }
 
-export const SchoolCard = ({ school }: SchoolCardProps) => {
+const SchoolCard = ({ school, onDisconnect }: SchoolCardProps) => {
   return (
-    <StyledCard>
-      {school.logoUrl && <StyledLogo src={school.logoUrl} alt={school.name} />}
-      <StyledInfo>
-        <Text as="h3" variant="H3" color={tokens.colors.neutral[800]}>
-          {school.name}
-        </Text>
-        <Text as="p" variant="B2" color={tokens.colors.neutral[600]}>
-          교육 노드: {school.nodeCount}개
-        </Text>
-      </StyledInfo>
-    </StyledCard>
+    <StyledCardContainer>
+      <StyledCardContent>
+        <StyledSchoolImageWrapper>
+          {school.logoUrl ? (
+            <Image src={school.logoUrl} alt={school.name} width={100} height={100} />
+          ) : (
+            <Text variant="H3" color={tokens.colors.white}>
+              {school.name.charAt(0)}
+            </Text>
+          )}
+        </StyledSchoolImageWrapper>
+        <StyledSchoolInfo>
+          <Text as="h3" variant="H3" color={tokens.colors.neutral[900]}>
+            {school.name}
+          </Text>
+          <Text as="p" variant="ST" color={tokens.colors.neutral[900]}>
+            학교 노드: {school.nodeCount}개
+          </Text>
+        </StyledSchoolInfo>
+      </StyledCardContent>
+      <StyledButton variant="contained" size="medium" onClick={onDisconnect}>
+        연동 해제하기
+      </StyledButton>
+    </StyledCardContainer>
   );
 };
 
-const StyledCard = styled.div`
+export default SchoolCard;
+
+const StyledCardContainer = styled.div`
   display: flex;
-  gap: ${tokens.spacing.medium};
-  padding: ${tokens.spacing.large};
-  background: ${tokens.colors.white};
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 40px;
+  background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.medium};
+  border-radius: 8px;
 `;
 
-const StyledLogo = styled.img`
-  width: 64px;
-  height: 64px;
-  border-radius: ${tokens.radius.small};
-  object-fit: cover;
+const StyledCardContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
 
-const StyledInfo = styled.div`
+const StyledSchoolImageWrapper = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: ${tokens.colors.black};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+
+const StyledSchoolInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.xsmall};
+  gap: 10px;
+  min-width: 260px;
+`;
+
+const StyledButton = styled(Button)`
+  background-color: ${tokens.colors.error[200]};
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: ${tokens.colors.error[100]};
+  }
 `;

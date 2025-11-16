@@ -1,1 +1,1 @@
-export { SchoolNodeListItem } from './SchoolNodeListItem';
+export { default as SchoolNodeListItem } from './SchoolNodeListItem';
