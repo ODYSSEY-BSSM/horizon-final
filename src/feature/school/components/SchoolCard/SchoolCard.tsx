@@ -19,9 +19,7 @@ const SchoolCard = ({ school, onDisconnect }: SchoolCardProps) => {
           {school.logoUrl ? (
             <Image src={school.logoUrl} alt={school.name} width={100} height={100} />
           ) : (
-            <Text variant="H3" color={tokens.colors.white}>
-              {school.name.charAt(0)}
-            </Text>
+            <Image src="/bssm.png" alt="Default school" width={100} height={100} />
           )}
         </StyledSchoolImageWrapper>
         <StyledSchoolInfo>
