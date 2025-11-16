@@ -2,26 +2,31 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { CreateTeamModal, EmptyTeamState, useTeamSpaceData } from '@/feature/team';
-import type { Team } from '@/feature/team/types/team';
+import { useEffect, useRef, useState } from 'react';
+import { CreateTeamModal, EmptyTeamState } from '@/feature/team';
+import { useApplyToTeam, useCreateTeam } from '@/feature/team/hooks/useTeamQueries';
+import { decodeInviteCode } from '@/feature/team/utils/inviteCode';
 import { useToast } from '@/shared/hooks/useToast';
 import { FormModal } from '@/shared/ui';
 
 const TeamSpaceContent = () => {
-  const { teams, addTeam, joinTeam } = useTeamSpaceData();
+  const createTeamMutation = useCreateTeam();
+  const applyToTeamMutation = useApplyToTeam();
   const { toast } = useToast();
+  const router = useRouter();
+  const hasAlerted = useRef(false);
+
+  useEffect(() => {
+    if (!hasAlerted.current) {
+      alert('현재 백엔드가 미완성입니다.');
+      hasAlerted.current = true;
+    }
+  }, []);
+
   const [modals, setModals] = useState({
     teamCreate: false,
     teamJoin: false,
   });
-  const router = useRouter();
-
-  useEffect(() => {
-    if (teams.length > 0) {
-      router.replace(`/team-space/${teams[0].id}`);
-    }
-  }, [teams, router]);
 
   const openModal = (modal: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modal]: true }));
@@ -36,12 +41,16 @@ const TeamSpaceContent = () => {
   };
 
   const handleTeamCreate = async ({ name }: { name: string }) => {
-    const newTeam = await addTeam({ name, description: '' });
-    return newTeam;
-  };
-
-  const handleTeamCreateComplete = (team: Team) => {
-    router.push(`/team-space/${team.id}`);
+    try {
+      const team = await createTeamMutation.mutateAsync({ name });
+      closeModal('teamCreate');
+      // 팀 생성 즉시 해당 팀 페이지로 이동
+      router.push(`/team-space/${team.id}`);
+      return team;
+    } catch (_error) {
+      toast({ description: '팀 생성에 실패했습니다.' });
+      throw _error;
+    }
   };
 
   const handleOpenJoinModal = () => {
@@ -54,16 +63,23 @@ const TeamSpaceContent = () => {
       return;
     }
 
-    const result = await joinTeam(data.inviteCode, {
-      onError: (message) => {
-        toast({ description: message });
-      },
-    });
-
-    if (!result.success) {
-      toast({ description: '유효하지 않은 초대 코드입니다.' });
-    } else {
+    try {
+      await applyToTeamMutation.mutateAsync({ inviteCode: data.inviteCode });
       closeModal('teamJoin');
+
+      // inviteCode에서 팀 ID 추출하여 해당 팀 페이지로 이동
+      const teamIdStr = decodeInviteCode(data.inviteCode);
+      if (teamIdStr) {
+        const teamId = parseInt(teamIdStr, 10);
+        if (!Number.isNaN(teamId)) {
+          router.push(`/team-space/${teamId}`);
+          return;
+        }
+      }
+
+      toast({ description: '팀 가입에 성공했습니다.' });
+    } catch (_error) {
+      toast({ description: '유효하지 않은 초대 코드입니다.' });
     }
   };
 
@@ -75,7 +91,6 @@ const TeamSpaceContent = () => {
         isOpen={modals.teamCreate}
         onClose={() => closeModal('teamCreate')}
         onCreate={handleTeamCreate}
-        onComplete={handleTeamCreateComplete}
       />
       <FormModal
         isOpen={modals.teamJoin}

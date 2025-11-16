@@ -1,17 +1,12 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { notFound, useParams, useRouter } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import type { DirectoryResponse } from '@/feature/folder/types';
-import {
-  CreateTeamModal,
-  FolderGrid,
-  InviteTeamModal,
-  TeamDropdown,
-  useTeamSpaceData,
-} from '@/feature/team';
+import { FolderGrid, InviteTeamModal } from '@/feature/team';
+import { useTeam } from '@/feature/team/hooks/useTeamQueries';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import { tokens } from '@/shared/tokens';
@@ -19,7 +14,6 @@ import { Button, FormModal } from '@/shared/ui';
 
 const TeamFoldersContent = () => {
   const params = useParams();
-  const router = useRouter();
 
   if (!params?.teamId || Array.isArray(params.teamId)) {
     notFound();
@@ -27,14 +21,23 @@ const TeamFoldersContent = () => {
 
   const teamId = params.teamId;
 
-  const { teams, addTeam } = useTeamSpaceData();
+  // GET /teams/{id} - 현재 팀 정보만 조회
+  const { data: teamData } = useTeam(Number(teamId));
+
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
-  const currentTeam = teams.find((team) => team.id === teamId);
-  const _teamName = currentTeam?.name || '';
+  const currentTeam = teamData
+    ? {
+        id: teamData.id?.toString() ?? '',
+        name: teamData.name ?? '',
+        description: '',
+        memberCount: teamData.members?.length ?? 0,
+        createdAt: new Date().toISOString(),
+        inviteCode: teamData.inviteCode ?? '',
+      }
+    : null;
 
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
   const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
@@ -57,10 +60,6 @@ const TeamFoldersContent = () => {
     }));
   }, [teamRootFolder, teamId]);
 
-  const handleTeamChange = (newTeamId: string) => {
-    router.push(`/team-space/${newTeamId}`);
-  };
-
   const handleAddFolder = () => {
     setShowFolderModal(true);
   };
@@ -76,16 +75,6 @@ const TeamFoldersContent = () => {
         },
       },
     );
-  };
-
-  const handleCreateTeam = () => {
-    setShowCreateTeamModal(true);
-  };
-
-  const handleTeamCreate = async ({ name }: { name: string }) => {
-    const newTeam = await addTeam({ name, description: '' });
-    router.push(`/team-space/${newTeam.id}`);
-    return newTeam;
   };
 
   const handleInviteTeam = () => {
@@ -114,12 +103,10 @@ const TeamFoldersContent = () => {
   return (
     <StyledContainer>
       <StyledHeader>
-        <TeamDropdown
-          teams={teams}
-          selectedTeamId={teamId}
-          onChange={handleTeamChange}
-          onCreateTeam={handleCreateTeam}
-        />
+        <StyledTeamInfo>
+          <StyledTeamName>{currentTeam.name}</StyledTeamName>
+          <StyledMemberCount>{currentTeam.memberCount}명</StyledMemberCount>
+        </StyledTeamInfo>
         <StyledButtonGroup>
           <Button
             variant="contained"
@@ -163,12 +150,6 @@ const TeamFoldersContent = () => {
         submitText="생성"
       />
 
-      <CreateTeamModal
-        isOpen={showCreateTeamModal}
-        onClose={() => setShowCreateTeamModal(false)}
-        onCreate={handleTeamCreate}
-      />
-
       <InviteTeamModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
@@ -201,6 +182,28 @@ const StyledButtonGroup = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+`;
+
+const StyledTeamInfo = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+`;
+
+const StyledTeamName = styled.h1`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[24]};
+  font-weight: ${tokens.typos.fontWeight.extrabold};
+  line-height: ${tokens.typos.lineHeight[34]};
+  color: ${tokens.colors.black};
+  margin: 0;
+`;
+
+const StyledMemberCount = styled.span`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[16]};
+  font-weight: ${tokens.typos.fontWeight.medium};
+  color: ${tokens.colors.neutral[600]};
 `;
 
 const StyledErrorMessage = styled.div`

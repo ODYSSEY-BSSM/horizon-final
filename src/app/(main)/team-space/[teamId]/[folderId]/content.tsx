@@ -7,7 +7,8 @@ import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapStyleModal } from '@/feature/roadmap';
 import { useCreateTeamRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { toRoadmapColor, toRoadmapIcon } from '@/feature/roadmap/utils/typeConverters';
-import { TeamFolderRoadmapListSection, useTeamSpaceData } from '@/feature/team';
+import { TeamFolderRoadmapListSection } from '@/feature/team';
+import { useTeam } from '@/feature/team/hooks/useTeamQueries';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -31,9 +32,19 @@ const FolderRoadmapsContent = () => {
   const teamId = params.teamId;
   const folderId = params.folderId;
 
-  const { teams } = useTeamSpaceData();
+  // GET /teams/{id} - 특정 팀 정보만 가져오기
+  const { data: teamData } = useTeam(Number(teamId));
 
-  const currentTeam = teams.find((team) => team.id === teamId);
+  const currentTeam = teamData
+    ? {
+        id: teamData.id?.toString() ?? '',
+        name: teamData.name ?? '',
+        description: '',
+        memberCount: teamData.members?.length ?? 0,
+        createdAt: new Date().toISOString(),
+        inviteCode: teamData.inviteCode ?? '',
+      }
+    : null;
 
   const [modals, setModals] = useState<ModalState>({
     roadmapCreate: false,
