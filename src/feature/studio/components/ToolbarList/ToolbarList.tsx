@@ -24,35 +24,35 @@ export const ToolbarList = ({ options, onSelect, maxHeight = 264 }: ToolbarListP
   };
 
   return (
-    <Container $maxHeight={maxHeight}>
-      <ItemsWrapper>
+    <StyledContainer $maxHeight={maxHeight}>
+      <StyledItemsWrapper>
         {options.map((option, index) => (
-          <ListItem
+          <StyledListItem
             key={option.value}
             $isHovered={hoveredIndex === index}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={() => handleSelect(option.value)}
           >
-            <ItemIcon className="material-symbols-rounded">{option.icon}</ItemIcon>
-            <ItemText>{option.text}</ItemText>
-          </ListItem>
+            <StyledItemIcon className="material-symbols-rounded">{option.icon}</StyledItemIcon>
+            <StyledItemText>{option.text}</StyledItemText>
+          </StyledListItem>
         ))}
-      </ItemsWrapper>
-    </Container>
+      </StyledItemsWrapper>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $maxHeight: number }>`
+const StyledContainer = styled.div<{ $maxHeight: number }>`
   width: 200px;
   max-height: ${(props) => props.$maxHeight}px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.sm};
+  border-radius: ${tokens.radius.small};
   overflow: hidden;
 `;
 
-const ItemsWrapper = styled.div`
+const StyledItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -60,7 +60,7 @@ const ItemsWrapper = styled.div`
   overflow: clip;
 `;
 
-const ListItem = styled.div<{ $isHovered: boolean }>`
+const StyledListItem = styled.div<{ $isHovered: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -78,8 +78,8 @@ const ListItem = styled.div<{ $isHovered: boolean }>`
   }
 `;
 
-const ItemIcon = styled.span`
-  font-family: 'Material Symbols Rounded', sans-serif;
+const StyledItemIcon = styled.span`
+  font-family: ${tokens.typos.fontFamily.icon};
   font-size: 20px;
   line-height: 1;
   color: ${tokens.colors.neutral[900]};
@@ -87,9 +87,9 @@ const ItemIcon = styled.span`
   flex-shrink: 0;
 `;
 
-const ItemText = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 400;
+const StyledItemText = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.regular};
   font-size: 16px;
   line-height: 24px;
   color: ${tokens.colors.neutral[900]};

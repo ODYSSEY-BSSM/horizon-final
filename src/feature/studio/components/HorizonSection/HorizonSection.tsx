@@ -35,34 +35,34 @@ export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) =
   const borderColor = colorTheme?.primary || '#6b7684';
 
   return (
-    <Container $borderColor={borderColor} $selected={selected}>
-      {data.label && <Label>{data.label}</Label>}
-    </Container>
+    <StyledContainer $borderColor={borderColor} $selected={selected}>
+      {data.label && <StyledLabel>{data.label}</StyledLabel>}
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $borderColor: string; $selected?: boolean }>`
+const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }>`
   width: 100%;
   height: 100%;
   background-color: #ffffff;
   border: ${(props) => (props.$selected ? '4px' : '2px')} solid
     ${(props) => (props.$selected ? '#4a81f0' : props.$borderColor)};
-  border-radius: ${tokens.radius.md};
-  padding: ${tokens.spacing.lg};
+  border-radius: ${tokens.radius.medium};
+  padding: ${tokens.spacing.large};
   transition: border-width 0.2s ease, border-color 0.2s ease;
 
   /* 자식 노드를 위한 포지셔닝 컨텍스트 */
   position: relative;
 `;
 
-const Label = styled.h3`
+const StyledLabel = styled.h3`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: ${tokens.typos.lineHeight[24]};
   color: #111827;
-  margin: 0 0 ${tokens.spacing.md} 0;
+  margin: 0 0 ${tokens.spacing.medium} 0;
   position: absolute;
-  top: ${tokens.spacing.md};
-  left: ${tokens.spacing.md};
+  top: ${tokens.spacing.medium};
+  left: ${tokens.spacing.medium};
 `;

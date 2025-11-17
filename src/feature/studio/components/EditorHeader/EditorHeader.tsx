@@ -36,53 +36,53 @@ export const EditorHeader = ({
   const isSaved = state === 'saved';
 
   return (
-    <Container>
-      <LeftSection>
-        <LogoIcon>
+    <StyledContainer>
+      <StyledLeftSection>
+        <StyledLogoIcon>
           <span className="material-symbols-rounded" style={{ fontSize: '40px' }}>
             developer_board
           </span>
-        </LogoIcon>
-        <TitleSection>
-          <EditorTitle>Roadmap Editor</EditorTitle>
+        </StyledLogoIcon>
+        <StyledTitleSection>
+          <StyledEditorTitle>Roadmap Editor</StyledEditorTitle>
           <DividerIcon />
-          <RoadmapTitle>{roadmapTitle}</RoadmapTitle>
-          {isSaved && <SavedLabel>(저장됨)</SavedLabel>}
-        </TitleSection>
-      </LeftSection>
+          <StyledRoadmapTitle>{roadmapTitle}</StyledRoadmapTitle>
+          {isSaved && <StyledSavedLabel>(저장됨)</StyledSavedLabel>}
+        </StyledTitleSection>
+      </StyledLeftSection>
 
-      <RightSection>
-        <TempSaveButton onClick={onTempSave} disabled={isSaving}>
+      <StyledRightSection>
+        <StyledTempSaveButton onClick={onTempSave} disabled={isSaving}>
           <span className="material-symbols-rounded">{isSaving ? 'autorenew' : 'save'}</span>
           {isSaving ? '저장중' : '임시저장'}
-        </TempSaveButton>
-        <SaveButton onClick={onSave} disabled={isSaving}>
+        </StyledTempSaveButton>
+        <StyledSaveButton onClick={onSave} disabled={isSaving}>
           <span className="material-symbols-rounded">save</span>
           저장하기
-        </SaveButton>
-      </RightSection>
-    </Container>
+        </StyledSaveButton>
+      </StyledRightSection>
+    </StyledContainer>
   );
 };
 
-const Container = styled.header`
+const StyledContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   height: 64px;
-  padding: 0 ${tokens.spacing.lg};
+  padding: 0 ${tokens.spacing.large};
   background-color: ${tokens.colors.white};
   border-bottom: 1px solid ${tokens.colors.neutral[200]};
 `;
 
-const LeftSection = styled.div`
+const StyledLeftSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.lg};
+  gap: ${tokens.spacing.large};
 `;
 
-const LogoIcon = styled.div`
+const StyledLogoIcon = styled.div`
   width: 40px;
   height: 40px;
   display: flex;
@@ -95,60 +95,60 @@ const LogoIcon = styled.div`
   }
 `;
 
-const TitleSection = styled.div`
+const StyledTitleSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.lg};
+  gap: ${tokens.spacing.large};
 `;
 
-const EditorTitle = styled.h1`
-  font-family: ${tokens.typography.fontFamily.suit};
+const StyledEditorTitle = styled.h1`
+  font-family: ${tokens.typos.fontFamily.suit};
   font-size: 20px;
-  font-weight: ${tokens.typography.fontWeight.bold};
+  font-weight: ${tokens.typos.fontWeight.bold};
   line-height: 28px;
   letter-spacing: -0.2px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const RoadmapTitle = styled.h2`
-  font-family: ${tokens.typography.fontFamily.suit};
+const StyledRoadmapTitle = styled.h2`
+  font-family: ${tokens.typos.fontFamily.suit};
   font-size: 20px;
-  font-weight: ${tokens.typography.fontWeight.bold};
+  font-weight: ${tokens.typos.fontWeight.bold};
   line-height: 28px;
   letter-spacing: -0.2px;
   color: ${tokens.colors.neutral[500]};
   margin: 0;
 `;
 
-const SavedLabel = styled.span`
-  font-family: ${tokens.typography.fontFamily.suit};
+const StyledSavedLabel = styled.span`
+  font-family: ${tokens.typos.fontFamily.suit};
   font-size: 18px;
-  font-weight: ${tokens.typography.fontWeight.semiBold};
+  font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: 26px;
   color: ${tokens.colors.neutral[500]};
 `;
 
-const RightSection = styled.div`
+const StyledRightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.sm};
+  gap: ${tokens.spacing.small};
 `;
 
-const TempSaveButton = styled.button`
+const StyledTempSaveButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${tokens.spacing.xs};
+  gap: ${tokens.spacing.xxsmall};
   height: 40px;
-  padding: ${tokens.spacing.sm} ${tokens.spacing.lg};
+  padding: ${tokens.spacing.small} ${tokens.spacing.large};
   border: 1.5px solid ${tokens.colors.primary};
-  border-radius: ${tokens.radius.md};
+  border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.white};
   color: ${tokens.colors.primary};
-  font-family: ${tokens.typography.fontFamily.suit};
+  font-family: ${tokens.typos.fontFamily.suit};
   font-size: 14px;
-  font-weight: ${tokens.typography.fontWeight.semiBold};
+  font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -169,21 +169,21 @@ const TempSaveButton = styled.button`
   }
 `;
 
-const SaveButton = styled.button`
+const StyledSaveButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${tokens.spacing.xs};
+  gap: ${tokens.spacing.xxsmall};
   height: 40px;
-  padding: ${tokens.spacing.sm} ${tokens.spacing.lg};
+  padding: ${tokens.spacing.small} ${tokens.spacing.large};
   padding-left: 12px;
   border: none;
-  border-radius: ${tokens.radius.md};
+  border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.primary};
   color: ${tokens.colors.white};
-  font-family: ${tokens.typography.fontFamily.suit};
+  font-family: ${tokens.typos.fontFamily.suit};
   font-size: 14px;
-  font-weight: ${tokens.typography.fontWeight.semiBold};
+  font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: 20px;
   cursor: pointer;
   transition: all 0.2s ease;

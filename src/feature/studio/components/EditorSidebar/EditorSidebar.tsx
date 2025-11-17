@@ -45,47 +45,59 @@ export const EditorSidebar = ({
     switch (nodeType) {
       case 'title':
         return (
-          <Header>
-            <HeaderTitle>Title Node</HeaderTitle>
-            <HeaderSubtitle>제목 노드</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            <StyledHeaderTitle>Title Node</StyledHeaderTitle>
+            <StyledHeaderSubtitle>제목 노드</StyledHeaderSubtitle>
+          </StyledHeader>
         );
       case 'standard':
         return (
-          <Header>
-            {isSchoolNode && <SchoolIcon className="material-symbols-rounded">school</SchoolIcon>}
-            <HeaderTitle>{isSchoolNode ? 'Standard School Node' : 'Standard Node'}</HeaderTitle>
-            <HeaderSubtitle>{isSchoolNode ? '기본 학교 노드' : '기본 노드'}</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            {isSchoolNode && (
+              <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+            )}
+            <StyledHeaderTitle>
+              {isSchoolNode ? 'Standard School Node' : 'Standard Node'}
+            </StyledHeaderTitle>
+            <StyledHeaderSubtitle>
+              {isSchoolNode ? '기본 학교 노드' : '기본 노드'}
+            </StyledHeaderSubtitle>
+          </StyledHeader>
         );
       case 'secondary':
         return (
-          <Header>
-            {isSchoolNode && <SchoolIcon className="material-symbols-rounded">school</SchoolIcon>}
-            <HeaderTitle>{isSchoolNode ? 'Secondary School Node' : 'Secondary Node'}</HeaderTitle>
-            <HeaderSubtitle>{isSchoolNode ? '세부 학교 노드' : '세부 노드'}</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            {isSchoolNode && (
+              <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+            )}
+            <StyledHeaderTitle>
+              {isSchoolNode ? 'Secondary School Node' : 'Secondary Node'}
+            </StyledHeaderTitle>
+            <StyledHeaderSubtitle>
+              {isSchoolNode ? '세부 학교 노드' : '세부 노드'}
+            </StyledHeaderSubtitle>
+          </StyledHeader>
         );
       case 'section':
         return (
-          <Header>
-            <HeaderTitle>Section</HeaderTitle>
-            <HeaderSubtitle>섹션</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            <StyledHeaderTitle>Section</StyledHeaderTitle>
+            <StyledHeaderSubtitle>섹션</StyledHeaderSubtitle>
+          </StyledHeader>
         );
       case 'titleText':
         return (
-          <Header>
-            <HeaderTitle>Title Text</HeaderTitle>
-            <HeaderSubtitle>제목 텍스트</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            <StyledHeaderTitle>Title Text</StyledHeaderTitle>
+            <StyledHeaderSubtitle>제목 텍스트</StyledHeaderSubtitle>
+          </StyledHeader>
         );
       case 'paragraphText':
         return (
-          <Header>
-            <HeaderTitle>Paragraph Text</HeaderTitle>
-            <HeaderSubtitle>본문 텍스트</HeaderSubtitle>
-          </Header>
+          <StyledHeader>
+            <StyledHeaderTitle>Paragraph Text</StyledHeaderTitle>
+            <StyledHeaderSubtitle>본문 텍스트</StyledHeaderSubtitle>
+          </StyledHeader>
         );
     }
   };
@@ -93,28 +105,28 @@ export const EditorSidebar = ({
   const renderContent = () => {
     if (nodeType === 'section') {
       return (
-        <Section>
-          <SectionTitle>스타일</SectionTitle>
-          <DimensionRow>
+        <StyledSection>
+          <StyledSectionTitle>스타일</StyledSectionTitle>
+          <StyledDimensionRow>
             <EditorTextbox label="W" value="240px" />
             <EditorTextbox label="H" value="158px" />
-          </DimensionRow>
-        </Section>
+          </StyledDimensionRow>
+        </StyledSection>
       );
     }
 
     if (nodeType === 'titleText' || nodeType === 'paragraphText') {
       return (
-        <Section>
-          <SectionTitle>속성</SectionTitle>
-          <FormGroup>
+        <StyledSection>
+          <StyledSectionTitle>속성</StyledSectionTitle>
+          <StyledFormGroup>
             <EditorDropdown label="타입" options={TEXT_TYPE_OPTIONS} selectedValue={nodeType} />
             <EditorTextfield
               label="텍스트"
               value={nodeType === 'titleText' ? 'Smooth Criminal' : 'The first Paragraph'}
             />
-          </FormGroup>
-        </Section>
+          </StyledFormGroup>
+        </StyledSection>
       );
     }
 
@@ -130,9 +142,9 @@ export const EditorSidebar = ({
 
     return (
       <>
-        <Section>
-          <SectionTitle>노드 정보</SectionTitle>
-          <FormGroup $disabled={isSchoolNode}>
+        <StyledSection>
+          <StyledSectionTitle>노드 정보</StyledSectionTitle>
+          <StyledFormGroup $disabled={isSchoolNode}>
             <EditorDropdown
               label="타입"
               options={NODE_TYPE_OPTIONS}
@@ -142,34 +154,34 @@ export const EditorSidebar = ({
             {nodeType !== 'title' && (
               <EditorTextfield label="학습 내용" value="노드의 학습 내용을 작성해주세요." />
             )}
-          </FormGroup>
-        </Section>
+          </StyledFormGroup>
+        </StyledSection>
 
-        <Section>
-          <SectionTitle>스타일</SectionTitle>
+        <StyledSection>
+          <StyledSectionTitle>스타일</StyledSectionTitle>
           <ColorDropdown selectedColor="blue" />
-        </Section>
+        </StyledSection>
 
         {showSchoolToggle && (
-          <BottomButtonContainer>
+          <StyledBottomButtonContainer>
             <Button variant="outlined" size="medium" onClick={onSchoolNodeToggle}>
               {isSchoolNode ? '기본 노드로 전환' : '학교 노드로 전환'}
             </Button>
-          </BottomButtonContainer>
+          </StyledBottomButtonContainer>
         )}
       </>
     );
   };
 
   return (
-    <Container>
+    <StyledContainer>
       {renderHeader()}
       {renderContent()}
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   width: 280px;
   height: 748px;
   background-color: ${tokens.colors.white};
@@ -177,7 +189,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Header = styled.div`
+const StyledHeader = styled.div`
   padding: 20px;
   border-bottom: 1px solid ${tokens.colors.neutral[200]};
   display: flex;
@@ -185,9 +197,9 @@ const Header = styled.div`
   gap: 0;
 `;
 
-const HeaderTitle = styled.h2`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 600;
+const StyledHeaderTitle = styled.h2`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.semibold};
   font-size: 18px;
   line-height: 26px;
   color: ${tokens.colors.neutral[900]};
@@ -197,23 +209,23 @@ const HeaderTitle = styled.h2`
   gap: 4px;
 `;
 
-const HeaderSubtitle = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledHeaderSubtitle = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const SchoolIcon = styled.span`
+const StyledSchoolIcon = styled.span`
   font-size: 24px;
   color: #2666dc;
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   margin-right: 4px;
 `;
 
-const Section = styled.div`
+const StyledSection = styled.div`
   padding: 20px;
   border-bottom: 1px solid ${tokens.colors.neutral[200]};
   display: flex;
@@ -221,16 +233,16 @@ const Section = styled.div`
   gap: 20px;
 `;
 
-const SectionTitle = styled.h3`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 400;
+const StyledSectionTitle = styled.h3`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.regular};
   font-size: 16px;
   line-height: 24px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const FormGroup = styled.div<{ $disabled?: boolean }>`
+const StyledFormGroup = styled.div<{ $disabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -238,7 +250,7 @@ const FormGroup = styled.div<{ $disabled?: boolean }>`
   pointer-events: ${(props) => (props.$disabled ? 'none' : 'auto')};
 `;
 
-const DimensionRow = styled.div`
+const StyledDimensionRow = styled.div`
   display: flex;
   gap: 8px;
   width: 240px;
@@ -248,7 +260,7 @@ const DimensionRow = styled.div`
   }
 `;
 
-const BottomButtonContainer = styled.div`
+const StyledBottomButtonContainer = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;

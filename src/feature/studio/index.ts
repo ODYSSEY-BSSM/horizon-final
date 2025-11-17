@@ -7,7 +7,7 @@ export type { DropdownOption, EditorDropdownProps } from './components/EditorDro
 export { EditorDropdown } from './components/EditorDropdown';
 export type { EditorHeaderProps, EditorHeaderState } from './components/EditorHeader';
 export { EditorHeader } from './components/EditorHeader';
-export type { EditorSidebarProps, NodeType } from './components/EditorSidebar';
+export type { EditorSidebarProps } from './components/EditorSidebar';
 export { EditorSidebar } from './components/EditorSidebar';
 export type { EditorTextboxProps } from './components/EditorTextbox';
 export { EditorTextbox } from './components/EditorTextbox';

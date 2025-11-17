@@ -25,44 +25,44 @@ export const EditorTextfield = ({
   };
 
   return (
-    <Container>
-      <Label>{label}</Label>
-      <Textarea
+    <StyledContainer>
+      <StyledLabel>{label}</StyledLabel>
+      <StyledTextarea
         value={value}
         placeholder={placeholder}
         onChange={handleChange}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 240px;
 `;
 
-const Label = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledLabel = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const Textarea = styled.textarea`
+const StyledTextarea = styled.textarea`
   width: 100%;
   height: 64px;
   padding: 5px 8px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
-  border-radius: ${tokens.radius.xs};
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+  border-radius: ${tokens.radius.extraSmall};
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
@@ -83,7 +83,7 @@ const Textarea = styled.textarea`
   }
 
   &:disabled {
-    background-color: ${tokens.colors.neutral[50]};
+    background-color: ${tokens.colors.neutral[100]};
     cursor: not-allowed;
     resize: none;
   }

@@ -38,34 +38,34 @@ export const EditorDropdown = ({
   };
 
   return (
-    <Container>
-      <Label>{label}</Label>
+    <StyledContainer>
+      <StyledLabel>{label}</StyledLabel>
 
-      <DropdownButton onClick={handleToggle} $isExpanded={isExpanded}>
-        <ButtonText>{selectedOption?.label || placeholder}</ButtonText>
-        <ArrowIcon className="material-symbols-rounded">
+      <StyledDropdownButton onClick={handleToggle} $isExpanded={isExpanded}>
+        <StyledButtonText>{selectedOption?.label || placeholder}</StyledButtonText>
+        <StyledArrowIcon className="material-symbols-rounded">
           {isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}
-        </ArrowIcon>
-      </DropdownButton>
+        </StyledArrowIcon>
+      </StyledDropdownButton>
 
       {isExpanded && (
-        <DropdownMenu>
+        <StyledDropdownMenu>
           {options.map((option) => (
-            <DropdownItem
+            <StyledDropdownItem
               key={option.value}
               onClick={() => handleOptionSelect(option.value)}
               $isSelected={option.value === selectedValue}
             >
-              <ItemText>{option.label}</ItemText>
-            </DropdownItem>
+              <StyledItemText>{option.label}</StyledItemText>
+            </StyledDropdownItem>
           ))}
-        </DropdownMenu>
+        </StyledDropdownMenu>
       )}
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -73,22 +73,22 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Label = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledLabel = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const DropdownButton = styled.button<{ $isExpanded: boolean }>`
+const StyledDropdownButton = styled.button<{ $isExpanded: boolean }>`
   position: relative;
   width: 100%;
   height: 32px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
-  border-radius: ${tokens.radius.xs};
+  border-radius: ${tokens.radius.extraSmall};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -106,9 +106,9 @@ const DropdownButton = styled.button<{ $isExpanded: boolean }>`
   }
 `;
 
-const ButtonText = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledButtonText = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
@@ -118,7 +118,7 @@ const ButtonText = styled.p`
   text-overflow: ellipsis;
 `;
 
-const ArrowIcon = styled.span`
+const StyledArrowIcon = styled.span`
   font-size: 16px;
   color: ${tokens.colors.neutral[600]};
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
@@ -126,23 +126,23 @@ const ArrowIcon = styled.span`
   flex-shrink: 0;
 `;
 
-const DropdownMenu = styled.div`
+const StyledDropdownMenu = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   border: 1px solid ${tokens.colors.neutral[300]};
-  border-radius: ${tokens.radius.xs};
+  border-radius: ${tokens.radius.extraSmall};
   overflow: hidden;
   margin-top: 4px;
 `;
 
-const DropdownItem = styled.button<{ $isSelected: boolean }>`
+const StyledDropdownItem = styled.button<{ $isSelected: boolean }>`
   position: relative;
   width: 100%;
   height: 32px;
   padding: 5px 8px;
   background-color: ${(props) =>
-    props.$isSelected ? tokens.colors.neutral[50] : tokens.colors.white};
+    props.$isSelected ? tokens.colors.neutral[100] : tokens.colors.white};
   border: none;
   cursor: pointer;
   display: flex;
@@ -159,9 +159,9 @@ const DropdownItem = styled.button<{ $isSelected: boolean }>`
   }
 `;
 
-const ItemText = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledItemText = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};

@@ -20,8 +20,8 @@ export const EditorToolbar = ({
   onAiActionSelect,
 }: EditorToolbarProps) => {
   return (
-    <Container>
-      <ToolbarWrapper>
+    <StyledContainer>
+      <StyledToolbarWrapper>
         <ToolbarItem
           type="selector"
           icon="arrow_selector_tool"
@@ -75,19 +75,19 @@ export const EditorToolbar = ({
           onSelect={() => onToolSelect?.('ai')}
           onDropdownSelect={onAiActionSelect}
         />
-      </ToolbarWrapper>
-    </Container>
+      </StyledToolbarWrapper>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.md};
+  border-radius: ${tokens.radius.medium};
   transform: translateX(-50%);
 `;
 
-const ToolbarWrapper = styled.div`
+const StyledToolbarWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;

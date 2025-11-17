@@ -17,34 +17,34 @@ export const HistoryController = ({
   onRedo,
 }: HistoryControllerProps) => {
   return (
-    <Container>
-      <UndoButton onClick={onUndo} disabled={!canUndo} aria-label="실행취소">
-        <Icon className="material-symbols-rounded">arrow_back</Icon>
-      </UndoButton>
-      <Divider />
-      <RedoButton onClick={onRedo} disabled={!canRedo} aria-label="재실행">
-        <Icon className="material-symbols-rounded">arrow_forward</Icon>
-      </RedoButton>
-    </Container>
+    <StyledContainer>
+      <StyledUndoButton onClick={onUndo} disabled={!canUndo} aria-label="실행취소">
+        <StyledIcon className="material-symbols-rounded">arrow_back</StyledIcon>
+      </StyledUndoButton>
+      <StyledDivider />
+      <StyledRedoButton onClick={onRedo} disabled={!canRedo} aria-label="재실행">
+        <StyledIcon className="material-symbols-rounded">arrow_forward</StyledIcon>
+      </StyledRedoButton>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.md};
+  border-radius: ${tokens.radius.medium};
   overflow: hidden;
   background-color: ${tokens.colors.white};
 `;
 
-const ButtonBase = styled.button`
+const StyledButtonBase = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  padding: ${tokens.spacing.sm};
+  padding: ${tokens.spacing.small};
   background-color: ${tokens.colors.white};
   border: none;
   cursor: pointer;
@@ -59,19 +59,19 @@ const ButtonBase = styled.button`
   }
 `;
 
-const UndoButton = styled(ButtonBase)`
+const StyledUndoButton = styled(StyledButtonBase)`
   border-right: 1px solid ${tokens.colors.neutral[200]};
 `;
 
-const RedoButton = styled(ButtonBase)``;
+const StyledRedoButton = styled(StyledButtonBase)``;
 
-const Divider = styled.div`
+const StyledDivider = styled.div`
   width: 1px;
   height: 100%;
   background-color: ${tokens.colors.neutral[200]};
 `;
 
-const Icon = styled.span<{ disabled?: boolean }>`
+const StyledIcon = styled.span<{ disabled?: boolean }>`
   font-size: 20px;
   color: ${(props) => (props.disabled ? tokens.colors.neutral[400] : tokens.colors.neutral[900])};
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;

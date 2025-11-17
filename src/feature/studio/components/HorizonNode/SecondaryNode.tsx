@@ -14,7 +14,7 @@ export const SecondaryNode = ({ data }: SecondaryNodeProps) => {
   const colorTheme = getNodeColor(data.color);
 
   return (
-    <Container $borderColor={colorTheme.border}>
+    <StyledContainer $borderColor={colorTheme.border}>
       {/* 4방향 핸들 */}
       <Handle type="target" position={Position.Top} id="top" />
       <Handle type="source" position={Position.Right} id="right" />
@@ -22,29 +22,29 @@ export const SecondaryNode = ({ data }: SecondaryNodeProps) => {
       <Handle type="target" position={Position.Left} id="left" />
 
       {/* 상단: 아이콘 + 타이틀 */}
-      <Header>
-        <Icon $color={colorTheme.primary}>school</Icon>
-        <NodeTitle>{data.title}</NodeTitle>
-      </Header>
+      <StyledHeader>
+        <StyledIcon $color={colorTheme.primary}>school</StyledIcon>
+        <StyledNodeTitle>{data.title}</StyledNodeTitle>
+      </StyledHeader>
 
       {/* 하단: 퀴즈 개수 */}
-      <QuizCount>
+      <StyledQuizCount>
         문제 {data.quizCurrent}/{data.quizTotal}
-      </QuizCount>
-    </Container>
+      </StyledQuizCount>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $borderColor: string }>`
+const StyledContainer = styled.div<{ $borderColor: string }>`
   width: 248px;
   background-color: #ffffff;
   border: 2px solid ${(props) => props.$borderColor};
-  border-radius: ${tokens.radius.md};
-  padding: ${tokens.spacing.md};
+  border-radius: ${tokens.radius.medium};
+  padding: ${tokens.spacing.medium};
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.sm};
-  box-shadow: ${tokens.shadow.sm};
+  gap: ${tokens.spacing.small};
+  box-shadow: ${tokens.shadow[0]};
   cursor: grab;
 
   &:active {
@@ -52,13 +52,13 @@ const Container = styled.div<{ $borderColor: string }>`
   }
 `;
 
-const Header = styled.div`
+const StyledHeader = styled.div`
   display: flex;
-  gap: ${tokens.spacing.sm};
+  gap: ${tokens.spacing.small};
   align-items: center;
 `;
 
-const Icon = styled.span<{ $color: string }>`
+const StyledIcon = styled.span<{ $color: string }>`
   font-family: ${tokens.typos.fontFamily.icon.join(', ')};
   font-size: 24px;
   color: ${(props) => props.$color};
@@ -66,7 +66,7 @@ const Icon = styled.span<{ $color: string }>`
   flex-shrink: 0;
 `;
 
-const NodeTitle = styled.h4`
+const StyledNodeTitle = styled.h4`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
@@ -76,7 +76,7 @@ const NodeTitle = styled.h4`
   flex: 1;
 `;
 
-const QuizCount = styled.p`
+const StyledQuizCount = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.regular};

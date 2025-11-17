@@ -14,7 +14,7 @@ export const StandardNode = ({ data }: StandardNodeProps) => {
   const colorTheme = getNodeColor(data.color);
 
   return (
-    <Container $borderColor={colorTheme.border}>
+    <StyledContainer $borderColor={colorTheme.border}>
       {/* 4방향 핸들 */}
       <Handle type="target" position={Position.Top} id="top" />
       <Handle type="source" position={Position.Right} id="right" />
@@ -22,35 +22,38 @@ export const StandardNode = ({ data }: StandardNodeProps) => {
       <Handle type="target" position={Position.Left} id="left" />
 
       {/* 상단: 아이콘 + 텍스트 */}
-      <Header>
-        <Icon $color={colorTheme.primary}>school</Icon>
-        <TextContent>
-          <NodeTitle>{data.title}</NodeTitle>
-          <Description>{data.description}</Description>
-        </TextContent>
-      </Header>
+      <StyledHeader>
+        <StyledIcon $color={colorTheme.primary}>school</StyledIcon>
+        <StyledTextContent>
+          <StyledNodeTitle>{data.title}</StyledNodeTitle>
+          <StyledDescription>{data.description}</StyledDescription>
+        </StyledTextContent>
+      </StyledHeader>
 
       {/* 하단: 진행률 바 */}
-      <ProgressSection>
-        <ProgressBarContainer $backgroundColor={colorTheme.progressBackground}>
-          <ProgressBarFill $backgroundColor={colorTheme.progressBar} $progress={data.progress} />
-        </ProgressBarContainer>
-        <ProgressLabel>{data.progress}%</ProgressLabel>
-      </ProgressSection>
-    </Container>
+      <StyledProgressSection>
+        <StyledProgressBarContainer $backgroundColor={colorTheme.progressBackground}>
+          <StyledProgressBarFill
+            $backgroundColor={colorTheme.progressBar}
+            $progress={data.progress}
+          />
+        </StyledProgressBarContainer>
+        <StyledProgressLabel>{data.progress}%</StyledProgressLabel>
+      </StyledProgressSection>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $borderColor: string }>`
+const StyledContainer = styled.div<{ $borderColor: string }>`
   width: 248px;
   background-color: #ffffff;
   border: 2px solid ${(props) => props.$borderColor};
-  border-radius: ${tokens.radius.md};
-  padding: ${tokens.spacing.md};
+  border-radius: ${tokens.radius.medium};
+  padding: ${tokens.spacing.medium};
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.sm};
-  box-shadow: ${tokens.shadow.sm};
+  gap: ${tokens.spacing.small};
+  box-shadow: ${tokens.shadow[0]};
   cursor: grab;
 
   &:active {
@@ -58,13 +61,13 @@ const Container = styled.div<{ $borderColor: string }>`
   }
 `;
 
-const Header = styled.div`
+const StyledHeader = styled.div`
   display: flex;
-  gap: ${tokens.spacing.sm};
+  gap: ${tokens.spacing.small};
   align-items: flex-start;
 `;
 
-const Icon = styled.span<{ $color: string }>`
+const StyledIcon = styled.span<{ $color: string }>`
   font-family: ${tokens.typos.fontFamily.icon.join(', ')};
   font-size: 24px;
   color: ${(props) => props.$color};
@@ -72,14 +75,14 @@ const Icon = styled.span<{ $color: string }>`
   flex-shrink: 0;
 `;
 
-const TextContent = styled.div`
+const StyledTextContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
 `;
 
-const NodeTitle = styled.h4`
+const StyledNodeTitle = styled.h4`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
@@ -88,7 +91,7 @@ const NodeTitle = styled.h4`
   margin: 0;
 `;
 
-const Description = styled.p`
+const StyledDescription = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[14]};
   font-weight: ${tokens.typos.fontWeight.light};
@@ -97,13 +100,13 @@ const Description = styled.p`
   margin: 0;
 `;
 
-const ProgressSection = styled.div`
+const StyledProgressSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.xs};
+  gap: ${tokens.spacing.xxsmall};
 `;
 
-const ProgressBarContainer = styled.div<{ $backgroundColor: string }>`
+const StyledProgressBarContainer = styled.div<{ $backgroundColor: string }>`
   flex: 1;
   height: 8px;
   background-color: ${(props) => props.$backgroundColor};
@@ -111,14 +114,14 @@ const ProgressBarContainer = styled.div<{ $backgroundColor: string }>`
   overflow: hidden;
 `;
 
-const ProgressBarFill = styled.div<{ $backgroundColor: string; $progress: number }>`
+const StyledProgressBarFill = styled.div<{ $backgroundColor: string; $progress: number }>`
   height: 100%;
   width: ${(props) => props.$progress}%;
   background-color: ${(props) => props.$backgroundColor};
   transition: width 0.3s ease;
 `;
 
-const ProgressLabel = styled.span`
+const StyledProgressLabel = styled.span`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[12]};
   font-weight: ${tokens.typos.fontWeight.medium};

@@ -25,9 +25,9 @@ export const EditorTextbox = ({
   };
 
   return (
-    <Container>
-      <Label>{label}</Label>
-      <Input
+    <StyledContainer>
+      <StyledLabel>{label}</StyledLabel>
+      <StyledInput
         type="text"
         value={value}
         placeholder={placeholder}
@@ -35,35 +35,35 @@ export const EditorTextbox = ({
         onFocus={onFocus}
         onBlur={onBlur}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 240px;
 `;
 
-const Label = styled.p`
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+const StyledLabel = styled.p`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
 `;
 
-const Input = styled.input`
+const StyledInput = styled.input`
   width: 100%;
   height: 32px;
   padding: 5px 8px;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
-  border-radius: ${tokens.radius.xs};
-  font-family: 'SUIT Variable', sans-serif;
-  font-weight: 300;
+  border-radius: ${tokens.radius.extraSmall};
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
@@ -83,7 +83,7 @@ const Input = styled.input`
   }
 
   &:disabled {
-    background-color: ${tokens.colors.neutral[50]};
+    background-color: ${tokens.colors.neutral[100]};
     cursor: not-allowed;
   }
 `;

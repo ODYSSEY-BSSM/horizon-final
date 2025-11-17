@@ -68,49 +68,51 @@ export const ToolbarItem = ({
   const dropdownState = isDropdownOpen ? 'hover' : state;
 
   return (
-    <Container
+    <StyledContainer
       ref={dropdownRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <IconButton $state={state}>
-        <Icon $state={state} className="material-symbols-rounded">
+      <StyledIconButton $state={state}>
+        <StyledIcon $state={state} className="material-symbols-rounded">
           {icon}
-        </Icon>
-      </IconButton>
+        </StyledIcon>
+      </StyledIconButton>
 
       {hasDropdown && (
-        <DropdownButtonWrapper>
+        <StyledDropdownButtonWrapper>
           {isDropdownOpen && dropdownOptions.length > 0 && (
-            <DropdownMenuWrapper>
+            <StyledDropdownMenuWrapper>
               <ToolbarList options={dropdownOptions} onSelect={handleDropdownSelect} />
-            </DropdownMenuWrapper>
+            </StyledDropdownMenuWrapper>
           )}
-          <DropdownButton $state={dropdownState} onClick={handleDropdownClick}>
-            <DropdownIcon className="material-symbols-rounded">arrow_drop_down</DropdownIcon>
-          </DropdownButton>
-        </DropdownButtonWrapper>
+          <StyledDropdownButton $state={dropdownState} onClick={handleDropdownClick}>
+            <StyledDropdownIcon className="material-symbols-rounded">
+              arrow_drop_down
+            </StyledDropdownIcon>
+          </StyledDropdownButton>
+        </StyledDropdownButtonWrapper>
       )}
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
   position: relative;
 `;
 
-const IconButton = styled.div<{ $state: ToolbarItemState }>`
+const StyledIconButton = styled.div<{ $state: ToolbarItemState }>`
   width: 36px;
   height: 36px;
   padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${tokens.radius.xs};
+  border-radius: ${tokens.radius.extraSmall};
   background-color: ${(props) => {
     switch (props.$state) {
       case 'selected':
@@ -124,8 +126,8 @@ const IconButton = styled.div<{ $state: ToolbarItemState }>`
   transition: background-color 0.2s;
 `;
 
-const Icon = styled.span<{ $state?: ToolbarItemState }>`
-  font-family: 'Material Symbols Rounded', sans-serif;
+const StyledIcon = styled.span<{ $state?: ToolbarItemState }>`
+  font-family: ${tokens.typos.fontFamily.icon};
   font-size: 20px;
   line-height: 1;
   color: ${(props) =>
@@ -133,7 +135,7 @@ const Icon = styled.span<{ $state?: ToolbarItemState }>`
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 `;
 
-const DropdownButtonWrapper = styled.div`
+const StyledDropdownButtonWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -144,21 +146,21 @@ const DropdownButtonWrapper = styled.div`
   gap: 8px;
 `;
 
-const DropdownMenuWrapper = styled.div`
+const StyledDropdownMenuWrapper = styled.div`
   position: absolute;
   bottom: 52px;
   left: 0;
   z-index: 1000;
 `;
 
-const DropdownButton = styled.div<{ $state: ToolbarItemState }>`
+const StyledDropdownButton = styled.div<{ $state: ToolbarItemState }>`
   width: 12px;
   height: 36px;
   padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${tokens.radius.xs};
+  border-radius: ${tokens.radius.extraSmall};
   background-color: ${(props) => {
     switch (props.$state) {
       case 'hover':
@@ -170,10 +172,10 @@ const DropdownButton = styled.div<{ $state: ToolbarItemState }>`
   transition: background-color 0.2s;
 `;
 
-const DropdownIcon = styled.span`
-  font-family: 'Material Symbols Rounded', sans-serif;
+const StyledDropdownIcon = styled.span`
+  font-family: ${tokens.typos.fontFamily.icon};
   font-size: 12px;
-  font-weight: 300;
+  font-weight: ${tokens.typos.fontWeight.light};
   line-height: 1;
   color: ${tokens.colors.neutral[700]};
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0;

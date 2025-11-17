@@ -24,20 +24,20 @@ import type { TextNodeData } from '../../types/text.types';
 export const HorizonText = ({ data, selected }: NodeProps<TextNodeData>) => {
   if (data.type === 'title') {
     return (
-      <TitleContainer $selected={selected}>
-        <TitleText>{data.text}</TitleText>
-      </TitleContainer>
+      <StyledTitleContainer $selected={selected}>
+        <StyledTitleText>{data.text}</StyledTitleText>
+      </StyledTitleContainer>
     );
   }
 
   return (
-    <ParagraphContainer $selected={selected}>
-      <ParagraphText>{data.text}</ParagraphText>
-    </ParagraphContainer>
+    <StyledParagraphContainer $selected={selected}>
+      <StyledParagraphText>{data.text}</StyledParagraphText>
+    </StyledParagraphContainer>
   );
 };
 
-const TitleContainer = styled.div<{ $selected?: boolean }>`
+const StyledTitleContainer = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +52,7 @@ const TitleContainer = styled.div<{ $selected?: boolean }>`
   }
 `;
 
-const TitleText = styled.p`
+const StyledTitleText = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[20]};
   font-weight: ${tokens.typos.fontWeight.bold};
@@ -63,7 +63,7 @@ const TitleText = styled.p`
   margin: 0;
 `;
 
-const ParagraphContainer = styled.div<{ $selected?: boolean }>`
+const StyledParagraphContainer = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,7 +78,7 @@ const ParagraphContainer = styled.div<{ $selected?: boolean }>`
   }
 `;
 
-const ParagraphText = styled.p`
+const StyledParagraphText = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.regular};
