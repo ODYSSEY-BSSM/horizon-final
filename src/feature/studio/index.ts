@@ -1,6 +1,7 @@
 // Components
 export { HorizonNode, SecondaryNode, StandardNode, TitleNode } from './components/HorizonNode';
 export { HorizonSection } from './components/HorizonSection';
+export { HorizonText } from './components/HorizonText';
 export type { ColorTheme } from './constants/nodeColors';
 
 // Constants
@@ -12,6 +13,7 @@ export {
   NODE_TYPE_MAP,
 } from './constants/nodeTypes';
 export { HORIZON_SECTION_TYPE, SECTION_DIMENSIONS } from './constants/sectionTypes';
+export { HORIZON_TEXT_TYPE, TEXT_TYPES } from './constants/textTypes';
 // Types
 export type {
   CreateNodeParams,
@@ -29,3 +31,9 @@ export type {
   HorizonSection as HorizonSectionType,
   SectionNodeData,
 } from './types/section.types';
+export type {
+  CreateTextParams,
+  HorizonText as HorizonTextType,
+  TextNodeData,
+  TextType,
+} from './types/text.types';
