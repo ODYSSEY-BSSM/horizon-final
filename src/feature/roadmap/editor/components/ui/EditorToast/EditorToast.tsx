@@ -46,7 +46,7 @@ const StyledContainer = styled.div<{ $type: ToastType }>`
   padding: 12px 20px;
   background-color: ${tokens.colors.white};
   border-left: 3px solid
-    ${(props) => (props.$type === 'success' ? tokens.colors.primary : '#ff0000')};
+    ${(props) => (props.$type === 'success' ? tokens.colors.primary : tokens.colors.error[200])};
   border-radius: ${tokens.radius.extraSmall};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
@@ -60,7 +60,7 @@ const StyledContent = styled.div<{ $hasDescription: boolean }>`
 
 const StyledIcon = styled.span<{ $type: ToastType }>`
   font-size: 32px;
-  color: ${(props) => (props.$type === 'success' ? tokens.colors.primary : '#ff0000')};
+  color: ${(props) => (props.$type === 'success' ? tokens.colors.primary : tokens.colors.error[200])};
   font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 40;
   flex-shrink: 0;
 `;

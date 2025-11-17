@@ -2,9 +2,9 @@
 
 import styled from '@emotion/styled';
 import type { NodeProps } from 'reactflow';
+import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
+import type { SectionNodeData } from '@/feature/roadmap/editor/types/section.types';
 import { tokens } from '@/shared/tokens';
-import { getNodeColor } from '../../constants/nodeColors';
-import type { SectionNodeData } from '../../types/section.types';
 
 /**
  * HorizonSection - 노드 그룹핑 컴포넌트
@@ -32,7 +32,7 @@ import type { SectionNodeData } from '../../types/section.types';
  */
 export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) => {
   const colorTheme = data.color ? getNodeColor(data.color) : null;
-  const borderColor = colorTheme?.primary || '#6b7684';
+  const borderColor = colorTheme?.primary || tokens.colors.neutral[500];
 
   return (
     <StyledContainer $borderColor={borderColor} $selected={selected}>
@@ -44,9 +44,9 @@ export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) =
 const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }>`
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
+  background-color: ${tokens.colors.white};
   border: ${(props) => (props.$selected ? '4px' : '2px')} solid
-    ${(props) => (props.$selected ? '#4a81f0' : props.$borderColor)};
+    ${(props) => (props.$selected ? tokens.colors.primary[500] : props.$borderColor)};
   border-radius: ${tokens.radius.medium};
   padding: ${tokens.spacing.large};
   transition: border-width 0.2s ease, border-color 0.2s ease;
@@ -60,7 +60,7 @@ const StyledLabel = styled.h3`
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: ${tokens.typos.lineHeight[24]};
-  color: #111827;
+  color: ${tokens.colors.neutral[900]};
   margin: 0 0 ${tokens.spacing.medium} 0;
   position: absolute;
   top: ${tokens.spacing.medium};

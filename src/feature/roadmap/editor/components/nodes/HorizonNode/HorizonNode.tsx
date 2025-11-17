@@ -1,7 +1,7 @@
 'use client';
 
 import type { NodeProps } from 'reactflow';
-import type { HorizonNodeData } from '../../types/node.types';
+import type { HorizonNodeData } from '@/feature/roadmap/editor/types/node.types';
 import { SecondaryNode } from './SecondaryNode';
 import { StandardNode } from './StandardNode';
 import { TitleNode } from './TitleNode';

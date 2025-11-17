@@ -2,9 +2,9 @@
 
 import styled from '@emotion/styled';
 import { Handle, Position } from 'reactflow';
+import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
+import type { StandardNodeData } from '@/feature/roadmap/editor/types/node.types';
 import { tokens } from '@/shared/tokens';
-import { getNodeColor } from '../../constants/nodeColors';
-import type { StandardNodeData } from '../../types/node.types';
 
 interface StandardNodeProps {
   data: StandardNodeData;
@@ -46,7 +46,7 @@ export const StandardNode = ({ data }: StandardNodeProps) => {
 
 const StyledContainer = styled.div<{ $borderColor: string }>`
   width: 248px;
-  background-color: #ffffff;
+  background-color: ${tokens.colors.white};
   border: 2px solid ${(props) => props.$borderColor};
   border-radius: ${tokens.radius.medium};
   padding: ${tokens.spacing.medium};
@@ -87,7 +87,7 @@ const StyledNodeTitle = styled.h4`
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: ${tokens.typos.lineHeight[24]};
-  color: #000000;
+  color: ${tokens.colors.black};
   margin: 0;
 `;
 
@@ -96,7 +96,7 @@ const StyledDescription = styled.p`
   font-size: ${tokens.typos.fontSize[14]};
   font-weight: ${tokens.typos.fontWeight.light};
   line-height: ${tokens.typos.lineHeight[20]};
-  color: #666666;
+  color: ${tokens.colors.neutral[600]};
   margin: 0;
 `;
 
@@ -125,7 +125,7 @@ const StyledProgressLabel = styled.span`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: ${tokens.typos.fontSize[12]};
   font-weight: ${tokens.typos.fontWeight.medium};
-  color: #000000;
+  color: ${tokens.colors.black};
   min-width: 36px;
   text-align: right;
 `;

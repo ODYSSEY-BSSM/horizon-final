@@ -2,9 +2,9 @@
 
 import styled from '@emotion/styled';
 import { Handle, Position } from 'reactflow';
+import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
+import type { SecondaryNodeData } from '@/feature/roadmap/editor/types/node.types';
 import { tokens } from '@/shared/tokens';
-import { getNodeColor } from '../../constants/nodeColors';
-import type { SecondaryNodeData } from '../../types/node.types';
 
 interface SecondaryNodeProps {
   data: SecondaryNodeData;
@@ -37,7 +37,7 @@ export const SecondaryNode = ({ data }: SecondaryNodeProps) => {
 
 const StyledContainer = styled.div<{ $borderColor: string }>`
   width: 248px;
-  background-color: #ffffff;
+  background-color: ${tokens.colors.white};
   border: 2px solid ${(props) => props.$borderColor};
   border-radius: ${tokens.radius.medium};
   padding: ${tokens.spacing.medium};
@@ -71,7 +71,7 @@ const StyledNodeTitle = styled.h4`
   font-size: ${tokens.typos.fontSize[18]};
   font-weight: ${tokens.typos.fontWeight.semibold};
   line-height: ${tokens.typos.lineHeight[24]};
-  color: #000000;
+  color: ${tokens.colors.black};
   margin: 0;
   flex: 1;
 `;
@@ -81,7 +81,7 @@ const StyledQuizCount = styled.p`
   font-size: ${tokens.typos.fontSize[16]};
   font-weight: ${tokens.typos.fontWeight.regular};
   line-height: ${tokens.typos.lineHeight[22]};
-  color: #666666;
+  color: ${tokens.colors.neutral[600]};
   margin: 0;
   padding-left: 32px; /* icon width + gap */
 `;

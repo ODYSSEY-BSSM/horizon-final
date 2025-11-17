@@ -17,6 +17,8 @@ export { RoadmapThumbnail } from './components/RoadmapThumbnail';
 export { ROADMAP_COLOR_OPTIONS, ROADMAP_COLORS } from './constants';
 export { FOLDER_FILTER_TABS } from './constants/FolderFilter.constants';
 export { FILTER_TABS as MY_ROADMAPS_FILTER_TABS } from './constants/MyRoadmapsFilter.constants';
+// Editor exports
+export * from './editor';
 export { RoadmapStyleModal } from './forms/RoadmapStyleModal';
 export type { CursorPosition, UseCursorWebSocketOptions } from './hooks/useCursorWebSocket';
 export { useCursorWebSocket } from './hooks/useCursorWebSocket';

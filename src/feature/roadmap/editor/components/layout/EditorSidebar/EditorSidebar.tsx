@@ -1,13 +1,13 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { ColorDropdown } from '@/feature/roadmap';
 import {
-  ColorDropdown,
   type DropdownOption,
   EditorDropdown,
   EditorTextbox,
   EditorTextfield,
-} from '@/feature/studio';
+} from '@/feature/roadmap/editor';
 import { tokens } from '@/shared/tokens';
 import { Button } from '@/shared/ui';
 
@@ -159,7 +159,12 @@ export const EditorSidebar = ({
 
         <StyledSection>
           <StyledSectionTitle>스타일</StyledSectionTitle>
-          <ColorDropdown selectedColor="blue" />
+          <ColorDropdown
+            value="blue"
+            onChange={() => {
+              // TODO: Implement color change handler when state management is added
+            }}
+          />
         </StyledSection>
 
         {showSchoolToggle && (
@@ -220,7 +225,7 @@ const StyledHeaderSubtitle = styled.p`
 
 const StyledSchoolIcon = styled.span`
   font-size: 24px;
-  color: #2666dc;
+  color: ${tokens.colors.primary[500]};
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   margin-right: 4px;
 `;

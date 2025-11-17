@@ -2,9 +2,9 @@
 
 import styled from '@emotion/styled';
 import { Handle, Position } from 'reactflow';
+import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
+import type { TitleNodeData } from '@/feature/roadmap/editor/types/node.types';
 import { tokens } from '@/shared/tokens';
-import { getNodeColor } from '../../constants/nodeColors';
-import type { TitleNodeData } from '../../types/node.types';
 
 interface TitleNodeProps {
   data: TitleNodeData;
@@ -49,7 +49,7 @@ const StyledTitle = styled.h3`
   font-size: ${tokens.typos.fontSize[24]};
   font-weight: ${tokens.typos.fontWeight.extrabold};
   line-height: ${tokens.typos.lineHeight[28]};
-  color: #ffffff;
+  color: ${tokens.colors.white};
   text-align: center;
   margin: 0;
 `;
