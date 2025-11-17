@@ -49,9 +49,7 @@ export const ToolbarItem = ({
   }, [isDropdownOpen]);
 
   const handleClick = () => {
-    if (!hasDropdown) {
-      onSelect?.();
-    }
+    onSelect?.();
   };
 
   const handleDropdownClick = (e: React.MouseEvent) => {

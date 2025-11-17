@@ -22,7 +22,7 @@ const DividerIcon = () => (
     role="presentation"
     aria-hidden="true"
   >
-    <path d="M1 0V24" stroke="${tokens.colors.neutral[500]}" strokeWidth="1.5" />
+    <path d="M1 0V24" stroke={tokens.colors.neutral[500]} strokeWidth="1.5" />
   </svg>
 );
 

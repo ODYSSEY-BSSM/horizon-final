@@ -11,7 +11,7 @@ import {
 import { tokens } from '@/shared/tokens';
 import { Button } from '@/shared/ui';
 
-export type NodeType =
+export type EditorNodeType =
   | 'title'
   | 'standard'
   | 'secondary'
@@ -20,7 +20,7 @@ export type NodeType =
   | 'paragraphText';
 
 export interface EditorSidebarProps {
-  nodeType: NodeType;
+  nodeType: EditorNodeType;
   isSchoolNode?: boolean;
   onSchoolNodeToggle?: () => void;
 }

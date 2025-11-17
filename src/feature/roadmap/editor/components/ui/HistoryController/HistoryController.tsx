@@ -19,11 +19,15 @@ export const HistoryController = ({
   return (
     <StyledContainer>
       <StyledUndoButton onClick={onUndo} disabled={!canUndo} aria-label="실행취소">
-        <StyledIcon className="material-symbols-rounded">arrow_back</StyledIcon>
+        <StyledIcon disabled={!canUndo} className="material-symbols-rounded">
+          arrow_back
+        </StyledIcon>
       </StyledUndoButton>
       <StyledDivider />
       <StyledRedoButton onClick={onRedo} disabled={!canRedo} aria-label="재실행">
-        <StyledIcon className="material-symbols-rounded">arrow_forward</StyledIcon>
+        <StyledIcon disabled={!canRedo} className="material-symbols-rounded">
+          arrow_forward
+        </StyledIcon>
       </StyledRedoButton>
     </StyledContainer>
   );

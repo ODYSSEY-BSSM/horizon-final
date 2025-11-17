@@ -47,7 +47,7 @@ const StyledContainer = styled.div`
 `;
 
 const StyledLabel = styled.p`
-  font-family: ${tokens.typos.fontFamily.suit};
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;
@@ -62,7 +62,7 @@ const StyledInput = styled.input`
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
   border-radius: ${tokens.radius.extraSmall};
-  font-family: ${tokens.typos.fontFamily.suit};
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
   line-height: 22px;

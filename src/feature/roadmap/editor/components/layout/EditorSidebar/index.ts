@@ -1,2 +1,2 @@
-export type { EditorSidebarProps, NodeType } from './EditorSidebar';
+export type { EditorNodeType, EditorSidebarProps } from './EditorSidebar';
 export { EditorSidebar } from './EditorSidebar';
