@@ -53,6 +53,7 @@
         "noUnusedVariables": "error",
         "useExhaustiveDependencies": "warn",
         "useHookAtTopLevel": "error",
+        "useUniqueElementIds": "off",
         "useValidForDirection": "error",
         "useYield": "error"
       },
