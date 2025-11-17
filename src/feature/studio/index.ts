@@ -1,15 +1,31 @@
 // Components
 
 // Types
+export type { ColorDropdownProps } from './components/ColorDropdown';
+export { ColorDropdown } from './components/ColorDropdown';
+export type { DropdownOption, EditorDropdownProps } from './components/EditorDropdown';
+export { EditorDropdown } from './components/EditorDropdown';
 export type { EditorHeaderProps, EditorHeaderState } from './components/EditorHeader';
 export { EditorHeader } from './components/EditorHeader';
+export type { EditorSidebarProps, NodeType } from './components/EditorSidebar';
+export { EditorSidebar } from './components/EditorSidebar';
+export type { EditorTextboxProps } from './components/EditorTextbox';
+export { EditorTextbox } from './components/EditorTextbox';
+export type { EditorTextfieldProps } from './components/EditorTextfield';
+export { EditorTextfield } from './components/EditorTextfield';
 export type { EditorToastProps, ToastType } from './components/EditorToast';
 export { EditorToast } from './components/EditorToast';
+export type { EditorToolbarProps } from './components/EditorToolbar';
+export { EditorToolbar } from './components/EditorToolbar';
 export type { HistoryControllerProps } from './components/HistoryController';
 export { HistoryController } from './components/HistoryController';
 export { HorizonNode, SecondaryNode, StandardNode, TitleNode } from './components/HorizonNode';
 export { HorizonSection } from './components/HorizonSection';
 export { HorizonText } from './components/HorizonText';
+export type { ToolbarItemProps, ToolbarItemState, ToolType } from './components/ToolbarItem';
+export { ToolbarItem } from './components/ToolbarItem';
+export type { ToolbarListOption, ToolbarListProps } from './components/ToolbarList';
+export { ToolbarList } from './components/ToolbarList';
 export type { ColorTheme } from './constants/nodeColors';
 // Constants
 export { getNodeColor, NODE_COLORS } from './constants/nodeColors';
