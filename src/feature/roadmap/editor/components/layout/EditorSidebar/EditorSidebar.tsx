@@ -188,10 +188,13 @@ export const EditorSidebar = ({
 
 const StyledContainer = styled.div`
   width: 280px;
-  height: 748px;
+  height: 100%;
   background-color: ${tokens.colors.white};
   border-left: 1px solid ${tokens.colors.neutral[200]};
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 const StyledHeader = styled.div`
@@ -200,6 +203,7 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0;
+  flex-shrink: 0;
 `;
 
 const StyledHeaderTitle = styled.h2`
@@ -236,6 +240,7 @@ const StyledSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex-shrink: 0;
 `;
 
 const StyledSectionTitle = styled.h3`
@@ -266,12 +271,11 @@ const StyledDimensionRow = styled.div`
 `;
 
 const StyledBottomButtonContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  margin-top: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  border-top: 1px solid ${tokens.colors.neutral[200]};
+  flex-shrink: 0;
 `;

@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 export interface DropdownOption {
   value: string;
@@ -43,9 +44,11 @@ export const EditorDropdown = ({
 
       <StyledDropdownButton onClick={handleToggle} $isExpanded={isExpanded}>
         <StyledButtonText>{selectedOption?.label || placeholder}</StyledButtonText>
-        <StyledArrowIcon className="material-symbols-rounded">
-          {isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}
-        </StyledArrowIcon>
+        <Icon
+          name={isExpanded ? 'arrow_drop_up' : 'arrow_drop_down'}
+          size={16}
+          color={tokens.colors.neutral[600]}
+        />
       </StyledDropdownButton>
 
       {isExpanded && (
@@ -116,14 +119,6 @@ const StyledButtonText = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`;
-
-const StyledArrowIcon = styled.span`
-  font-size: 16px;
-  color: ${tokens.colors.neutral[600]};
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-  line-height: 1;
-  flex-shrink: 0;
 `;
 
 const StyledDropdownMenu = styled.div`

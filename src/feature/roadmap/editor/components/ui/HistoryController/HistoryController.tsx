@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 export interface HistoryControllerProps {
   canUndo?: boolean;
@@ -19,14 +20,14 @@ export const HistoryController = ({
   return (
     <StyledContainer>
       <StyledUndoButton onClick={onUndo} disabled={!canUndo} aria-label="실행취소">
-        <StyledIcon disabled={!canUndo} className="material-symbols-rounded">
-          arrow_back
+        <StyledIcon disabled={!canUndo}>
+          <Icon name="arrow_back" variant="SM" />
         </StyledIcon>
       </StyledUndoButton>
       <StyledDivider />
       <StyledRedoButton onClick={onRedo} disabled={!canRedo} aria-label="재실행">
-        <StyledIcon disabled={!canRedo} className="material-symbols-rounded">
-          arrow_forward
+        <StyledIcon disabled={!canRedo}>
+          <Icon name="arrow_forward" variant="SM" />
         </StyledIcon>
       </StyledRedoButton>
     </StyledContainer>
@@ -76,7 +77,8 @@ const StyledDivider = styled.div`
 `;
 
 const StyledIcon = styled.span<{ disabled?: boolean }>`
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: ${(props) => (props.disabled ? tokens.colors.neutral[400] : tokens.colors.neutral[900])};
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 `;

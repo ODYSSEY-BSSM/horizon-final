@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 import { ToolbarList, type ToolbarListOption } from '../ToolbarList';
 
 export type ToolType = 'selector' | 'node' | 'section' | 'text' | 'ai';
@@ -19,7 +20,6 @@ export interface ToolbarItemProps {
 }
 
 export const ToolbarItem = ({
-  type,
   icon,
   hasDropdown = false,
   dropdownOptions = [],
@@ -73,8 +73,8 @@ export const ToolbarItem = ({
       onClick={handleClick}
     >
       <StyledIconButton $state={state}>
-        <StyledIcon $state={state} className="material-symbols-rounded">
-          {icon}
+        <StyledIcon $state={state}>
+          <Icon name={icon} variant="MD" />
         </StyledIcon>
       </StyledIconButton>
 
@@ -125,12 +125,11 @@ const StyledIconButton = styled.div<{ $state: ToolbarItemState }>`
 `;
 
 const StyledIcon = styled.span<{ $state?: ToolbarItemState }>`
-  font-family: ${tokens.typos.fontFamily.icon};
-  font-size: 20px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: ${(props) =>
     props.$state === 'selected' ? tokens.colors.white : tokens.colors.neutral[700]};
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 `;
 
 const StyledDropdownButtonWrapper = styled.div`

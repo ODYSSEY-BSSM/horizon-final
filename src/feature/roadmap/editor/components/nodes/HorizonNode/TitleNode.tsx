@@ -22,21 +22,25 @@ export const TitleNode = ({ data }: TitleNodeProps) => {
       <Handle type="target" position={Position.Left} id="left" />
 
       {/* 타이틀 텍스트 */}
-      <StyledTitle>{data.label}</StyledTitle>
+      <StyledTitle $color={colorTheme.primary}>{data.label}</StyledTitle>
+
+      {/* 하단 중앙 핸들 포인트 */}
+      <StyledHandlePoint />
     </StyledContainer>
   );
 };
 
 const StyledContainer = styled.div<{ $backgroundColor: string }>`
-  width: 240px;
-  min-height: 56px;
-  padding: ${tokens.spacing.medium};
-  background-color: ${(props) => props.$backgroundColor};
+  position: relative;
+  width: 248px;
+  min-height: 62px;
+  padding: 12px 40px;
+  background-color: ${tokens.colors.white};
+  border: 4px solid ${(props) => props.$backgroundColor};
   border-radius: ${tokens.radius.medium};
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: ${tokens.shadow[0]};
   cursor: grab;
 
   &:active {
@@ -44,12 +48,28 @@ const StyledContainer = styled.div<{ $backgroundColor: string }>`
   }
 `;
 
-const StyledTitle = styled.h3`
+const StyledTitle = styled.h3<{ $color: string }>`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[24]};
+  font-size: 24px;
   font-weight: ${tokens.typos.fontWeight.extrabold};
-  line-height: ${tokens.typos.lineHeight[28]};
-  color: ${tokens.colors.white};
+  line-height: 34px;
+  letter-spacing: -0.36px;
+  color: ${(props) => props.$color};
   text-align: center;
   margin: 0;
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+`;
+
+const StyledHandlePoint = styled.div`
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${tokens.colors.neutral[600]};
+  border: 2px solid ${tokens.colors.white};
 `;

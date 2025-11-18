@@ -1,7 +1,9 @@
 'use client';
 
 import styled from '@emotion/styled';
+import Image from 'next/image';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 export type EditorHeaderState = 'editing' | 'saved' | 'saving';
 
@@ -39,9 +41,7 @@ export const EditorHeader = ({
     <StyledContainer>
       <StyledLeftSection>
         <StyledLogoIcon>
-          <span className="material-symbols-rounded" style={{ fontSize: '40px' }}>
-            developer_board
-          </span>
+          <Image src="/logo.svg" alt="Horizon Logo" width={40} height={40} priority />
         </StyledLogoIcon>
         <StyledTitleSection>
           <StyledEditorTitle>Roadmap Editor</StyledEditorTitle>
@@ -53,11 +53,11 @@ export const EditorHeader = ({
 
       <StyledRightSection>
         <StyledTempSaveButton onClick={onTempSave} disabled={isSaving}>
-          <span className="material-symbols-rounded">{isSaving ? 'autorenew' : 'save'}</span>
+          <Icon name={isSaving ? 'autorenew' : 'save'} variant="SM" />
           {isSaving ? '저장중' : '임시저장'}
         </StyledTempSaveButton>
         <StyledSaveButton onClick={onSave} disabled={isSaving}>
-          <span className="material-symbols-rounded">save</span>
+          <Icon name="save" variant="SM" />
           저장하기
         </StyledSaveButton>
       </StyledRightSection>
@@ -71,15 +71,18 @@ const StyledContainer = styled.header`
   justify-content: space-between;
   width: 100%;
   height: 64px;
-  padding: 0 ${tokens.spacing.large};
+  padding: 12px 20px;
   background-color: ${tokens.colors.white};
   border-bottom: 1px solid ${tokens.colors.neutral[200]};
+  box-sizing: border-box;
 `;
 
 const StyledLeftSection = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.large};
+  flex: 1;
+  min-width: 0;
 `;
 
 const StyledLogoIcon = styled.div`
@@ -89,16 +92,15 @@ const StyledLogoIcon = styled.div`
   align-items: center;
   justify-content: center;
   color: ${tokens.colors.primary};
-
-  .material-symbols-rounded {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-  }
 `;
 
 const StyledTitleSection = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.large};
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 `;
 
 const StyledEditorTitle = styled.h1`
@@ -109,6 +111,8 @@ const StyledEditorTitle = styled.h1`
   letter-spacing: -0.2px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
 `;
 
 const StyledRoadmapTitle = styled.h2`
@@ -119,6 +123,11 @@ const StyledRoadmapTitle = styled.h2`
   letter-spacing: -0.2px;
   color: ${tokens.colors.neutral[500]};
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
 `;
 
 const StyledSavedLabel = styled.span`
@@ -132,16 +141,17 @@ const StyledSavedLabel = styled.span`
 const StyledRightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.small};
+  gap: ${tokens.spacing.gap.large};
+  flex-shrink: 0;
 `;
 
 const StyledTempSaveButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${tokens.spacing.xxsmall};
+  gap: ${tokens.spacing.gap.medium};
   height: 40px;
-  padding: ${tokens.spacing.small} ${tokens.spacing.large};
+  padding: 10px 20px;
   border: 1.5px solid ${tokens.colors.primary};
   border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.white};
@@ -152,6 +162,8 @@ const StyledTempSaveButton = styled.button`
   line-height: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &:hover:not(:disabled) {
     background-color: ${tokens.colors.primary}10;
@@ -162,21 +174,15 @@ const StyledTempSaveButton = styled.button`
     color: ${tokens.colors.neutral[300]};
     cursor: not-allowed;
   }
-
-  .material-symbols-rounded {
-    font-size: 20px;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  }
 `;
 
 const StyledSaveButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${tokens.spacing.xxsmall};
+  gap: ${tokens.spacing.gap.medium};
   height: 40px;
-  padding: ${tokens.spacing.small} ${tokens.spacing.large};
-  padding-left: 12px;
+  padding: 10px 20px 10px 12px;
   border: none;
   border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.primary};
@@ -187,6 +193,8 @@ const StyledSaveButton = styled.button`
   line-height: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &:hover:not(:disabled) {
     background-color: ${tokens.colors.primary}dd;
@@ -195,10 +203,5 @@ const StyledSaveButton = styled.button`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-
-  .material-symbols-rounded {
-    font-size: 20px;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 `;

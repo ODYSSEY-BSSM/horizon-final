@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import type { NodeProps } from 'reactflow';
+import { NodeResizer } from 'reactflow';
 import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
 import type { SectionNodeData } from '@/feature/roadmap/editor/types/section.types';
 import { tokens } from '@/shared/tokens';
@@ -35,9 +36,26 @@ export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) =
   const borderColor = colorTheme?.primary || tokens.colors.neutral[500];
 
   return (
-    <StyledContainer $borderColor={borderColor} $selected={selected}>
-      {data.label && <StyledLabel>{data.label}</StyledLabel>}
-    </StyledContainer>
+    <>
+      {/* 크기 조절 핸들 - 선택 시에만 표시 */}
+      <NodeResizer
+        isVisible={selected}
+        minWidth={200}
+        minHeight={100}
+        color={tokens.colors.primary[500]}
+        lineStyle={{ borderWidth: 2 }}
+        handleStyle={{
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+          backgroundColor: tokens.colors.primary[500],
+          border: `2px solid ${tokens.colors.white}`,
+        }}
+      />
+      <StyledContainer $borderColor={borderColor} $selected={selected}>
+        {data.label && <StyledLabel>{data.label}</StyledLabel>}
+      </StyledContainer>
+    </>
   );
 };
 
