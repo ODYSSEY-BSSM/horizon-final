@@ -5,25 +5,31 @@ import { Handle, Position } from 'reactflow';
 import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
 import type { StandardNodeData } from '@/feature/roadmap/editor/types/node.types';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 interface StandardNodeProps {
   data: StandardNodeData;
+  selected?: boolean;
 }
 
-export const StandardNode = ({ data }: StandardNodeProps) => {
+export const StandardNode = ({ data, selected }: StandardNodeProps) => {
   const colorTheme = getNodeColor(data.color);
+
+  const handleStyle = {
+    opacity: selected ? 1 : 0,
+  };
 
   return (
     <StyledContainer $borderColor={colorTheme.border}>
       {/* 4방향 핸들 */}
-      <Handle type="target" position={Position.Top} id="top" />
-      <Handle type="source" position={Position.Right} id="right" />
-      <Handle type="source" position={Position.Bottom} id="bottom" />
-      <Handle type="target" position={Position.Left} id="left" />
+      <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
+      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
+      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
 
       {/* 상단: 아이콘 + 텍스트 */}
       <StyledHeader>
-        <StyledIcon $color={colorTheme.primary}>school</StyledIcon>
+        <Icon name="school" size={24} color={colorTheme.primary} filled />
         <StyledTextContent>
           <StyledNodeTitle>{data.title}</StyledNodeTitle>
           <StyledDescription>{data.description}</StyledDescription>
@@ -65,14 +71,6 @@ const StyledHeader = styled.div`
   display: flex;
   gap: ${tokens.spacing.small};
   align-items: flex-start;
-`;
-
-const StyledIcon = styled.span<{ $color: string }>`
-  font-family: ${tokens.typos.fontFamily.icon.join(', ')};
-  font-size: 24px;
-  color: ${(props) => props.$color};
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  flex-shrink: 0;
 `;
 
 const StyledTextContent = styled.div`

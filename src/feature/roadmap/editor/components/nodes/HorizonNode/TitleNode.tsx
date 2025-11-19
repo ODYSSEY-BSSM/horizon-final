@@ -8,24 +8,26 @@ import { tokens } from '@/shared/tokens';
 
 interface TitleNodeProps {
   data: TitleNodeData;
+  selected?: boolean;
 }
 
-export const TitleNode = ({ data }: TitleNodeProps) => {
+export const TitleNode = ({ data, selected }: TitleNodeProps) => {
   const colorTheme = getNodeColor(data.color);
+
+  const handleStyle = {
+    opacity: selected ? 1 : 0,
+  };
 
   return (
     <StyledContainer $backgroundColor={colorTheme.primary}>
       {/* 4방향 핸들 */}
-      <Handle type="target" position={Position.Top} id="top" />
-      <Handle type="source" position={Position.Right} id="right" />
-      <Handle type="source" position={Position.Bottom} id="bottom" />
-      <Handle type="target" position={Position.Left} id="left" />
+      <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
+      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
+      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
 
       {/* 타이틀 텍스트 */}
       <StyledTitle $color={colorTheme.primary}>{data.label}</StyledTitle>
-
-      {/* 하단 중앙 핸들 포인트 */}
-      <StyledHandlePoint />
     </StyledContainer>
   );
 };
@@ -60,16 +62,4 @@ const StyledTitle = styled.h3<{ $color: string }>`
   word-wrap: break-word;
   word-break: keep-all;
   overflow-wrap: break-word;
-`;
-
-const StyledHandlePoint = styled.div`
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: ${tokens.colors.neutral[600]};
-  border: 2px solid ${tokens.colors.white};
 `;

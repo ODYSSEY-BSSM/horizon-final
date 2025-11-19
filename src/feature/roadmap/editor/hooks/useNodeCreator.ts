@@ -56,12 +56,12 @@ export const useNodeCreator = () => {
    * @param position - 텍스트 위치
    */
   const addText = useCallback(
-    (textType: 'title' | 'subtitle' | 'body' = 'body', position = { x: 250, y: 250 }) => {
+    (textType: 'title' | 'paragraph' = 'paragraph', position = { x: 250, y: 250 }) => {
       const newText = {
         id: `text-${Date.now()}`,
         type: 'horizonText',
         position,
-        data: { type: textType, content: 'New Text' },
+        data: { type: textType, text: 'New Text' },
       };
 
       setNodes((nds) => [...nds, newText]);

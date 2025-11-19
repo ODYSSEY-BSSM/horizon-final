@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { tokens } from '@/shared/tokens';
 import { Icon } from '@/shared/ui';
 
@@ -26,6 +26,7 @@ export const EditorDropdown = ({
   onChange,
 }: EditorDropdownProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = options.find((option) => option.value === selectedValue);
 
@@ -38,8 +39,25 @@ export const EditorDropdown = ({
     setIsExpanded(false);
   };
 
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsExpanded(false);
+      }
+    };
+
+    if (isExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isExpanded]);
+
   return (
-    <StyledContainer>
+    <StyledContainer ref={containerRef}>
       <StyledLabel>{label}</StyledLabel>
 
       <StyledDropdownButton onClick={handleToggle} $isExpanded={isExpanded}>
@@ -106,7 +124,7 @@ const StyledDropdownButton = styled.button<{ $isExpanded: boolean }>`
 
   &:focus {
     outline: none;
-    border-color: ${tokens.colors.primary};
+    border-color: ${tokens.colors.primary[500]};
   }
 `;
 
@@ -123,6 +141,10 @@ const StyledButtonText = styled.p`
 `;
 
 const StyledDropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -130,6 +152,9 @@ const StyledDropdownMenu = styled.div`
   border-radius: ${tokens.radius.extraSmall};
   overflow: hidden;
   margin-top: 4px;
+  background-color: ${tokens.colors.white};
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 `;
 
 const StyledDropdownItem = styled.button<{ $isSelected: boolean }>`

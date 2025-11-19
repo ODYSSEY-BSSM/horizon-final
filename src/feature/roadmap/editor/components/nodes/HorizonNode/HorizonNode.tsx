@@ -10,14 +10,14 @@ import { TitleNode } from './TitleNode';
  * HorizonNode - 통합 노드 컴포넌트
  * React Flow의 커스텀 노드로 사용되며, type에 따라 적절한 하위 컴포넌트를 렌더링합니다.
  */
-export const HorizonNode = ({ data }: NodeProps<HorizonNodeData>) => {
+export const HorizonNode = ({ data, selected }: NodeProps<HorizonNodeData>) => {
   switch (data.type) {
     case 'title':
-      return <TitleNode data={data} />;
+      return <TitleNode data={data} selected={selected} />;
     case 'standard':
-      return <StandardNode data={data} />;
+      return <StandardNode data={data} selected={selected} />;
     case 'secondary':
-      return <SecondaryNode data={data} />;
+      return <SecondaryNode data={data} selected={selected} />;
     default:
       return null;
   }

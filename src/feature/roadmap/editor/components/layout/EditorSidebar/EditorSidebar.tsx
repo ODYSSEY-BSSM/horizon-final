@@ -9,7 +9,7 @@ import {
   EditorTextfield,
 } from '@/feature/roadmap/editor';
 import { tokens } from '@/shared/tokens';
-import { Button } from '@/shared/ui';
+import { Button, Icon } from '@/shared/ui';
 
 export type EditorNodeType =
   | 'title'
@@ -21,6 +21,8 @@ export type EditorNodeType =
 
 export interface EditorSidebarProps {
   nodeType: EditorNodeType;
+  nodeData?: any; // 선택된 노드의 데이터
+  onNodeUpdate?: (field: string, value: any) => void; // 노드 데이터 업데이트 콜백
   isSchoolNode?: boolean;
   onSchoolNodeToggle?: () => void;
 }
@@ -38,6 +40,8 @@ const TEXT_TYPE_OPTIONS: DropdownOption[] = [
 
 export const EditorSidebar = ({
   nodeType,
+  nodeData,
+  onNodeUpdate,
   isSchoolNode = false,
   onSchoolNodeToggle,
 }: EditorSidebarProps) => {
@@ -56,7 +60,7 @@ export const EditorSidebar = ({
             {isSchoolNode ? (
               <>
                 <StyledHeaderTitleRow>
-                  <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+                  <Icon name="school" size={24} color="#2666dc" filled />
                   <StyledHeaderTitle>Standard School Node</StyledHeaderTitle>
                 </StyledHeaderTitleRow>
                 <StyledHeaderSubtitle>기본 학교 노드</StyledHeaderSubtitle>
@@ -75,7 +79,7 @@ export const EditorSidebar = ({
             {isSchoolNode ? (
               <>
                 <StyledHeaderTitleRow>
-                  <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+                  <Icon name="school" size={24} color="#2666dc" filled />
                   <StyledHeaderTitle>Secondary School Node</StyledHeaderTitle>
                 </StyledHeaderTitleRow>
                 <StyledHeaderSubtitle>세부 학교 노드</StyledHeaderSubtitle>
@@ -133,7 +137,8 @@ export const EditorSidebar = ({
             <EditorDropdown label="타입" options={TEXT_TYPE_OPTIONS} selectedValue={nodeType} />
             <EditorTextfield
               label="텍스트"
-              value={nodeType === 'titleText' ? 'Smooth Criminal' : 'The first Paragraph'}
+              value={nodeData?.text || ''}
+              onChange={(value) => onNodeUpdate?.('text', value)}
             />
           </StyledFormGroup>
         </StyledSection>
@@ -142,12 +147,6 @@ export const EditorSidebar = ({
 
     // Title, Standard, Secondary nodes
     const showSchoolToggle = nodeType === 'standard' || nodeType === 'secondary';
-    const defaultName =
-      nodeType === 'title'
-        ? 'Title Node'
-        : nodeType === 'standard'
-          ? 'Standard Node'
-          : 'Secondary Node';
     const selectedTypeValue = nodeType;
 
     return (
@@ -160,9 +159,20 @@ export const EditorSidebar = ({
               options={NODE_TYPE_OPTIONS}
               selectedValue={selectedTypeValue}
             />
-            <EditorTextbox label="이름" value={defaultName} />
+            <EditorTextbox
+              label="이름"
+              value={nodeData?.label || nodeData?.title || ''}
+              onChange={(value) => {
+                const field = nodeType === 'title' ? 'label' : 'title';
+                onNodeUpdate?.(field, value);
+              }}
+            />
             {nodeType !== 'title' && (
-              <EditorTextfield label="학습 내용" value="노드의 학습 내용을 작성해주세요." />
+              <EditorTextfield
+                label="학습 내용"
+                value={nodeData?.description || ''}
+                onChange={(value) => onNodeUpdate?.('description', value)}
+              />
             )}
           </StyledFormGroup>
         </StyledSection>
@@ -170,10 +180,8 @@ export const EditorSidebar = ({
         <StyledSection>
           <StyledSectionTitle>스타일</StyledSectionTitle>
           <ColorDropdown
-            value="blue"
-            onChange={() => {
-              // TODO: Implement color change handler when state management is added
-            }}
+            value={nodeData?.color || 'blue'}
+            onChange={(value) => onNodeUpdate?.('color', value)}
           />
         </StyledSection>
 
@@ -204,7 +212,8 @@ const StyledContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: visible;
 `;
 
 const StyledHeader = styled.div`
@@ -239,13 +248,6 @@ const StyledHeaderSubtitle = styled.p`
   line-height: 22px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
-`;
-
-const StyledSchoolIcon = styled.span`
-  font-size: 24px;
-  color: #2666dc;
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  flex-shrink: 0;
 `;
 
 const StyledSection = styled.div`

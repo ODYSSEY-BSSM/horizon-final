@@ -80,7 +80,7 @@ const StyledInput = styled.input`
 
   &:focus {
     outline: none;
-    border-color: ${tokens.colors.primary};
+    border-color: ${tokens.colors.primary[500]};
   }
 
   &:disabled {

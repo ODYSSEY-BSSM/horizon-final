@@ -27,6 +27,7 @@ import { HorizonText } from './components/nodes/HorizonText';
 import { EditorToolbar } from './components/toolbar/EditorToolbar';
 import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
+import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
 
 // 노드 타입 등록
@@ -73,11 +74,14 @@ export const RoadmapEditor = () => {
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
 
+  // 노드 생성 훅
+  const { addNode, addSection, addText } = useNodeCreator();
+
   // 에디터 스토어
   const { selectedNodeId, setSelectedNodeId } = useEditorStore();
 
   // 선택된 노드 찾기
-  const _selectedNode = nodes.find((node) => node.id === selectedNodeId);
+  const selectedNode = nodes.find((node) => node.id === selectedNodeId);
 
   // 연결선 추가
   const onConnect = useCallback(
@@ -142,6 +146,68 @@ export const RoadmapEditor = () => {
     }, 2000);
   }, []);
 
+  // selectedNodeId와 React Flow의 선택 상태 동기화
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        selected: node.id === selectedNodeId,
+      })),
+    );
+  }, [selectedNodeId, setNodes]);
+
+  // 노드 데이터 업데이트 핸들러
+  const handleNodeUpdate = useCallback(
+    (field: string, value: any) => {
+      if (!selectedNodeId) {
+        return;
+      }
+
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === selectedNodeId ? { ...node, data: { ...node.data, [field]: value } } : node,
+        ),
+      );
+    },
+    [selectedNodeId, setNodes],
+  );
+
+  // 툴바 - 노드 타입 선택 핸들러
+  const handleNodeTypeSelect = useCallback(
+    (nodeType: string) => {
+      if (nodeType === 'title') {
+        addNode('title', { x: 250, y: 250 });
+      } else if (nodeType === 'standard') {
+        addNode('standard', { x: 250, y: 250 });
+      } else if (nodeType === 'secondary') {
+        addNode('secondary', { x: 250, y: 250 });
+      }
+    },
+    [addNode],
+  );
+
+  // 툴바 - 도구 선택 핸들러
+  const handleToolSelect = useCallback(
+    (tool: string) => {
+      if (tool === 'section') {
+        addSection({ x: 100, y: 100 }, { width: 600, height: 400 });
+      }
+    },
+    [addSection],
+  );
+
+  // 툴바 - 텍스트 타입 선택 핸들러
+  const handleTextTypeSelect = useCallback(
+    (textType: string) => {
+      if (textType === 'title-text') {
+        addText('title', { x: 250, y: 250 });
+      } else if (textType === 'paragraph-text') {
+        addText('paragraph', { x: 250, y: 250 });
+      }
+    },
+    [addText],
+  );
+
   // 노드/엣지 변경 완료 시 히스토리 저장 (debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -202,12 +268,20 @@ export const RoadmapEditor = () => {
 
       {/* 사이드바 */}
       <StyledSidebar>
-        <EditorSidebar nodeType="title" />
+        <EditorSidebar
+          nodeType={(selectedNode?.data?.type as any) || 'title'}
+          nodeData={selectedNode?.data}
+          onNodeUpdate={handleNodeUpdate}
+        />
       </StyledSidebar>
 
       {/* 툴바 */}
       <StyledToolbar>
-        <EditorToolbar />
+        <EditorToolbar
+          onToolSelect={handleToolSelect}
+          onNodeTypeSelect={handleNodeTypeSelect}
+          onTextTypeSelect={handleTextTypeSelect}
+        />
       </StyledToolbar>
     </StyledEditorContainer>
   );
