@@ -45,7 +45,7 @@ const StyledContainer = styled.div`
   width: 240px;
 `;
 
-const StyledLabel = styled.p`
+const StyledLabel = styled.label`
   font-family: ${tokens.typos.fontFamily.suit};
   font-weight: ${tokens.typos.fontWeight.light};
   font-size: 14px;
@@ -58,6 +58,7 @@ const StyledTextarea = styled.textarea`
   width: 100%;
   height: 64px;
   padding: 5px 8px;
+  box-sizing: border-box;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
   border-radius: ${tokens.radius.extraSmall};

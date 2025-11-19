@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Background,
@@ -19,7 +19,7 @@ import 'reactflow/dist/style.css';
 
 import { tokens } from '@/shared/tokens';
 import { HorizonEdge } from './components/edges';
-import { EditorHeader } from './components/layout/EditorHeader';
+import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
 import { EditorSidebar } from './components/layout/EditorSidebar';
 import { HorizonNode } from './components/nodes/HorizonNode';
 import { HorizonSection } from './components/nodes/HorizonSection';
@@ -68,12 +68,16 @@ const initialEdges: Edge[] = [];
 export const RoadmapEditor = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
 
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
 
   // 에디터 스토어
-  const { setSelectedNodeId } = useEditorStore();
+  const { selectedNodeId, setSelectedNodeId } = useEditorStore();
+
+  // 선택된 노드 찾기
+  const _selectedNode = nodes.find((node) => node.id === selectedNodeId);
 
   // 연결선 추가
   const onConnect = useCallback(
@@ -114,6 +118,30 @@ export const RoadmapEditor = () => {
     setSelectedNodeId(null);
   }, [setSelectedNodeId]);
 
+  // 임시저장 핸들러
+  const handleTempSave = useCallback(() => {
+    console.log('임시저장');
+    // TODO: 임시저장 API 호출
+  }, []);
+
+  // 저장 핸들러
+  const handleSave = useCallback(() => {
+    setHeaderState('saving');
+    console.log('저장 중...');
+
+    // TODO: 저장 API 호출
+    // 임시로 2초 후에 저장 완료 처리
+    setTimeout(() => {
+      setHeaderState('saved');
+      console.log('저장 완료');
+
+      // 3초 후에 다시 editing 상태로 전환
+      setTimeout(() => {
+        setHeaderState('editing');
+      }, 3000);
+    }, 2000);
+  }, []);
+
   // 노드/엣지 변경 완료 시 히스토리 저장 (debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -128,7 +156,7 @@ export const RoadmapEditor = () => {
   return (
     <StyledEditorContainer>
       {/* 헤더 */}
-      <EditorHeader state="editing" />
+      <EditorHeader state={headerState} onTempSave={handleTempSave} onSave={handleSave} />
 
       {/* 히스토리 컨트롤러 */}
       <StyledHistoryController>

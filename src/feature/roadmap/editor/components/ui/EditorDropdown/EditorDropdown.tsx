@@ -89,6 +89,8 @@ const StyledDropdownButton = styled.button<{ $isExpanded: boolean }>`
   position: relative;
   width: 100%;
   height: 32px;
+  padding: 5px 8px;
+  box-sizing: border-box;
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[300]};
   border-radius: ${tokens.radius.extraSmall};
@@ -96,7 +98,6 @@ const StyledDropdownButton = styled.button<{ $isExpanded: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 8px;
   transition: border-color 0.2s;
 
   &:hover {
@@ -136,6 +137,7 @@ const StyledDropdownItem = styled.button<{ $isSelected: boolean }>`
   width: 100%;
   height: 32px;
   padding: 5px 8px;
+  box-sizing: border-box;
   background-color: ${(props) =>
     props.$isSelected ? tokens.colors.neutral[100] : tokens.colors.white};
   border: none;

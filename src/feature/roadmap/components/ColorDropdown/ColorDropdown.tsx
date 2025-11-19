@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useId } from 'react';
 import { useDropdown } from '@/shared/hooks/useDropdown';
 import { tokens } from '@/shared/tokens';
-import { Icon, Text } from '@/shared/ui';
+import { Icon } from '@/shared/ui';
 
 export type ColorOption = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple';
 
@@ -23,7 +23,7 @@ const COLOR_OPTIONS: { value: ColorOption; label: string; color: string }[] = [
   { value: 'purple', label: 'Purple', color: '#A826DC' },
 ];
 
-const ColorDropdown = ({ value, onChange, label = '컬러' }: ColorDropdownProps) => {
+const ColorDropdown = ({ value, onChange, label = '색상' }: ColorDropdownProps) => {
   const labelId = useId();
   const buttonId = `${labelId}-button`;
 
@@ -35,15 +35,9 @@ const ColorDropdown = ({ value, onChange, label = '컬러' }: ColorDropdownProps
 
   return (
     <StyledContainer>
-      <Text
-        as="label"
-        id={labelId}
-        htmlFor={buttonId}
-        variant="B1"
-        color={tokens.colors.neutral[500]}
-      >
+      <StyledLabel id={labelId} htmlFor={buttonId}>
         {label}
-      </Text>
+      </StyledLabel>
       <div
         style={{ position: 'relative' }}
         ref={dropdownRef}
@@ -71,11 +65,9 @@ const ColorDropdown = ({ value, onChange, label = '컬러' }: ColorDropdownProps
               : undefined
           }
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.small }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <StyledColorSwatch $color={selectedOption.color} />
-            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-              {selectedOption.label}
-            </Text>
+            <StyledOptionText>{selectedOption.label}</StyledOptionText>
           </div>
           <Icon
             name={isOpen ? 'arrow_drop_up' : 'arrow_drop_down'}
@@ -101,9 +93,7 @@ const ColorDropdown = ({ value, onChange, label = '컬러' }: ColorDropdownProps
               aria-selected={value === option.value}
             >
               <StyledColorSwatch $color={option.color} />
-              <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-                {option.label}
-              </Text>
+              <StyledOptionText>{option.label}</StyledOptionText>
             </StyledColorOption>
           ))}
         </StyledDropdownList>
@@ -117,11 +107,18 @@ export default ColorDropdown;
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
-  width: 100%;
+  gap: 4px;
+  width: 240px;
   position: relative;
-  z-index: 1;
-  flex: 1;
+`;
+
+const StyledLabel = styled.label`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
+  font-size: 14px;
+  line-height: 22px;
+  color: ${tokens.colors.neutral[900]};
+  margin: 0;
 `;
 
 const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
@@ -129,49 +126,54 @@ const StyledDropdownHeader = styled.button<{ $isOpen: boolean }>`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 48px;
-  padding: ${tokens.spacing.small} ${tokens.spacing.medium};
+  height: 32px;
+  padding: 5px 8px;
+  box-sizing: border-box;
   background-color: ${tokens.colors.white};
-  border: ${({ $isOpen }) =>
-    $isOpen
-      ? `2px solid ${tokens.colors.primary[500]}`
-      : `1px solid ${tokens.colors.neutral[300]}`};
-  border-radius: ${tokens.radius.medium};
+  border: 1px solid ${tokens.colors.neutral[300]};
+  border-radius: 4px;
   cursor: pointer;
   transition: border-color 0.2s ease;
 
   &:hover {
-    border-color: ${tokens.colors.primary[500]};
+    border-color: ${tokens.colors.neutral[400]};
   }
 
   &:focus-visible {
     outline: none;
-    border-color: ${tokens.colors.primary[500]};
+    border-color: ${tokens.colors.primary};
   }
 `;
 
 const StyledColorSwatch = styled.div<{ $color: string }>`
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   background-color: ${({ $color }) => $color};
   flex-shrink: 0;
+`;
+
+const StyledOptionText = styled.span`
+  font-family: ${tokens.typos.fontFamily.suit};
+  font-weight: ${tokens.typos.fontWeight.light};
+  font-size: 14px;
+  line-height: 22px;
+  color: ${tokens.colors.neutral[800]};
+  white-space: nowrap;
 `;
 
 const StyledDropdownList = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  right: 0;
+  width: 240px;
   background-color: ${tokens.colors.white};
-  border: 1px solid ${tokens.colors.neutral[200]};
-  border-radius: ${tokens.radius.medium};
-  box-shadow: ${tokens.shadow[0]};
-  z-index: 10000;
-  max-height: 240px;
-  overflow-y: auto;
+  border: 1px solid ${tokens.colors.neutral[300]};
+  border-radius: 4px;
+  overflow: hidden;
   display: ${({ $isOpen }) => ($isOpen ? 'flex' : 'none')};
   flex-direction: column;
+  z-index: 10000;
 `;
 
 const StyledColorOption = styled.button<{
@@ -180,19 +182,15 @@ const StyledColorOption = styled.button<{
 }>`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.small};
-  height: 48px;
-  padding: ${tokens.spacing.small};
+  gap: 8px;
+  height: 32px;
+  padding: 5px 8px;
+  box-sizing: border-box;
   background-color: ${tokens.colors.white};
   border: none;
-  border-bottom: 1px solid ${tokens.colors.neutral[100]};
   cursor: pointer;
   transition: background-color 0.2s ease;
   width: 100%;
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:hover {
     background-color: ${tokens.colors.neutral[100]};
@@ -201,12 +199,12 @@ const StyledColorOption = styled.button<{
   ${({ $selected }) =>
     $selected &&
     `
-    background-color: ${tokens.colors.primary[100]};
+    background-color: ${tokens.colors.neutral[100]};
   `}
 
   ${({ $highlighted }) =>
     $highlighted &&
     `
-    background-color: ${tokens.colors.primary[100]};
+    background-color: ${tokens.colors.neutral[100]};
   `}
 `;

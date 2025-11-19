@@ -152,10 +152,11 @@ const StyledTempSaveButton = styled.button`
   gap: ${tokens.spacing.gap.medium};
   height: 40px;
   padding: 10px 20px;
-  border: 1.5px solid ${tokens.colors.primary};
+  box-sizing: border-box;
+  border: 1.5px solid ${tokens.colors.primary[500]};
   border-radius: ${tokens.radius.medium};
   background-color: ${tokens.colors.white};
-  color: ${tokens.colors.primary};
+  color: ${tokens.colors.primary[500]};
   font-family: ${tokens.typos.fontFamily.suit};
   font-size: 14px;
   font-weight: ${tokens.typos.fontWeight.semibold};
@@ -166,7 +167,7 @@ const StyledTempSaveButton = styled.button`
   flex-shrink: 0;
 
   &:hover:not(:disabled) {
-    background-color: ${tokens.colors.primary}10;
+    background-color: ${tokens.colors.primary[100]};
   }
 
   &:disabled {
@@ -183,9 +184,10 @@ const StyledSaveButton = styled.button`
   gap: ${tokens.spacing.gap.medium};
   height: 40px;
   padding: 10px 20px 10px 12px;
+  box-sizing: border-box;
   border: none;
   border-radius: ${tokens.radius.medium};
-  background-color: ${tokens.colors.primary};
+  background-color: ${tokens.colors.primary[500]};
   color: ${tokens.colors.white};
   font-family: ${tokens.typos.fontFamily.suit};
   font-size: 14px;
@@ -197,7 +199,7 @@ const StyledSaveButton = styled.button`
   flex-shrink: 0;
 
   &:hover:not(:disabled) {
-    background-color: ${tokens.colors.primary}dd;
+    background-color: ${tokens.colors.primary[600]};
   }
 
   &:disabled {

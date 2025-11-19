@@ -53,29 +53,39 @@ export const EditorSidebar = ({
       case 'standard':
         return (
           <StyledHeader>
-            {isSchoolNode && (
-              <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+            {isSchoolNode ? (
+              <>
+                <StyledHeaderTitleRow>
+                  <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+                  <StyledHeaderTitle>Standard School Node</StyledHeaderTitle>
+                </StyledHeaderTitleRow>
+                <StyledHeaderSubtitle>기본 학교 노드</StyledHeaderSubtitle>
+              </>
+            ) : (
+              <>
+                <StyledHeaderTitle>Standard Node</StyledHeaderTitle>
+                <StyledHeaderSubtitle>기본 노드</StyledHeaderSubtitle>
+              </>
             )}
-            <StyledHeaderTitle>
-              {isSchoolNode ? 'Standard School Node' : 'Standard Node'}
-            </StyledHeaderTitle>
-            <StyledHeaderSubtitle>
-              {isSchoolNode ? '기본 학교 노드' : '기본 노드'}
-            </StyledHeaderSubtitle>
           </StyledHeader>
         );
       case 'secondary':
         return (
           <StyledHeader>
-            {isSchoolNode && (
-              <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+            {isSchoolNode ? (
+              <>
+                <StyledHeaderTitleRow>
+                  <StyledSchoolIcon className="material-symbols-rounded">school</StyledSchoolIcon>
+                  <StyledHeaderTitle>Secondary School Node</StyledHeaderTitle>
+                </StyledHeaderTitleRow>
+                <StyledHeaderSubtitle>세부 학교 노드</StyledHeaderSubtitle>
+              </>
+            ) : (
+              <>
+                <StyledHeaderTitle>Secondary Node</StyledHeaderTitle>
+                <StyledHeaderSubtitle>세부 노드</StyledHeaderSubtitle>
+              </>
             )}
-            <StyledHeaderTitle>
-              {isSchoolNode ? 'Secondary School Node' : 'Secondary Node'}
-            </StyledHeaderTitle>
-            <StyledHeaderSubtitle>
-              {isSchoolNode ? '세부 학교 노드' : '세부 노드'}
-            </StyledHeaderSubtitle>
           </StyledHeader>
         );
       case 'section':
@@ -206,6 +216,13 @@ const StyledHeader = styled.div`
   flex-shrink: 0;
 `;
 
+const StyledHeaderTitleRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+`;
+
 const StyledHeaderTitle = styled.h2`
   font-family: ${tokens.typos.fontFamily.suit};
   font-weight: ${tokens.typos.fontWeight.semibold};
@@ -213,9 +230,6 @@ const StyledHeaderTitle = styled.h2`
   line-height: 26px;
   color: ${tokens.colors.neutral[900]};
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 `;
 
 const StyledHeaderSubtitle = styled.p`
@@ -229,9 +243,9 @@ const StyledHeaderSubtitle = styled.p`
 
 const StyledSchoolIcon = styled.span`
   font-size: 24px;
-  color: ${tokens.colors.primary[500]};
+  color: #2666dc;
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  margin-right: 4px;
+  flex-shrink: 0;
 `;
 
 const StyledSection = styled.div`
@@ -271,11 +285,13 @@ const StyledDimensionRow = styled.div`
 `;
 
 const StyledBottomButtonContainer = styled.div`
-  margin-top: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 280px;
   padding: 20px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-top: 1px solid ${tokens.colors.neutral[200]};
-  flex-shrink: 0;
 `;
