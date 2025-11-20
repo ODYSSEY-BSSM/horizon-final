@@ -10,6 +10,11 @@ interface HistoryState {
 }
 
 /**
+ * 최대 히스토리 개수
+ */
+const MAX_HISTORY = 50;
+
+/**
  * 히스토리 관리 훅
  * Undo/Redo 기능을 제공합니다.
  */
@@ -26,9 +31,23 @@ export const useHistory = () => {
         // 현재 인덱스 이후의 히스토리 제거
         const newHistory = prev.slice(0, currentIndex + 1);
         // 새 상태 추가
-        return [...newHistory, { nodes, edges }];
+        const updatedHistory = [...newHistory, { nodes, edges }];
+
+        // 최대 개수 제한
+        if (updatedHistory.length > MAX_HISTORY) {
+          const trimmed = updatedHistory.slice(-MAX_HISTORY);
+          setCurrentIndex(MAX_HISTORY - 1);
+          return trimmed;
+        }
+
+        return updatedHistory;
       });
-      setCurrentIndex((prev) => prev + 1);
+
+      // currentIndex 업데이트 (MAX_HISTORY 초과하지 않은 경우만)
+      setCurrentIndex((prev) => {
+        const next = prev + 1;
+        return next >= MAX_HISTORY ? MAX_HISTORY - 1 : next;
+      });
     },
     [currentIndex],
   );

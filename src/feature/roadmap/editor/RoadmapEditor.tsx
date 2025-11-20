@@ -80,6 +80,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
+  const [isEdgesLoaded, setIsEdgesLoaded] = useState(false);
 
   // Toast
   const { toast } = useToast();
@@ -125,7 +126,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // 연결선 추가
   const onConnect = useCallback(
     (connection: Connection) => {
-      setEdges((eds) => addEdge(connection, eds));
+      setEdges((eds) => addEdge({ ...connection, type: 'horizonEdge' }, eds));
     },
     [setEdges],
   );
@@ -243,8 +244,12 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 임시저장 핸들러
   const handleTempSave = useCallback(() => {
-    // TODO: 임시저장 API 호출
-  }, []);
+    toast({
+      title: 'Coming Soon',
+      description: 'Temporary save feature is under development',
+      variant: 'default',
+    });
+  }, [toast]);
 
   // 저장 핸들러
   const handleSave = useCallback(async () => {
@@ -260,13 +265,16 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     setHeaderState('saving');
 
     try {
+      // horizonNode만 필터링
+      const horizonNodes = nodes.filter((node) => node.type === 'horizonNode');
+
       // React Flow 노드를 API 형식으로 변환
       const apiNodeRequests = reactFlowNodesToApi(nodes);
 
       // 각 노드 업데이트 (병렬 처리)
       await Promise.all(
         apiNodeRequests.map((nodeRequest, index) => {
-          const nodeId = Number.parseInt(nodes[index].id, 10);
+          const nodeId = Number.parseInt(horizonNodes[index].id, 10);
           if (Number.isNaN(nodeId)) {
             // 새로 생성된 노드는 임시 ID를 가지므로 스킵 (향후 createNode로 처리)
             return Promise.resolve();
@@ -305,16 +313,6 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       })),
     );
   }, [selectedNodeId, setNodes]);
-
-  // edge에 z-index 자동 추가 (섹션 위에 표시)
-  useEffect(() => {
-    setEdges((eds) =>
-      eds.map((edge) => ({
-        ...edge,
-        style: { ...edge.style, zIndex: 1 },
-      })),
-    );
-  }, [setEdges]);
 
   // 노드 데이터 업데이트 핸들러
   const handleNodeUpdate = useCallback(
@@ -401,15 +399,16 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       if (savedEdges.length > 0) {
         setEdges(savedEdges);
       }
+      setIsEdgesLoaded(true);
     }
   }, [roadmapId, setEdges]);
 
-  // Edge 변경 시 자동으로 localStorage에 저장
+  // Edge 변경 시 자동으로 localStorage에 저장 (로드 완료 후에만)
   useEffect(() => {
-    if (roadmapId && roadmapId > 0 && edges.length >= 0) {
+    if (isEdgesLoaded && roadmapId && roadmapId > 0) {
       saveEdges(roadmapId, edges);
     }
-  }, [roadmapId, edges]);
+  }, [isEdgesLoaded, roadmapId, edges]);
 
   // 노드/엣지 변경 완료 시 히스토리 저장 (debounced)
   useEffect(() => {
