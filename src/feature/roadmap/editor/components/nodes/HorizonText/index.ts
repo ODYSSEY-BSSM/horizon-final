@@ -1,0 +1,1 @@
+export { HorizonText } from './HorizonText';

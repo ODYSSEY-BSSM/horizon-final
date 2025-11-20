@@ -1,0 +1,90 @@
+'use client';
+
+import styled from '@emotion/styled';
+import { tokens } from '@/shared/tokens';
+
+export interface EditorTextboxProps {
+  label?: string;
+  value?: string;
+  placeholder?: string;
+  onChange?: (value: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
+
+export const EditorTextbox = ({
+  label = 'Label',
+  value = '',
+  placeholder = 'Text',
+  onChange,
+  onFocus,
+  onBlur,
+}: EditorTextboxProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(e.target.value);
+  };
+
+  return (
+    <StyledContainer>
+      <StyledLabel>{label}</StyledLabel>
+      <StyledInput
+        type="text"
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    </StyledContainer>
+  );
+};
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 240px;
+`;
+
+const StyledLabel = styled.label`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-weight: ${tokens.typos.fontWeight.light};
+  font-size: 14px;
+  line-height: 22px;
+  color: ${tokens.colors.neutral[900]};
+  margin: 0;
+`;
+
+const StyledInput = styled.input`
+  width: 100%;
+  height: 32px;
+  padding: 5px 8px;
+  box-sizing: border-box;
+  background-color: ${tokens.colors.white};
+  border: 1px solid ${tokens.colors.neutral[300]};
+  border-radius: ${tokens.radius.extraSmall};
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-weight: ${tokens.typos.fontWeight.light};
+  font-size: 14px;
+  line-height: 22px;
+  color: ${tokens.colors.neutral[900]};
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: ${tokens.colors.neutral[500]};
+  }
+
+  &:hover {
+    border-color: ${tokens.colors.neutral[400]};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${tokens.colors.primary[500]};
+  }
+
+  &:disabled {
+    background-color: ${tokens.colors.neutral[100]};
+    cursor: not-allowed;
+  }
+`;

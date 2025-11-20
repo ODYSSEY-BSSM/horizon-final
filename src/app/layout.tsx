@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import QueryProvider from '@/shared/providers/QueryProvider';
+import { EmotionProvider, QueryProvider } from '@/shared/providers';
 import { Toaster } from '@/shared/ui/Toast';
 import './globals.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -19,8 +19,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>{children}</QueryProvider>
-        <Toaster />
+        <EmotionProvider>
+          <QueryProvider>{children}</QueryProvider>
+          <Toaster />
+        </EmotionProvider>
       </body>
     </html>
   );

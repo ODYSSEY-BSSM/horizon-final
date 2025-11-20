@@ -1,0 +1,88 @@
+'use client';
+
+import styled from '@emotion/styled';
+import type { NodeProps } from 'reactflow';
+import { NodeResizer } from 'reactflow';
+import { getNodeColor } from '@/feature/roadmap/editor/constants/nodeColors';
+import type { SectionNodeData } from '@/feature/roadmap/editor/types/section.types';
+import { tokens } from '@/shared/tokens';
+
+/**
+ * HorizonSection - 노드 그룹핑 컴포넌트
+ * React Flow의 Parent Node로 사용되며, 여러 HorizonNode를 시각적으로 묶는 영역
+ *
+ * 사용 예시:
+ * ```tsx
+ * const nodes = [
+ *   {
+ *     id: 'section-1',
+ *     type: 'horizonSection',
+ *     data: { label: 'Introduction', color: 'blue' },
+ *     position: { x: 0, y: 0 },
+ *     style: { width: 600, height: 400 },
+ *   },
+ *   {
+ *     id: 'node-1',
+ *     type: 'horizonStandard',
+ *     parentNode: 'section-1',
+ *     position: { x: 50, y: 50 },
+ *     data: { ... },
+ *   },
+ * ];
+ * ```
+ */
+export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) => {
+  const colorTheme = data.color ? getNodeColor(data.color) : null;
+  const borderColor = colorTheme?.primary || tokens.colors.neutral[500];
+
+  return (
+    <>
+      {/* 크기 조절 핸들 - 선택 시에만 표시 */}
+      <NodeResizer
+        isVisible={selected}
+        minWidth={200}
+        minHeight={100}
+        color={tokens.colors.primary[500]}
+        lineStyle={{ borderWidth: 2 }}
+        handleStyle={{
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+          backgroundColor: tokens.colors.primary[500],
+          border: `2px solid ${tokens.colors.white}`,
+        }}
+      />
+      <StyledContainer $borderColor={borderColor} $selected={selected}>
+        {data.label && <StyledLabel>{data.label}</StyledLabel>}
+      </StyledContainer>
+    </>
+  );
+};
+
+const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }>`
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: ${tokens.colors.white};
+  border: ${(props) => (props.$selected ? '4px' : '2px')} solid
+    ${(props) => (props.$selected ? tokens.colors.primary[500] : props.$borderColor)};
+  border-radius: ${tokens.radius.medium};
+  padding: ${tokens.spacing.large};
+  transition: border-width 0.2s ease, border-color 0.2s ease;
+
+  /* 자식 노드를 위한 포지셔닝 컨텍스트 */
+  position: relative;
+  z-index: 0 !important; /* 선택되어도 항상 배경 레이어 유지 */
+`;
+
+const StyledLabel = styled.h3`
+  font-family: ${tokens.typos.fontFamily.suit.join(', ')};
+  font-size: ${tokens.typos.fontSize[18]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  line-height: ${tokens.typos.lineHeight[24]};
+  color: ${tokens.colors.neutral[900]};
+  margin: 0 0 ${tokens.spacing.medium} 0;
+  position: absolute;
+  top: ${tokens.spacing.medium};
+  left: ${tokens.spacing.medium};
+`;
