@@ -55,22 +55,43 @@ export function mapColorFromApi(color: ApiColor): NodeColor {
 /**
  * 노드의 절대 좌표 계산
  * 부모 노드가 있으면 부모의 절대 좌표에 상대 좌표를 더함
+ *
+ * @param node - 절대 좌표를 계산할 노드
+ * @param allNodes - 전체 노드 배열
+ * @param visited - 순환 참조 감지를 위한 방문한 노드 ID 집합
+ * @returns 절대 좌표
  */
-export function calculateAbsolutePosition(node: Node, allNodes: Node[]): { x: number; y: number } {
+export function calculateAbsolutePosition(
+  node: Node,
+  allNodes: Node[],
+  visited: Set<string> = new Set(),
+): { x: number; y: number } {
+  // 순환 참조 감지
+  if (visited.has(node.id)) {
+    console.error(
+      `Circular parent dependency detected for node ${node.id}. Chain: ${Array.from(visited).join(' -> ')} -> ${node.id}`,
+    );
+    return { x: node.position.x, y: node.position.y };
+  }
+
   // 부모가 없으면 현재 위치가 절대 좌표
   if (!node.parentNode) {
     return { x: node.position.x, y: node.position.y };
   }
 
+  // 방문 기록 추가
+  visited.add(node.id);
+
   // 부모 노드 찾기
   const parentNode = allNodes.find((n) => n.id === node.parentNode);
   if (!parentNode) {
     // 부모를 찾지 못하면 현재 위치 반환
+    console.warn(`Parent node ${node.parentNode} not found for node ${node.id}`);
     return { x: node.position.x, y: node.position.y };
   }
 
   // 부모의 절대 좌표 계산 (재귀)
-  const parentAbsolute = calculateAbsolutePosition(parentNode, allNodes);
+  const parentAbsolute = calculateAbsolutePosition(parentNode, allNodes, visited);
 
   // 부모의 절대 좌표 + 현재 노드의 상대 좌표
   return {

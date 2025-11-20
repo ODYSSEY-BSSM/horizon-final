@@ -41,17 +41,23 @@ export const EditorDropdown = ({
 
   // 외부 클릭 감지
   useEffect(() => {
+    if (!isExpanded) {
+      return;
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsExpanded(false);
       }
     };
 
-    if (isExpanded) {
+    // 약간의 지연을 두어 즉시 닫히는 것을 방지
+    const timeoutId = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside);
-    }
+    }, 0);
 
     return () => {
+      clearTimeout(timeoutId);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isExpanded]);

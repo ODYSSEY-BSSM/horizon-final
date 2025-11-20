@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import type { CSSProperties } from 'react';
 import { ColorDropdown } from '@/feature/roadmap';
 import {
   type DropdownOption,
@@ -19,10 +20,26 @@ export type EditorNodeType =
   | 'titleText'
   | 'paragraphText';
 
+/**
+ * 노드 데이터 타입 (간소화된 버전)
+ */
+export interface NodeData {
+  type?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  color?: string;
+  progress?: number;
+  text?: string;
+  quizCurrent?: number;
+  quizTotal?: number;
+  [key: string]: any; // 확장성을 위한 인덱스 시그니처
+}
+
 export interface EditorSidebarProps {
   nodeType: EditorNodeType;
-  nodeData?: any; // 선택된 노드의 데이터
-  nodeStyle?: any; // 선택된 노드의 스타일 (섹션 크기 등)
+  nodeData?: NodeData; // 선택된 노드의 데이터
+  nodeStyle?: CSSProperties; // 선택된 노드의 스타일 (섹션 크기 등)
   onNodeUpdate?: (field: string, value: any) => void; // 노드 데이터 업데이트 콜백
   onNodeStyleUpdate?: (styleField: string, value: any) => void; // 노드 스타일 업데이트 콜백
   isSchoolNode?: boolean;

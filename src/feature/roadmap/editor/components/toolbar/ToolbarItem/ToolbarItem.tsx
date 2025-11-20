@@ -33,17 +33,23 @@ export const ToolbarItem = ({
 
   // Close dropdown when clicking outside
   useEffect(() => {
+    if (!isDropdownOpen) {
+      return;
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     };
 
-    if (isDropdownOpen) {
+    // 약간의 지연을 두어 즉시 닫히는 것을 방지
+    const timeoutId = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside);
-    }
+    }, 0);
 
     return () => {
+      clearTimeout(timeoutId);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isDropdownOpen]);

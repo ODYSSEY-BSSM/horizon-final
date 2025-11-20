@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Background,
@@ -72,6 +72,10 @@ const initialNodes: Node[] = [
 
 const initialEdges: Edge[] = [];
 
+// 상수 정의
+const HISTORY_DEBOUNCE_MS = 500;
+const SAVE_SUCCESS_DISPLAY_MS = 3000;
+
 interface RoadmapEditorProps {
   roadmapId?: number;
 }
@@ -81,6 +85,9 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
   const [isEdgesLoaded, setIsEdgesLoaded] = useState(false);
+
+  // Refs for cleanup
+  const saveTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Toast
   const { toast } = useToast();
@@ -151,7 +158,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 노드 선택 핸들러
   const onNodeClick = useCallback(
-    (_event: React.MouseEvent, node: any) => {
+    (_event: React.MouseEvent, node: Node) => {
       setSelectedNodeId(node.id);
     },
     [setSelectedNodeId],
@@ -268,18 +275,18 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // horizonNode만 필터링
       const horizonNodes = nodes.filter((node) => node.type === 'horizonNode');
 
-      // React Flow 노드를 API 형식으로 변환
-      const apiNodeRequests = reactFlowNodesToApi(nodes);
+      // React Flow 노드를 API 형식으로 변환 (필터링된 배열 사용)
+      const apiNodeRequests = reactFlowNodesToApi(horizonNodes);
 
       // 각 노드 업데이트 (병렬 처리)
       await Promise.all(
-        apiNodeRequests.map((nodeRequest, index) => {
-          const nodeId = Number.parseInt(horizonNodes[index].id, 10);
+        horizonNodes.map((node, index) => {
+          const nodeId = Number.parseInt(node.id, 10);
           if (Number.isNaN(nodeId)) {
             // 새로 생성된 노드는 임시 ID를 가지므로 스킵 (향후 createNode로 처리)
             return Promise.resolve();
           }
-          return updateNodeMutation.mutateAsync({ nodeId, data: nodeRequest });
+          return updateNodeMutation.mutateAsync({ nodeId, data: apiNodeRequests[index] });
         }),
       );
 
@@ -290,10 +297,15 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         variant: 'default',
       });
 
+      // 이전 timeout 정리
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
       // 3초 후에 다시 editing 상태로 전환
-      setTimeout(() => {
+      saveTimeoutRef.current = setTimeout(() => {
         setHeaderState('editing');
-      }, 3000);
+      }, SAVE_SUCCESS_DISPLAY_MS);
     } catch (error) {
       setHeaderState('editing');
       toast({
@@ -304,14 +316,33 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     }
   }, [roadmapId, nodes, updateNodeMutation, toast]);
 
-  // selectedNodeId와 React Flow의 선택 상태 동기화
+  // Cleanup timeout on unmount
   useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => ({
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // selectedNodeId와 React Flow의 선택 상태 동기화 (최적화)
+  useEffect(() => {
+    setNodes((nds) => {
+      // 변경이 필요한지 먼저 확인
+      const needsUpdate = nds.some((node) => {
+        const shouldBeSelected = node.id === selectedNodeId;
+        return node.selected !== shouldBeSelected;
+      });
+
+      if (!needsUpdate) {
+        return nds;
+      }
+
+      return nds.map((node) => ({
         ...node,
         selected: node.id === selectedNodeId,
-      })),
-    );
+      }));
+    });
   }, [selectedNodeId, setNodes]);
 
   // 노드 데이터 업데이트 핸들러
@@ -416,10 +447,12 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       if (nodes.length > 0 || edges.length > 0) {
         saveState(nodes, edges);
       }
-    }, 500);
+    }, HISTORY_DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
-  }, [nodes, edges, saveState]);
+    // saveState는 stable하므로 deps에서 제거 (무한 루프 방지)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodes, edges]);
 
   // 로딩 상태
   if (roadmapId && isLoading) {
