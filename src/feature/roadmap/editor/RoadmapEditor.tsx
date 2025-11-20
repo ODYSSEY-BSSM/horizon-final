@@ -17,7 +17,9 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
+import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
+import { useNodes, useUpdateNode } from './api/nodeApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
 import { EditorSidebar } from './components/layout/EditorSidebar';
@@ -29,6 +31,8 @@ import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
 import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
+import { loadEdges, saveEdges } from './utils/edgeStorage';
+import { apiNodesToReactFlow, reactFlowNodesToApi } from './utils/nodeConverter';
 
 // 노드 타입 등록
 const nodeTypes: NodeTypes = {
@@ -68,10 +72,21 @@ const initialNodes: Node[] = [
 
 const initialEdges: Edge[] = [];
 
-export const RoadmapEditor = () => {
+interface RoadmapEditorProps {
+  roadmapId?: number;
+}
+
+export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
+
+  // Toast
+  const { toast } = useToast();
+
+  // API 연동: 노드 목록 조회
+  const { data: apiNodes, isLoading, isError } = useNodes(roadmapId || 0);
+  const updateNodeMutation = useUpdateNode(roadmapId || 0);
 
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
@@ -232,20 +247,54 @@ export const RoadmapEditor = () => {
   }, []);
 
   // 저장 핸들러
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
+    if (!roadmapId) {
+      toast({
+        title: 'Error',
+        description: 'Roadmap ID is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setHeaderState('saving');
 
-    // TODO: 저장 API 호출
-    // 임시로 2초 후에 저장 완료 처리
-    setTimeout(() => {
+    try {
+      // React Flow 노드를 API 형식으로 변환
+      const apiNodeRequests = reactFlowNodesToApi(nodes);
+
+      // 각 노드 업데이트 (병렬 처리)
+      await Promise.all(
+        apiNodeRequests.map((nodeRequest, index) => {
+          const nodeId = Number.parseInt(nodes[index].id, 10);
+          if (Number.isNaN(nodeId)) {
+            // 새로 생성된 노드는 임시 ID를 가지므로 스킵 (향후 createNode로 처리)
+            return Promise.resolve();
+          }
+          return updateNodeMutation.mutateAsync({ nodeId, data: nodeRequest });
+        }),
+      );
+
       setHeaderState('saved');
+      toast({
+        title: 'Success',
+        description: 'Roadmap saved successfully',
+        variant: 'default',
+      });
 
       // 3초 후에 다시 editing 상태로 전환
       setTimeout(() => {
         setHeaderState('editing');
       }, 3000);
-    }, 2000);
-  }, []);
+    } catch (error) {
+      setHeaderState('editing');
+      toast({
+        title: 'Save failed',
+        description: error instanceof Error ? error.message : 'Failed to save roadmap',
+        variant: 'destructive',
+      });
+    }
+  }, [roadmapId, nodes, updateNodeMutation, toast]);
 
   // selectedNodeId와 React Flow의 선택 상태 동기화
   useEffect(() => {
@@ -337,6 +386,31 @@ export const RoadmapEditor = () => {
     [addText],
   );
 
+  // API 노드 로드 시 React Flow 노드로 변환
+  useEffect(() => {
+    if (apiNodes && apiNodes.length > 0) {
+      const reactFlowNodes = apiNodesToReactFlow(apiNodes);
+      setNodes(reactFlowNodes);
+    }
+  }, [apiNodes, setNodes]);
+
+  // 초기 로드: localStorage에서 Edge 복원
+  useEffect(() => {
+    if (roadmapId && roadmapId > 0) {
+      const savedEdges = loadEdges(roadmapId);
+      if (savedEdges.length > 0) {
+        setEdges(savedEdges);
+      }
+    }
+  }, [roadmapId, setEdges]);
+
+  // Edge 변경 시 자동으로 localStorage에 저장
+  useEffect(() => {
+    if (roadmapId && roadmapId > 0 && edges.length >= 0) {
+      saveEdges(roadmapId, edges);
+    }
+  }, [roadmapId, edges]);
+
   // 노드/엣지 변경 완료 시 히스토리 저장 (debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -347,6 +421,29 @@ export const RoadmapEditor = () => {
 
     return () => clearTimeout(timer);
   }, [nodes, edges, saveState]);
+
+  // 로딩 상태
+  if (roadmapId && isLoading) {
+    return (
+      <StyledEditorContainer>
+        <StyledLoadingContainer>
+          <StyledLoadingText>Loading roadmap...</StyledLoadingText>
+        </StyledLoadingContainer>
+      </StyledEditorContainer>
+    );
+  }
+
+  // 에러 상태
+  if (roadmapId && isError) {
+    return (
+      <StyledEditorContainer>
+        <StyledErrorContainer>
+          <StyledErrorText>Failed to load roadmap</StyledErrorText>
+          <StyledErrorMessage>Please try again later</StyledErrorMessage>
+        </StyledErrorContainer>
+      </StyledEditorContainer>
+    );
+  }
 
   return (
     <StyledEditorContainer>
@@ -455,4 +552,39 @@ const StyledToolbar = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+`;
+
+const StyledLoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const StyledLoadingText = styled.div`
+  font-size: ${tokens.typos.fontSize[16]};
+  font-weight: ${tokens.typos.fontWeight.regular};
+  color: ${tokens.colors.neutral[600]};
+`;
+
+const StyledErrorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: ${tokens.spacing.medium};
+`;
+
+const StyledErrorText = styled.div`
+  font-size: ${tokens.typos.fontSize[24]};
+  font-weight: ${tokens.typos.fontWeight.semibold};
+  color: ${tokens.colors.error[200]};
+`;
+
+const StyledErrorMessage = styled.div`
+  font-size: ${tokens.typos.fontSize[14]};
+  color: ${tokens.colors.neutral[600]};
 `;
