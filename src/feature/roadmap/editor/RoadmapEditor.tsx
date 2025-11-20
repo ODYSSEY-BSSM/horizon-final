@@ -1,5 +1,6 @@
 'use client';
 
+import { Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactFlow, {
@@ -529,6 +530,15 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   return (
     <StyledEditorContainer>
+      {/* React Flow z-index 전역 스타일 */}
+      <Global
+        styles={`
+          .react-flow__edges {
+            z-index: 1 !important;
+          }
+        `}
+      />
+
       {/* 헤더 */}
       <EditorHeader state={headerState} onTempSave={handleTempSave} onSave={handleSave} />
 

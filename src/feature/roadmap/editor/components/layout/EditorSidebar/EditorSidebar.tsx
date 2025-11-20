@@ -143,33 +143,46 @@ export const EditorSidebar = ({
       const height = nodeStyle?.height ?? 400;
 
       return (
-        <StyledSection>
-          <StyledSectionTitle>스타일</StyledSectionTitle>
-          <StyledDimensionRow>
-            <EditorTextbox
-              label="W"
-              value={`${width}px`}
-              onChange={(value) => {
-                const numValue = Number.parseInt(value, 10);
-                // 범위 검증 추가 (최소 200, 최대 5000)
-                if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
-                  onNodeStyleUpdate?.('width', numValue);
-                }
-              }}
-            />
-            <EditorTextbox
-              label="H"
-              value={`${height}px`}
-              onChange={(value) => {
-                const numValue = Number.parseInt(value, 10);
-                // 범위 검증 추가 (최소 200, 최대 5000)
-                if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
-                  onNodeStyleUpdate?.('height', numValue);
-                }
-              }}
-            />
-          </StyledDimensionRow>
-        </StyledSection>
+        <>
+          <StyledSection>
+            <StyledSectionTitle>섹션 정보</StyledSectionTitle>
+            <StyledFormGroup>
+              <EditorTextbox
+                label="이름"
+                value={nodeData?.label || 'New Section'}
+                onChange={(value) => onNodeUpdate?.('label', value)}
+              />
+            </StyledFormGroup>
+          </StyledSection>
+
+          <StyledSection>
+            <StyledSectionTitle>스타일</StyledSectionTitle>
+            <StyledDimensionRow>
+              <EditorTextbox
+                label="W"
+                value={`${width}px`}
+                onChange={(value) => {
+                  const numValue = Number.parseInt(value, 10);
+                  // 범위 검증 추가 (최소 200, 최대 5000)
+                  if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
+                    onNodeStyleUpdate?.('width', numValue);
+                  }
+                }}
+              />
+              <EditorTextbox
+                label="H"
+                value={`${height}px`}
+                onChange={(value) => {
+                  const numValue = Number.parseInt(value, 10);
+                  // 범위 검증 추가 (최소 200, 최대 5000)
+                  if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
+                    onNodeStyleUpdate?.('height', numValue);
+                  }
+                }}
+              />
+            </StyledDimensionRow>
+          </StyledSection>
+        </>
       );
     }
 
