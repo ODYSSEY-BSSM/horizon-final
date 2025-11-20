@@ -442,9 +442,38 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       }
 
       setNodes((nds) =>
-        nds.map((node) =>
-          node.id === selectedNodeId ? { ...node, data: { ...node.data, [field]: value } } : node,
-        ),
+        nds.map((node) => {
+          if (node.id !== selectedNodeId) {
+            return node;
+          }
+
+          // 타입 변경 시 데이터 구조 변환
+          if (field === 'type') {
+            const newType = value as NodeType;
+            const currentData = node.data;
+
+            // 타입별 필수 필드 설정
+            const newData: any = {
+              type: newType,
+              color: currentData.color || 'blue',
+            };
+
+            if (newType === 'title') {
+              // title 노드는 label 필드 사용
+              newData.label = currentData.label || currentData.title || 'New Title';
+            } else if (newType === 'standard' || newType === 'secondary') {
+              // standard/secondary 노드는 title, description 필드 사용
+              newData.title = currentData.title || currentData.label || 'New Node';
+              newData.description = currentData.description || '';
+              newData.progress = currentData.progress || 0;
+            }
+
+            return { ...node, data: newData };
+          }
+
+          // 일반 필드 업데이트
+          return { ...node, data: { ...node.data, [field]: value } };
+        }),
       );
     },
     [selectedNodeId, setNodes],
