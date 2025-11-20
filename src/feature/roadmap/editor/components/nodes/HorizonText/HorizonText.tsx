@@ -43,8 +43,8 @@ const StyledTitleContainer = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
-  border: ${(props) => (props.$selected ? `2px solid ${tokens.colors.primary[500]}` : '2px solid transparent')};
+  padding: 0 1.5px;
+  border: ${(props) => (props.$selected ? `0.75px solid ${tokens.colors.primary[500]}` : '0.75px solid transparent')};
   box-sizing: border-box;
   transition: border-color 0.2s ease;
   cursor: grab;
@@ -56,11 +56,11 @@ const StyledTitleContainer = styled.div<{ $selected?: boolean }>`
 
 const StyledTitleText = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[20]};
+  font-size: 7.5px;
   font-weight: ${tokens.typos.fontWeight.bold};
-  line-height: ${tokens.typos.lineHeight[28]};
+  line-height: 10.5px;
   color: ${tokens.colors.neutral[900]};
-  letter-spacing: -0.2px;
+  letter-spacing: -0.075px;
   white-space: pre;
   margin: 0;
 `;
@@ -71,8 +71,8 @@ const StyledParagraphContainer = styled.div<{ $selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
-  border: ${(props) => (props.$selected ? `2px solid ${tokens.colors.primary[500]}` : '2px solid transparent')};
+  padding: 0 1.5px;
+  border: ${(props) => (props.$selected ? `0.75px solid ${tokens.colors.primary[500]}` : '0.75px solid transparent')};
   box-sizing: border-box;
   transition: border-color 0.2s ease;
   cursor: grab;
@@ -84,9 +84,9 @@ const StyledParagraphContainer = styled.div<{ $selected?: boolean }>`
 
 const StyledParagraphText = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[16]};
+  font-size: 6px;
   font-weight: ${tokens.typos.fontWeight.regular};
-  line-height: ${tokens.typos.lineHeight[24]};
+  line-height: 9px;
   color: ${tokens.colors.neutral[600]};
   white-space: pre;
   margin: 0;

@@ -29,7 +29,7 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
 
       {/* 상단: 아이콘 + 타이틀 */}
       <StyledHeader>
-        <Icon name="school" size={24} color={colorTheme.primary} filled />
+        <Icon name="school" size={9} color={colorTheme.primary} filled />
         <StyledNodeTitle>{data.title}</StyledNodeTitle>
       </StyledHeader>
 
@@ -44,14 +44,14 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
 const StyledContainer = styled.div<{ $borderColor: string }>`
   position: relative;
   z-index: 1;
-  width: 248px;
+  width: 93px;
   background-color: ${tokens.colors.white};
-  border: 2px solid ${(props) => props.$borderColor};
-  border-radius: ${tokens.radius.medium};
-  padding: ${tokens.spacing.medium};
+  border: 1.5px solid ${(props) => props.$borderColor};
+  border-radius: ${tokens.radius.small};
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
+  gap: 3px;
   box-shadow: ${tokens.shadow[0]};
   cursor: grab;
 
@@ -62,15 +62,15 @@ const StyledContainer = styled.div<{ $borderColor: string }>`
 
 const StyledHeader = styled.div`
   display: flex;
-  gap: ${tokens.spacing.small};
+  gap: 3px;
   align-items: center;
 `;
 
 const StyledNodeTitle = styled.h4`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[18]};
+  font-size: 6.75px;
   font-weight: ${tokens.typos.fontWeight.semibold};
-  line-height: ${tokens.typos.lineHeight[24]};
+  line-height: 9px;
   color: ${tokens.colors.black};
   margin: 0;
   flex: 1;
@@ -78,10 +78,10 @@ const StyledNodeTitle = styled.h4`
 
 const StyledQuizCount = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[16]};
+  font-size: 6px;
   font-weight: ${tokens.typos.fontWeight.regular};
-  line-height: ${tokens.typos.lineHeight[22]};
+  line-height: 8.25px;
   color: ${tokens.colors.neutral[600]};
   margin: 0;
-  padding-left: 32px; /* icon width + gap */
+  padding-left: 12px; /* icon width + gap */
 `;

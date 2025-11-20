@@ -35,12 +35,12 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
 const StyledContainer = styled.div<{ $backgroundColor: string }>`
   position: relative;
   z-index: 1;
-  width: 248px;
-  min-height: 62px;
-  padding: 12px 40px;
+  width: 93px;
+  min-height: 24px;
+  padding: 4.5px 15px;
   background-color: ${tokens.colors.white};
-  border: 4px solid ${(props) => props.$backgroundColor};
-  border-radius: ${tokens.radius.medium};
+  border: 1.5px solid ${(props) => props.$backgroundColor};
+  border-radius: ${tokens.radius.small};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,10 +53,10 @@ const StyledContainer = styled.div<{ $backgroundColor: string }>`
 
 const StyledTitle = styled.h3<{ $color: string }>`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: 24px;
+  font-size: 9px;
   font-weight: ${tokens.typos.fontWeight.extrabold};
-  line-height: 34px;
-  letter-spacing: -0.36px;
+  line-height: 12px;
+  letter-spacing: -0.135px;
   color: ${(props) => props.$color};
   text-align: center;
   margin: 0;

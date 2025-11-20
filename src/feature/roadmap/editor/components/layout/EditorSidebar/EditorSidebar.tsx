@@ -196,7 +196,11 @@ export const EditorSidebar = ({
               label="타입"
               options={TEXT_TYPE_OPTIONS}
               selectedValue={nodeType}
-              onChange={(value) => onNodeUpdate?.('type', value)}
+              onChange={(value) => {
+                // 'titleText' -> 'title', 'paragraphText' -> 'paragraph' 변환
+                const actualType = value === 'titleText' ? 'title' : 'paragraph';
+                onNodeUpdate?.('type', actualType);
+              }}
             />
             <EditorTextfield
               label="텍스트"
