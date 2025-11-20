@@ -62,6 +62,7 @@ export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) =
 const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }>`
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
   background-color: ${tokens.colors.white};
   border: ${(props) => (props.$selected ? '4px' : '2px')} solid
     ${(props) => (props.$selected ? tokens.colors.primary[500] : props.$borderColor)};
@@ -71,6 +72,7 @@ const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }
 
   /* 자식 노드를 위한 포지셔닝 컨텍스트 */
   position: relative;
+  z-index: 0 !important; /* 선택되어도 항상 배경 레이어 유지 */
 `;
 
 const StyledLabel = styled.h3`

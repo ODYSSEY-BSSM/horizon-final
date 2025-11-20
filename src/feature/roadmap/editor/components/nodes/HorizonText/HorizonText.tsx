@@ -38,6 +38,8 @@ export const HorizonText = ({ data, selected }: NodeProps<TextNodeData>) => {
 };
 
 const StyledTitleContainer = styled.div<{ $selected?: boolean }>`
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,6 +66,8 @@ const StyledTitleText = styled.p`
 `;
 
 const StyledParagraphContainer = styled.div<{ $selected?: boolean }>`
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;

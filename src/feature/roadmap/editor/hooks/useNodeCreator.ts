@@ -21,6 +21,7 @@ export const useNodeCreator = () => {
         type: 'horizonNode',
         position,
         data: createNodeData(type),
+        style: { zIndex: 1 }, // 일반 노드는 섹션 위에 표시
       };
 
       setNodes((nds) => [...nds, newNode]);
@@ -41,7 +42,8 @@ export const useNodeCreator = () => {
         type: 'horizonSection',
         position,
         data: { label: 'New Section', color: 'blue' as const },
-        style: { width: size.width, height: size.height },
+        style: { width: size.width, height: size.height, zIndex: 0 }, // 섹션은 배경 레이어
+        selected: false, // 선택되지 않은 상태로 생성
       };
 
       setNodes((nds) => [...nds, newSection]);
@@ -62,6 +64,7 @@ export const useNodeCreator = () => {
         type: 'horizonText',
         position,
         data: { type: textType, text: 'New Text' },
+        style: { zIndex: 1 }, // 텍스트도 섹션 위에 표시
       };
 
       setNodes((nds) => [...nds, newText]);

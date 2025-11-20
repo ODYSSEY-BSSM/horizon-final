@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { tokens } from '@/shared/tokens';
+import { Icon } from '@/shared/ui';
 
 export interface ToolbarListOption {
   icon: string;
@@ -34,7 +35,7 @@ export const ToolbarList = ({ options, onSelect, maxHeight = 264 }: ToolbarListP
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={() => handleSelect(option.value)}
           >
-            <StyledItemIcon className="material-symbols-rounded">{option.icon}</StyledItemIcon>
+            <Icon name={option.icon} variant="SM" />
             <StyledItemText>{option.text}</StyledItemText>
           </StyledListItem>
         ))}
@@ -76,15 +77,6 @@ const StyledListItem = styled.div<{ $isHovered: boolean }>`
   &:hover {
     background-color: ${tokens.colors.neutral[100]};
   }
-`;
-
-const StyledItemIcon = styled.span`
-  font-family: ${tokens.typos.fontFamily.icon};
-  font-size: 20px;
-  line-height: 1;
-  color: ${tokens.colors.neutral[900]};
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  flex-shrink: 0;
 `;
 
 const StyledItemText = styled.p`

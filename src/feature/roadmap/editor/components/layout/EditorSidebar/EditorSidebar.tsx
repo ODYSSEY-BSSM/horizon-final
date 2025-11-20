@@ -22,7 +22,9 @@ export type EditorNodeType =
 export interface EditorSidebarProps {
   nodeType: EditorNodeType;
   nodeData?: any; // 선택된 노드의 데이터
+  nodeStyle?: any; // 선택된 노드의 스타일 (섹션 크기 등)
   onNodeUpdate?: (field: string, value: any) => void; // 노드 데이터 업데이트 콜백
+  onNodeStyleUpdate?: (styleField: string, value: any) => void; // 노드 스타일 업데이트 콜백
   isSchoolNode?: boolean;
   onSchoolNodeToggle?: () => void;
 }
@@ -41,7 +43,9 @@ const TEXT_TYPE_OPTIONS: DropdownOption[] = [
 export const EditorSidebar = ({
   nodeType,
   nodeData,
+  nodeStyle,
   onNodeUpdate,
+  onNodeStyleUpdate,
   isSchoolNode = false,
   onSchoolNodeToggle,
 }: EditorSidebarProps) => {
@@ -118,12 +122,33 @@ export const EditorSidebar = ({
 
   const renderContent = () => {
     if (nodeType === 'section') {
+      const width = nodeStyle?.width || 600;
+      const height = nodeStyle?.height || 400;
+
       return (
         <StyledSection>
           <StyledSectionTitle>스타일</StyledSectionTitle>
           <StyledDimensionRow>
-            <EditorTextbox label="W" value="240px" />
-            <EditorTextbox label="H" value="158px" />
+            <EditorTextbox
+              label="W"
+              value={`${width}px`}
+              onChange={(value) => {
+                const numValue = Number.parseInt(value, 10);
+                if (!Number.isNaN(numValue)) {
+                  onNodeStyleUpdate?.('width', numValue);
+                }
+              }}
+            />
+            <EditorTextbox
+              label="H"
+              value={`${height}px`}
+              onChange={(value) => {
+                const numValue = Number.parseInt(value, 10);
+                if (!Number.isNaN(numValue)) {
+                  onNodeStyleUpdate?.('height', numValue);
+                }
+              }}
+            />
           </StyledDimensionRow>
         </StyledSection>
       );

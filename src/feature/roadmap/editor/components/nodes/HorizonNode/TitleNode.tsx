@@ -34,6 +34,7 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
 
 const StyledContainer = styled.div<{ $backgroundColor: string }>`
   position: relative;
+  z-index: 1;
   width: 248px;
   min-height: 62px;
   padding: 12px 40px;

@@ -49,6 +49,7 @@ const initialNodes: Node[] = [
     type: 'horizonNode',
     position: { x: 250, y: 200 },
     data: { type: 'title' as const, label: 'Roadmap Title', color: 'blue' as const },
+    style: { zIndex: 1 },
   },
   {
     id: '2',
@@ -61,6 +62,7 @@ const initialNodes: Node[] = [
       color: 'blue' as const,
       progress: 50,
     },
+    style: { zIndex: 1 },
   },
 ];
 
@@ -82,6 +84,28 @@ export const RoadmapEditor = () => {
 
   // 선택된 노드 찾기
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
+
+  // 노드 타입 결정
+  const getNodeType = ():
+    | 'title'
+    | 'standard'
+    | 'secondary'
+    | 'section'
+    | 'titleText'
+    | 'paragraphText' => {
+    if (!selectedNode) {
+      return 'title';
+    }
+
+    if (selectedNode.type === 'horizonSection') {
+      return 'section';
+    }
+    if (selectedNode.type === 'horizonText') {
+      return selectedNode.data.type === 'title' ? 'titleText' : 'paragraphText';
+    }
+    // horizonNode
+    return selectedNode.data.type || 'title';
+  };
 
   // 연결선 추가
   const onConnect = useCallback(
@@ -122,22 +146,99 @@ export const RoadmapEditor = () => {
     setSelectedNodeId(null);
   }, [setSelectedNodeId]);
 
+  // 노드 드래그 종료 시 부모-자식 관계 설정
+  const onNodeDragStop = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      // 섹션이 아닌 노드만 처리
+      if (node.type === 'horizonSection') {
+        return;
+      }
+
+      // 모든 섹션 찾기
+      const sections = nodes.filter((n) => n.type === 'horizonSection');
+
+      // 노드의 절대 좌표 계산 (parentNode가 있으면 상대 좌표이므로 변환 필요)
+      let absoluteX = node.position.x;
+      let absoluteY = node.position.y;
+
+      if (node.parentNode) {
+        const currentParent = nodes.find((n) => n.id === node.parentNode);
+        if (currentParent) {
+          absoluteX = currentParent.position.x + node.position.x;
+          absoluteY = currentParent.position.y + node.position.y;
+        }
+      }
+
+      // 현재 노드가 어느 섹션 안에 있는지 확인
+      let newParentId: string | undefined;
+
+      for (const section of sections) {
+        const sectionX = section.position.x;
+        const sectionY = section.position.y;
+        const sectionWidth = (section.style?.width as number) || 600;
+        const sectionHeight = (section.style?.height as number) || 400;
+
+        // 노드가 섹션 영역 안에 있는지 확인
+        if (
+          absoluteX >= sectionX &&
+          absoluteX <= sectionX + sectionWidth &&
+          absoluteY >= sectionY &&
+          absoluteY <= sectionY + sectionHeight
+        ) {
+          newParentId = section.id;
+          break;
+        }
+      }
+
+      // 부모가 변경된 경우에만 업데이트
+      if (node.parentNode !== newParentId) {
+        setNodes((nds) =>
+          nds.map((n) => {
+            if (n.id === node.id) {
+              if (newParentId) {
+                // 부모 섹션 찾기
+                const parent = nds.find((p) => p.id === newParentId);
+                if (parent) {
+                  // 절대 좌표를 부모 기준 상대 좌표로 변환
+                  const relativeX = absoluteX - parent.position.x;
+                  const relativeY = absoluteY - parent.position.y;
+                  return {
+                    ...n,
+                    parentNode: newParentId,
+                    position: { x: relativeX, y: relativeY },
+                  };
+                }
+              } else {
+                // 부모에서 제거 - 절대 좌표로 변환
+                // biome-ignore lint/correctness/noUnusedVariables: parentNode을 제거하기 위한 구조 분해
+                const { parentNode, ...rest } = n;
+                return {
+                  ...rest,
+                  position: { x: absoluteX, y: absoluteY },
+                };
+              }
+            }
+            return n;
+          }),
+        );
+      }
+    },
+    [nodes, setNodes],
+  );
+
   // 임시저장 핸들러
   const handleTempSave = useCallback(() => {
-    console.log('임시저장');
     // TODO: 임시저장 API 호출
   }, []);
 
   // 저장 핸들러
   const handleSave = useCallback(() => {
     setHeaderState('saving');
-    console.log('저장 중...');
 
     // TODO: 저장 API 호출
     // 임시로 2초 후에 저장 완료 처리
     setTimeout(() => {
       setHeaderState('saved');
-      console.log('저장 완료');
 
       // 3초 후에 다시 editing 상태로 전환
       setTimeout(() => {
@@ -156,6 +257,16 @@ export const RoadmapEditor = () => {
     );
   }, [selectedNodeId, setNodes]);
 
+  // edge에 z-index 자동 추가 (섹션 위에 표시)
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((edge) => ({
+        ...edge,
+        style: { ...edge.style, zIndex: 1 },
+      })),
+    );
+  }, [setEdges]);
+
   // 노드 데이터 업데이트 핸들러
   const handleNodeUpdate = useCallback(
     (field: string, value: any) => {
@@ -166,6 +277,24 @@ export const RoadmapEditor = () => {
       setNodes((nds) =>
         nds.map((node) =>
           node.id === selectedNodeId ? { ...node, data: { ...node.data, [field]: value } } : node,
+        ),
+      );
+    },
+    [selectedNodeId, setNodes],
+  );
+
+  // 노드 스타일 업데이트 핸들러 (섹션 크기 등)
+  const handleNodeStyleUpdate = useCallback(
+    (styleField: string, value: any) => {
+      if (!selectedNodeId) {
+        return;
+      }
+
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === selectedNodeId
+            ? { ...node, style: { ...node.style, [styleField]: value } }
+            : node,
         ),
       );
     },
@@ -244,9 +373,12 @@ export const RoadmapEditor = () => {
           onConnect={onConnect}
           onNodeClick={onNodeClick}
           onPaneClick={onPaneClick}
+          onNodeDragStop={onNodeDragStop}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          defaultEdgeOptions={{ type: 'horizonEdge' }}
+          defaultEdgeOptions={{ type: 'horizonEdge', style: { zIndex: 1 } }}
+          elevateNodesOnSelect={false}
+          elevateEdgesOnSelect={false}
           fitView
           minZoom={0.1}
           maxZoom={2}
@@ -269,9 +401,11 @@ export const RoadmapEditor = () => {
       {/* 사이드바 */}
       <StyledSidebar>
         <EditorSidebar
-          nodeType={(selectedNode?.data?.type as any) || 'title'}
+          nodeType={getNodeType()}
           nodeData={selectedNode?.data}
+          nodeStyle={selectedNode?.style}
           onNodeUpdate={handleNodeUpdate}
+          onNodeStyleUpdate={handleNodeStyleUpdate}
         />
       </StyledSidebar>
 

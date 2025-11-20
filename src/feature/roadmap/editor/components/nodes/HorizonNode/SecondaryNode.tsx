@@ -42,6 +42,8 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
 };
 
 const StyledContainer = styled.div<{ $borderColor: string }>`
+  position: relative;
+  z-index: 1;
   width: 248px;
   background-color: ${tokens.colors.white};
   border: 2px solid ${(props) => props.$borderColor};

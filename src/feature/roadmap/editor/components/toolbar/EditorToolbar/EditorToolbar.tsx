@@ -13,7 +13,7 @@ export interface EditorToolbarProps {
 }
 
 export const EditorToolbar = ({
-  selectedTool = 'selector',
+  selectedTool,
   onToolSelect,
   onNodeTypeSelect,
   onTextTypeSelect,
@@ -84,7 +84,6 @@ const StyledContainer = styled.div`
   background-color: ${tokens.colors.white};
   border: 1px solid ${tokens.colors.neutral[200]};
   border-radius: ${tokens.radius.medium};
-  transform: translateX(-50%);
 `;
 
 const StyledToolbarWrapper = styled.div`
@@ -92,6 +91,6 @@ const StyledToolbarWrapper = styled.div`
   align-items: center;
   gap: 8px;
   padding: 8px;
-  overflow: clip;
+  overflow: visible;
   border-radius: inherit;
 `;

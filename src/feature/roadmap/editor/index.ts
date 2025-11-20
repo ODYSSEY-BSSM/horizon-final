@@ -17,7 +17,6 @@ export {
 export { HorizonSection } from './components/nodes/HorizonSection';
 export { HorizonText } from './components/nodes/HorizonText';
 // Toolbar
-export type { EditorToolbarProps } from './components/toolbar/EditorToolbar';
 export { EditorToolbar } from './components/toolbar/EditorToolbar';
 export type {
   ToolbarItemProps,

@@ -48,13 +48,16 @@ export const ToolbarItem = ({
     };
   }, [isDropdownOpen]);
 
-  const handleClick = () => {
+  const handleIconClick = () => {
     onSelect?.();
   };
 
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsDropdownOpen(!isDropdownOpen);
+    e.preventDefault();
+    setIsDropdownOpen((prev) => {
+      return !prev;
+    });
   };
 
   const handleDropdownSelect = (value: string) => {
@@ -64,31 +67,27 @@ export const ToolbarItem = ({
 
   const state: ToolbarItemState = isSelected ? 'selected' : isHovered ? 'hover' : 'default';
   const dropdownState = isDropdownOpen ? 'hover' : state;
+  const iconColor = isSelected ? tokens.colors.white : tokens.colors.neutral[700];
 
   return (
     <StyledContainer
       ref={dropdownRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={handleClick}
     >
-      <StyledIconButton $state={state}>
-        <StyledIcon $state={state}>
-          <Icon name={icon} variant="MD" />
-        </StyledIcon>
+      <StyledIconButton $state={state} onClick={handleIconClick}>
+        <Icon name={icon} variant="SM" color={iconColor} />
       </StyledIconButton>
 
       {hasDropdown && (
         <StyledDropdownButtonWrapper>
           {isDropdownOpen && dropdownOptions.length > 0 && (
-            <StyledDropdownMenuWrapper>
+            <StyledDropdownMenuWrapper onClick={(e) => e.stopPropagation()}>
               <ToolbarList options={dropdownOptions} onSelect={handleDropdownSelect} />
             </StyledDropdownMenuWrapper>
           )}
           <StyledDropdownButton $state={dropdownState} onClick={handleDropdownClick}>
-            <StyledDropdownIcon className="material-symbols-rounded">
-              arrow_drop_down
-            </StyledDropdownIcon>
+            <Icon name="arrow_drop_down" variant="XS" color={tokens.colors.neutral[700]} />
           </StyledDropdownButton>
         </StyledDropdownButtonWrapper>
       )}
@@ -99,18 +98,17 @@ export const ToolbarItem = ({
 const StyledContainer = styled.div`
   display: flex;
   align-items: center;
-  cursor: pointer;
   position: relative;
 `;
 
-const StyledIconButton = styled.div<{ $state: ToolbarItemState }>`
+const StyledIconButton = styled.button<{ $state: ToolbarItemState }>`
   width: 36px;
   height: 36px;
-  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: ${tokens.radius.extraSmall};
+  border: none;
   background-color: ${(props) => {
     switch (props.$state) {
       case 'selected':
@@ -122,14 +120,8 @@ const StyledIconButton = styled.div<{ $state: ToolbarItemState }>`
     }
   }};
   transition: background-color 0.2s;
-`;
-
-const StyledIcon = styled.span<{ $state?: ToolbarItemState }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) =>
-    props.$state === 'selected' ? tokens.colors.white : tokens.colors.neutral[700]};
+  cursor: pointer;
+  padding: 0;
 `;
 
 const StyledDropdownButtonWrapper = styled.div`
@@ -141,19 +133,34 @@ const StyledDropdownButtonWrapper = styled.div`
   width: 12px;
   height: 36px;
   gap: 8px;
+  margin-left: -4px;
 `;
 
 const StyledDropdownMenuWrapper = styled.div`
   position: absolute;
-  bottom: 52px;
-  left: 0;
+  bottom: 48px;
+  left: -94px;
   z-index: 1000;
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.12));
+  animation: slideUp 0.2s ease-out;
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 const StyledDropdownButton = styled.div<{ $state: ToolbarItemState }>`
   width: 12px;
   height: 36px;
-  padding: 8px;
+  padding: 8px 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,13 +174,6 @@ const StyledDropdownButton = styled.div<{ $state: ToolbarItemState }>`
     }
   }};
   transition: background-color 0.2s;
-`;
-
-const StyledDropdownIcon = styled.span`
-  font-family: ${tokens.typos.fontFamily.icon};
-  font-size: 12px;
-  font-weight: ${tokens.typos.fontWeight.light};
-  line-height: 1;
   color: ${tokens.colors.neutral[700]};
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0;
+  cursor: pointer;
 `;
