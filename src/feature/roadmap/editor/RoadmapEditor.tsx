@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Background,
@@ -32,7 +32,11 @@ import { useHistory } from './hooks/useHistory';
 import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
 import { loadEdges, saveEdges } from './utils/edgeStorage';
-import { apiNodesToReactFlow, reactFlowNodesToApi } from './utils/nodeConverter';
+import {
+  apiNodesToReactFlow,
+  calculateAbsolutePosition,
+  reactFlowNodesToApi,
+} from './utils/nodeConverter';
 
 // 노드 타입 등록
 const nodeTypes: NodeTypes = {
@@ -108,14 +112,10 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // 선택된 노드 찾기
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
 
-  // 노드 타입 결정
-  const getNodeType = ():
-    | 'title'
-    | 'standard'
-    | 'secondary'
-    | 'section'
-    | 'titleText'
-    | 'paragraphText' => {
+  // 노드 타입 결정 (메모이제이션)
+  const nodeType = useMemo<
+    'title' | 'standard' | 'secondary' | 'section' | 'titleText' | 'paragraphText'
+  >(() => {
     if (!selectedNode) {
       return 'title';
     }
@@ -128,7 +128,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     }
     // horizonNode
     return selectedNode.data.type || 'title';
-  };
+  }, [selectedNode]);
 
   // 연결선 추가
   const onConnect = useCallback(
@@ -169,6 +169,33 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     setSelectedNodeId(null);
   }, [setSelectedNodeId]);
 
+  // 노드 삭제 핸들러 (섹션 삭제 시 자식 노드의 부모 참조 제거)
+  const onNodesDelete = useCallback(
+    (deletedNodes: Node[]) => {
+      const deletedNodeIds = new Set(deletedNodes.map((n) => n.id));
+
+      setNodes((nds) =>
+        nds.map((node) => {
+          // 삭제된 노드를 부모로 가진 노드의 부모 참조 제거
+          if (node.parentNode && deletedNodeIds.has(node.parentNode)) {
+            // 절대 좌표 계산
+            const absolutePos = calculateAbsolutePosition(node, nds);
+
+            // 부모 참조 제거하고 절대 좌표로 변환
+            // biome-ignore lint/correctness/noUnusedVariables: parentNode을 제거하기 위한 구조 분해
+            const { parentNode, ...rest } = node;
+            return {
+              ...rest,
+              position: absolutePos,
+            };
+          }
+          return node;
+        }),
+      );
+    },
+    [setNodes],
+  );
+
   // 노드 드래그 종료 시 부모-자식 관계 설정
   const onNodeDragStop = useCallback(
     (_event: React.MouseEvent, node: Node) => {
@@ -198,8 +225,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       for (const section of sections) {
         const sectionX = section.position.x;
         const sectionY = section.position.y;
-        const sectionWidth = (section.style?.width as number) || 600;
-        const sectionHeight = (section.style?.height as number) || 400;
+        const sectionWidth = (section.style?.width as number | undefined) ?? 600;
+        const sectionHeight = (section.style?.height as number | undefined) ?? 400;
 
         // 노드가 섹션 영역 안에 있는지 확인
         if (
@@ -278,22 +305,45 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // React Flow 노드를 API 형식으로 변환 (필터링된 배열 사용)
       const apiNodeRequests = reactFlowNodesToApi(horizonNodes);
 
-      // 각 노드 업데이트 (병렬 처리)
-      await Promise.all(
+      // 각 노드 업데이트 (병렬 처리) - Promise.allSettled 사용
+      const results = await Promise.allSettled(
         horizonNodes.map((node, index) => {
           const nodeId = Number.parseInt(node.id, 10);
           if (Number.isNaN(nodeId)) {
             // 새로 생성된 노드는 임시 ID를 가지므로 스킵 (향후 createNode로 처리)
-            return Promise.resolve();
+            return Promise.resolve({ skipped: true, nodeId: node.id });
           }
-          return updateNodeMutation.mutateAsync({ nodeId, data: apiNodeRequests[index] });
+          return updateNodeMutation
+            .mutateAsync({ nodeId, data: apiNodeRequests[index] })
+            .then((result) => ({ skipped: false, nodeId, result }));
         }),
       );
 
+      // 실패한 노드 확인
+      const failures = results.filter((r) => r.status === 'rejected');
+      const skipped = results.filter(
+        (r) => r.status === 'fulfilled' && (r.value as any).skipped === true,
+      );
+
+      if (failures.length > 0) {
+        console.error(`Failed to save ${failures.length} node(s):`, failures);
+        toast({
+          title: 'Partial Save',
+          description: `${results.length - failures.length - skipped.length} nodes saved, ${failures.length} failed`,
+          variant: 'destructive',
+        });
+        setHeaderState('editing');
+        return;
+      }
+
       setHeaderState('saved');
+      const savedCount = results.length - skipped.length;
       toast({
         title: 'Success',
-        description: 'Roadmap saved successfully',
+        description:
+          skipped.length > 0
+            ? `${savedCount} nodes saved (${skipped.length} new nodes skipped)`
+            : 'Roadmap saved successfully',
         variant: 'default',
       });
 
@@ -347,7 +397,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 노드 데이터 업데이트 핸들러
   const handleNodeUpdate = useCallback(
-    (field: string, value: any) => {
+    (field: string, value: string | number | boolean) => {
       if (!selectedNodeId) {
         return;
       }
@@ -363,7 +413,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 노드 스타일 업데이트 핸들러 (섹션 크기 등)
   const handleNodeStyleUpdate = useCallback(
-    (styleField: string, value: any) => {
+    (styleField: string, value: string | number) => {
       if (!selectedNodeId) {
         return;
       }
@@ -503,6 +553,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           onNodeClick={onNodeClick}
           onPaneClick={onPaneClick}
           onNodeDragStop={onNodeDragStop}
+          onNodesDelete={onNodesDelete}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           defaultEdgeOptions={{ type: 'horizonEdge', style: { zIndex: 1 } }}
@@ -530,7 +581,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       {/* 사이드바 */}
       <StyledSidebar>
         <EditorSidebar
-          nodeType={getNodeType()}
+          nodeType={nodeType}
           nodeData={selectedNode?.data}
           nodeStyle={selectedNode?.style}
           onNodeUpdate={handleNodeUpdate}

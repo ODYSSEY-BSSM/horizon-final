@@ -7,6 +7,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/client';
 import type { NodeRequest, NodeResponse } from '../types/api.types';
 
+// Optimistic update ID counter (음수로 시작하여 실제 ID와 충돌 방지)
+let optimisticIdCounter = -1;
+
 // ============================================================================
 // API Client Functions
 // ============================================================================
@@ -94,10 +97,10 @@ export function useCreateNode(roadmapId: number) {
         editorNodeKeys.list(roadmapId),
       );
 
-      // 임시 ID로 노드 추가
+      // 임시 ID로 노드 추가 (음수 카운터 사용하여 충돌 방지)
       if (previousNodes) {
         const tempNode: NodeResponse = {
-          id: Date.now(), // 임시 ID
+          id: optimisticIdCounter--, // 음수 ID로 충돌 방지
           roadmapId,
           parentNodeId: data.parentNodeId || 0,
           childNode: [],

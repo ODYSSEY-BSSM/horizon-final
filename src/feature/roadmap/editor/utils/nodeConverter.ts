@@ -162,12 +162,22 @@ export function reactFlowToApi(node: Node, allNodes: Node[]): NodeRequest {
   // 절대 좌표 계산
   const absolutePos = calculateAbsolutePosition(node, allNodes);
 
-  // 크기 추출 (기본값: 200x100)
-  const width = (node.style?.width as number) || 200;
-  const height = (node.style?.height as number) || 100;
+  // 크기 추출 (기본값: 200x100) - nullish coalescing 사용
+  const width = (node.style?.width as number | undefined) ?? 200;
+  const height = (node.style?.height as number | undefined) ?? 100;
 
-  // 부모 노드 ID 변환 (string → number)
-  const parentNodeId = node.parentNode ? Number.parseInt(node.parentNode, 10) : undefined;
+  // 부모 노드 ID 변환 (string → number) - NaN 체크 추가
+  let parentNodeId: number | undefined;
+  if (node.parentNode) {
+    const parsed = Number.parseInt(node.parentNode, 10);
+    if (!Number.isNaN(parsed)) {
+      parentNodeId = parsed;
+    } else {
+      console.warn(
+        `Invalid parent node ID: ${node.parentNode} for node ${node.id}. Parent reference will be ignored.`,
+      );
+    }
+  }
 
   return {
     title: extractTitle(data),
@@ -273,19 +283,35 @@ export function apiNodesToReactFlow(apiNodes: NodeResponse[]): Node[] {
 export function validateNodeRequest(request: NodeRequest): string[] {
   const errors: string[] = [];
 
-  // 제목 길이 검사
-  if (request.title.length > 64) {
+  // 제목 검사
+  if (!request.title || request.title.trim().length === 0) {
+    errors.push('Title is required');
+  } else if (request.title.length > 64) {
     errors.push('Title must be 64 characters or less');
   }
 
   // 설명 길이 검사
-  if (request.description.length > 1500) {
+  if (request.description && request.description.length > 1500) {
     errors.push('Description must be 1500 characters or less');
   }
 
-  // 크기 검사
-  if (request.width <= 0 || request.height <= 0) {
-    errors.push('Width and height must be positive numbers');
+  // 크기 검사 - NaN, Infinity, 범위 체크
+  if (
+    !Number.isFinite(request.width) ||
+    !Number.isFinite(request.height) ||
+    request.width <= 0 ||
+    request.height <= 0
+  ) {
+    errors.push('Width and height must be positive finite numbers');
+  }
+
+  if (request.width > 10000 || request.height > 10000) {
+    errors.push('Width and height must not exceed 10000');
+  }
+
+  // 좌표 검사 - NaN, Infinity 체크
+  if (!Number.isFinite(request.x) || !Number.isFinite(request.y)) {
+    errors.push('X and Y coordinates must be finite numbers');
   }
 
   return errors;

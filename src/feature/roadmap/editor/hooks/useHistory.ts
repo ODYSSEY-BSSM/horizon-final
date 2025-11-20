@@ -39,14 +39,18 @@ function historyReducer(state: HistoryManagerState, action: HistoryAction): Hist
     case 'SAVE_STATE': {
       const { nodes, edges } = action.payload;
 
-      // 마지막 상태와 동일한지 확인 (중복 저장 방지)
+      // 마지막 상태와 동일한지 확인 (shallow comparison으로 최적화)
       const lastState = state.history[state.currentIndex];
-      if (
-        lastState &&
-        JSON.stringify(lastState.nodes) === JSON.stringify(nodes) &&
-        JSON.stringify(lastState.edges) === JSON.stringify(edges)
-      ) {
-        return state; // 변경사항 없음
+      if (lastState) {
+        // 배열 길이와 레퍼런스 빠른 비교
+        if (
+          lastState.nodes.length === nodes.length &&
+          lastState.edges.length === edges.length &&
+          lastState.nodes === nodes &&
+          lastState.edges === edges
+        ) {
+          return state; // 완전히 동일한 레퍼런스 (변경사항 없음)
+        }
       }
 
       // 현재 인덱스 이후의 히스토리 제거

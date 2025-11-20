@@ -40,8 +40,8 @@ export interface EditorSidebarProps {
   nodeType: EditorNodeType;
   nodeData?: NodeData; // 선택된 노드의 데이터
   nodeStyle?: CSSProperties; // 선택된 노드의 스타일 (섹션 크기 등)
-  onNodeUpdate?: (field: string, value: any) => void; // 노드 데이터 업데이트 콜백
-  onNodeStyleUpdate?: (styleField: string, value: any) => void; // 노드 스타일 업데이트 콜백
+  onNodeUpdate?: (field: string, value: string | number | boolean) => void; // 노드 데이터 업데이트 콜백
+  onNodeStyleUpdate?: (styleField: string, value: string | number) => void; // 노드 스타일 업데이트 콜백
   isSchoolNode?: boolean;
   onSchoolNodeToggle?: () => void;
 }
@@ -139,8 +139,8 @@ export const EditorSidebar = ({
 
   const renderContent = () => {
     if (nodeType === 'section') {
-      const width = nodeStyle?.width || 600;
-      const height = nodeStyle?.height || 400;
+      const width = nodeStyle?.width ?? 600;
+      const height = nodeStyle?.height ?? 400;
 
       return (
         <StyledSection>
@@ -151,7 +151,8 @@ export const EditorSidebar = ({
               value={`${width}px`}
               onChange={(value) => {
                 const numValue = Number.parseInt(value, 10);
-                if (!Number.isNaN(numValue)) {
+                // 범위 검증 추가 (최소 200, 최대 5000)
+                if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
                   onNodeStyleUpdate?.('width', numValue);
                 }
               }}
@@ -161,7 +162,8 @@ export const EditorSidebar = ({
               value={`${height}px`}
               onChange={(value) => {
                 const numValue = Number.parseInt(value, 10);
-                if (!Number.isNaN(numValue)) {
+                // 범위 검증 추가 (최소 200, 최대 5000)
+                if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
                   onNodeStyleUpdate?.('height', numValue);
                 }
               }}
