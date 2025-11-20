@@ -20,7 +20,7 @@ import 'reactflow/dist/style.css';
 
 import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
-import { useNodes, useUpdateNode } from './api/nodeApi';
+import { useCreateNode, useDeleteNode, useNodes, useUpdateNode } from './api/nodeApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
 import { EditorSidebar } from './components/layout/EditorSidebar';
@@ -32,10 +32,15 @@ import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
 import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
+import type { NodeRequest } from './types/api.types';
+import type { NodeType } from './types/node.types';
 import { loadEdges, saveEdges } from './utils/edgeStorage';
 import {
   apiNodesToReactFlow,
+  apiToReactFlow,
   calculateAbsolutePosition,
+  mapColorToApi,
+  mapTypeToApi,
   reactFlowNodesToApi,
 } from './utils/nodeConverter';
 
@@ -100,12 +105,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // API 연동: 노드 목록 조회
   const { data: apiNodes, isLoading, isError } = useNodes(roadmapId || 0);
   const updateNodeMutation = useUpdateNode(roadmapId || 0);
+  const createNodeMutation = useCreateNode(roadmapId || 0);
+  const deleteNodeMutation = useDeleteNode(roadmapId || 0);
 
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
 
-  // 노드 생성 훅
-  const { addNode, addSection, addText } = useNodeCreator();
+  // 노드 생성 훅 (섹션과 텍스트용)
+  const { addSection, addText } = useNodeCreator();
 
   // 에디터 스토어
   const { selectedNodeId, setSelectedNodeId } = useEditorStore();
@@ -172,9 +179,41 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 노드 삭제 핸들러 (섹션 삭제 시 자식 노드의 부모 참조 제거)
   const onNodesDelete = useCallback(
-    (deletedNodes: Node[]) => {
+    async (deletedNodes: Node[]) => {
       const deletedNodeIds = new Set(deletedNodes.map((n) => n.id));
 
+      // horizonNode만 API 호출 (섹션과 텍스트는 로컬에서만 삭제)
+      const horizonNodesToDelete = deletedNodes.filter((node) => node.type === 'horizonNode');
+
+      // API 호출 (병렬 처리)
+      if (roadmapId && horizonNodesToDelete.length > 0) {
+        try {
+          await Promise.all(
+            horizonNodesToDelete.map((node) => {
+              const nodeId = Number.parseInt(node.id, 10);
+              if (!Number.isNaN(nodeId)) {
+                return deleteNodeMutation.mutateAsync(nodeId);
+              }
+              // 임시 ID인 경우 (API에서 생성되지 않은 노드) 스킵
+              return Promise.resolve();
+            }),
+          );
+
+          toast({
+            title: 'Success',
+            description: `${horizonNodesToDelete.length} node(s) deleted`,
+            variant: 'default',
+          });
+        } catch (error) {
+          toast({
+            title: 'Error',
+            description: error instanceof Error ? error.message : 'Failed to delete some nodes',
+            variant: 'destructive',
+          });
+        }
+      }
+
+      // 로컬 상태 업데이트 (자식 노드의 부모 참조 제거)
       setNodes((nds) =>
         nds.map((node) => {
           // 삭제된 노드를 부모로 가진 노드의 부모 참조 제거
@@ -194,7 +233,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         }),
       );
     },
-    [setNodes],
+    [roadmapId, deleteNodeMutation, setNodes, toast],
   );
 
   // 노드 드래그 종료 시 부모-자식 관계 설정
@@ -327,7 +366,6 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       );
 
       if (failures.length > 0) {
-        console.error(`Failed to save ${failures.length} node(s):`, failures);
         toast({
           title: 'Partial Save',
           description: `${results.length - failures.length - skipped.length} nodes saved, ${failures.length} failed`,
@@ -432,16 +470,63 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 툴바 - 노드 타입 선택 핸들러
   const handleNodeTypeSelect = useCallback(
-    (nodeType: string) => {
-      if (nodeType === 'title') {
-        addNode('title', { x: 250, y: 250 });
-      } else if (nodeType === 'standard') {
-        addNode('standard', { x: 250, y: 250 });
-      } else if (nodeType === 'secondary') {
-        addNode('secondary', { x: 250, y: 250 });
+    async (nodeTypeStr: string) => {
+      if (!roadmapId) {
+        toast({
+          title: 'Error',
+          description: 'Roadmap ID is required',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const nodeType = nodeTypeStr as NodeType;
+
+      // 노드 기본 데이터 구성
+      const defaultTitle =
+        nodeType === 'title'
+          ? 'Title Node'
+          : nodeType === 'standard'
+            ? 'Standard Node'
+            : 'Secondary Node';
+      const defaultDescription = nodeType === 'standard' ? '노드의 학습 내용을 작성해주세요.' : '';
+
+      // API 요청 데이터 생성
+      const nodeRequest: NodeRequest = {
+        title: defaultTitle,
+        description: defaultDescription,
+        height: 93, // 현재 노드 크기
+        width: 93,
+        type: mapTypeToApi(nodeType),
+        x: 250,
+        y: 250,
+        color: mapColorToApi('blue'),
+      };
+
+      try {
+        // API 호출
+        const response = await createNodeMutation.mutateAsync(nodeRequest);
+
+        // API 응답을 React Flow 노드로 변환
+        const newNode = apiToReactFlow(response, apiNodes || []);
+
+        // React Flow 상태에 노드 추가
+        setNodes((nds) => [...nds, newNode]);
+
+        toast({
+          title: 'Success',
+          description: 'Node created successfully',
+          variant: 'default',
+        });
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: error instanceof Error ? error.message : 'Failed to create node',
+          variant: 'destructive',
+        });
       }
     },
-    [addNode],
+    [roadmapId, createNodeMutation, apiNodes, setNodes, toast],
   );
 
   // 툴바 - 도구 선택 핸들러
@@ -501,9 +586,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     }, HISTORY_DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
-    // saveState는 stable하므로 deps에서 제거 (무한 루프 방지)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, edges]);
+  }, [nodes, edges, saveState]);
 
   // 로딩 상태
   if (roadmapId && isLoading) {
