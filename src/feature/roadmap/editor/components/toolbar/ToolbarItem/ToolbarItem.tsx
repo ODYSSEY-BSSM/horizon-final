@@ -27,8 +27,12 @@ export const ToolbarItem = ({
   onSelect,
   onDropdownSelect,
 }: ToolbarItemProps) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isIconHovered, setIsIconHovered] = useState(false);
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [lastSelectedValue, setLastSelectedValue] = useState<string | null>(
+    dropdownOptions.length > 0 ? dropdownOptions[0].value : null,
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -55,33 +59,39 @@ export const ToolbarItem = ({
   }, [isDropdownOpen]);
 
   const handleIconClick = () => {
-    onSelect?.();
+    // 드롭다운이 있으면 최근 선택 항목 실행, 없으면 기본 액션
+    if (hasDropdown && lastSelectedValue) {
+      onDropdownSelect?.(lastSelectedValue);
+    } else {
+      onSelect?.();
+    }
   };
 
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setIsDropdownOpen((prev) => {
-      return !prev;
-    });
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const handleDropdownSelect = (value: string) => {
+    setLastSelectedValue(value);
     onDropdownSelect?.(value);
     setIsDropdownOpen(false);
   };
 
-  const state: ToolbarItemState = isSelected ? 'selected' : isHovered ? 'hover' : 'default';
-  const dropdownState = isDropdownOpen ? 'hover' : state;
+  const iconState: ToolbarItemState = isSelected ? 'selected' : isIconHovered ? 'hover' : 'default';
+  const dropdownState: ToolbarItemState = isDropdownOpen || isDropdownHovered ? 'hover' : 'default';
   const iconColor = isSelected ? tokens.colors.white : tokens.colors.neutral[700];
 
   return (
-    <StyledContainer
-      ref={dropdownRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <StyledIconButton $state={state} onClick={handleIconClick}>
+    <StyledContainer ref={dropdownRef}>
+      <StyledIconButton
+        $state={iconState}
+        $hasDropdown={hasDropdown}
+        onClick={handleIconClick}
+        onMouseEnter={() => setIsIconHovered(true)}
+        onMouseLeave={() => setIsIconHovered(false)}
+      >
         <Icon name={icon} variant="SM" color={iconColor} />
       </StyledIconButton>
 
@@ -92,7 +102,12 @@ export const ToolbarItem = ({
               <ToolbarList options={dropdownOptions} onSelect={handleDropdownSelect} />
             </StyledDropdownMenuWrapper>
           )}
-          <StyledDropdownButton $state={dropdownState} onClick={handleDropdownClick}>
+          <StyledDropdownButton
+            $state={dropdownState}
+            onClick={handleDropdownClick}
+            onMouseEnter={() => setIsDropdownHovered(true)}
+            onMouseLeave={() => setIsDropdownHovered(false)}
+          >
             <Icon name="arrow_drop_down" variant="XS" color={tokens.colors.neutral[700]} />
           </StyledDropdownButton>
         </StyledDropdownButtonWrapper>
@@ -105,15 +120,19 @@ const StyledContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  gap: 0;
 `;
 
-const StyledIconButton = styled.button<{ $state: ToolbarItemState }>`
+const StyledIconButton = styled.button<{ $state: ToolbarItemState; $hasDropdown?: boolean }>`
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${tokens.radius.extraSmall};
+  border-radius: ${(props) =>
+    props.$hasDropdown
+      ? `${tokens.radius.extraSmall} 0 0 ${tokens.radius.extraSmall}`
+      : tokens.radius.extraSmall};
   border: none;
   background-color: ${(props) => {
     switch (props.$state) {
@@ -136,10 +155,9 @@ const StyledDropdownButtonWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  width: 12px;
+  width: 20px;
   height: 36px;
   gap: 8px;
-  margin-left: -4px;
 `;
 
 const StyledDropdownMenuWrapper = styled.div`
@@ -163,14 +181,15 @@ const StyledDropdownMenuWrapper = styled.div`
 `;
 
 const StyledDropdownButton = styled.div<{ $state: ToolbarItemState }>`
-  width: 12px;
+  width: 20px;
   height: 36px;
-  padding: 8px 0;
+  padding: 8px 4px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${tokens.radius.extraSmall};
+  border-radius: 0 ${tokens.radius.extraSmall} ${tokens.radius.extraSmall} 0;
+  border: none;
   background-color: ${(props) => {
     switch (props.$state) {
       case 'hover':
