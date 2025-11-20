@@ -149,7 +149,8 @@ export const EditorSidebar = ({
             <StyledFormGroup>
               <EditorTextbox
                 label="이름"
-                value={nodeData?.label || 'New Section'}
+                value={nodeData?.label || ''}
+                placeholder="섹션 이름을 입력하세요"
                 onChange={(value) => onNodeUpdate?.('label', value)}
               />
             </StyledFormGroup>
@@ -191,10 +192,16 @@ export const EditorSidebar = ({
         <StyledSection>
           <StyledSectionTitle>속성</StyledSectionTitle>
           <StyledFormGroup>
-            <EditorDropdown label="타입" options={TEXT_TYPE_OPTIONS} selectedValue={nodeType} />
+            <EditorDropdown
+              label="타입"
+              options={TEXT_TYPE_OPTIONS}
+              selectedValue={nodeType}
+              onChange={(value) => onNodeUpdate?.('type', value)}
+            />
             <EditorTextfield
               label="텍스트"
               value={nodeData?.text || ''}
+              placeholder="텍스트를 입력하세요"
               onChange={(value) => onNodeUpdate?.('text', value)}
             />
           </StyledFormGroup>
@@ -215,10 +222,12 @@ export const EditorSidebar = ({
               label="타입"
               options={NODE_TYPE_OPTIONS}
               selectedValue={selectedTypeValue}
+              onChange={(value) => onNodeUpdate?.('type', value)}
             />
             <EditorTextbox
               label="이름"
               value={nodeData?.label || nodeData?.title || ''}
+              placeholder="노드 이름을 입력하세요"
               onChange={(value) => {
                 const field = nodeType === 'title' ? 'label' : 'title';
                 onNodeUpdate?.(field, value);
@@ -228,6 +237,7 @@ export const EditorSidebar = ({
               <EditorTextfield
                 label="학습 내용"
                 value={nodeData?.description || ''}
+                placeholder="학습 내용을 입력하세요"
                 onChange={(value) => onNodeUpdate?.('description', value)}
               />
             )}
