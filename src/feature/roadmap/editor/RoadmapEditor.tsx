@@ -93,7 +93,7 @@ const HISTORY_DEBOUNCE_MS = 500;
 const SAVE_SUCCESS_DISPLAY_MS = 3000;
 
 interface RoadmapEditorProps {
-  roadmapId?: number;
+  roadmapId: number;
 }
 
 export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
@@ -109,10 +109,10 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const { toast } = useToast();
 
   // API 연동: 노드 목록 조회
-  const { data: apiNodes, isLoading, isError } = useNodes(roadmapId || 0);
-  const updateNodeMutation = useUpdateNode(roadmapId || 0);
-  const createNodeMutation = useCreateNode(roadmapId || 0);
-  const deleteNodeMutation = useDeleteNode(roadmapId || 0);
+  const { data: apiNodes, isLoading, isError } = useNodes(roadmapId);
+  const updateNodeMutation = useUpdateNode(roadmapId);
+  const createNodeMutation = useCreateNode(roadmapId);
+  const deleteNodeMutation = useDeleteNode(roadmapId);
 
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();

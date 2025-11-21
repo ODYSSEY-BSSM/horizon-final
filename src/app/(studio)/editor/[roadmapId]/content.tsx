@@ -3,10 +3,14 @@
 import { ReactFlowProvider } from 'reactflow';
 import { RoadmapEditor } from '@/feature/roadmap/editor';
 
-export function EditorContent() {
+interface EditorContentProps {
+  roadmapId: number;
+}
+
+export function EditorContent({ roadmapId }: EditorContentProps) {
   return (
     <ReactFlowProvider>
-      <RoadmapEditor />
+      <RoadmapEditor roadmapId={roadmapId} />
     </ReactFlowProvider>
   );
 }
