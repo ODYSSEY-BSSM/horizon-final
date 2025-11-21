@@ -62,7 +62,12 @@ const initialNodes: Node[] = [
     id: '1',
     type: 'horizonNode',
     position: { x: 250, y: 200 },
-    data: { type: 'title' as const, label: 'Roadmap Title', color: 'blue' as const },
+    data: {
+      type: 'title' as const,
+      label: 'Roadmap Title',
+      color: 'blue' as const,
+      isSchoolNode: false,
+    },
     style: { zIndex: 1 },
   },
   {
@@ -75,6 +80,7 @@ const initialNodes: Node[] = [
       description: '노드 설명을 입력하세요',
       color: 'blue' as const,
       progress: 50,
+      isSchoolNode: false,
     },
     style: { zIndex: 1 },
   },
@@ -456,6 +462,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
             const newData: any = {
               type: newType,
               color: currentData.color || 'blue',
+              isSchoolNode: (currentData as any).isSchoolNode || false, // 학교 노드 상태 보존
             };
 
             if (newType === 'title') {

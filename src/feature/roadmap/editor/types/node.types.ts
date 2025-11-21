@@ -21,6 +21,7 @@ export interface TitleNodeData {
   type: 'title';
   label: string;
   color: NodeColor;
+  isSchoolNode?: boolean; // 학교 연계 노드 여부
 }
 
 /**
@@ -32,6 +33,7 @@ export interface StandardNodeData {
   description: string;
   color: NodeColor;
   progress: number; // 0-100 범위의 진행률
+  isSchoolNode?: boolean; // 학교 연계 노드 여부
 }
 
 /**
@@ -43,6 +45,7 @@ export interface SecondaryNodeData {
   color: NodeColor;
   quizCurrent: number; // 현재 완료한 퀴즈 개수
   quizTotal: number; // 전체 퀴즈 개수
+  isSchoolNode?: boolean; // 학교 연계 노드 여부
 }
 
 /**

@@ -14,6 +14,7 @@ interface SecondaryNodeProps {
 
 export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
   const colorTheme = getNodeColor(data.color);
+  const isSchoolNode = data.isSchoolNode ?? false;
 
   const handleStyle = {
     opacity: selected ? 1 : 0,
@@ -29,12 +30,12 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
 
       {/* 상단: 아이콘 + 타이틀 */}
       <StyledHeader>
-        <Icon name="school" size={9} color={colorTheme.primary} filled />
+        {isSchoolNode && <Icon name="school" size={9} color={colorTheme.primary} filled />}
         <StyledNodeTitle>{data.title}</StyledNodeTitle>
       </StyledHeader>
 
       {/* 하단: 퀴즈 개수 */}
-      <StyledQuizCount>
+      <StyledQuizCount $hasIcon={isSchoolNode}>
         문제 {data.quizCurrent}/{data.quizTotal}
       </StyledQuizCount>
     </StyledContainer>
@@ -76,12 +77,12 @@ const StyledNodeTitle = styled.h4`
   flex: 1;
 `;
 
-const StyledQuizCount = styled.p`
+const StyledQuizCount = styled.p<{ $hasIcon?: boolean }>`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
   font-size: 6px;
   font-weight: ${tokens.typos.fontWeight.regular};
   line-height: 8.25px;
   color: ${tokens.colors.neutral[600]};
   margin: 0;
-  padding-left: 12px; /* icon width + gap */
+  padding-left: ${(props) => (props.$hasIcon ? '12px' : '0')}; /* icon width + gap */
 `;

@@ -86,6 +86,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         type: 'title',
         label: 'Title Node',
         color: 'blue',
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
     case 'standard':
       return {
@@ -94,6 +95,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         description: '노드의 학습 내용을 작성해주세요.',
         color: 'blue',
         progress: 0,
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
     case 'secondary':
       return {
@@ -102,6 +104,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         color: 'blue',
         quizCurrent: 0,
         quizTotal: 4,
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
   }
 }

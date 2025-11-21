@@ -63,9 +63,11 @@ export const EditorSidebar = ({
   nodeStyle,
   onNodeUpdate,
   onNodeStyleUpdate,
-  isSchoolNode = false,
+  isSchoolNode: isSchoolNodeProp,
   onSchoolNodeToggle,
 }: EditorSidebarProps) => {
+  // nodeData에서 isSchoolNode를 우선 사용, prop은 fallback
+  const isSchoolNode = (nodeData as any)?.isSchoolNode ?? isSchoolNodeProp ?? false;
   const renderHeader = () => {
     switch (nodeType) {
       case 'title':
@@ -258,9 +260,13 @@ export const EditorSidebar = ({
 
         {showSchoolToggle && (
           <StyledBottomButtonContainer>
-            <Button variant="outlined" size="medium" onClick={onSchoolNodeToggle}>
+            <StyledSchoolToggleButton
+              variant="outlined"
+              size="medium"
+              onClick={() => onNodeUpdate?.('isSchoolNode', !isSchoolNode)}
+            >
               {isSchoolNode ? '기본 노드로 전환' : '학교 노드로 전환'}
-            </Button>
+            </StyledSchoolToggleButton>
           </StyledBottomButtonContainer>
         )}
       </>
@@ -358,13 +364,27 @@ const StyledDimensionRow = styled.div`
 `;
 
 const StyledBottomButtonContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 280px;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const StyledSchoolToggleButton = styled(Button)`
+  background-color: ${tokens.colors.white} !important;
+  border: 1.5px solid ${tokens.colors.primary[500]} !important;
+  color: ${tokens.colors.primary[500]} !important;
+
+  &:hover {
+    background-color: ${tokens.colors.primary[50]} !important;
+    border-color: ${tokens.colors.primary[600]} !important;
+    color: ${tokens.colors.primary[600]} !important;
+  }
+
+  &:active {
+    background-color: ${tokens.colors.primary[100]} !important;
+    border-color: ${tokens.colors.primary[900]} !important;
+    color: ${tokens.colors.primary[900]} !important;
+  }
 `;

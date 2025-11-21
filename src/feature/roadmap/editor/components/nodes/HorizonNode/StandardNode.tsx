@@ -14,6 +14,7 @@ interface StandardNodeProps {
 
 export const StandardNode = ({ data, selected }: StandardNodeProps) => {
   const colorTheme = getNodeColor(data.color);
+  const isSchoolNode = data.isSchoolNode ?? false;
 
   const handleStyle = {
     opacity: selected ? 1 : 0,
@@ -29,7 +30,7 @@ export const StandardNode = ({ data, selected }: StandardNodeProps) => {
 
       {/* 상단: 아이콘 + 텍스트 */}
       <StyledHeader>
-        <Icon name="school" size={9} color={colorTheme.primary} filled />
+        {isSchoolNode && <Icon name="school" size={9} color={colorTheme.primary} filled />}
         <StyledTextContent>
           <StyledNodeTitle>{data.title}</StyledNodeTitle>
           <StyledDescription>{data.description}</StyledDescription>
