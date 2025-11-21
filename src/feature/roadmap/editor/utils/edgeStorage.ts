@@ -32,8 +32,8 @@ export function saveEdges(roadmapId: number, edges: Edge[]): void {
     const key = getStorageKey(roadmapId);
     const serialized = JSON.stringify(edges);
     localStorage.setItem(key, serialized);
-  } catch (error) {
-    console.error('Failed to save edges to localStorage:', error);
+  } catch (_error) {
+    // localStorage 저장 실패 시 무시 (quota 초과, 권한 없음 등)
   }
 }
 
@@ -57,8 +57,7 @@ export function loadEdges(roadmapId: number): Edge[] {
 
     const edges = JSON.parse(serialized) as Edge[];
     return edges;
-  } catch (error) {
-    console.error('Failed to load edges from localStorage:', error);
+  } catch (_error) {
     return [];
   }
 }
@@ -75,8 +74,8 @@ export function clearEdges(roadmapId: number): void {
   try {
     const key = getStorageKey(roadmapId);
     localStorage.removeItem(key);
-  } catch (error) {
-    console.error('Failed to clear edges from localStorage:', error);
+  } catch (_error) {
+    // localStorage 삭제 실패 시 무시 (권한 없음 등)
   }
 }
 
@@ -96,7 +95,7 @@ export function clearAllEdges(): void {
         localStorage.removeItem(key);
       }
     }
-  } catch (error) {
-    console.error('Failed to clear all edges from localStorage:', error);
+  } catch (_error) {
+    // localStorage 삭제 실패 시 무시 (권한 없음 등)
   }
 }

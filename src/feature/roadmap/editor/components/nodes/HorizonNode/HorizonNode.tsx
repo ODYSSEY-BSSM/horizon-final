@@ -19,9 +19,6 @@ export const HorizonNode = ({ data, selected }: NodeProps<HorizonNodeData>) => {
     case 'secondary':
       return <SecondaryNode data={data} selected={selected} />;
     default:
-      console.error(
-        `Unknown HorizonNode type: ${data.type}. Expected 'title', 'standard', or 'secondary'.`,
-      );
       return null;
   }
 };

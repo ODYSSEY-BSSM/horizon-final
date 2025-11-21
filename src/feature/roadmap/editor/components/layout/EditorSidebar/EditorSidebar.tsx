@@ -2,13 +2,15 @@
 
 import styled from '@emotion/styled';
 import type { CSSProperties } from 'react';
-import { ColorDropdown } from '@/feature/roadmap';
+import { useState } from 'react';
+import { ColorDropdown, type ColorOption } from '@/feature/roadmap';
 import {
   type DropdownOption,
   EditorDropdown,
   EditorTextbox,
   EditorTextfield,
 } from '@/feature/roadmap/editor';
+import { SchoolNodeConversionModal } from '@/feature/roadmap/editor/components/modals/SchoolNodeConversionModal';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon } from '@/shared/ui';
 
@@ -64,10 +66,41 @@ export const EditorSidebar = ({
   onNodeUpdate,
   onNodeStyleUpdate,
   isSchoolNode: isSchoolNodeProp,
-  onSchoolNodeToggle,
+  onSchoolNodeToggle: _onSchoolNodeToggle,
 }: EditorSidebarProps) => {
   // nodeData에서 isSchoolNode를 우선 사용, prop은 fallback
   const isSchoolNode = (nodeData as any)?.isSchoolNode ?? isSchoolNodeProp ?? false;
+  const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
+
+  const handleToggleClick = () => {
+    if (isSchoolNode) {
+      // Converting to basic node - no modal needed
+      handleConvertToBasic();
+    } else {
+      // Converting to school node - show curriculum selection modal
+      setIsToggleModalOpen(true);
+    }
+  };
+
+  const handleToggleConfirm = (_curriculumId: string) => {
+    setIsConverting(true);
+    // TODO: API call to convert node with _curriculumId
+    // _curriculumId will be sent to backend API
+
+    // Simulate async operation
+    setTimeout(() => {
+      onNodeUpdate?.('isSchoolNode', !isSchoolNode);
+      setIsConverting(false);
+      setIsToggleModalOpen(false);
+    }, 500);
+  };
+
+  const handleConvertToBasic = () => {
+    // Converting to basic node doesn't need curriculum selection
+    onNodeUpdate?.('isSchoolNode', false);
+  };
+
   const renderHeader = () => {
     switch (nodeType) {
       case 'title':
@@ -253,18 +286,14 @@ export const EditorSidebar = ({
         <StyledSection>
           <StyledSectionTitle>스타일</StyledSectionTitle>
           <ColorDropdown
-            value={nodeData?.color || 'blue'}
+            value={(nodeData?.color as ColorOption) || 'blue'}
             onChange={(value) => onNodeUpdate?.('color', value)}
           />
         </StyledSection>
 
         {showSchoolToggle && (
           <StyledBottomButtonContainer>
-            <StyledSchoolToggleButton
-              variant="outlined"
-              size="medium"
-              onClick={() => onNodeUpdate?.('isSchoolNode', !isSchoolNode)}
-            >
+            <StyledSchoolToggleButton variant="outlined" size="medium" onClick={handleToggleClick}>
               {isSchoolNode ? '기본 노드로 전환' : '학교 노드로 전환'}
             </StyledSchoolToggleButton>
           </StyledBottomButtonContainer>
@@ -277,6 +306,15 @@ export const EditorSidebar = ({
     <StyledContainer>
       {renderHeader()}
       {renderContent()}
+
+      {!isSchoolNode && (
+        <SchoolNodeConversionModal
+          isOpen={isToggleModalOpen}
+          onClose={() => setIsToggleModalOpen(false)}
+          onConfirm={handleToggleConfirm}
+          isConverting={isConverting}
+        />
+      )}
     </StyledContainer>
   );
 };
@@ -377,13 +415,13 @@ const StyledSchoolToggleButton = styled(Button)`
   color: ${tokens.colors.primary[500]} !important;
 
   &:hover {
-    background-color: ${tokens.colors.primary[50]} !important;
+    background-color: ${tokens.colors.primary[100]} !important;
     border-color: ${tokens.colors.primary[600]} !important;
     color: ${tokens.colors.primary[600]} !important;
   }
 
   &:active {
-    background-color: ${tokens.colors.primary[100]} !important;
+    background-color: ${tokens.colors.primary[200]} !important;
     border-color: ${tokens.colors.primary[900]} !important;
     color: ${tokens.colors.primary[900]} !important;
   }

@@ -103,7 +103,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const [isEdgesLoaded, setIsEdgesLoaded] = useState(false);
 
   // Refs for cleanup
-  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Toast
   const { toast } = useToast();
@@ -208,13 +208,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           toast({
             title: 'Success',
             description: `${horizonNodesToDelete.length} node(s) deleted`,
-            variant: 'default',
+            variant: 'success',
           });
         } catch (error) {
           toast({
             title: 'Error',
             description: error instanceof Error ? error.message : 'Failed to delete some nodes',
-            variant: 'destructive',
+            variant: 'failed',
           });
         }
       }
@@ -327,7 +327,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     toast({
       title: 'Coming Soon',
       description: 'Temporary save feature is under development',
-      variant: 'default',
+      variant: 'success',
     });
   }, [toast]);
 
@@ -337,7 +337,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       toast({
         title: 'Error',
         description: 'Roadmap ID is required',
-        variant: 'destructive',
+        variant: 'failed',
       });
       return;
     }
@@ -375,7 +375,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         toast({
           title: 'Partial Save',
           description: `${results.length - failures.length - skipped.length} nodes saved, ${failures.length} failed`,
-          variant: 'destructive',
+          variant: 'failed',
         });
         setHeaderState('editing');
         return;
@@ -389,7 +389,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           skipped.length > 0
             ? `${savedCount} nodes saved (${skipped.length} new nodes skipped)`
             : 'Roadmap saved successfully',
-        variant: 'default',
+        variant: 'success',
       });
 
       // 이전 timeout 정리
@@ -406,7 +406,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       toast({
         title: 'Save failed',
         description: error instanceof Error ? error.message : 'Failed to save roadmap',
-        variant: 'destructive',
+        variant: 'failed',
       });
     }
   }, [roadmapId, nodes, updateNodeMutation, toast]);
@@ -511,7 +511,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         toast({
           title: 'Error',
           description: 'Roadmap ID is required',
-          variant: 'destructive',
+          variant: 'failed',
         });
         return;
       }
@@ -552,13 +552,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         toast({
           title: 'Success',
           description: 'Node created successfully',
-          variant: 'default',
+          variant: 'success',
         });
       } catch (error) {
         toast({
           title: 'Error',
           description: error instanceof Error ? error.message : 'Failed to create node',
-          variant: 'destructive',
+          variant: 'failed',
         });
       }
     },

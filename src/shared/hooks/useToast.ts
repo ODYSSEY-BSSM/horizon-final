@@ -5,8 +5,9 @@ export interface Toast {
   id: string;
   title?: string;
   description?: string;
-  variant?: 'default' | 'destructive';
+  variant?: 'success' | 'failed';
   duration?: number;
+  position?: 'top' | 'bottom';
 }
 
 interface ToastStore {

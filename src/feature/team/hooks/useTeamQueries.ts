@@ -49,14 +49,14 @@ export function useCreateTeam() {
       // 모든 팀 관련 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: teamKeys.all });
       toast({
-        variant: 'default',
+        variant: 'success',
         title: '팀 생성 완료',
         description: `"${data.name}" 팀이 성공적으로 생성되었습니다.`,
       });
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '팀 생성 실패',
         description: error.message || '알 수 없는 오류가 발생했습니다.',
       });

@@ -68,9 +68,6 @@ export function calculateAbsolutePosition(
 ): { x: number; y: number } {
   // 순환 참조 감지
   if (visited.has(node.id)) {
-    console.error(
-      `Circular parent dependency detected for node ${node.id}. Chain: ${Array.from(visited).join(' -> ')} -> ${node.id}`,
-    );
     return { x: node.position.x, y: node.position.y };
   }
 
@@ -85,8 +82,6 @@ export function calculateAbsolutePosition(
   // 부모 노드 찾기
   const parentNode = allNodes.find((n) => n.id === node.parentNode);
   if (!parentNode) {
-    // 부모를 찾지 못하면 현재 위치 반환
-    console.warn(`Parent node ${node.parentNode} not found for node ${node.id}`);
     return { x: node.position.x, y: node.position.y };
   }
 
@@ -172,10 +167,6 @@ export function reactFlowToApi(node: Node, allNodes: Node[]): NodeRequest {
     const parsed = Number.parseInt(node.parentNode, 10);
     if (!Number.isNaN(parsed)) {
       parentNodeId = parsed;
-    } else {
-      console.warn(
-        `Invalid parent node ID: ${node.parentNode} for node ${node.id}. Parent reference will be ignored.`,
-      );
     }
   }
 
