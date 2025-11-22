@@ -197,10 +197,11 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           await Promise.all(
             horizonNodesToDelete.map((node) => {
               const nodeId = Number.parseInt(node.id, 10);
-              if (!Number.isNaN(nodeId)) {
+              // 서버에 존재하는 정수 ID(양수)만 삭제
+              if (!Number.isNaN(nodeId) && nodeId > 0) {
                 return deleteNodeMutation.mutateAsync(nodeId);
               }
-              // 임시 ID인 경우 (API에서 생성되지 않은 노드) 스킵
+              // 임시/로컬 ID는 서버 호출 없이 스킵
               return Promise.resolve();
             }),
           );
