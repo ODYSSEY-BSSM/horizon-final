@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { PrimaryButton, TextDivider } from '@/feature/auth';
 import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
 import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
 import { useEmailForm } from '@/feature/auth/hooks/useEmailForm';
@@ -32,19 +33,12 @@ const EmailStep = ({ onGoogleSignUp, onSignIn }: EmailStepProps) => {
       />
       <StyledActionsWrapper>
         <StyledButtonGroup>
-          <StyledSubmitButton type="submit" disabled={isSubmitting}>
+          <PrimaryButton type="submit" disabled={isSubmitting}>
             <Text variant="ST" color={tokens.colors.white}>
               {isSubmitting ? '전송 중...' : '인증번호 보내기'}
             </Text>
-          </StyledSubmitButton>
-          <StyledDividerWrapper>
-            <StyledDividerLine />
-            <StyledDividerText>
-              <Text variant="O" color={tokens.colors.neutral[400]}>
-                또는
-              </Text>
-            </StyledDividerText>
-          </StyledDividerWrapper>
+          </PrimaryButton>
+          <TextDivider />
           <ContinueWithGoogle onClick={onGoogleSignUp} disabled />
         </StyledButtonGroup>
         <SecondaryAction
@@ -79,62 +73,4 @@ const StyledButtonGroup = styled.div`
   flex-direction: column;
   gap: 12px;
   width: 100%;
-`;
-
-const StyledSubmitButton = styled.button<{ disabled: boolean }>`
-  width: 100%;
-  height: 48px;
-  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
-  border: none;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
-  }
-
-  &:disabled {
-    opacity: 1;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ disabled }) => (disabled ? tokens.colors.neutral[400] : tokens.colors.primary[600])};
-    outline-offset: 2px;
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
-`;
-
-const StyledDividerWrapper = styled.div`
-  position: relative;
-  height: 40px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledDividerLine = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: ${tokens.colors.neutral[400]};
-`;
-
-const StyledDividerText = styled.div`
-  background-color: ${tokens.colors.white};
-  padding: 0 16px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
 `;

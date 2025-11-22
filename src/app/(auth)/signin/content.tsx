@@ -3,7 +3,12 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { SignInSecondaryAction as SecondaryAction, useLogin } from '@/feature/auth';
+import {
+  PrimaryButton,
+  SignUpSecondaryAction as SecondaryAction,
+  TextDivider,
+  useLogin,
+} from '@/feature/auth';
 import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
@@ -17,7 +22,8 @@ export default function SignInContent() {
 
   const isFormValid = email.trim() !== '' && password.trim() !== '';
 
-  const handleLogin = async () => {
+  const handleLogin = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!isFormValid) {
       return;
     }
@@ -54,59 +60,56 @@ export default function SignInContent() {
           </Text>
         </StyledHeaderWrapper>
 
-        <StyledFormWrapper>
-          <TextField
-            label="이메일"
-            placeholder="이메일 입력"
-            type="email"
-            leftIcon="person"
-            width="100%"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="비밀번호"
-            placeholder="비밀번호 입력"
-            type="password"
-            leftIcon="lock"
-            width="100%"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && (
-            <StyledErrorMessage>
-              <Text variant="O" color={tokens.colors.error[200]}>
-                {error}
-              </Text>
-            </StyledErrorMessage>
-          )}
-        </StyledFormWrapper>
-
-        <StyledActionsWrapper>
-          <StyledButtonGroup>
-            <StyledLoginButton
-              disabled={!isFormValid || loginMutation.isPending}
-              onClick={handleLogin}
-            >
-              <Text variant="ST" color={tokens.colors.white}>
-                {loginMutation.isPending ? '로그인 중...' : '로그인'}
-              </Text>
-            </StyledLoginButton>
-
-            <StyledDividerWrapper>
-              <StyledDividerLine />
-              <StyledDividerText>
-                <Text variant="O" color={tokens.colors.neutral[400]}>
-                  또는
+        <StyledForm onSubmit={handleLogin}>
+          <StyledFieldsWrapper>
+            <TextField
+              label="이메일"
+              placeholder="이메일 입력"
+              type="email"
+              leftIcon="person"
+              width="100%"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              label="비밀번호"
+              placeholder="비밀번호 입력"
+              type="password"
+              leftIcon="lock"
+              width="100%"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && (
+              <StyledErrorMessage>
+                <Text variant="O" color={tokens.colors.error[200]}>
+                  {error}
                 </Text>
-              </StyledDividerText>
-            </StyledDividerWrapper>
+              </StyledErrorMessage>
+            )}
+          </StyledFieldsWrapper>
 
-            <ContinueWithGoogle onClick={handleGoogleLogin} disabled />
-          </StyledButtonGroup>
+          <StyledActionsWrapper>
+            <StyledButtonGroup>
+              <PrimaryButton type="submit" disabled={!isFormValid || loginMutation.isPending}>
+                <Text variant="ST" color={tokens.colors.white}>
+                  {loginMutation.isPending ? '로그인 중...' : '로그인'}
+                </Text>
+              </PrimaryButton>
 
-          <SecondaryAction onSignUpClick={handleSignUp} />
-        </StyledActionsWrapper>
+              <TextDivider />
+
+              <ContinueWithGoogle onClick={handleGoogleLogin} disabled />
+            </StyledButtonGroup>
+
+            <SecondaryAction
+              primaryText="아직 계정이 없으신가요?"
+              actionText="회원가입하기"
+              onActionClick={handleSignUp}
+              align="flex-start"
+            />
+          </StyledActionsWrapper>
+        </StyledForm>
       </StyledContentCard>
     </StyledPageWrapper>
   );
@@ -142,73 +145,29 @@ const StyledHeaderWrapper = styled.div`
   width: 400px;
 `;
 
-const StyledFormWrapper = styled.div`
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  width: 400px;
+`;
+
+const StyledFieldsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 400px;
 `;
 
 const StyledActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
-  width: 400px;
 `;
 
 const StyledButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-`;
-
-const StyledLoginButton = styled.button<{ disabled: boolean }>`
-  width: 100%;
-  height: 48px;
-  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
-  border: none;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
-  }
-
-  &:disabled {
-    opacity: 1;
-  }
-`;
-
-const StyledDividerWrapper = styled.div`
-  position: relative;
-  height: 40px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledDividerLine = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: ${tokens.colors.neutral[400]};
-`;
-
-const StyledDividerText = styled.div`
-  background-color: ${tokens.colors.white};
-  padding: 0 16px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
 `;
 
 const StyledErrorMessage = styled.div`

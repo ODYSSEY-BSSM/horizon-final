@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { PrimaryButton } from '@/feature/auth';
 import { PasswordValidation } from '@/feature/auth/components/signup/PasswordValidation';
 import { usePasswordForm } from '@/feature/auth/hooks/usePasswordForm';
 import { tokens } from '@/shared/tokens';
@@ -64,11 +65,11 @@ const PasswordStep = () => {
         />
       </StyledFieldsWrapper>
 
-      <StyledSubmitButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
+      <PrimaryButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
         <Text variant="ST" color={tokens.colors.white}>
           {isSubmitting ? '설정 중...' : '완료'}
         </Text>
-      </StyledSubmitButton>
+      </PrimaryButton>
     </StyledForm>
   );
 };
@@ -98,34 +99,4 @@ const StyledValidationsWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
-
-const StyledSubmitButton = styled.button<{ disabled: boolean }>`
-  width: 100%;
-  height: 48px;
-  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
-  border: none;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s ease;
-  
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
-  }
-  
-  &:disabled {
-    opacity: 1;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ disabled }) => (disabled ? tokens.colors.neutral[400] : tokens.colors.primary[600])};
-    outline-offset: 2px;
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
 `;
