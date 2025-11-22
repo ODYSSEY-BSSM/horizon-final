@@ -220,12 +220,15 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       }
 
       // 로컬 상태 업데이트 (자식 노드의 부모 참조 제거)
-      setNodes((nds) =>
-        nds.map((node) => {
+      setNodes((nds) => {
+        // 좌표 계산용 배열: 현재 노드 + 삭제된 노드 (부모 노드 찾기 위함)
+        const allNodesForCalc = [...nds, ...deletedNodes];
+
+        return nds.map((node) => {
           // 삭제된 노드를 부모로 가진 노드의 부모 참조 제거
           if (node.parentNode && deletedNodeIds.has(node.parentNode)) {
-            // 절대 좌표 계산
-            const absolutePos = calculateAbsolutePosition(node, nds);
+            // 절대 좌표 계산 (삭제된 부모 포함)
+            const absolutePos = calculateAbsolutePosition(node, allNodesForCalc);
 
             // 부모 참조 제거하고 절대 좌표로 변환
             // biome-ignore lint/correctness/noUnusedVariables: parentNode을 제거하기 위한 구조 분해
@@ -236,8 +239,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
             };
           }
           return node;
-        }),
-      );
+        });
+      });
     },
     [roadmapId, deleteNodeMutation, setNodes, toast],
   );
@@ -348,8 +351,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // horizonNode만 필터링
       const horizonNodes = nodes.filter((node) => node.type === 'horizonNode');
 
-      // React Flow 노드를 API 형식으로 변환 (필터링된 배열 사용)
-      const apiNodeRequests = reactFlowNodesToApi(horizonNodes);
+      // React Flow 노드를 API 형식으로 변환 (전체 배열 전달하여 부모 노드 찾기 가능)
+      const apiNodeRequests = reactFlowNodesToApi(nodes);
 
       // 각 노드 업데이트 (병렬 처리) - Promise.allSettled 사용
       const results = await Promise.allSettled(
@@ -455,27 +458,33 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
           // 타입 변경 시 데이터 구조 변환
           if (field === 'type') {
-            const newType = value as NodeType;
-            const currentData = node.data;
+            // horizonNode에만 타입 전환 로직 적용 (텍스트/섹션 노드는 단순 필드 변경)
+            if (node.type === 'horizonNode') {
+              const newType = value as NodeType;
+              const currentData = node.data as any;
 
-            // 타입별 필수 필드 설정
-            const newData: any = {
-              type: newType,
-              color: currentData.color || 'blue',
-              isSchoolNode: (currentData as any).isSchoolNode || false, // 학교 노드 상태 보존
-            };
+              // 타입별 필수 필드 설정
+              const newData: any = {
+                type: newType,
+                color: currentData.color || 'blue',
+                isSchoolNode: currentData.isSchoolNode ?? false,
+              };
 
-            if (newType === 'title') {
-              // title 노드는 label 필드 사용
-              newData.label = currentData.label || currentData.title || 'New Title';
-            } else if (newType === 'standard' || newType === 'secondary') {
-              // standard/secondary 노드는 title, description 필드 사용
-              newData.title = currentData.title || currentData.label || 'New Node';
-              newData.description = currentData.description || '';
-              newData.progress = currentData.progress || 0;
+              if (newType === 'title') {
+                // title 노드는 label 필드 사용
+                newData.label = currentData.label || currentData.title || 'New Title';
+              } else if (newType === 'standard' || newType === 'secondary') {
+                // standard/secondary 노드는 title, description 필드 사용
+                newData.title = currentData.title || currentData.label || 'New Node';
+                newData.description = currentData.description || '';
+                newData.progress = currentData.progress || 0;
+              }
+
+              return { ...node, data: newData };
             }
 
-            return { ...node, data: newData };
+            // 텍스트/섹션 노드는 type만 변경 (기존 데이터 보존)
+            return { ...node, data: { ...node.data, type: value } };
           }
 
           // 일반 필드 업데이트
@@ -516,6 +525,15 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         return;
       }
 
+      if (!apiNodes) {
+        toast({
+          title: 'Error',
+          description: 'Roadmap data is not loaded yet',
+          variant: 'failed',
+        });
+        return;
+      }
+
       const nodeType = nodeTypeStr as NodeType;
 
       // 노드 기본 데이터 구성
@@ -543,8 +561,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         // API 호출
         const response = await createNodeMutation.mutateAsync(nodeRequest);
 
-        // API 응답을 React Flow 노드로 변환
-        const newNode = apiToReactFlow(response, apiNodes || []);
+        // API 응답을 React Flow 노드로 변환 (apiNodes는 이미 체크됨)
+        const newNode = apiToReactFlow(response, apiNodes);
 
         // React Flow 상태에 노드 추가
         setNodes((nds) => [...nds, newNode]);
