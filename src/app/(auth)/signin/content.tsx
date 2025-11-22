@@ -44,68 +44,70 @@ export default function SignInContent() {
 
   return (
     <StyledPageWrapper>
-      <StyledHeaderWrapper>
-        <Text variant="H2" color={tokens.colors.primary[500]}>
-          HORIZON
-        </Text>
-        <Text variant="B1" color={tokens.colors.neutral[500]}>
-          환영합니다, 로그인을 진행해주세요.
-        </Text>
-      </StyledHeaderWrapper>
+      <StyledContentCard>
+        <StyledHeaderWrapper>
+          <Text variant="H2" color={tokens.colors.primary[500]}>
+            HORIZON
+          </Text>
+          <Text variant="B1" color={tokens.colors.neutral[500]}>
+            환영합니다, 로그인을 진행해주세요.
+          </Text>
+        </StyledHeaderWrapper>
 
-      <StyledFormWrapper>
-        <TextField
-          label="이메일"
-          placeholder="이메일 입력"
-          type="email"
-          leftIcon="person"
-          width="100%"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          label="비밀번호"
-          placeholder="비밀번호 입력"
-          type="password"
-          leftIcon="lock"
-          width="100%"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {error && (
-          <StyledErrorMessage>
-            <Text variant="O" color={tokens.colors.error[200]}>
-              {error}
-            </Text>
-          </StyledErrorMessage>
-        )}
-      </StyledFormWrapper>
-
-      <StyledActionsWrapper>
-        <StyledButtonGroup>
-          <StyledLoginButton
-            disabled={!isFormValid || loginMutation.isPending}
-            onClick={handleLogin}
-          >
-            <Text variant="ST" color={tokens.colors.white}>
-              {loginMutation.isPending ? '로그인 중...' : '로그인'}
-            </Text>
-          </StyledLoginButton>
-
-          <StyledDividerWrapper>
-            <StyledDividerLine />
-            <StyledDividerText>
-              <Text variant="O" color={tokens.colors.neutral[400]}>
-                또는
+        <StyledFormWrapper>
+          <TextField
+            label="이메일"
+            placeholder="이메일 입력"
+            type="email"
+            leftIcon="person"
+            width="100%"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="비밀번호"
+            placeholder="비밀번호 입력"
+            type="password"
+            leftIcon="lock"
+            width="100%"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && (
+            <StyledErrorMessage>
+              <Text variant="O" color={tokens.colors.error[200]}>
+                {error}
               </Text>
-            </StyledDividerText>
-          </StyledDividerWrapper>
+            </StyledErrorMessage>
+          )}
+        </StyledFormWrapper>
 
-          <ContinueWithGoogle onClick={handleGoogleLogin} disabled />
-        </StyledButtonGroup>
+        <StyledActionsWrapper>
+          <StyledButtonGroup>
+            <StyledLoginButton
+              disabled={!isFormValid || loginMutation.isPending}
+              onClick={handleLogin}
+            >
+              <Text variant="ST" color={tokens.colors.white}>
+                {loginMutation.isPending ? '로그인 중...' : '로그인'}
+              </Text>
+            </StyledLoginButton>
 
-        <SecondaryAction onSignUpClick={handleSignUp} />
-      </StyledActionsWrapper>
+            <StyledDividerWrapper>
+              <StyledDividerLine />
+              <StyledDividerText>
+                <Text variant="O" color={tokens.colors.neutral[400]}>
+                  또는
+                </Text>
+              </StyledDividerText>
+            </StyledDividerWrapper>
+
+            <ContinueWithGoogle onClick={handleGoogleLogin} disabled />
+          </StyledButtonGroup>
+
+          <SecondaryAction onSignUpClick={handleSignUp} />
+        </StyledActionsWrapper>
+      </StyledContentCard>
     </StyledPageWrapper>
   );
 }
@@ -117,6 +119,18 @@ const StyledPageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: ${tokens.colors.background};
+`;
+
+const StyledContentCard = styled.div`
+    width: 720px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  background-color: ${tokens.colors.white};
+  box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const StyledHeaderWrapper = styled.div`
