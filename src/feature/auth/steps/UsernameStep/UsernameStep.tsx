@@ -18,7 +18,7 @@ const UsernameStep = () => {
     <StyledForm onSubmit={onSubmit}>
       <TextField
         label="사용자 이름"
-        placeholder="UserName"
+        placeholder="사용자 이름을 입력해주세요."
         type="text"
         width="100%"
         {...register('username')}
