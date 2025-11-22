@@ -25,62 +25,60 @@ const PasswordStep = () => {
   };
 
   return (
-    <StyledContainer>
-      <form onSubmit={onSubmit}>
-        <StyledFieldsWrapper>
-          <StyledPasswordFieldWrapper>
-            <TextField
-              label="비밀번호"
-              placeholder="비밀번호 입력"
-              type="password"
-              width="100%"
-              {...register('password')}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-            <StyledValidationsWrapper>
-              <PasswordValidation
-                text="8자 이상"
-                isValid={getValidationState(passwordValidation.hasMinLength)}
-              />
-              <PasswordValidation
-                text="숫자 포함"
-                isValid={getValidationState(passwordValidation.hasNumber)}
-              />
-              <PasswordValidation
-                text="기호 포함"
-                isValid={getValidationState(passwordValidation.hasSpecialChar)}
-              />
-            </StyledValidationsWrapper>
-          </StyledPasswordFieldWrapper>
-
+    <StyledForm onSubmit={onSubmit}>
+      <StyledFieldsWrapper>
+        <StyledPasswordFieldWrapper>
           <TextField
-            label="비밀번호 확인"
-            placeholder="비밀번호 재입력"
+            label="비밀번호"
+            placeholder="비밀번호 입력"
             type="password"
             width="100%"
-            {...register('confirmPassword')}
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword?.message}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message}
           />
-        </StyledFieldsWrapper>
+          <StyledValidationsWrapper>
+            <PasswordValidation
+              text="8자 이상"
+              isValid={getValidationState(passwordValidation.hasMinLength)}
+            />
+            <PasswordValidation
+              text="숫자 포함"
+              isValid={getValidationState(passwordValidation.hasNumber)}
+            />
+            <PasswordValidation
+              text="기호 포함"
+              isValid={getValidationState(passwordValidation.hasSpecialChar)}
+            />
+          </StyledValidationsWrapper>
+        </StyledPasswordFieldWrapper>
 
-        <StyledSubmitButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
-          <Text variant="ST" color={tokens.colors.white}>
-            {isSubmitting ? '설정 중...' : '완료'}
-          </Text>
-        </StyledSubmitButton>
-      </form>
-    </StyledContainer>
+        <TextField
+          label="비밀번호 확인"
+          placeholder="비밀번호 재입력"
+          type="password"
+          width="100%"
+          {...register('confirmPassword')}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
+        />
+      </StyledFieldsWrapper>
+
+      <StyledSubmitButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
+        <Text variant="ST" color={tokens.colors.white}>
+          {isSubmitting ? '설정 중...' : '완료'}
+        </Text>
+      </StyledSubmitButton>
+    </StyledForm>
   );
 };
 
 export default PasswordStep;
 
-const StyledContainer = styled.div`
+const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 62px;
   width: 100%;
 `;
 

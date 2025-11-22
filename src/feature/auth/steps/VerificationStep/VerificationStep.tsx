@@ -49,7 +49,7 @@ export default VerificationStep;
 const StyledContainer = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 62px;
 `;
 
 const StyledButtonSection = styled.div`
