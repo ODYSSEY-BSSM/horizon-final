@@ -162,7 +162,6 @@ class ApiClient {
       const response = await fetch(`${this.baseURL}/auth/token`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Refresh-Token': refreshToken,
         },
       });
