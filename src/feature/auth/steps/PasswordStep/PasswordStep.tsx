@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { PrimaryButton } from '@/feature/auth';
 import { PasswordValidation } from '@/feature/auth/components/signup/PasswordValidation';
 import { usePasswordForm } from '@/feature/auth/hooks/usePasswordForm';
 import { tokens } from '@/shared/tokens';
@@ -25,62 +26,60 @@ const PasswordStep = () => {
   };
 
   return (
-    <StyledContainer>
-      <form onSubmit={onSubmit}>
-        <StyledFieldsWrapper>
-          <StyledPasswordFieldWrapper>
-            <TextField
-              label="비밀번호"
-              placeholder="비밀번호 입력"
-              type="password"
-              width="100%"
-              {...register('password')}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-            <StyledValidationsWrapper>
-              <PasswordValidation
-                text="8자 이상"
-                isValid={getValidationState(passwordValidation.hasMinLength)}
-              />
-              <PasswordValidation
-                text="숫자 포함"
-                isValid={getValidationState(passwordValidation.hasNumber)}
-              />
-              <PasswordValidation
-                text="기호 포함"
-                isValid={getValidationState(passwordValidation.hasSpecialChar)}
-              />
-            </StyledValidationsWrapper>
-          </StyledPasswordFieldWrapper>
-
+    <StyledForm onSubmit={onSubmit}>
+      <StyledFieldsWrapper>
+        <StyledPasswordFieldWrapper>
           <TextField
-            label="비밀번호 확인"
-            placeholder="비밀번호 재입력"
+            label="비밀번호"
+            placeholder="비밀번호 입력"
             type="password"
             width="100%"
-            {...register('confirmPassword')}
-            error={!!errors.confirmPassword}
-            helperText={errors.confirmPassword?.message}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message}
           />
-        </StyledFieldsWrapper>
+          <StyledValidationsWrapper>
+            <PasswordValidation
+              text="8자 이상"
+              isValid={getValidationState(passwordValidation.hasMinLength)}
+            />
+            <PasswordValidation
+              text="숫자 포함"
+              isValid={getValidationState(passwordValidation.hasNumber)}
+            />
+            <PasswordValidation
+              text="기호 포함"
+              isValid={getValidationState(passwordValidation.hasSpecialChar)}
+            />
+          </StyledValidationsWrapper>
+        </StyledPasswordFieldWrapper>
 
-        <StyledSubmitButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
-          <Text variant="ST" color={tokens.colors.white}>
-            {isSubmitting ? '설정 중...' : '완료'}
-          </Text>
-        </StyledSubmitButton>
-      </form>
-    </StyledContainer>
+        <TextField
+          label="비밀번호 확인"
+          placeholder="비밀번호 재입력"
+          type="password"
+          width="100%"
+          {...register('confirmPassword')}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
+        />
+      </StyledFieldsWrapper>
+
+      <PrimaryButton type="submit" disabled={isSubmitting || !passwordValidation.isValid}>
+        <Text variant="ST" color={tokens.colors.white}>
+          {isSubmitting ? '설정 중...' : '완료'}
+        </Text>
+      </PrimaryButton>
+    </StyledForm>
   );
 };
 
 export default PasswordStep;
 
-const StyledContainer = styled.div`
+const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 62px;
   width: 100%;
 `;
 
@@ -100,34 +99,4 @@ const StyledValidationsWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
-
-const StyledSubmitButton = styled.button<{ disabled: boolean }>`
-  width: 100%;
-  height: 48px;
-  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
-  border: none;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s ease;
-  
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
-  }
-  
-  &:disabled {
-    opacity: 1;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ disabled }) => (disabled ? tokens.colors.neutral[400] : tokens.colors.primary[600])};
-    outline-offset: 2px;
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
 `;

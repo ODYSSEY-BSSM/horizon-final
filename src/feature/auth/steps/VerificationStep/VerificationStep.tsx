@@ -1,6 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
+import { PrimaryButton } from '@/feature/auth';
 import { SecondaryAction } from '@/feature/auth/components/signup/SecondaryAction';
 import { VerificationInput } from '@/feature/auth/components/signup/VerificationInput';
 import { useVerificationForm } from '@/feature/auth/hooks/useVerificationForm';
@@ -26,11 +27,11 @@ const VerificationStep = () => {
         error={errors.verificationCode?.message}
       />
       <StyledButtonSection>
-        <StyledSubmitButton type="submit" disabled={isSubmitting}>
+        <PrimaryButton type="submit" disabled={isSubmitting} width="400px">
           <Text variant="ST" color={tokens.colors.white}>
             {isSubmitting ? '인증 중...' : '확인'}
           </Text>
-        </StyledSubmitButton>
+        </PrimaryButton>
 
         <SecondaryAction
           primaryText="인증번호를 받지 못했나요?"
@@ -49,42 +50,12 @@ export default VerificationStep;
 const StyledContainer = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 62px;
 `;
 
 const StyledButtonSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
-`;
-
-const StyledSubmitButton = styled.button<{ disabled: boolean }>`
-  width: 400px;
-  height: 48px;
-  background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[500])};
-  border: none;
-  border-radius: 8px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s ease;
-  align-self: center;
-
-  &:hover {
-    background-color: ${({ disabled }) => (disabled ? tokens.colors.neutral[300] : tokens.colors.primary[600])};
-  }
-
-  &:disabled {
-    opacity: 1;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ disabled }) => (disabled ? tokens.colors.neutral[400] : tokens.colors.primary[600])};
-    outline-offset: 2px;
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
 `;
