@@ -17,7 +17,7 @@ export const useNodeCreator = () => {
   const addNode = useCallback(
     (type: NodeType, position = { x: 250, y: 250 }) => {
       const newNode = {
-        id: `node-${Date.now()}`,
+        id: `node-${crypto.randomUUID()}`,
         type: 'horizonNode',
         position,
         data: createNodeData(type),
@@ -38,7 +38,7 @@ export const useNodeCreator = () => {
   const addSection = useCallback(
     (position = { x: 100, y: 100 }, size = { width: 600, height: 400 }) => {
       const newSection = {
-        id: `section-${Date.now()}`,
+        id: `section-${crypto.randomUUID()}`,
         type: 'horizonSection',
         position,
         data: { label: 'New Section', color: 'blue' as const },
@@ -60,7 +60,7 @@ export const useNodeCreator = () => {
   const addText = useCallback(
     (textType: 'title' | 'paragraph' = 'paragraph', position = { x: 250, y: 250 }) => {
       const newText = {
-        id: `text-${Date.now()}`,
+        id: `text-${crypto.randomUUID()}`,
         type: 'horizonText',
         position,
         data: { type: textType, text: 'New Text' },
@@ -86,6 +86,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         type: 'title',
         label: 'Title Node',
         color: 'blue',
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
     case 'standard':
       return {
@@ -94,6 +95,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         description: '노드의 학습 내용을 작성해주세요.',
         color: 'blue',
         progress: 0,
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
     case 'secondary':
       return {
@@ -102,6 +104,7 @@ function createNodeData(type: NodeType): HorizonNodeData {
         color: 'blue',
         quizCurrent: 0,
         quizTotal: 4,
+        isSchoolNode: false, // 기본 노드는 학교 노드가 아님
       };
   }
 }

@@ -41,6 +41,58 @@ export type ApiIcon =
   | 'SCIENCE'
   | 'MATH';
 
+/**
+ * 교육 과목 타입 (API)
+ * 45+ curriculum options from swagger
+ */
+export type ApiSubject =
+  | 'MATH_AND_AI'
+  | 'JAVA_PROGRAMMING'
+  | 'WEB_DEVELOPMENT'
+  | 'DATA_STRUCTURES'
+  | 'ALGORITHMS'
+  | 'DATABASE_SYSTEMS'
+  | 'COMPUTER_NETWORKS'
+  | 'OPERATING_SYSTEMS'
+  | 'SOFTWARE_ENGINEERING'
+  | 'CLOUD_COMPUTING'
+  | 'MACHINE_LEARNING'
+  | 'DEEP_LEARNING'
+  | 'NATURAL_LANGUAGE_PROCESSING'
+  | 'COMPUTER_VISION'
+  | 'MOBILE_APP_DEVELOPMENT'
+  | 'GAME_DEVELOPMENT'
+  | 'CYBERSECURITY'
+  | 'BLOCKCHAIN'
+  | 'DEVOPS'
+  | 'MICROSERVICES'
+  | 'REACT'
+  | 'VUE'
+  | 'ANGULAR'
+  | 'NODE_JS'
+  | 'PYTHON'
+  | 'JAVASCRIPT'
+  | 'TYPESCRIPT'
+  | 'GO'
+  | 'RUST'
+  | 'KOTLIN'
+  | 'SWIFT'
+  | 'DOCKER'
+  | 'KUBERNETES'
+  | 'AWS'
+  | 'AZURE'
+  | 'GCP'
+  | 'MONGODB'
+  | 'POSTGRESQL'
+  | 'MYSQL'
+  | 'REDIS'
+  | 'ELASTICSEARCH'
+  | 'GRAPHQL'
+  | 'REST_API'
+  | 'MICROSERVICES_ARCHITECTURE'
+  | 'SYSTEM_DESIGN'
+  | 'DESIGN_PATTERNS';
+
 // ============================================================================
 // Type Mapping Constants
 // ============================================================================
@@ -82,6 +134,15 @@ export const COLOR_MAPPING = {
 // ============================================================================
 // Node API Types
 // ============================================================================
+
+/**
+ * 교육 상태 업데이트 요청 (클라이언트 → 서버)
+ * PATCH /roadmap/{roadmapId}/nodes/{nodeId}
+ */
+export interface SubjectRequest {
+  /** 교육 과목 */
+  subject: ApiSubject;
+}
 
 /**
  * 노드 생성/업데이트 요청 (클라이언트 → 서버)

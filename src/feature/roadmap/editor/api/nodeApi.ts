@@ -5,7 +5,10 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/client';
-import type { NodeRequest, NodeResponse } from '../types/api.types';
+import type { NodeRequest, NodeResponse, SubjectRequest } from '../types/api.types';
+
+// Optimistic update ID counter (음수로 시작하여 실제 ID와 충돌 방지)
+let optimisticIdCounter = -1;
 
 // ============================================================================
 // API Client Functions
@@ -18,6 +21,15 @@ import type { NodeRequest, NodeResponse } from '../types/api.types';
 export async function getNodes(roadmapId: number): Promise<NodeResponse[]> {
   const response = await apiClient.get<{ nodes: NodeResponse[] }>(`/roadmap/${roadmapId}/nodes`);
   return response.nodes;
+}
+
+/**
+ * 개별 노드 조회
+ * GET /roadmap/{roadmapId}/nodes/{nodeId}
+ * 자식 노드, 진행률, 교육 상태 포함
+ */
+export async function getNodeById(roadmapId: number, nodeId: number): Promise<NodeResponse> {
+  return apiClient.get<NodeResponse>(`/roadmap/${roadmapId}/nodes/${nodeId}`);
 }
 
 /**
@@ -48,6 +60,18 @@ export async function deleteNode(roadmapId: number, nodeId: number): Promise<voi
   return apiClient.delete<void>(`/roadmap/${roadmapId}/nodes/${nodeId}`);
 }
 
+/**
+ * 교육 상태 업데이트
+ * PATCH /roadmap/{roadmapId}/nodes/{nodeId}
+ */
+export async function updateEducationStatus(
+  roadmapId: number,
+  nodeId: number,
+  data: SubjectRequest,
+): Promise<NodeResponse> {
+  return apiClient.patch<NodeResponse>(`/roadmap/${roadmapId}/nodes/${nodeId}`, data);
+}
+
 // ============================================================================
 // TanStack Query Keys
 // ============================================================================
@@ -56,6 +80,9 @@ export const editorNodeKeys = {
   all: ['editor-nodes'] as const,
   lists: () => [...editorNodeKeys.all, 'list'] as const,
   list: (roadmapId: number) => [...editorNodeKeys.lists(), roadmapId] as const,
+  details: () => [...editorNodeKeys.all, 'detail'] as const,
+  detail: (roadmapId: number, nodeId: number) =>
+    [...editorNodeKeys.details(), roadmapId, nodeId] as const,
 };
 
 // ============================================================================
@@ -72,6 +99,20 @@ export function useNodes(roadmapId: number) {
     queryKey: editorNodeKeys.list(roadmapId),
     queryFn: () => getNodes(roadmapId),
     enabled: !!roadmapId && roadmapId > 0,
+  });
+}
+
+/**
+ * 개별 노드 조회 훅
+ * @param roadmapId - 로드맵 ID
+ * @param nodeId - 노드 ID
+ * @returns Query result with NodeResponse (with childNode, progress, education status)
+ */
+export function useNode(roadmapId: number, nodeId: number) {
+  return useQuery({
+    queryKey: editorNodeKeys.detail(roadmapId, nodeId),
+    queryFn: () => getNodeById(roadmapId, nodeId),
+    enabled: !!roadmapId && roadmapId > 0 && !!nodeId && nodeId > 0,
   });
 }
 
@@ -94,10 +135,10 @@ export function useCreateNode(roadmapId: number) {
         editorNodeKeys.list(roadmapId),
       );
 
-      // 임시 ID로 노드 추가
+      // 임시 ID로 노드 추가 (음수 카운터 사용하여 충돌 방지)
       if (previousNodes) {
         const tempNode: NodeResponse = {
-          id: Date.now(), // 임시 ID
+          id: optimisticIdCounter--, // 음수 ID로 충돌 방지
           roadmapId,
           parentNodeId: data.parentNodeId || 0,
           childNode: [],
@@ -208,6 +249,54 @@ export function useDeleteNode(roadmapId: number) {
         queryClient.setQueryData<NodeResponse[]>(
           editorNodeKeys.list(roadmapId),
           previousNodes.filter((node) => node.id !== nodeId),
+        );
+      }
+
+      return { previousNodes };
+    },
+
+    onError: (_error, _variables, context) => {
+      if (context?.previousNodes) {
+        queryClient.setQueryData(editorNodeKeys.list(roadmapId), context.previousNodes);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+    },
+
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+}
+
+/**
+ * 교육 상태 업데이트 훅
+ * @param roadmapId - 로드맵 ID
+ * @returns Mutation for updating education status with optimistic updates
+ */
+export function useUpdateEducationStatus(roadmapId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ nodeId, data }: { nodeId: number; data: SubjectRequest }) =>
+      updateEducationStatus(roadmapId, nodeId, data),
+
+    // 낙관적 업데이트: 교육 상태 즉시 반영
+    onMutate: async ({ nodeId, data }) => {
+      await queryClient.cancelQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+
+      const previousNodes = queryClient.getQueryData<NodeResponse[]>(
+        editorNodeKeys.list(roadmapId),
+      );
+
+      if (previousNodes) {
+        queryClient.setQueryData<NodeResponse[]>(editorNodeKeys.list(roadmapId), (old) =>
+          old
+            ? old.map((node) =>
+                node.id === nodeId ? { ...node, isEducation: true, subject: data.subject } : node,
+              )
+            : old,
         );
       }
 

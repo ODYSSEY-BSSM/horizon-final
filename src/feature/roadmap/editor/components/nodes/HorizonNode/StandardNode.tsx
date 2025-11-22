@@ -14,6 +14,7 @@ interface StandardNodeProps {
 
 export const StandardNode = ({ data, selected }: StandardNodeProps) => {
   const colorTheme = getNodeColor(data.color);
+  const isSchoolNode = data.isSchoolNode ?? false;
 
   const handleStyle = {
     opacity: selected ? 1 : 0,
@@ -29,7 +30,7 @@ export const StandardNode = ({ data, selected }: StandardNodeProps) => {
 
       {/* 상단: 아이콘 + 텍스트 */}
       <StyledHeader>
-        <Icon name="school" size={24} color={colorTheme.primary} filled />
+        {isSchoolNode && <Icon name="school" size={9} color={colorTheme.primary} filled />}
         <StyledTextContent>
           <StyledNodeTitle>{data.title}</StyledNodeTitle>
           <StyledDescription>{data.description}</StyledDescription>
@@ -53,14 +54,14 @@ export const StandardNode = ({ data, selected }: StandardNodeProps) => {
 const StyledContainer = styled.div<{ $borderColor: string }>`
   position: relative;
   z-index: 1;
-  width: 248px;
+  width: 93px;
   background-color: ${tokens.colors.white};
-  border: 2px solid ${(props) => props.$borderColor};
-  border-radius: ${tokens.radius.medium};
-  padding: ${tokens.spacing.medium};
+  border: 1.5px solid ${(props) => props.$borderColor};
+  border-radius: ${tokens.radius.small};
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.small};
+  gap: 3px;
   box-shadow: ${tokens.shadow[0]};
   cursor: grab;
 
@@ -71,7 +72,7 @@ const StyledContainer = styled.div<{ $borderColor: string }>`
 
 const StyledHeader = styled.div`
   display: flex;
-  gap: ${tokens.spacing.small};
+  gap: 3px;
   align-items: flex-start;
 `;
 
@@ -79,23 +80,23 @@ const StyledTextContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1.5px;
 `;
 
 const StyledNodeTitle = styled.h4`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[18]};
+  font-size: 6.75px;
   font-weight: ${tokens.typos.fontWeight.semibold};
-  line-height: ${tokens.typos.lineHeight[24]};
+  line-height: 9px;
   color: ${tokens.colors.black};
   margin: 0;
 `;
 
 const StyledDescription = styled.p`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[14]};
+  font-size: 5.25px;
   font-weight: ${tokens.typos.fontWeight.light};
-  line-height: ${tokens.typos.lineHeight[20]};
+  line-height: 7.5px;
   color: ${tokens.colors.neutral[600]};
   margin: 0;
 `;
@@ -103,14 +104,14 @@ const StyledDescription = styled.p`
 const StyledProgressSection = styled.div`
   display: flex;
   align-items: center;
-  gap: ${tokens.spacing.xxsmall};
+  gap: 1.5px;
 `;
 
 const StyledProgressBarContainer = styled.div<{ $backgroundColor: string }>`
   flex: 1;
-  height: 8px;
+  height: 3px;
   background-color: ${(props) => props.$backgroundColor};
-  border-radius: 4px;
+  border-radius: 1.5px;
   overflow: hidden;
 `;
 
@@ -123,9 +124,9 @@ const StyledProgressBarFill = styled.div<{ $backgroundColor: string; $progress: 
 
 const StyledProgressLabel = styled.span`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[12]};
+  font-size: 4.5px;
   font-weight: ${tokens.typos.fontWeight.medium};
   color: ${tokens.colors.black};
-  min-width: 36px;
+  min-width: 13.5px;
   text-align: right;
 `;

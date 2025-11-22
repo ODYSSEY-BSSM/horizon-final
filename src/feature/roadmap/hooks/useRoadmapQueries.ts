@@ -74,7 +74,7 @@ export function useCreateRoadmap() {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '로드맵 생성 실패',
         description: error.message,
       });
@@ -99,7 +99,7 @@ export function useUpdateRoadmap() {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '로드맵 수정 실패',
         description: error.message,
       });
@@ -123,7 +123,7 @@ export function useDeleteRoadmap() {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '로드맵 삭제 실패',
         description: error.message,
       });
@@ -143,7 +143,7 @@ export function useAddFavorite() {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '즐겨찾기 실패',
         description: error.message,
       });
@@ -163,7 +163,7 @@ export function useRemoveFavorite() {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '즐겨찾기 해제 실패',
         description: error.message,
       });
@@ -202,7 +202,7 @@ export function useCreateTeamRoadmap(teamId: number) {
     },
     onError: (error) => {
       toast({
-        variant: 'destructive',
+        variant: 'failed',
         title: '팀 로드맵 생성 실패',
         description: error.message,
       });

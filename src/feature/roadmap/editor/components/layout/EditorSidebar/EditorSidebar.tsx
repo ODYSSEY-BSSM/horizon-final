@@ -1,13 +1,16 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { ColorDropdown } from '@/feature/roadmap';
+import type { CSSProperties } from 'react';
+import { useState } from 'react';
+import { ColorDropdown, type ColorOption } from '@/feature/roadmap';
 import {
   type DropdownOption,
   EditorDropdown,
   EditorTextbox,
   EditorTextfield,
 } from '@/feature/roadmap/editor';
+import { SchoolNodeConversionModal } from '@/feature/roadmap/editor/components/modals/SchoolNodeConversionModal';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon } from '@/shared/ui';
 
@@ -19,12 +22,28 @@ export type EditorNodeType =
   | 'titleText'
   | 'paragraphText';
 
+/**
+ * 노드 데이터 타입 (간소화된 버전)
+ */
+export interface NodeData {
+  type?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  color?: string;
+  progress?: number;
+  text?: string;
+  quizCurrent?: number;
+  quizTotal?: number;
+  [key: string]: any; // 확장성을 위한 인덱스 시그니처
+}
+
 export interface EditorSidebarProps {
   nodeType: EditorNodeType;
-  nodeData?: any; // 선택된 노드의 데이터
-  nodeStyle?: any; // 선택된 노드의 스타일 (섹션 크기 등)
-  onNodeUpdate?: (field: string, value: any) => void; // 노드 데이터 업데이트 콜백
-  onNodeStyleUpdate?: (styleField: string, value: any) => void; // 노드 스타일 업데이트 콜백
+  nodeData?: NodeData; // 선택된 노드의 데이터
+  nodeStyle?: CSSProperties; // 선택된 노드의 스타일 (섹션 크기 등)
+  onNodeUpdate?: (field: string, value: string | number | boolean) => void; // 노드 데이터 업데이트 콜백
+  onNodeStyleUpdate?: (styleField: string, value: string | number) => void; // 노드 스타일 업데이트 콜백
   isSchoolNode?: boolean;
   onSchoolNodeToggle?: () => void;
 }
@@ -46,9 +65,42 @@ export const EditorSidebar = ({
   nodeStyle,
   onNodeUpdate,
   onNodeStyleUpdate,
-  isSchoolNode = false,
-  onSchoolNodeToggle,
+  isSchoolNode: isSchoolNodeProp,
+  onSchoolNodeToggle: _onSchoolNodeToggle,
 }: EditorSidebarProps) => {
+  // nodeData에서 isSchoolNode를 우선 사용, prop은 fallback
+  const isSchoolNode = (nodeData as any)?.isSchoolNode ?? isSchoolNodeProp ?? false;
+  const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
+  const [isConverting, setIsConverting] = useState(false);
+
+  const handleToggleClick = () => {
+    if (isSchoolNode) {
+      // Converting to basic node - no modal needed
+      handleConvertToBasic();
+    } else {
+      // Converting to school node - show curriculum selection modal
+      setIsToggleModalOpen(true);
+    }
+  };
+
+  const handleToggleConfirm = (_curriculumId: string) => {
+    setIsConverting(true);
+    // TODO: API call to convert node with _curriculumId
+    // _curriculumId will be sent to backend API
+
+    // Simulate async operation
+    setTimeout(() => {
+      onNodeUpdate?.('isSchoolNode', !isSchoolNode);
+      setIsConverting(false);
+      setIsToggleModalOpen(false);
+    }, 500);
+  };
+
+  const handleConvertToBasic = () => {
+    // Converting to basic node doesn't need curriculum selection
+    onNodeUpdate?.('isSchoolNode', false);
+  };
+
   const renderHeader = () => {
     switch (nodeType) {
       case 'title':
@@ -122,35 +174,51 @@ export const EditorSidebar = ({
 
   const renderContent = () => {
     if (nodeType === 'section') {
-      const width = nodeStyle?.width || 600;
-      const height = nodeStyle?.height || 400;
+      const width = nodeStyle?.width ?? 600;
+      const height = nodeStyle?.height ?? 400;
 
       return (
-        <StyledSection>
-          <StyledSectionTitle>스타일</StyledSectionTitle>
-          <StyledDimensionRow>
-            <EditorTextbox
-              label="W"
-              value={`${width}px`}
-              onChange={(value) => {
-                const numValue = Number.parseInt(value, 10);
-                if (!Number.isNaN(numValue)) {
-                  onNodeStyleUpdate?.('width', numValue);
-                }
-              }}
-            />
-            <EditorTextbox
-              label="H"
-              value={`${height}px`}
-              onChange={(value) => {
-                const numValue = Number.parseInt(value, 10);
-                if (!Number.isNaN(numValue)) {
-                  onNodeStyleUpdate?.('height', numValue);
-                }
-              }}
-            />
-          </StyledDimensionRow>
-        </StyledSection>
+        <>
+          <StyledSection>
+            <StyledSectionTitle>섹션 정보</StyledSectionTitle>
+            <StyledFormGroup>
+              <EditorTextbox
+                label="이름"
+                value={nodeData?.label || ''}
+                placeholder="섹션 이름을 입력하세요"
+                onChange={(value) => onNodeUpdate?.('label', value)}
+              />
+            </StyledFormGroup>
+          </StyledSection>
+
+          <StyledSection>
+            <StyledSectionTitle>스타일</StyledSectionTitle>
+            <StyledDimensionRow>
+              <EditorTextbox
+                label="W"
+                value={`${width}px`}
+                onChange={(value) => {
+                  const numValue = Number.parseInt(value, 10);
+                  // 범위 검증 추가 (최소 200, 최대 5000)
+                  if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
+                    onNodeStyleUpdate?.('width', numValue);
+                  }
+                }}
+              />
+              <EditorTextbox
+                label="H"
+                value={`${height}px`}
+                onChange={(value) => {
+                  const numValue = Number.parseInt(value, 10);
+                  // 범위 검증 추가 (최소 200, 최대 5000)
+                  if (!Number.isNaN(numValue) && numValue >= 200 && numValue <= 5000) {
+                    onNodeStyleUpdate?.('height', numValue);
+                  }
+                }}
+              />
+            </StyledDimensionRow>
+          </StyledSection>
+        </>
       );
     }
 
@@ -159,10 +227,20 @@ export const EditorSidebar = ({
         <StyledSection>
           <StyledSectionTitle>속성</StyledSectionTitle>
           <StyledFormGroup>
-            <EditorDropdown label="타입" options={TEXT_TYPE_OPTIONS} selectedValue={nodeType} />
+            <EditorDropdown
+              label="타입"
+              options={TEXT_TYPE_OPTIONS}
+              selectedValue={nodeType}
+              onChange={(value) => {
+                // 'titleText' -> 'title', 'paragraphText' -> 'paragraph' 변환
+                const actualType = value === 'titleText' ? 'title' : 'paragraph';
+                onNodeUpdate?.('type', actualType);
+              }}
+            />
             <EditorTextfield
               label="텍스트"
               value={nodeData?.text || ''}
+              placeholder="텍스트를 입력하세요"
               onChange={(value) => onNodeUpdate?.('text', value)}
             />
           </StyledFormGroup>
@@ -183,10 +261,12 @@ export const EditorSidebar = ({
               label="타입"
               options={NODE_TYPE_OPTIONS}
               selectedValue={selectedTypeValue}
+              onChange={(value) => onNodeUpdate?.('type', value)}
             />
             <EditorTextbox
               label="이름"
               value={nodeData?.label || nodeData?.title || ''}
+              placeholder="노드 이름을 입력하세요"
               onChange={(value) => {
                 const field = nodeType === 'title' ? 'label' : 'title';
                 onNodeUpdate?.(field, value);
@@ -196,6 +276,7 @@ export const EditorSidebar = ({
               <EditorTextfield
                 label="학습 내용"
                 value={nodeData?.description || ''}
+                placeholder="학습 내용을 입력하세요"
                 onChange={(value) => onNodeUpdate?.('description', value)}
               />
             )}
@@ -205,16 +286,16 @@ export const EditorSidebar = ({
         <StyledSection>
           <StyledSectionTitle>스타일</StyledSectionTitle>
           <ColorDropdown
-            value={nodeData?.color || 'blue'}
+            value={(nodeData?.color as ColorOption) || 'blue'}
             onChange={(value) => onNodeUpdate?.('color', value)}
           />
         </StyledSection>
 
         {showSchoolToggle && (
           <StyledBottomButtonContainer>
-            <Button variant="outlined" size="medium" onClick={onSchoolNodeToggle}>
+            <StyledSchoolToggleButton variant="outlined" size="medium" onClick={handleToggleClick}>
               {isSchoolNode ? '기본 노드로 전환' : '학교 노드로 전환'}
-            </Button>
+            </StyledSchoolToggleButton>
           </StyledBottomButtonContainer>
         )}
       </>
@@ -225,6 +306,15 @@ export const EditorSidebar = ({
     <StyledContainer>
       {renderHeader()}
       {renderContent()}
+
+      {!isSchoolNode && (
+        <SchoolNodeConversionModal
+          isOpen={isToggleModalOpen}
+          onClose={() => setIsToggleModalOpen(false)}
+          onConfirm={handleToggleConfirm}
+          isConverting={isConverting}
+        />
+      )}
     </StyledContainer>
   );
 };
@@ -312,13 +402,27 @@ const StyledDimensionRow = styled.div`
 `;
 
 const StyledBottomButtonContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 280px;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const StyledSchoolToggleButton = styled(Button)`
+  background-color: ${tokens.colors.white} !important;
+  border: 1.5px solid ${tokens.colors.primary[500]} !important;
+  color: ${tokens.colors.primary[500]} !important;
+
+  &:hover {
+    background-color: ${tokens.colors.primary[100]} !important;
+    border-color: ${tokens.colors.primary[600]} !important;
+    color: ${tokens.colors.primary[600]} !important;
+  }
+
+  &:active {
+    background-color: ${tokens.colors.primary[200]} !important;
+    border-color: ${tokens.colors.primary[900]} !important;
+    color: ${tokens.colors.primary[900]} !important;
+  }
 `;

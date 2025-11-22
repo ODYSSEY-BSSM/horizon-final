@@ -40,16 +40,16 @@ export const HorizonSection = ({ data, selected }: NodeProps<SectionNodeData>) =
       {/* 크기 조절 핸들 - 선택 시에만 표시 */}
       <NodeResizer
         isVisible={selected}
-        minWidth={200}
-        minHeight={100}
+        minWidth={75}
+        minHeight={37.5}
         color={tokens.colors.primary[500]}
-        lineStyle={{ borderWidth: 2 }}
+        lineStyle={{ borderWidth: 0.75 }}
         handleStyle={{
-          width: 12,
-          height: 12,
+          width: 4.5,
+          height: 4.5,
           borderRadius: '50%',
           backgroundColor: tokens.colors.primary[500],
-          border: `2px solid ${tokens.colors.white}`,
+          border: `0.75px solid ${tokens.colors.white}`,
         }}
       />
       <StyledContainer $borderColor={borderColor} $selected={selected}>
@@ -64,10 +64,10 @@ const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }
   height: 100%;
   box-sizing: border-box;
   background-color: ${tokens.colors.white};
-  border: ${(props) => (props.$selected ? '4px' : '2px')} solid
+  border: ${(props) => (props.$selected ? '1.5px' : '0.75px')} solid
     ${(props) => (props.$selected ? tokens.colors.primary[500] : props.$borderColor)};
-  border-radius: ${tokens.radius.medium};
-  padding: ${tokens.spacing.large};
+  border-radius: ${tokens.radius.small};
+  padding: 9px;
   transition: border-width 0.2s ease, border-color 0.2s ease;
 
   /* 자식 노드를 위한 포지셔닝 컨텍스트 */
@@ -77,12 +77,12 @@ const StyledContainer = styled.div<{ $borderColor: string; $selected?: boolean }
 
 const StyledLabel = styled.h3`
   font-family: ${tokens.typos.fontFamily.suit.join(', ')};
-  font-size: ${tokens.typos.fontSize[18]};
+  font-size: 6.75px;
   font-weight: ${tokens.typos.fontWeight.semibold};
-  line-height: ${tokens.typos.lineHeight[24]};
+  line-height: 9px;
   color: ${tokens.colors.neutral[900]};
-  margin: 0 0 ${tokens.spacing.medium} 0;
+  margin: 0 0 6px 0;
   position: absolute;
-  top: ${tokens.spacing.medium};
-  left: ${tokens.spacing.medium};
+  top: 6px;
+  left: 6px;
 `;
