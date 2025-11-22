@@ -129,6 +129,7 @@ const StyledContentCard = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 60px;
   background-color: ${tokens.colors.white};
   box-shadow: 1px 2px 8px 2px rgba(0, 0, 0, 0.1);
 `;
