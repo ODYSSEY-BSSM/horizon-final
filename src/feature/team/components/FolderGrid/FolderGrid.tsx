@@ -4,9 +4,9 @@ import styled from '@emotion/styled';
 import { useMemo } from 'react';
 import { AddFolderCard } from '@/feature/folder';
 import { FilterTabs, FolderCard } from '@/feature/roadmap';
-import { FOLDER_FILTER_TABS } from '@/feature/team';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { mapTeamFolderToFolder } from '@/feature/team/utils/folderMapper';
+import { FOLDER_SORT_TABS as FOLDER_FILTER_TABS } from '@/shared/constants/filterTabs';
 import { tokens } from '@/shared/tokens';
 
 interface FolderGridProps {

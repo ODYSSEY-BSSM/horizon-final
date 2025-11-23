@@ -9,8 +9,6 @@ export { TeamDropdown } from './components/TeamDropdown';
 export { TeamListView } from './components/TeamListView';
 
 export * from './constants/RoadmapFilterTabs.constants';
-export * from './constants/TeamFilterTabs.constants';
-export * from './constants/TeamFolderFilterTabs.constants';
 
 export { TeamFolderDeleteModal } from './forms/TeamFolderDeleteModal';
 export type { UseTeamDirectoryWebSocketOptions } from './hooks/useTeamDirectoryWebSocket';

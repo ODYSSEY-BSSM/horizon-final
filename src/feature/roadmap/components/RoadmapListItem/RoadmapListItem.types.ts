@@ -2,7 +2,7 @@ import type { Roadmap } from '@/feature/roadmap/types';
 
 export interface RoadmapListItemProps {
   roadmap: Roadmap;
-  onClick?: () => void;
+  onClick?: (id: string) => void;
   onEdit?: () => void;
   onDelete?: () => void;
   showActions?: boolean;

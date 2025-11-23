@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { FolderRoadmapList } from '@/feature/roadmap';
 import { mapTeamRoadmapToRoadmapItem, useTeamFolderDetail } from '@/feature/team';
+import { RoadmapList } from '@/shared/components/RoadmapList';
+import { TEAM_FOLDER_FILTER_TABS } from '@/shared/constants/filterTabs';
 
 interface RoadmapListSectionProps {
   teamId: string;
@@ -11,6 +13,7 @@ interface RoadmapListSectionProps {
 }
 
 const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapListSectionProps) => {
+  const router = useRouter();
   const {
     activeFilter,
     setActiveFilter,
@@ -25,17 +28,28 @@ const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapList
   // 팀 로드맵을 개인 로드맵 형식으로 변환
   const mappedRoadmaps = useMemo(() => roadmaps.map(mapTeamRoadmapToRoadmapItem), [roadmaps]);
 
+  const handleRoadmapClick = (roadmapId: string) => {
+    router.push(`/roadmap/${roadmapId}`);
+  };
+
   return (
-    <FolderRoadmapList
-      activeTab={activeFilter}
-      onTabClick={setActiveFilter}
+    <RoadmapList
+      items={mappedRoadmaps}
       viewMode={viewMode}
       onViewModeChange={setViewMode}
-      onCreateRoadmap={onAddRoadmapClick}
-      roadmaps={mappedRoadmaps}
+      showViewToggle
+      filterTabs={TEAM_FOLDER_FILTER_TABS}
+      activeFilter={activeFilter}
+      onFilterChange={setActiveFilter}
+      showFilterTabs
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={onPageChange}
+      showPagination
+      onAddRoadmap={onAddRoadmapClick}
+      onRoadmapClick={handleRoadmapClick}
+      title="로드맵 리스트"
+      showHeader
     />
   );
 };

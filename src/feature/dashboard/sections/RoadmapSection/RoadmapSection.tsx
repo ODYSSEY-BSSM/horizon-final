@@ -1,5 +1,10 @@
-import { RoadmapList } from '@/feature/dashboard/components/RoadmapList';
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { RoadmapList } from '@/shared/components/RoadmapList';
+import { DASHBOARD_FILTER_TABS } from '@/shared/constants/filterTabs';
+import { useRoadmapList } from '@/shared/hooks/useRoadmapList';
+import type { RoadmapItem } from '@/shared/types';
 
 interface RoadmapSectionProps {
   items: RoadmapItem[];
@@ -7,7 +12,42 @@ interface RoadmapSectionProps {
 }
 
 const RoadmapSection = ({ items, onAddRoadmap }: RoadmapSectionProps) => {
-  return <RoadmapList items={items} onAddRoadmap={onAddRoadmap} />;
+  const router = useRouter();
+  const {
+    currentView,
+    currentFilter,
+    currentPage,
+    totalPages,
+    paginatedItems,
+    handleViewChange,
+    handleFilterChange,
+    handlePageChange,
+  } = useRoadmapList(items);
+
+  const handleRoadmapClick = (roadmapId: string) => {
+    router.push(`/roadmap/${roadmapId}`);
+  };
+
+  return (
+    <RoadmapList
+      items={paginatedItems}
+      viewMode={currentView}
+      onViewModeChange={handleViewChange}
+      showViewToggle
+      filterTabs={DASHBOARD_FILTER_TABS}
+      activeFilter={currentFilter}
+      onFilterChange={handleFilterChange}
+      showFilterTabs
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+      showPagination
+      onAddRoadmap={onAddRoadmap}
+      onRoadmapClick={handleRoadmapClick}
+      title="로드맵 리스트"
+      showHeader
+    />
+  );
 };
 
 export default RoadmapSection;

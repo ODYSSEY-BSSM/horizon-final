@@ -1,7 +1,6 @@
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import type { Roadmap } from '@/feature/roadmap';
 import type { Roadmap as TeamRoadmap } from '@/feature/team/types/team';
-import type { RoadmapColor } from '@/shared/types/roadmap';
+import type { RoadmapColor, RoadmapItem } from '@/shared/types';
 
 const isValidRoadmapColor = (color: string): color is RoadmapColor => {
   return ['red', 'orange', 'yellow', 'green', 'blue', 'purple'].includes(color);

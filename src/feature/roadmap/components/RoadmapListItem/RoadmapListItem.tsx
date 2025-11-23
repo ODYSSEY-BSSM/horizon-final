@@ -15,8 +15,12 @@ const RoadmapListItem = ({
 }: RoadmapListItemProps) => {
   const colors = ROADMAP_COLORS[roadmap.color] ?? ROADMAP_COLORS.blue;
 
+  const handleClick = () => {
+    onClick?.(roadmap.id);
+  };
+
   return (
-    <StyledContainer onClick={onClick}>
+    <StyledContainer onClick={handleClick}>
       <StyledLeftSection>
         <StyledIconBox $bgColor={colors.bg}>
           <Icon name={roadmap.icon} variant="SM" filled color={colors.icon} decorative />

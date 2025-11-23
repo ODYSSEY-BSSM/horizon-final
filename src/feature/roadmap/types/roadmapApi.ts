@@ -21,6 +21,7 @@ export interface RoadmapResponseVO {
   lastModifiedAt: string;
   lastAccessedAt: string;
   isFavorite: boolean;
+  directoryId: number;
 }
 
 export interface RoadmapResponse {

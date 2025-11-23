@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
+import { useTeamRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import type { Roadmap } from '@/feature/team/types/team';
-import type { RoadmapColor } from '@/shared/types/roadmap';
+import { mapTeamRoadmapResponseToRoadmapItem } from '@/shared/utils/roadmapMapper';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -12,45 +12,43 @@ const useFolderDetail = (teamId: string, folderId: string) => {
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
+  const { data: teamRoadmapsData } = useTeamRoadmaps(Number(teamId));
 
   const allRoadmaps: Roadmap[] = useMemo(() => {
-    if (!teamRootFolder?.directories) {
+    if (!teamRoadmapsData) {
       return [];
     }
 
-    const findDirectory = (dirs: typeof teamRootFolder.directories, id: number): any => {
-      for (const dir of dirs) {
-        if (dir.id === id) {
-          return dir;
-        }
-        if (dir.directories?.length) {
-          const found = findDirectory(dir.directories, id);
-          if (found) {
-            return found;
-          }
-        }
-      }
-      return null;
-    };
+    // Convert API response to RoadmapItem format first
+    const allItems = teamRoadmapsData.map(mapTeamRoadmapResponseToRoadmapItem);
 
-    const targetDir = findDirectory(teamRootFolder.directories, Number(folderId));
-    const roadmapList = targetDir?.roadmaps || [];
+    // Filter by folderId
+    const folderIdNum = Number(folderId);
+    const filteredItems = allItems.filter((item) => {
+      const originalRoadmap = teamRoadmapsData.find((r) => r.uuid.toString() === item.id);
+      return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
+    });
 
-    return roadmapList.map((roadmap: any) => ({
-      id: roadmap.id?.toString() || '',
-      folderId: folderId,
-      name: roadmap.title || '',
-      description: '', // TODO: API에서 description 제공 필요
-      icon: 'folder',
-      color: 'blue' as RoadmapColor,
-      type: 'team' as 'personal' | 'team',
-      totalSteps: 0,
-      completedSteps: 0,
-      status: 'in-progress' as 'completed' | 'in-progress',
-      progress: 0,
-    }));
-  }, [teamRootFolder, folderId]);
+    // Convert RoadmapItem to Roadmap (team-specific type)
+    return filteredItems.map((item) => {
+      const originalRoadmap = teamRoadmapsData.find((r) => r.uuid.toString() === item.id);
+      // Map 'not-started' to 'in-progress' for team Roadmap type
+      const status = item.status === 'not-started' ? 'in-progress' : item.status;
+      return {
+        id: item.id,
+        folderId: folderId,
+        name: item.title,
+        description: originalRoadmap?.roadmapInfo?.description || '',
+        icon: item.icon,
+        color: item.color,
+        type: 'team' as const,
+        totalSteps: 0,
+        completedSteps: 0,
+        status: status as 'in-progress' | 'completed',
+        progress: item.progress,
+      };
+    });
+  }, [teamRoadmapsData, folderId]);
 
   const filteredRoadmaps = useMemo(() => {
     return allRoadmaps.filter((roadmap: Roadmap) => {
