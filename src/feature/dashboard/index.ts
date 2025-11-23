@@ -1,3 +1,4 @@
+export { DashboardSkeleton } from './components/DashboardSkeleton';
 export { GreetingMessage } from './components/GreetingMessage';
 export { InfoCard } from './components/InfoCard';
 export { ListHeader } from './components/ListHeader';

@@ -27,15 +27,11 @@ export const realAuthApi = {
   },
 
   refreshToken: async (refreshToken: string): Promise<TokenRefreshResponse> => {
-    return apiClient.put<TokenRefreshResponse>(
-      '/auth/token',
-      {},
-      {
-        headers: {
-          'Refresh-Token': refreshToken,
-        },
+    return apiClient.put<TokenRefreshResponse>('/auth/token', undefined, {
+      headers: {
+        'Refresh-Token': refreshToken,
       },
-    );
+    });
   },
 
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
@@ -47,7 +43,7 @@ export const realAuthApi = {
   },
 
   deleteUser: async (_data: DeleteUserRequest): Promise<void> => {
-    return apiClient.delete<void>('/users', { headers: { 'Content-Type': 'application/json' } });
+    return apiClient.delete<void>('/users');
   },
 
   getProfile: async (): Promise<UserInfoResponse> => {

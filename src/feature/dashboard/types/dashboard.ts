@@ -30,12 +30,15 @@ export type RoadmapStatus = 'in-progress' | 'completed';
 export interface RoadmapItem {
   id: string;
   title: string;
+  description?: string;
   icon: string;
   color: RoadmapColor;
   category: 'personal' | 'team';
   steps: number;
   status: RoadmapStatus;
   progress: number;
+  folderId?: string;
+  folderName?: string;
 }
 
 export type FilterType = 'all' | 'my' | 'team' | 'completed' | 'in-progress';

@@ -16,6 +16,7 @@ export interface Roadmap {
   status: RoadmapStatus;
   progress: number;
   folderId?: string;
+  folderName?: string;
   createdAt?: string;
   updatedAt?: string;
 }

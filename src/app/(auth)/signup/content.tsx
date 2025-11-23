@@ -68,11 +68,9 @@ export default function SignUpContent() {
         <StyledFormWrapper>
           <StyledContentWrapper>
             <StyledHeaderWrapper>
-              {currentStep !== 'email' && (
-                <StyledBackButton onClick={handleBack}>
-                  <Icon name="arrow_left_alt" color={tokens.colors.neutral[400]} size="24px" />
-                </StyledBackButton>
-              )}
+              <StyledBackButton onClick={handleBack}>
+                <Icon name="arrow_left_alt" color={tokens.colors.neutral[400]} size="24px" />
+              </StyledBackButton>
               <StyledTitleSection>
                 <Text variant="H2" color={tokens.colors.primary[500]}>
                   {getStepTitle()}

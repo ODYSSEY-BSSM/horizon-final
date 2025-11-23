@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
+import { useRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { useAllTeamRoadmaps, useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/types';
 import type { RoadmapColor } from '@/shared/types/roadmap';
@@ -20,6 +21,7 @@ export const useDashboardData = () => {
     isLoading: isLoadingTeamRoadmaps,
     error: teamError,
   } = useAllTeamRoadmaps(teamIds);
+  const { data: rootFolder, isLoading: isLoadingFolder } = useRootFolder();
 
   const roadmapsData: RoadmapResponse[] = useMemo(() => {
     return personalRoadmaps || [];
@@ -56,6 +58,30 @@ export const useDashboardData = () => {
     };
   }, [userProfile, roadmapsData, teamRoadmaps]);
 
+  // 로드맵 ID와 디렉토리 정보를 매핑하는 맵 생성
+  const roadmapToDirectoryMap = useMemo(() => {
+    const map = new Map<number, { id: number; name: string }>();
+    if (!rootFolder?.directories) {
+      return map;
+    }
+
+    const traverse = (directories: any[]): void => {
+      for (const dir of directories) {
+        if (dir.roadmaps) {
+          for (const roadmap of dir.roadmaps) {
+            map.set(roadmap.id, { id: dir.id, name: dir.name });
+          }
+        }
+        if (dir.directories?.length) {
+          traverse(dir.directories);
+        }
+      }
+    };
+
+    traverse(rootFolder.directories);
+    return map;
+  }, [rootFolder]);
+
   const roadmaps = useMemo(() => {
     const combinedRoadmaps: (RoadmapResponse | TeamRoadmapResponse)[] = [
       ...(personalRoadmaps || []),
@@ -67,24 +93,28 @@ export const useDashboardData = () => {
 
       const category = isTeamRoadmap ? ('team' as const) : ('personal' as const);
       const status = 'in-progress' as const;
+      const folderInfo = roadmapToDirectoryMap.get(roadmap.roadmapInfo.id);
 
       return {
         id: roadmap.roadmapInfo.id.toString(),
         title: roadmap.roadmapInfo.title,
+        description: roadmap.roadmapInfo.description,
         icon: roadmap.icon.toLowerCase(),
         color: roadmap.color.toLowerCase() as RoadmapColor,
         category,
         steps: 0,
         status,
         progress: roadmap.progress,
+        folderId: folderInfo?.id.toString(),
+        folderName: folderInfo?.name,
       };
     });
-  }, [personalRoadmaps, teamRoadmaps]);
+  }, [personalRoadmaps, teamRoadmaps, roadmapToDirectoryMap]);
 
   return {
     userData,
     roadmapsData: roadmaps,
-    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeamRoadmaps,
+    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeamRoadmaps || isLoadingFolder,
     error: userError || personalError || teamError,
   };
 };

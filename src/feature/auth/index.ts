@@ -1,9 +1,10 @@
 export { authApi } from './api/authApi';
 
-export { SecondaryAction as SignInSecondaryAction } from './components/signin/SecondaryAction';
+export { PrimaryButton } from './components/PrimaryButton';
 export { PasswordValidation } from './components/signup/PasswordValidation';
 export { SecondaryAction as SignUpSecondaryAction } from './components/signup/SecondaryAction';
 export { VerificationInput } from './components/signup/VerificationInput';
+export { TextDivider } from './components/TextDivider';
 export { TokenInitializer } from './components/TokenInitializer';
 
 export { useEmailForm } from './hooks/useEmailForm';
@@ -36,12 +37,4 @@ export type {
   VerificationRequest,
 } from './types/auth';
 
-export type {
-  EmailStepProps,
-  PasswordStepProps,
-  SignUpData,
-  SignUpStep,
-  StepProps,
-  UsernameStepProps,
-  VerificationStepProps,
-} from './types/signup';
+export type { SignUpData, SignUpStep } from './types/signup';

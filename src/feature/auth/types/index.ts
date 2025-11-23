@@ -10,12 +10,4 @@ export type {
   VerificationRequest,
 } from './auth';
 
-export type {
-  EmailStepProps,
-  PasswordStepProps,
-  SignUpData,
-  SignUpStep,
-  StepProps,
-  UsernameStepProps,
-  VerificationStepProps,
-} from './signup';
+export type { SignUpData, SignUpStep } from './signup';
