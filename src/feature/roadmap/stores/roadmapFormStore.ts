@@ -29,6 +29,9 @@ export interface RoadmapSubmitData {
 interface RoadmapFormState {
   isModalOpen: boolean;
 
+  mode: 'create' | 'edit';
+  roadmapId?: number;
+
   currentStep: RoadmapFormStep;
 
   formData: RoadmapFormData;
@@ -41,6 +44,7 @@ interface RoadmapFormState {
 
 interface RoadmapFormActions {
   openModal: () => void;
+  openEditModal: (roadmapId: number, initialData: Partial<RoadmapFormData>) => void;
   closeModal: () => void;
 
   nextStep: () => void;
@@ -67,6 +71,7 @@ type RoadmapFormStore = RoadmapFormState & RoadmapFormActions;
 const STEP_FLOWS = {
   personal: ['category', 'folder', 'info', 'style'] as const,
   team: ['category', 'team', 'folder', 'info', 'style'] as const,
+  edit: ['folder', 'info', 'style'] as const,
 };
 
 const initialFormData: RoadmapFormData = {
@@ -82,6 +87,8 @@ const initialFormData: RoadmapFormData = {
 
 const initialState: RoadmapFormState = {
   isModalOpen: false,
+  mode: 'create',
+  roadmapId: undefined,
   currentStep: 'category',
   formData: initialFormData,
   errors: {},
@@ -89,18 +96,29 @@ const initialState: RoadmapFormState = {
   globalError: null,
 };
 
-function getStepFlow(category: string): readonly RoadmapFormStep[] {
+function getStepFlow(mode: 'create' | 'edit', category: string): readonly RoadmapFormStep[] {
+  if (mode === 'edit') {
+    return STEP_FLOWS.edit;
+  }
   return category === 'team' ? STEP_FLOWS.team : STEP_FLOWS.personal;
 }
 
-function getNextStep(currentStep: RoadmapFormStep, category: string): RoadmapFormStep | null {
-  const flow = getStepFlow(category);
+function getNextStep(
+  currentStep: RoadmapFormStep,
+  mode: 'create' | 'edit',
+  category: string,
+): RoadmapFormStep | null {
+  const flow = getStepFlow(mode, category);
   const currentIndex = flow.indexOf(currentStep);
   return flow[currentIndex + 1] || null;
 }
 
-function getPreviousStep(currentStep: RoadmapFormStep, category: string): RoadmapFormStep | null {
-  const flow = getStepFlow(category);
+function getPreviousStep(
+  currentStep: RoadmapFormStep,
+  mode: 'create' | 'edit',
+  category: string,
+): RoadmapFormStep | null {
+  const flow = getStepFlow(mode, category);
   const currentIndex = flow.indexOf(currentStep);
   return flow[currentIndex - 1] || null;
 }
@@ -158,12 +176,29 @@ export const useRoadmapFormStore = create<RoadmapFormStore>()(
     (set, get) => ({
       ...initialState,
 
-      openModal: () => set({ isModalOpen: true }, false, 'openModal'),
+      openModal: () =>
+        set({ isModalOpen: true, mode: 'create', currentStep: 'category' }, false, 'openModal'),
+
+      openEditModal: (roadmapId: number, initialData: Partial<RoadmapFormData>) =>
+        set(
+          {
+            isModalOpen: true,
+            mode: 'edit',
+            roadmapId,
+            currentStep: 'folder',
+            formData: { ...initialFormData, ...initialData },
+            errors: {},
+          },
+          false,
+          'openEditModal',
+        ),
 
       closeModal: () =>
         set(
           {
             isModalOpen: false,
+            mode: 'create',
+            roadmapId: undefined,
             currentStep: 'category',
             formData: initialFormData,
             errors: {},
@@ -179,7 +214,7 @@ export const useRoadmapFormStore = create<RoadmapFormStore>()(
           return;
         }
 
-        const next = getNextStep(state.currentStep, state.formData.category);
+        const next = getNextStep(state.currentStep, state.mode, state.formData.category);
         if (next) {
           set({ currentStep: next, errors: {} }, false, 'nextStep');
         }
@@ -187,7 +222,7 @@ export const useRoadmapFormStore = create<RoadmapFormStore>()(
 
       previousStep: () => {
         const state = get() as RoadmapFormStore;
-        const prev = getPreviousStep(state.currentStep, state.formData.category);
+        const prev = getPreviousStep(state.currentStep, state.mode, state.formData.category);
 
         if (prev) {
           set({ currentStep: prev, errors: {} }, false, 'previousStep');

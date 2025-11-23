@@ -66,11 +66,17 @@ export const useFolderStep = () => {
   };
 
   const getDisplayText = () => {
-    if (folderName) {
+    // 새로운 폴더 이름이 있는 경우 (새 폴더 생성 시)
+    if (folderName && !folderId) {
       return folderName;
     }
+    // 기존 폴더가 선택된 경우
     if (selectedFolder) {
       return selectedFolder.label;
+    }
+    // 폴더 ID는 있지만 아직 로딩 중인 경우 (수정 모드에서 초기 로딩)
+    if (folderId && folderName) {
+      return folderName;
     }
     return '폴더를 선택해주세요';
   };

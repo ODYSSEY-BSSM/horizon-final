@@ -56,11 +56,19 @@ const InfoCard = ({
           <Icon
             name={isSchoolCard ? (hasItem ? 'check_circle' : 'cancel') : 'file_export'}
             variant="XS"
-            color={isSchoolCard && !hasItem ? tokens.colors.error[200] : tokens.colors.neutral[500]}
+            color={
+              isSchoolCard
+                ? hasItem
+                  ? tokens.colors.success[200]
+                  : tokens.colors.error[200]
+                : tokens.colors.neutral[500]
+            }
             decorative
           />
           <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-            {isSchoolCard ? config.subLabel(0) : config.subLabel(subCount)}
+            {isSchoolCard
+              ? (config.subLabel as (hasItem: boolean) => string)(hasItem)
+              : (config.subLabel as (count: number) => string)(subCount)}
           </Text>
         </StyledSubInfo>
       </StyledCardContent>

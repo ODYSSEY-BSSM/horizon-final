@@ -11,6 +11,7 @@ import {
 import type { FilterType, RoadmapItem, ViewType } from '@/feature/dashboard/types/dashboard';
 import { Pagination, RoadmapListItem } from '@/feature/roadmap';
 import { tokens } from '@/shared/tokens';
+import { Text } from '@/shared/ui';
 import { FilterTab } from '../FilterTab';
 import { RoadmapCard } from '../RoadmapCard';
 
@@ -127,6 +128,8 @@ const RoadmapList = ({
     router.push(`/roadmap/${roadmapId}`);
   };
 
+  const hasItems = paginatedItems.length > 0;
+
   return (
     <StyledRoadmapListContainer className={className}>
       <ListHeader
@@ -136,7 +139,21 @@ const RoadmapList = ({
       />
       <FilterTab currentFilter={currentFilter} onFilterChange={handleFilterChangeInternal} />
 
-      {currentView === 'list' ? (
+      {!hasItems ? (
+        <StyledEmptyStateContainer>
+          <Text variant="ST" color={tokens.colors.neutral[600]}>
+            아직 로드맵이 없습니다.
+          </Text>
+          <Text
+            as="button"
+            variant="B1"
+            color={tokens.colors.primary[500]}
+            onClick={handleAddRoadmapClick}
+          >
+            새 로드맵 만들기
+          </Text>
+        </StyledEmptyStateContainer>
+      ) : currentView === 'list' ? (
         <StyledListItemsContainer>
           {paginatedItems.map((item) => (
             <RoadmapListItem
@@ -144,6 +161,7 @@ const RoadmapList = ({
               roadmap={{
                 id: item.id,
                 name: item.title,
+                description: item.description,
                 icon: item.icon,
                 color: item.color,
                 type: item.category,
@@ -151,6 +169,8 @@ const RoadmapList = ({
                 completedSteps: Math.round((item.steps * item.progress) / 100),
                 status: item.status,
                 progress: item.progress,
+                folderId: item.folderId,
+                folderName: item.folderName,
               }}
               onClick={() => handleRoadmapClick(item.id)}
             />
@@ -200,4 +220,25 @@ const StyledThumbnailGridContainer = styled.div`
   gap: ${tokens.spacing.medium};
   padding: ${tokens.spacing.xxlarge};
   background-color: ${tokens.colors.white};
+`;
+
+const StyledEmptyStateContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.medium};
+  align-items: center;
+  padding: 80px ${tokens.spacing.xxlarge};
+  background-color: ${tokens.colors.white};
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      color: ${tokens.colors.primary[600]};
+      text-decoration: underline;
+    }
+  }
 `;

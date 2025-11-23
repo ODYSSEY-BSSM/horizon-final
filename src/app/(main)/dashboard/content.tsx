@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import {
+  DashboardSkeleton,
   GreetingMessage as GreetingSection,
   InfoCardsGrid,
   RoadmapFormModal,
@@ -36,9 +37,9 @@ const DashboardContent = () => {
   if (isLoading) {
     return (
       <StyledPageContainer>
-        <StyledLoadingContainer>
-          <StyledLoadingText>대시보드를 불러오는 중...</StyledLoadingText>
-        </StyledLoadingContainer>
+        <StyledContentContainer>
+          <DashboardSkeleton />
+        </StyledContentContainer>
       </StyledPageContainer>
     );
   }
@@ -100,11 +101,6 @@ const StyledLoadingContainer = styled.div`
   align-items: center;
   height: 500px;
   width: 100%;
-`;
-
-const StyledLoadingText = styled.div`
-  color: ${tokens.colors.neutral[600]};
-  font-size: 18px;
 `;
 
 const StyledErrorText = styled.div`
