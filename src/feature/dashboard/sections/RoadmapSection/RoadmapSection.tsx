@@ -25,7 +25,7 @@ const RoadmapSection = ({ items, onAddRoadmap }: RoadmapSectionProps) => {
   } = useRoadmapList(items);
 
   const handleRoadmapClick = (roadmapId: string) => {
-    router.push(`/roadmap/${roadmapId}`);
+    router.push(`/editor/${roadmapId}`);
   };
 
   return (
