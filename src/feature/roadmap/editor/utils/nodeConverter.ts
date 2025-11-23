@@ -134,10 +134,10 @@ function extractTitle(data: HorizonNodeData): string {
  */
 function extractDescription(data: HorizonNodeData): string {
   if (data.type === 'standard') {
-    return data.description;
+    return data.description || '-';
   }
-  // title, secondary는 설명이 없으므로 빈 문자열
-  return '';
+  // title, secondary는 설명이 없지만 필수값이므로 기본값 반환
+  return '-';
 }
 
 // ============================================================================

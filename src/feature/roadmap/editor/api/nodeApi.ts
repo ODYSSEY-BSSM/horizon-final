@@ -17,10 +17,24 @@ let optimisticIdCounter = -1;
 /**
  * 노드 목록 조회
  * GET /roadmap/{roadmapId}/nodes
+ * API 응답 형태: ListCommonResponseNodeResponse
+ * { code: string, message: string, data: NodeResponse[] }
  */
 export async function getNodes(roadmapId: number): Promise<NodeResponse[]> {
-  const response = await apiClient.get<{ nodes: NodeResponse[] }>(`/roadmap/${roadmapId}/nodes`);
-  return response.nodes;
+  try {
+    // apiClient.get은 이미 .data를 반환하므로 NodeResponse[] 타입으로 받음
+    const response = await apiClient.get<NodeResponse[]>(`/roadmap/${roadmapId}/nodes`);
+
+    // 배열 응답 확인
+    if (Array.isArray(response)) {
+      return response;
+    }
+    // 예상치 못한 응답 형태 - 빈 배열 반환
+    return [];
+  } catch (_error) {
+    // 에러 발생 시 빈 배열 반환하여 undefined 방지
+    return [];
+  }
 }
 
 /**
@@ -99,6 +113,10 @@ export function useNodes(roadmapId: number) {
     queryKey: editorNodeKeys.list(roadmapId),
     queryFn: () => getNodes(roadmapId),
     enabled: !!roadmapId && roadmapId > 0,
+    retry: 1, // 1번만 재시도
+    staleTime: 10000, // 10초간 캐시 유지
+    // 항상 배열 반환 보장
+    select: (data) => data || [],
   });
 }
 

@@ -43,6 +43,7 @@ import {
   mapTypeToApi,
   reactFlowNodesToApi,
 } from './utils/nodeConverter';
+import { loadNodes, saveLastSaveTime, saveNodes } from './utils/nodeStorage';
 
 // 노드 타입 등록
 const nodeTypes: NodeTypes = {
@@ -104,6 +105,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // Refs for cleanup
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const autoSaveIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Toast
   const { toast } = useToast();
@@ -326,14 +328,23 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     [nodes, setNodes],
   );
 
-  // 임시저장 핸들러
+  // 임시저장 핸들러 (localStorage만)
   const handleTempSave = useCallback(() => {
+    if (!roadmapId) {
+      return;
+    }
+
+    // localStorage에 노드와 엣지 저장
+    saveNodes(roadmapId, nodes);
+    saveEdges(roadmapId, edges);
+    saveLastSaveTime(roadmapId);
+
     toast({
-      title: 'Coming Soon',
-      description: 'Temporary save feature is under development',
+      title: 'Temp Saved',
+      description: 'Saved to local storage',
       variant: 'success',
     });
-  }, [toast]);
+  }, [roadmapId, nodes, edges, toast]);
 
   // 저장 핸들러
   const handleSave = useCallback(async () => {
@@ -352,33 +363,103 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // horizonNode만 필터링
       const horizonNodes = nodes.filter((node) => node.type === 'horizonNode');
 
-      // React Flow 노드를 API 형식으로 변환 (전체 배열 전달하여 부모 노드 찾기 가능)
+      // 신규 노드와 기존 노드 분리
+      const newNodes: Node[] = [];
+      const existingNodes: Node[] = [];
+
+      for (const node of horizonNodes) {
+        const nodeId = Number.parseInt(node.id, 10);
+        if (Number.isNaN(nodeId) || nodeId < 0) {
+          // 임시 ID (문자열 또는 음수)는 신규 노드
+          newNodes.push(node);
+        } else {
+          // 양수 정수 ID는 기존 노드
+          existingNodes.push(node);
+        }
+      }
+
+      // React Flow 노드를 API 형식으로 변환
       const apiNodeRequests = reactFlowNodesToApi(nodes);
 
-      // 각 노드 업데이트 (병렬 처리) - Promise.allSettled 사용
-      const results = await Promise.allSettled(
-        horizonNodes.map((node, index) => {
+      // 임시 ID -> 실제 ID 매핑 (신규 노드 생성 후 사용)
+      const idMapping = new Map<string, number>();
+
+      // 1단계: 신규 노드 생성 (순차 처리 - 부모 먼저 생성)
+      const newNodeResults: Array<{ success: boolean; tempId: string; realId?: number }> = [];
+
+      for (const node of newNodes) {
+        const index = horizonNodes.indexOf(node);
+        const apiRequest = apiNodeRequests[index];
+
+        try {
+          const response = await createNodeMutation.mutateAsync(apiRequest);
+          idMapping.set(node.id, response.id);
+          newNodeResults.push({ success: true, tempId: node.id, realId: response.id });
+        } catch (_error) {
+          newNodeResults.push({ success: false, tempId: node.id });
+        }
+      }
+
+      // 2단계: 기존 노드 업데이트 (병렬 처리)
+      const updateResults = await Promise.allSettled(
+        existingNodes.map((node) => {
           const nodeId = Number.parseInt(node.id, 10);
-          if (Number.isNaN(nodeId)) {
-            // 새로 생성된 노드는 임시 ID를 가지므로 스킵 (향후 createNode로 처리)
-            return Promise.resolve({ skipped: true, nodeId: node.id });
-          }
+          const index = horizonNodes.indexOf(node);
           return updateNodeMutation
             .mutateAsync({ nodeId, data: apiNodeRequests[index] })
-            .then((result) => ({ skipped: false, nodeId, result }));
+            .then((result) => ({ success: true, nodeId, result }));
         }),
       );
 
-      // 실패한 노드 확인
-      const failures = results.filter((r) => r.status === 'rejected');
-      const skipped = results.filter(
-        (r) => r.status === 'fulfilled' && (r.value as any).skipped === true,
-      );
+      // 결과 집계
+      const newNodeSuccesses = newNodeResults.filter((r) => r.success).length;
+      const newNodeFailures = newNodeResults.filter((r) => !r.success).length;
+      const updateSuccesses = updateResults.filter((r) => r.status === 'fulfilled').length;
+      const updateFailures = updateResults.filter((r) => r.status === 'rejected').length;
 
-      if (failures.length > 0) {
+      const totalSuccess = newNodeSuccesses + updateSuccesses;
+      const totalFailures = newNodeFailures + updateFailures;
+
+      // 3단계: 임시 ID를 실제 ID로 교체 (노드 + 참조 업데이트)
+      if (idMapping.size > 0) {
+        // 노드 ID 및 parentNode 참조 업데이트
+        setNodes((nds) =>
+          nds.map((node) => {
+            const realId = idMapping.get(node.id);
+            const realParentId = node.parentNode ? idMapping.get(node.parentNode) : undefined;
+
+            return {
+              ...node,
+              id: realId ? String(realId) : node.id,
+              parentNode: realParentId
+                ? String(realParentId)
+                : node.parentNode
+                  ? node.parentNode
+                  : undefined,
+            };
+          }),
+        );
+
+        // 엣지의 source/target 참조 업데이트
+        setEdges((eds) =>
+          eds.map((edge) => {
+            const newSource = idMapping.get(edge.source);
+            const newTarget = idMapping.get(edge.target);
+
+            return {
+              ...edge,
+              source: newSource ? String(newSource) : edge.source,
+              target: newTarget ? String(newTarget) : edge.target,
+            };
+          }),
+        );
+      }
+
+      // 결과에 따라 토스트 표시
+      if (totalFailures > 0) {
         toast({
           title: 'Partial Save',
-          description: `${results.length - failures.length - skipped.length} nodes saved, ${failures.length} failed`,
+          description: `${totalSuccess} nodes saved, ${totalFailures} failed`,
           variant: 'failed',
         });
         setHeaderState('editing');
@@ -386,13 +467,9 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       }
 
       setHeaderState('saved');
-      const savedCount = results.length - skipped.length;
       toast({
         title: 'Success',
-        description:
-          skipped.length > 0
-            ? `${savedCount} nodes saved (${skipped.length} new nodes skipped)`
-            : 'Roadmap saved successfully',
+        description: `${totalSuccess} nodes saved successfully`,
         variant: 'success',
       });
 
@@ -413,13 +490,44 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         variant: 'failed',
       });
     }
-  }, [roadmapId, nodes, updateNodeMutation, toast]);
+  }, [
+    roadmapId,
+    nodes,
+    updateNodeMutation,
+    createNodeMutation,
+    toast,
+    setNodes, // 엣지의 source/target 참조 업데이트
+    setEdges,
+  ]);
+
+  // 30초 자동 임시저장
+  useEffect(() => {
+    if (!roadmapId) {
+      return;
+    }
+
+    // 30초마다 localStorage에 자동 저장
+    autoSaveIntervalRef.current = setInterval(() => {
+      saveNodes(roadmapId, nodes);
+      saveEdges(roadmapId, edges);
+      saveLastSaveTime(roadmapId);
+    }, 30000); // 30초
+
+    return () => {
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
+      }
+    };
+  }, [roadmapId, nodes, edges]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
+      }
+      if (autoSaveIntervalRef.current) {
+        clearInterval(autoSaveIntervalRef.current);
       }
     };
   }, []);
@@ -544,7 +652,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           : nodeType === 'standard'
             ? 'Standard Node'
             : 'Secondary Node';
-      const defaultDescription = nodeType === 'standard' ? '노드의 학습 내용을 작성해주세요.' : '';
+      const defaultDescription = nodeType === 'standard' ? '노드의 학습 내용을 작성해주세요.' : '-';
 
       // API 요청 데이터 생성
       const nodeRequest: NodeRequest = {
@@ -606,13 +714,35 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     [addText],
   );
 
-  // API 노드 로드 시 React Flow 노드로 변환
+  // API 노드 로드 시 React Flow 노드로 변환 (localStorage 우선)
   useEffect(() => {
-    if (apiNodes && apiNodes.length > 0) {
+    // roadmapId가 없거나 apiNodes가 아직 로드되지 않았으면 스킵
+    if (!roadmapId || apiNodes === undefined) {
+      return;
+    }
+
+    // 1순위: localStorage에서 임시저장된 노드 복원
+    const localNodes = loadNodes(roadmapId);
+    if (localNodes && localNodes.length > 0) {
+      setNodes(localNodes);
+      return;
+    }
+
+    // 2순위: API에서 로드한 노드
+    if (apiNodes.length > 0) {
       const reactFlowNodes = apiNodesToReactFlow(apiNodes);
       setNodes(reactFlowNodes);
+    } else {
+      // 서버에 노드가 없으면 빈 배열로 시작
+      setNodes([]);
     }
-  }, [apiNodes, setNodes]);
+    // setNodes는 useNodesState에서 제공하는 안정적인 함수이므로 의존성에서 제외
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    roadmapId,
+    apiNodes, // 서버에 노드가 없으면 빈 배열로 시작
+    setNodes,
+  ]);
 
   // 초기 로드: localStorage에서 Edge 복원
   useEffect(() => {
