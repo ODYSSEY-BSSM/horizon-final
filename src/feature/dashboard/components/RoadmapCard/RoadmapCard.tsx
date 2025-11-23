@@ -1,17 +1,16 @@
 'use client';
 
 import styled from '@emotion/styled';
-import type { RoadmapItem } from '@/feature/dashboard/types/dashboard';
 import { tokens } from '@/shared/tokens';
 import { gradients } from '@/shared/tokens/gradient/gradient';
-import type { RoadmapColor } from '@/shared/types/roadmap';
+import type { RoadmapColor, RoadmapItem } from '@/shared/types';
 import { Icon, Text } from '@/shared/ui';
 
 export interface RoadmapCardProps {
   item: RoadmapItem;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
-  onClick?: () => void;
+  onClick?: (id: string) => void;
   className?: string;
 }
 
@@ -22,7 +21,7 @@ const RoadmapCard = ({ item, onClick, className }: RoadmapCardProps) => {
   };
 
   const handleCardClick = () => {
-    onClick?.();
+    onClick?.(item.id);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRootFolder } from '@/feature/folder/hooks/useFolderQueries';
-import type { RoadmapColor } from '@/shared/types/roadmap';
+import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { mapRoadmapResponseToRoadmapItem } from '@/shared/utils/roadmapMapper';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -15,69 +15,28 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: rootFolder, isLoading } = useRootFolder();
+  const { data: roadmapsData, isLoading } = useRoadmaps();
 
   const roadmaps = useMemo(() => {
-    if (!rootFolder?.directories) {
+    if (!roadmapsData) {
       return [];
     }
 
+    // Convert API response to RoadmapItem format
+    const allRoadmaps = roadmapsData.map(mapRoadmapResponseToRoadmapItem);
+
+    // Filter by folderId if provided
     if (options?.folderId) {
       const folderIdNum = Number(options.folderId);
-      const findDirectory = (dirs: typeof rootFolder.directories, id: number): any => {
-        for (const dir of dirs) {
-          if (dir.id === id) {
-            return dir;
-          }
-          if (dir.directories?.length) {
-            const found = findDirectory(dir.directories, id);
-            if (found) {
-              return found;
-            }
-          }
-        }
-        return null;
-      };
-
-      const targetDir = findDirectory(rootFolder.directories, folderIdNum);
-      const roadmapList = targetDir?.roadmaps || [];
-
-      return roadmapList.map((roadmap: any) => ({
-        id: roadmap.id?.toString() || '',
-        title: roadmap.title || '',
-        icon: 'folder',
-        color: 'blue' as RoadmapColor,
-        category: 'personal' as 'personal' | 'team',
-        steps: 0,
-        status: 'in-progress' as 'completed' | 'in-progress',
-        progress: 0,
-      }));
+      return allRoadmaps.filter((roadmap) => {
+        // Find the roadmap in the original response to get directoryId
+        const originalRoadmap = roadmapsData.find((r) => r.uuid.toString() === roadmap.id);
+        return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
+      });
     }
 
-    const collectAllRoadmaps = (dirs: typeof rootFolder.directories): any[] => {
-      let all: any[] = [];
-      for (const dir of dirs) {
-        all = all.concat(dir.roadmaps || []);
-        if (dir.directories?.length) {
-          all = all.concat(collectAllRoadmaps(dir.directories));
-        }
-      }
-      return all;
-    };
-
-    const allRoadmaps = collectAllRoadmaps(rootFolder.directories);
-
-    return allRoadmaps.map((roadmap: any) => ({
-      id: roadmap.id?.toString() || '',
-      title: roadmap.title || '',
-      icon: 'folder',
-      color: 'blue' as RoadmapColor,
-      category: 'personal' as 'personal' | 'team',
-      steps: 0,
-      status: 'in-progress' as 'completed' | 'in-progress',
-      progress: 0,
-    }));
-  }, [rootFolder, options?.folderId]);
+    return allRoadmaps;
+  }, [roadmapsData, options?.folderId]);
 
   const filteredRoadmaps = useMemo(() => {
     return roadmaps.filter((roadmap: (typeof roadmaps)[0]) => {
