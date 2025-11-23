@@ -67,6 +67,7 @@ export function useCreateRoadmap() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.count() });
+      queryClient.invalidateQueries({ queryKey: folderKeys.root() });
       toast({
         title: '로드맵 생성 완료',
         description: '새로운 로드맵이 성공적으로 생성되었습니다.',
@@ -92,6 +93,7 @@ export function useUpdateRoadmap() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.detail(variables.roadmapUuid) });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: folderKeys.root() });
       toast({
         title: '로드맵 수정 완료',
         description: '로드맵이 성공적으로 수정되었습니다.',
@@ -116,6 +118,7 @@ export function useDeleteRoadmap() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roadmapKeys.count() });
+      queryClient.invalidateQueries({ queryKey: folderKeys.root() });
       toast({
         title: '로드맵 삭제 완료',
         description: '로드맵이 성공적으로 삭제되었습니다.',
@@ -195,6 +198,7 @@ export function useCreateTeamRoadmap(teamId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: roadmapKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
+      queryClient.invalidateQueries({ queryKey: folderKeys.root() });
       toast({
         title: '팀 로드맵 생성 완료',
         description: '새로운 팀 로드맵이 성공적으로 생성되었습니다.',

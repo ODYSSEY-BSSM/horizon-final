@@ -2,7 +2,8 @@ export { default as Button } from './Button/Button';
 export type { ButtonProps } from './Button/Button.types';
 export { default as Divider } from './Divider/Divider';
 export type { DividerProps } from './Divider/Divider.types';
-
+export type { DropdownMenuItem, DropdownProps } from './Dropdown';
+export { Dropdown } from './Dropdown';
 export { default as Icon } from './Icon/Icon';
 export type { IconProps } from './Icon/Icon.types';
 export type {
