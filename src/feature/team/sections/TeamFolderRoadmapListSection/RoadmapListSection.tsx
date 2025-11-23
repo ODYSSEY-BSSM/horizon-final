@@ -29,7 +29,7 @@ const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapList
   const mappedRoadmaps = useMemo(() => roadmaps.map(mapTeamRoadmapToRoadmapItem), [roadmaps]);
 
   const handleRoadmapClick = (roadmapId: string) => {
-    router.push(`/roadmap/${roadmapId}`);
+    router.push(`/editor/${roadmapId}`);
   };
 
   return (
