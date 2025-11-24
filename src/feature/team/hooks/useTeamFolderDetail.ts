@@ -64,7 +64,6 @@ const useFolderDetail = (teamId: string, folderId: string) => {
           return roadmap.status === 'completed';
         case 'inProgress':
           return roadmap.status === 'in-progress';
-        case 'all':
         default:
           return true;
       }

@@ -84,7 +84,7 @@ const StyledMenu = styled.div<{ $align: 'left' | 'right' }>`
   box-shadow: ${tokens.shadow[0]};
   min-width: 120px;
   padding: ${tokens.spacing.xsmall};
-  z-index: 1000;
+  z-index: 10000;
 `;
 
 const StyledMenuItem = styled.button<{ $variant: 'default' | 'danger' }>`
