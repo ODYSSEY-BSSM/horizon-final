@@ -17,19 +17,19 @@ export const StandardNode = ({ data, selected }: StandardNodeProps) => {
   const isSchoolNode = data.isSchoolNode ?? false;
 
   const handleStyle = {
-    opacity: selected ? 1 : 0,
-    width: '1px',
-    height: '1px',
-    minWidth: '1px',
-    minHeight: '1px',
-    border: 'none',
-    background: 'transparent',
+    width: '2.5px',
+    height: '2.5px',
+    minWidth: '2.5px',
+    minHeight: '2.5px',
+    border: `0.3px solid ${tokens.colors.white}`,
+    background: tokens.colors.black,
+    opacity: 1,
   };
 
-  const topHandleStyle = { ...handleStyle, top: '0px' };
-  const bottomHandleStyle = { ...handleStyle, bottom: '0px' };
-  const leftHandleStyle = { ...handleStyle, left: '0px' };
-  const rightHandleStyle = { ...handleStyle, right: '0px' };
+  const topHandleStyle = { ...handleStyle, top: '-1.25px' };
+  const bottomHandleStyle = { ...handleStyle, bottom: '-1.25px' };
+  const leftHandleStyle = { ...handleStyle, left: '-1.25px' };
+  const rightHandleStyle = { ...handleStyle, right: '-1.25px' };
 
   return (
     <StyledContainer $borderColor={colorTheme.border}>
