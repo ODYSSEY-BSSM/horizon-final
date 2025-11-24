@@ -16,6 +16,7 @@ const RoadmapListItem = ({ roadmap, onClick, showActions = true }: RoadmapListIt
   const { openEditModal } = useRoadmapFormStore();
   const deleteMutation = useDeleteRoadmap();
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isRightSectionHovered, setIsRightSectionHovered] = useState(false);
 
   const handleEdit = () => {
     const roadmapUuid = Number.parseInt(roadmap.id, 10);
@@ -66,7 +67,7 @@ const RoadmapListItem = ({ roadmap, onClick, showActions = true }: RoadmapListIt
 
   return (
     <>
-      <StyledContainer onClick={handleClick}>
+      <StyledContainer onClick={handleClick} $disableHover={isRightSectionHovered}>
         <StyledLeftSection>
           <StyledIconBox $bgColor={colors.bg}>
             <Icon name={roadmap.icon} variant="SM" filled color={colors.icon} decorative />
@@ -94,7 +95,11 @@ const RoadmapListItem = ({ roadmap, onClick, showActions = true }: RoadmapListIt
             </StyledMetaData>
           </StyledInfoSection>
         </StyledLeftSection>
-        <StyledRightSection onClick={(e) => e.stopPropagation()}>
+        <StyledRightSection
+          onClick={(e) => e.stopPropagation()}
+          onMouseEnter={() => setIsRightSectionHovered(true)}
+          onMouseLeave={() => setIsRightSectionHovered(false)}
+        >
           <StyledProgressContainer>
             <Text variant="B2" color={tokens.colors.neutral[600]}>
               {roadmap.progress}%
@@ -145,7 +150,7 @@ const RoadmapListItem = ({ roadmap, onClick, showActions = true }: RoadmapListIt
 
 export default RoadmapListItem;
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ $disableHover?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -156,7 +161,7 @@ const StyledContainer = styled.div`
   transition: background-color 0.2s;
 
   &:hover {
-    background: ${tokens.colors.neutral[100]};
+    background: ${({ $disableHover }) => ($disableHover ? tokens.colors.white : tokens.colors.neutral[100])};
   }
 
   &:last-child {
