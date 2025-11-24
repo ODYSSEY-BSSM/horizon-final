@@ -6,14 +6,19 @@ export interface DirectoryCreateRequest {
 export interface SimpleDirectoryResponse {
   id?: number;
   name?: string;
+  description?: string;
+  roadmaps?: SimpleRoadmapResponse[];
+  roadmapCount?: number;
 }
 
 export interface DirectoryResponse {
   id?: number;
   name?: string;
   parentId?: number;
+  description?: string;
   directories?: SimpleDirectoryResponse[];
   roadmaps?: SimpleRoadmapResponse[];
+  roadmapCount?: number;
 }
 
 export interface SimpleRoadmapResponse {

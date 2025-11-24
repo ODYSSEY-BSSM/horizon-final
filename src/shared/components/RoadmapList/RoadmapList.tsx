@@ -172,7 +172,7 @@ const StyledContainer = styled.div`
   width: 100%;
   border: 1px solid ${tokens.colors.neutral[100]};
   border-radius: ${tokens.radius.large};
-  overflow: hidden;
+  overflow: visible;
   background-color: ${tokens.colors.white};
 `;
 
@@ -221,6 +221,7 @@ const StyledContentSection = styled.div`
   gap: ${tokens.spacing.xlarge};
   padding: ${tokens.spacing.xlarge};
   background-color: ${tokens.colors.white};
+  overflow: visible;
 `;
 
 const StyledRoadmapList = styled.div`
@@ -228,6 +229,7 @@ const StyledRoadmapList = styled.div`
   flex-direction: column;
   gap: 16px;
   max-height: 944px;
+  overflow: visible;
 `;
 
 const StyledThumbnailGrid = styled.div`

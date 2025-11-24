@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { mapTeamRoadmapToRoadmapItem, useTeamFolderDetail } from '@/feature/team';
 import { RoadmapList } from '@/shared/components/RoadmapList';
-import { TEAM_FOLDER_FILTER_TABS } from '@/shared/constants/filterTabs';
+import { FOLDER_STATUS_TABS } from '@/shared/constants/filterTabs';
 
 interface RoadmapListSectionProps {
   teamId: string;
@@ -38,7 +38,7 @@ const RoadmapListSection = ({ teamId, folderId, onAddRoadmapClick }: RoadmapList
       viewMode={viewMode}
       onViewModeChange={setViewMode}
       showViewToggle
-      filterTabs={TEAM_FOLDER_FILTER_TABS}
+      filterTabs={FOLDER_STATUS_TABS}
       activeFilter={activeFilter}
       onFilterChange={setActiveFilter}
       showFilterTabs

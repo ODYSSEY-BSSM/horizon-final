@@ -26,16 +26,22 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
     const allRoadmaps = roadmapsData.map(mapRoadmapResponseToRoadmapItem);
 
     // Filter by folderId if provided
+    let filteredRoadmaps = allRoadmaps;
     if (options?.folderId) {
       const folderIdNum = Number(options.folderId);
-      return allRoadmaps.filter((roadmap) => {
+      filteredRoadmaps = allRoadmaps.filter((roadmap) => {
         // Find the roadmap in the original response to get directoryId
         const originalRoadmap = roadmapsData.find((r) => r.uuid.toString() === roadmap.id);
         return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
       });
     }
 
-    return allRoadmaps;
+    // Deduplicate by ID to prevent duplicate key errors in React
+    const uniqueRoadmaps = Array.from(
+      new Map(filteredRoadmaps.map((roadmap) => [roadmap.id, roadmap])).values(),
+    );
+
+    return uniqueRoadmaps;
   }, [roadmapsData, options?.folderId]);
 
   const filteredRoadmaps = useMemo(() => {

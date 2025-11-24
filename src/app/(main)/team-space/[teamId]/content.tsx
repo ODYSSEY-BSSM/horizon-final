@@ -59,17 +59,22 @@ const TeamFoldersContent = () => {
       return [];
     }
 
-    return teamRootFolder.directories.map((directory: DirectoryResponse) => ({
-      id: (directory.id ?? 0).toString(),
-      name: directory.name ?? '',
-      teamId: teamId,
-      description: '',
-      color: 'blue',
-      icon: 'folder',
-      roadmapCount: directory.roadmaps?.length || 0,
-      createdRoadmapCount: directory.roadmaps?.length || 0,
-      progress: 0,
-    }));
+    return teamRootFolder.directories.map((directory: DirectoryResponse) => {
+      // roadmapCount 필드 우선 사용, 없으면 roadmaps 배열 길이 사용
+      const roadmapCount = directory.roadmapCount ?? directory.roadmaps?.length ?? 0;
+
+      return {
+        id: (directory.id ?? 0).toString(),
+        name: directory.name ?? '',
+        teamId: teamId,
+        description: '',
+        color: 'blue',
+        icon: 'folder',
+        roadmapCount,
+        createdRoadmapCount: roadmapCount,
+        progress: 0,
+      };
+    });
   }, [teamRootFolder, teamId]);
 
   const handleAddFolder = () => {

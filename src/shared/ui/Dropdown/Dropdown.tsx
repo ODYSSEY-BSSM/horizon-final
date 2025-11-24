@@ -43,7 +43,7 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
   };
 
   return (
-    <StyledDropdownContainer ref={dropdownRef}>
+    <StyledDropdownContainer ref={dropdownRef} $isOpen={isOpen}>
       <StyledTrigger onClick={() => setIsOpen(!isOpen)}>{trigger}</StyledTrigger>
       {isOpen && (
         <StyledMenu $align={align}>
@@ -65,9 +65,10 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
 
 export default Dropdown;
 
-const StyledDropdownContainer = styled.div`
+const StyledDropdownContainer = styled.div<{ $isOpen?: boolean }>`
   position: relative;
   display: inline-block;
+  z-index: ${({ $isOpen }) => ($isOpen ? 9999 : 1)};
 `;
 
 const StyledTrigger = styled.div`
@@ -84,7 +85,7 @@ const StyledMenu = styled.div<{ $align: 'left' | 'right' }>`
   box-shadow: ${tokens.shadow[0]};
   min-width: 120px;
   padding: ${tokens.spacing.xsmall};
-  z-index: 1000;
+  z-index: 10000;
 `;
 
 const StyledMenuItem = styled.button<{ $variant: 'default' | 'danger' }>`
