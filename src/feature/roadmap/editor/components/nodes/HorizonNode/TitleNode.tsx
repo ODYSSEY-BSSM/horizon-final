@@ -16,15 +16,26 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
 
   const handleStyle = {
     opacity: selected ? 1 : 0,
+    width: '1px',
+    height: '1px',
+    minWidth: '1px',
+    minHeight: '1px',
+    border: 'none',
+    background: 'transparent',
   };
+
+  const topHandleStyle = { ...handleStyle, top: '0px' };
+  const bottomHandleStyle = { ...handleStyle, bottom: '0px' };
+  const leftHandleStyle = { ...handleStyle, left: '0px' };
+  const rightHandleStyle = { ...handleStyle, right: '0px' };
 
   return (
     <StyledContainer $backgroundColor={colorTheme.primary}>
       {/* 4방향 핸들 */}
-      <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
-      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
-      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
+      <Handle type="target" position={Position.Top} id="top" style={topHandleStyle} />
+      <Handle type="source" position={Position.Right} id="right" style={rightHandleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={bottomHandleStyle} />
+      <Handle type="target" position={Position.Left} id="left" style={leftHandleStyle} />
 
       {/* 타이틀 텍스트 */}
       <StyledTitle $color={colorTheme.primary}>{data.label}</StyledTitle>
