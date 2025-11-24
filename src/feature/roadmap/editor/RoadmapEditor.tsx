@@ -782,35 +782,39 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     [addText],
   );
 
-  // API 노드 로드 시 React Flow 노드로 변환 (localStorage 우선)
+  // API 노드 로드 시 React Flow 노드로 변환 (서버 데이터 우선)
   useEffect(() => {
+    console.log('🔍 Node loading effect triggered', { roadmapId, apiNodes });
+
     // roadmapId가 없거나 apiNodes가 아직 로드되지 않았으면 스킵
     if (!roadmapId || apiNodes === undefined) {
+      console.log('⏭️ Skipping: roadmapId or apiNodes undefined');
       return;
     }
 
-    // 1순위: localStorage에서 임시저장된 노드 복원
-    const localNodes = loadNodes(roadmapId);
-    if (localNodes && localNodes.length > 0) {
-      setNodes(localNodes);
-      return;
-    }
-
-    // 2순위: API에서 로드한 노드
+    // 서버 데이터 우선: API에서 로드한 노드
+    console.log('🌐 API nodes count:', apiNodes.length);
     if (apiNodes.length > 0) {
       const reactFlowNodes = apiNodesToReactFlow(apiNodes);
+      console.log('✅ Converted API nodes to ReactFlow:', reactFlowNodes);
       setNodes(reactFlowNodes);
+      // localStorage도 동기화
+      saveNodes(roadmapId, reactFlowNodes);
     } else {
-      // 서버에 노드가 없으면 빈 배열로 시작
-      setNodes([]);
+      // 서버에 노드가 없으면 localStorage 확인
+      const localNodes = loadNodes(roadmapId);
+      console.log('💾 localStorage nodes:', localNodes);
+      if (localNodes && localNodes.length > 0) {
+        console.log('✅ Using localStorage nodes (no server data)');
+        setNodes(localNodes);
+      } else {
+        console.log('⚠️ No nodes from API or localStorage, setting empty array');
+        setNodes([]);
+      }
     }
     // setNodes는 useNodesState에서 제공하는 안정적인 함수이므로 의존성에서 제외
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    roadmapId,
-    apiNodes, // 서버에 노드가 없으면 빈 배열로 시작
-    setNodes,
-  ]);
+  }, [roadmapId, apiNodes, setNodes]);
 
   // 초기 로드: localStorage에서 Edge 복원
   useEffect(() => {
