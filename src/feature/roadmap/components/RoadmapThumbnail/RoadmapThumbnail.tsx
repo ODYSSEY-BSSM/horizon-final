@@ -20,7 +20,7 @@ const RoadmapThumbnail = ({ color, icon, status }: RoadmapThumbnailProps) => {
     <StyledThumbnail $gradient={tokens.gradients.roadmap[color]}>
       {status && (
         <StyledStatusBadge>
-          <Text variant="O_M_11" color={tokens.colors.white}>
+          <Text variant="C" color={tokens.colors.white}>
             {statusLabel}
           </Text>
         </StyledStatusBadge>

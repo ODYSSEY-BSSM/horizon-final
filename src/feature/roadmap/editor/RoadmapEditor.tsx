@@ -34,7 +34,7 @@ import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
 import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
-import type { NodeRequest } from './types/api.types';
+import type { ApiColor, ApiNodeType, NodeRequest, NodeResponse } from './types/api.types';
 import type { NodeType } from './types/node.types';
 import { loadEdges, saveEdges } from './utils/edgeStorage';
 import {
@@ -121,8 +121,27 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // WebSocket handlers for real-time synchronization
   const handleNodeCreated = useCallback(
     (nodeData: RoadmapNodeMessage) => {
+      // Convert WebSocket message to NodeResponse format
+      const nodeResponse: NodeResponse = {
+        id: nodeData.id,
+        title: nodeData.title,
+        description: nodeData.description,
+        height: nodeData.height,
+        width: nodeData.width,
+        type: nodeData.type as ApiNodeType,
+        x: nodeData.x,
+        y: nodeData.y,
+        color: 'blue' as ApiColor, // Default color
+        roadmapId: nodeData.roadmapId,
+        parentNodeId: nodeData.parentNodeId ?? 0,
+        childNode: [],
+        progress: 0,
+        isEducation: false,
+        subject: '',
+      };
+
       // Convert API node to ReactFlow node and add it to the canvas
-      const newNode = apiToReactFlow(nodeData);
+      const newNode = apiToReactFlow(nodeResponse, apiNodes || []);
       setNodes((nds) => {
         // Check if node already exists to avoid duplicates
         if (nds.some((n) => n.id === newNode.id)) {
@@ -131,7 +150,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         return [...nds, newNode];
       });
     },
-    [setNodes],
+    [setNodes, apiNodes],
   );
 
   const handleNodeDeleted = useCallback(

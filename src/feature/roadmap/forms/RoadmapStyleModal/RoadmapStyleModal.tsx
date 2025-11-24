@@ -112,7 +112,7 @@ const RoadmapStyleModal = ({ isOpen, onClose, onSubmit, onBack }: RoadmapStyleMo
                   if (e.key === 'Enter' && highlightedColorIndex !== -1) {
                     setFormData((prev) => ({
                       ...prev,
-                      color: COLOR_OPTIONS[highlightedColorIndex].value,
+                      color: COLOR_OPTIONS[highlightedColorIndex].value as ColorOption,
                     }));
                     setColorDropdownOpen(false);
                   }
@@ -158,7 +158,7 @@ const RoadmapStyleModal = ({ isOpen, onClose, onSubmit, onBack }: RoadmapStyleMo
                         $color={option.color}
                         $selected={formData.color === option.value}
                         onClick={() => {
-                          setFormData((prev) => ({ ...prev, color: option.value }));
+                          setFormData((prev) => ({ ...prev, color: option.value as ColorOption }));
                           setColorDropdownOpen(false);
                         }}
                         $highlighted={highlightedColorIndex === index}
@@ -194,7 +194,7 @@ const RoadmapStyleModal = ({ isOpen, onClose, onSubmit, onBack }: RoadmapStyleMo
                   if (e.key === 'Enter' && highlightedIconIndex !== -1) {
                     setFormData((prev) => ({
                       ...prev,
-                      icon: ICON_OPTIONS[highlightedIconIndex].value,
+                      icon: ICON_OPTIONS[highlightedIconIndex].value as IconOption,
                     }));
                     setIconDropdownOpen(false);
                   }
@@ -253,7 +253,7 @@ const RoadmapStyleModal = ({ isOpen, onClose, onSubmit, onBack }: RoadmapStyleMo
                         id={`icon-option-${option.id}`}
                         $selected={formData.icon === option.value}
                         onClick={() => {
-                          setFormData((prev) => ({ ...prev, icon: option.value }));
+                          setFormData((prev) => ({ ...prev, icon: option.value as IconOption }));
                           setIconDropdownOpen(false);
                         }}
                         $highlighted={highlightedIconIndex === index}
