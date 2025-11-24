@@ -54,6 +54,7 @@ const StyledFilterTab = styled.div<{ $active?: boolean }>`
     height: 2px;
     background-color: ${tokens.colors.primary[500]};
     display: ${({ $active }) => ($active ? 'block' : 'none')};
+    z-index: 1;
   }
 `;
 

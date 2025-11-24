@@ -60,14 +60,11 @@ const useFolderDetail = (teamId: string, folderId: string) => {
   const filteredRoadmaps = useMemo(() => {
     return allRoadmaps.filter((roadmap: Roadmap) => {
       switch (activeFilter) {
-        case 'my':
-          return roadmap.type === 'personal';
-        case 'team':
-          return roadmap.type === 'team';
         case 'completed':
           return roadmap.status === 'completed';
         case 'inProgress':
           return roadmap.status === 'in-progress';
+        case 'all':
         default:
           return true;
       }
