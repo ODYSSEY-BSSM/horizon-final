@@ -206,6 +206,8 @@ const StyledRightSection = styled.div`
   display: flex;
   align-items: center;
   gap: ${tokens.spacing.small};
+  position: relative;
+  z-index: 10;
 `;
 
 const StyledProgressContainer = styled.div`

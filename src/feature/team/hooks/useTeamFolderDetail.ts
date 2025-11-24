@@ -30,7 +30,7 @@ const useFolderDetail = (teamId: string, folderId: string) => {
     });
 
     // Convert RoadmapItem to Roadmap (team-specific type)
-    return filteredItems.map((item) => {
+    const roadmaps = filteredItems.map((item) => {
       const originalRoadmap = teamRoadmapsData.find((r) => r.uuid.toString() === item.id);
       // Map 'not-started' to 'in-progress' for team Roadmap type
       const status = item.status === 'not-started' ? 'in-progress' : item.status;
@@ -48,6 +48,13 @@ const useFolderDetail = (teamId: string, folderId: string) => {
         progress: item.progress,
       };
     });
+
+    // Deduplicate by ID to prevent duplicate key errors in React
+    const uniqueRoadmaps = Array.from(
+      new Map(roadmaps.map((roadmap) => [roadmap.id, roadmap])).values(),
+    );
+
+    return uniqueRoadmaps;
   }, [teamRoadmapsData, folderId]);
 
   const filteredRoadmaps = useMemo(() => {
