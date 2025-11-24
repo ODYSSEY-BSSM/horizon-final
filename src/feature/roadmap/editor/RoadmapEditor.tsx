@@ -18,8 +18,10 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
+import type { DeleteMessage, RoadmapNodeMessage } from '@/shared/api/stompTypes';
 import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
+import { useRoadmapNodesWebSocket } from '../hooks/useRoadmapNodesWebSocket';
 import { useCreateNode, useDeleteNode, useNodes, useUpdateNode } from './api/nodeApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
@@ -116,6 +118,38 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const createNodeMutation = useCreateNode(roadmapId);
   const deleteNodeMutation = useDeleteNode(roadmapId);
 
+  // WebSocket handlers for real-time synchronization
+  const handleNodeCreated = useCallback(
+    (nodeData: RoadmapNodeMessage) => {
+      // Convert API node to ReactFlow node and add it to the canvas
+      const newNode = apiToReactFlow(nodeData);
+      setNodes((nds) => {
+        // Check if node already exists to avoid duplicates
+        if (nds.some((n) => n.id === newNode.id)) {
+          return nds;
+        }
+        return [...nds, newNode];
+      });
+    },
+    [setNodes],
+  );
+
+  const handleNodeDeleted = useCallback(
+    (nodeId: DeleteMessage) => {
+      // Remove node from canvas when deleted by another user or process
+      setNodes((nds) => nds.filter((n) => n.id !== String(nodeId)));
+    },
+    [setNodes],
+  );
+
+  // WebSocket integration for real-time node synchronization
+  useRoadmapNodesWebSocket({
+    roadmapId,
+    onCreated: handleNodeCreated,
+    onDeleted: handleNodeDeleted,
+    autoSubscribe: true,
+  });
+
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
 
@@ -193,31 +227,46 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // horizonNode만 API 호출 (섹션과 텍스트는 로컬에서만 삭제)
       const horizonNodesToDelete = deletedNodes.filter((node) => node.type === 'horizonNode');
 
-      // API 호출 (병렬 처리)
+      // API 호출 (병렬 처리) with 404 handling
       if (roadmapId && horizonNodesToDelete.length > 0) {
-        try {
-          await Promise.all(
-            horizonNodesToDelete.map((node) => {
-              const nodeId = Number.parseInt(node.id, 10);
-              // 서버에 존재하는 정수 ID(양수)만 삭제
-              if (!Number.isNaN(nodeId) && nodeId > 0) {
-                return deleteNodeMutation.mutateAsync(nodeId);
+        const deleteResults = await Promise.allSettled(
+          horizonNodesToDelete.map(async (node) => {
+            const nodeId = Number.parseInt(node.id, 10);
+            // 서버에 존재하는 정수 ID(양수)만 삭제
+            if (!Number.isNaN(nodeId) && nodeId > 0) {
+              try {
+                return await deleteNodeMutation.mutateAsync(nodeId);
+              } catch (error) {
+                // 404 errors are expected if node was already deleted - ignore them
+                if (error instanceof Error && error.message.includes('404')) {
+                  return { alreadyDeleted: true };
+                }
+                throw error;
               }
-              // 임시/로컬 ID는 서버 호출 없이 스킵
-              return Promise.resolve();
-            }),
-          );
+            }
+            // 임시/로컬 ID는 서버 호출 없이 스킵
+            return Promise.resolve();
+          }),
+        );
 
+        const failures = deleteResults.filter(
+          (result) =>
+            result.status === 'rejected' ||
+            (result.status === 'fulfilled' && result.value?.alreadyDeleted),
+        );
+        const successCount = deleteResults.length - failures.length;
+
+        if (failures.length === 0) {
           toast({
             title: 'Success',
-            description: `${horizonNodesToDelete.length} node(s) deleted`,
+            description: `${successCount} node(s) deleted`,
             variant: 'success',
           });
-        } catch (error) {
+        } else if (successCount > 0) {
           toast({
-            title: 'Error',
-            description: error instanceof Error ? error.message : 'Failed to delete some nodes',
-            variant: 'failed',
+            title: 'Partial Success',
+            description: `${successCount} node(s) deleted, ${failures.length} already removed`,
+            variant: 'success',
           });
         }
       }

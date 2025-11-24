@@ -31,7 +31,8 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
     }
 
     return rootFolder.directories.map((folder) => {
-      const roadmapCount = folder.roadmaps?.length || 0;
+      // roadmapCount 필드 우선 사용, 없으면 roadmaps 배열 길이 사용
+      const roadmapCount = folder.roadmapCount ?? folder.roadmaps?.length ?? 0;
       // SimpleRoadmapResponse에 progress 정보가 없으므로 완료된 로드맵을 계산할 수 없음
       const completedCount = 0;
       // 진행률 = (완료된 로드맵 수 / 전체 로드맵 수) * 100
