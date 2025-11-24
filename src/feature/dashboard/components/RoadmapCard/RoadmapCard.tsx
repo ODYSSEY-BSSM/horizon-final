@@ -126,11 +126,11 @@ export const StyledProgressBadge = styled.div<{ status: RoadmapItem['status'] }>
   position: absolute;
   top: ${tokens.spacing.small};
   right: ${tokens.spacing.small};
-  padding: ${tokens.spacing.xxsmall} ${tokens.spacing.xsmall};
   background-color: rgba(255, 255, 255, 0.2);
-  border-radius: ${tokens.radius.small};
+  border-radius: 14px;
   display: inline-flex;
   padding: 2px 8px;
+  backdrop-filter: blur(4px);
 `;
 
 export const StyledContent = styled.div`
