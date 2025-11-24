@@ -3,13 +3,24 @@ import { useUserProfile } from '@/feature/auth/hooks/useSignIn';
 import { useRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { useAllTeamRoadmaps, useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/types';
+import { useTeams } from '@/feature/team/hooks/useTeamQueries';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
 export const useDashboardData = () => {
   const { data: userProfile, isLoading: isLoadingUser, error: userError } = useUserProfile();
 
-  // teams는 이제 string[] (팀 이름 배열)이므로 teamIds를 빈 배열로 설정
-  const teamIds = useMemo(() => [] as number[], []);
+  // 전체 팀 목록 가져오기
+  const { data: teams, isLoading: isLoadingTeams } = useTeams();
+
+  // 유저가 속한 팀의 ID만 추출
+  const teamIds = useMemo(() => {
+    if (!teams || !userProfile?.teams) {
+      return [];
+    }
+    // userProfile.teams는 팀 이름 배열, teams는 TeamInfo[] (id, name)
+    // 유저가 속한 팀의 이름과 매칭되는 팀 ID만 추출
+    return teams.filter((team) => userProfile.teams.includes(team.name)).map((team) => team.id);
+  }, [teams, userProfile?.teams]);
 
   const {
     data: personalRoadmaps,
@@ -114,7 +125,12 @@ export const useDashboardData = () => {
   return {
     userData,
     roadmapsData: roadmaps,
-    isLoading: isLoadingUser || isLoadingPersonal || isLoadingTeamRoadmaps || isLoadingFolder,
+    isLoading:
+      isLoadingUser ||
+      isLoadingPersonal ||
+      isLoadingTeams ||
+      isLoadingTeamRoadmaps ||
+      isLoadingFolder,
     error: userError || personalError || teamError,
   };
 };
