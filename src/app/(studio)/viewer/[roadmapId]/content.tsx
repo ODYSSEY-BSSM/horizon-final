@@ -5,6 +5,7 @@ import { ReactFlowProvider } from 'reactflow';
 import { useNodes } from '@/feature/roadmap/editor/api/nodeApi';
 import { loadEdges } from '@/feature/roadmap/editor/utils/edgeStorage';
 import { apiNodesToReactFlow } from '@/feature/roadmap/editor/utils/nodeConverter';
+import { useRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { RoadmapViewer } from '@/feature/roadmap/viewer';
 
 interface ViewerContentProps {
@@ -13,6 +14,9 @@ interface ViewerContentProps {
 
 export function ViewerContent({ roadmapId }: ViewerContentProps) {
   const router = useRouter();
+
+  // API 연동: 로드맵 정보 조회
+  const { data: roadmapData } = useRoadmap(roadmapId);
 
   // Editor와 같은 API 사용
   const { data: apiNodes, isLoading, error } = useNodes(roadmapId);
@@ -90,7 +94,7 @@ export function ViewerContent({ roadmapId }: ViewerContentProps) {
     <ReactFlowProvider>
       <RoadmapViewer
         roadmapId={roadmapId.toString()}
-        roadmapTitle={`Roadmap ${roadmapId}`}
+        roadmapTitle={roadmapData?.roadmapInfo?.title || 'Roadmap'}
         nodes={nodes}
         edges={edges}
         onEditClick={handleEditClick}

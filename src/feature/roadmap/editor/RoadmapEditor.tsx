@@ -89,14 +89,6 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // API 연동: 로드맵 정보 조회
   const { data: roadmapData } = useRoadmap(roadmapId);
 
-  // 디버깅: 로드맵 데이터 확인
-  useEffect(() => {
-    if (roadmapData) {
-      console.log('Roadmap Data:', roadmapData);
-      console.log('Roadmap Title:', roadmapData.roadmapInfo?.title);
-    }
-  }, [roadmapData]);
-
   // API 연동: 노드 목록 조회
   const { data: apiNodes, isLoading, isError } = useNodes(roadmapId);
   const updateNodeMutation = useUpdateNode(roadmapId);
