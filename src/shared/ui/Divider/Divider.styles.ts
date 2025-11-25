@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { colors } from '@/shared/tokens/color/color';
-import { spacing } from '@/shared/tokens/spacing/spacing';
 import { BLOCKED_PROPS } from './Divider.constants';
 import type { StyledDividerProps } from './Divider.types';
 

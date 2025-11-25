@@ -30,7 +30,7 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
   const rightHandleStyle = { ...handleStyle, right: '-1.25px' };
 
   return (
-    <StyledContainer $backgroundColor={colorTheme.primary}>
+    <StyledContainer $backgroundColor={colorTheme.primary} $isSelected={selected}>
       {/* 4방향 핸들 */}
       <Handle type="target" position={Position.Top} id="top" style={topHandleStyle} />
       <Handle type="source" position={Position.Right} id="right" style={rightHandleStyle} />
@@ -43,7 +43,7 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
   );
 };
 
-const StyledContainer = styled.div<{ $backgroundColor: string }>`
+const StyledContainer = styled.div<{ $backgroundColor: string; $isSelected?: boolean }>`
   position: relative;
   z-index: 1;
   width: 93px;
@@ -55,7 +55,11 @@ const StyledContainer = styled.div<{ $backgroundColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: ${(props) => (props.$isSelected ? tokens.shadow[2] : 'none')};
   cursor: grab;
+  outline: ${(props) => (props.$isSelected ? `2px solid ${tokens.colors.primary}` : 'none')};
+  outline-offset: 2px;
+  transition: box-shadow 0.2s ease, outline 0.2s ease;
 
   &:active {
     cursor: grabbing;

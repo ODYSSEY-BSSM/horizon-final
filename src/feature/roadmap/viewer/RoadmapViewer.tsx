@@ -40,13 +40,11 @@ export const RoadmapViewer = ({
   // WebSocket integration for real-time node synchronization (read-only)
   useRoadmapNodesWebSocket({
     roadmapId: Number(roadmapId),
-    onCreated: useCallback((nodeData: RoadmapNodeMessage) => {
-      console.log('Node created in viewer:', nodeData);
+    onCreated: useCallback((_nodeData: RoadmapNodeMessage) => {
       // TODO: Add node to canvas in real-time
       // For now, viewer will refetch on next load
     }, []),
-    onDeleted: useCallback((nodeId: NodeDeleteMessage) => {
-      console.log('Node deleted in viewer:', nodeId);
+    onDeleted: useCallback((_nodeId: NodeDeleteMessage) => {
       // TODO: Remove node from canvas in real-time
       // For now, viewer will refetch on next load
     }, []),

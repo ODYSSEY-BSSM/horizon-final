@@ -69,8 +69,8 @@ export class StompWebSocketClient {
       try {
         const data = JSON.parse(message.body) as T;
         handler(data);
-      } catch (_error) {
-        // 메시지 파싱에 실패한 경우 무시
+      } catch (error) {
+        this.emitEvent('error', { destination, error });
       }
     });
 

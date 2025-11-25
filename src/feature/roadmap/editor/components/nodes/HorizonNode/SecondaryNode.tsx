@@ -32,7 +32,7 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
   const rightHandleStyle = { ...handleStyle, right: '-1.25px' };
 
   return (
-    <StyledContainer $borderColor={colorTheme.border}>
+    <StyledContainer $borderColor={colorTheme.border} $isSelected={selected}>
       {/* 4방향 핸들 */}
       <Handle type="target" position={Position.Top} id="top" style={topHandleStyle} />
       <Handle type="source" position={Position.Right} id="right" style={rightHandleStyle} />
@@ -53,7 +53,7 @@ export const SecondaryNode = ({ data, selected }: SecondaryNodeProps) => {
   );
 };
 
-const StyledContainer = styled.div<{ $borderColor: string }>`
+const StyledContainer = styled.div<{ $borderColor: string; $isSelected?: boolean }>`
   position: relative;
   z-index: 1;
   width: 93px;
@@ -64,8 +64,11 @@ const StyledContainer = styled.div<{ $borderColor: string }>`
   display: flex;
   flex-direction: column;
   gap: 3px;
-  box-shadow: ${tokens.shadow[0]};
+  box-shadow: ${(props) => (props.$isSelected ? tokens.shadow[2] : tokens.shadow[0])};
   cursor: grab;
+  outline: ${(props) => (props.$isSelected ? `2px solid ${tokens.colors.primary}` : 'none')};
+  outline-offset: 2px;
+  transition: box-shadow 0.2s ease, outline 0.2s ease;
 
   &:active {
     cursor: grabbing;

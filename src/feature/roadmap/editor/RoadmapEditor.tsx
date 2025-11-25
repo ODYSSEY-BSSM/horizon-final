@@ -165,9 +165,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // WebSocket integration for real-time cursor sharing
   useCursorWebSocket({
     roadmapId,
-    onCursorMove: useCallback((cursor: CursorReceiveMessage) => {
-      // TODO: Display other users' cursor positions on canvas
-      console.log('Cursor moved:', cursor);
+    onCursorMove: useCallback((_cursor: CursorReceiveMessage) => {
+      // TODO: 커서 렌더링 구현 필요
     }, []),
     autoSubscribe: true,
   });
@@ -175,20 +174,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // WebSocket integration for real-time section synchronization
   useSectionWebSocket({
     roadmapId,
-    onCreated: useCallback((section: SectionMessage['section']) => {
-      // Add section to canvas when created by another user
-      console.log('Section created:', section);
+    onCreated: useCallback((_section: SectionMessage['section']) => {
       // TODO: Convert section to ReactFlow node and add to canvas
     }, []),
-    onUpdated: useCallback((update: SectionUpdateMessage) => {
-      // Update section on canvas when modified by another user
-      console.log('Section updated:', update);
+    onUpdated: useCallback((_update: SectionUpdateMessage) => {
       // TODO: Update section node on canvas
     }, []),
     onDeleted: useCallback(
       (sectionId: SectionDeleteMessage) => {
-        // Remove section from canvas when deleted by another user
-        console.log('Section deleted:', sectionId);
         setNodes((nds) => nds.filter((n) => n.id !== String(sectionId)));
       },
       [setNodes],
@@ -199,20 +192,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // WebSocket integration for real-time text synchronization
   useTextWebSocket({
     roadmapId,
-    onCreated: useCallback((text: TextMessage['texts']) => {
-      // Add text to canvas when created by another user
-      console.log('Text created:', text);
+    onCreated: useCallback((_text: TextMessage['texts']) => {
       // TODO: Convert text to ReactFlow node and add to canvas
     }, []),
-    onUpdated: useCallback((update: TextUpdateMessage) => {
-      // Update text on canvas when modified by another user
-      console.log('Text updated:', update);
+    onUpdated: useCallback((_update: TextUpdateMessage) => {
       // TODO: Update text node on canvas
     }, []),
     onDeleted: useCallback(
       (textId: TextDeleteMessage) => {
-        // Remove text from canvas when deleted by another user
-        console.log('Text deleted:', textId);
         setNodes((nds) => nds.filter((n) => n.id !== String(textId)));
       },
       [setNodes],

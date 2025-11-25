@@ -1,3 +1,4 @@
+import { ApiError } from './errors';
 import type { ApiResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
@@ -90,7 +91,7 @@ class ApiClient {
       if (refreshed) {
         return this.request<T>(method, endpoint, data, options);
       }
-      throw new Error('Authentication failed');
+      throw new ApiError(401, 'AUTH_REQUIRED', 'Authentication failed');
     }
 
     if (response.status === 204) {
@@ -105,7 +106,12 @@ class ApiClient {
     const result: ApiResponse<T> = await response.json();
 
     if (!response.ok || result.code !== 'OK') {
-      throw new Error(result.message || 'Request failed');
+      throw new ApiError(
+        response.status,
+        result.code || 'UNKNOWN_ERROR',
+        result.message || 'Request failed',
+        result.data,
+      );
     }
 
     return result.data;
@@ -167,14 +173,18 @@ class ApiClient {
       });
 
       if (!response.ok) {
-        throw new Error('Token refresh failed');
+        throw new ApiError(response.status, 'TOKEN_REFRESH_FAILED', 'Token refresh failed');
       }
 
       const result: ApiResponse<{ accessToken: string; refreshToken: string }> =
         await response.json();
 
       if (result.code !== 'OK') {
-        throw new Error(result.message || 'Token refresh failed');
+        throw new ApiError(
+          response.status,
+          result.code || 'TOKEN_REFRESH_FAILED',
+          result.message || 'Token refresh failed',
+        );
       }
 
       const newAccessToken = result.data.accessToken;

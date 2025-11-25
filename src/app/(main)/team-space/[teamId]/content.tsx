@@ -56,7 +56,6 @@ const TeamFoldersContent = () => {
     teamId: Number(teamId),
     onCreated: useCallback(
       (directory: TeamDirectoryMessage) => {
-        console.log('Directory created:', directory);
         toast({
           title: '디렉토리 생성',
           description: `${directory.name} 디렉토리가 생성되었습니다.`,
@@ -68,7 +67,6 @@ const TeamFoldersContent = () => {
     ),
     onUpdated: useCallback(
       (directory: TeamDirectoryMessage) => {
-        console.log('Directory updated:', directory);
         toast({
           title: '디렉토리 수정',
           description: `${directory.name} 디렉토리가 수정되었습니다.`,
@@ -79,8 +77,7 @@ const TeamFoldersContent = () => {
       [toast, refetchRootFolder],
     ),
     onDeleted: useCallback(
-      (directoryId: DirectoryDeleteMessage) => {
-        console.log('Directory deleted:', directoryId);
+      (_directoryId: DirectoryDeleteMessage) => {
         toast({
           title: '디렉토리 삭제',
           description: '디렉토리가 삭제되었습니다.',
@@ -98,7 +95,6 @@ const TeamFoldersContent = () => {
     teamId: Number(teamId),
     onCreated: useCallback(
       (roadmap: RoadmapMessage['roadmap']) => {
-        console.log('Team roadmap created:', roadmap);
         toast({
           title: '로드맵 생성',
           description: `${roadmap.title} 로드맵이 생성되었습니다.`,
@@ -110,7 +106,6 @@ const TeamFoldersContent = () => {
     ),
     onUpdated: useCallback(
       (roadmap: RoadmapMessage['roadmap']) => {
-        console.log('Team roadmap updated:', roadmap);
         toast({
           title: '로드맵 수정',
           description: `${roadmap.title} 로드맵이 수정되었습니다.`,
@@ -121,8 +116,7 @@ const TeamFoldersContent = () => {
       [toast, refetchRootFolder],
     ),
     onDeleted: useCallback(
-      (roadmapId: number) => {
-        console.log('Team roadmap deleted:', roadmapId);
+      (_roadmapId: number) => {
         toast({
           title: '로드맵 삭제',
           description: '로드맵이 삭제되었습니다.',
