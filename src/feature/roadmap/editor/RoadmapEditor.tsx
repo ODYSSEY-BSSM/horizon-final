@@ -22,6 +22,7 @@ import type { DeleteMessage, RoadmapNodeMessage } from '@/shared/api/stompTypes'
 import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 import { useRoadmapNodesWebSocket } from '../hooks/useRoadmapNodesWebSocket';
+import { useRoadmap } from '../hooks/useRoadmapQueries';
 import { useCreateNode, useDeleteNode, useNodes, useUpdateNode } from './api/nodeApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
@@ -84,6 +85,9 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // Toast
   const { toast } = useToast();
+
+  // API 연동: 로드맵 정보 조회
+  const { data: roadmapData } = useRoadmap(roadmapId);
 
   // API 연동: 노드 목록 조회
   const { data: apiNodes, isLoading, isError } = useNodes(roadmapId);
@@ -870,7 +874,12 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       />
 
       {/* 헤더 */}
-      <EditorHeader state={headerState} onTempSave={handleTempSave} onSave={handleSave} />
+      <EditorHeader
+        state={headerState}
+        roadmapTitle={roadmapData?.roadmapInfo?.title || 'Roadmap'}
+        onTempSave={handleTempSave}
+        onSave={handleSave}
+      />
 
       {/* 히스토리 컨트롤러 */}
       <StyledHistoryController>
