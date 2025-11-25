@@ -18,10 +18,25 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import type { DeleteMessage, RoadmapNodeMessage } from '@/shared/api/stompTypes';
+import {
+  useCursorWebSocket,
+  useRoadmapNodesWebSocket,
+  useSectionWebSocket,
+  useTextWebSocket,
+} from '@/feature/roadmap';
+import type {
+  CursorReceiveMessage,
+  NodeDeleteMessage,
+  RoadmapNodeMessage,
+  SectionDeleteMessage,
+  SectionMessage,
+  SectionUpdateMessage,
+  TextDeleteMessage,
+  TextMessage,
+  TextUpdateMessage,
+} from '@/shared/api';
 import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
-import { useRoadmapNodesWebSocket } from '../hooks/useRoadmapNodesWebSocket';
 import { useRoadmap } from '../hooks/useRoadmapQueries';
 import { useCreateNode, useDeleteNode, useNodes, useUpdateNode } from './api/nodeApi';
 import { HorizonEdge } from './components/edges';
@@ -109,7 +124,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           type: nodeData.type as ApiNodeType,
           x: nodeData.x,
           y: nodeData.y,
-          color: (nodeData.color as ApiColor) || ('blue' as ApiColor),
+          color: 'blue' as ApiColor, // Default color since WebSocket message doesn't include it
           roadmapId: nodeData.roadmapId,
           parentNodeId: nodeData.parentNodeId ?? 0,
           childNode: [],
@@ -132,7 +147,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   );
 
   const handleNodeDeleted = useCallback(
-    (nodeId: DeleteMessage) => {
+    (nodeId: NodeDeleteMessage) => {
       // Remove node from canvas when deleted by another user or process
       setNodes((nds) => nds.filter((n) => n.id !== String(nodeId)));
     },
@@ -144,6 +159,64 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     roadmapId,
     onCreated: handleNodeCreated,
     onDeleted: handleNodeDeleted,
+    autoSubscribe: true,
+  });
+
+  // WebSocket integration for real-time cursor sharing
+  useCursorWebSocket({
+    roadmapId,
+    onCursorMove: useCallback((cursor: CursorReceiveMessage) => {
+      // TODO: Display other users' cursor positions on canvas
+      console.log('Cursor moved:', cursor);
+    }, []),
+    autoSubscribe: true,
+  });
+
+  // WebSocket integration for real-time section synchronization
+  useSectionWebSocket({
+    roadmapId,
+    onCreated: useCallback((section: SectionMessage['section']) => {
+      // Add section to canvas when created by another user
+      console.log('Section created:', section);
+      // TODO: Convert section to ReactFlow node and add to canvas
+    }, []),
+    onUpdated: useCallback((update: SectionUpdateMessage) => {
+      // Update section on canvas when modified by another user
+      console.log('Section updated:', update);
+      // TODO: Update section node on canvas
+    }, []),
+    onDeleted: useCallback(
+      (sectionId: SectionDeleteMessage) => {
+        // Remove section from canvas when deleted by another user
+        console.log('Section deleted:', sectionId);
+        setNodes((nds) => nds.filter((n) => n.id !== String(sectionId)));
+      },
+      [setNodes],
+    ),
+    autoSubscribe: true,
+  });
+
+  // WebSocket integration for real-time text synchronization
+  useTextWebSocket({
+    roadmapId,
+    onCreated: useCallback((text: TextMessage['texts']) => {
+      // Add text to canvas when created by another user
+      console.log('Text created:', text);
+      // TODO: Convert text to ReactFlow node and add to canvas
+    }, []),
+    onUpdated: useCallback((update: TextUpdateMessage) => {
+      // Update text on canvas when modified by another user
+      console.log('Text updated:', update);
+      // TODO: Update text node on canvas
+    }, []),
+    onDeleted: useCallback(
+      (textId: TextDeleteMessage) => {
+        // Remove text from canvas when deleted by another user
+        console.log('Text deleted:', textId);
+        setNodes((nds) => nds.filter((n) => n.id !== String(textId)));
+      },
+      [setNodes],
+    ),
     autoSubscribe: true,
   });
 

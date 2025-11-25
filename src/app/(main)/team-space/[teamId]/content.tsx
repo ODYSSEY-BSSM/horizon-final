@@ -2,13 +2,21 @@
 
 import styled from '@emotion/styled';
 import { notFound, useParams, useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import type { DirectoryResponse } from '@/feature/folder/types';
-import { FolderGrid, InviteTeamModal, TeamDropdown } from '@/feature/team';
+import {
+  FolderGrid,
+  InviteTeamModal,
+  TeamDropdown,
+  useTeamDirectoryWebSocket,
+  useTeamRoadmapWebSocket,
+} from '@/feature/team';
 import { useTeam, useTeams } from '@/feature/team/hooks/useTeamQueries';
 import type { TeamFolder } from '@/feature/team/types/team';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
+import type { DirectoryDeleteMessage, RoadmapMessage, TeamDirectoryMessage } from '@/shared/api';
+import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 import { Button, FormModal } from '@/shared/ui';
 
@@ -40,7 +48,92 @@ const TeamFoldersContent = () => {
     : null;
 
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
-  const { data: teamRootFolder } = useTeamRootFolder(Number(teamId));
+  const { data: teamRootFolder, refetch: refetchRootFolder } = useTeamRootFolder(Number(teamId));
+  const { toast } = useToast();
+
+  // WebSocket integration for real-time directory synchronization
+  useTeamDirectoryWebSocket({
+    teamId: Number(teamId),
+    onCreated: useCallback(
+      (directory: TeamDirectoryMessage) => {
+        console.log('Directory created:', directory);
+        toast({
+          title: '디렉토리 생성',
+          description: `${directory.name} 디렉토리가 생성되었습니다.`,
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    onUpdated: useCallback(
+      (directory: TeamDirectoryMessage) => {
+        console.log('Directory updated:', directory);
+        toast({
+          title: '디렉토리 수정',
+          description: `${directory.name} 디렉토리가 수정되었습니다.`,
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    onDeleted: useCallback(
+      (directoryId: DirectoryDeleteMessage) => {
+        console.log('Directory deleted:', directoryId);
+        toast({
+          title: '디렉토리 삭제',
+          description: '디렉토리가 삭제되었습니다.',
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    autoSubscribe: true,
+  });
+
+  // WebSocket integration for real-time roadmap synchronization
+  useTeamRoadmapWebSocket({
+    teamId: Number(teamId),
+    onCreated: useCallback(
+      (roadmap: RoadmapMessage['roadmap']) => {
+        console.log('Team roadmap created:', roadmap);
+        toast({
+          title: '로드맵 생성',
+          description: `${roadmap.title} 로드맵이 생성되었습니다.`,
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    onUpdated: useCallback(
+      (roadmap: RoadmapMessage['roadmap']) => {
+        console.log('Team roadmap updated:', roadmap);
+        toast({
+          title: '로드맵 수정',
+          description: `${roadmap.title} 로드맵이 수정되었습니다.`,
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    onDeleted: useCallback(
+      (roadmapId: number) => {
+        console.log('Team roadmap deleted:', roadmapId);
+        toast({
+          title: '로드맵 삭제',
+          description: '로드맵이 삭제되었습니다.',
+          variant: 'success',
+        });
+        refetchRootFolder();
+      },
+      [toast, refetchRootFolder],
+    ),
+    autoSubscribe: true,
+  });
 
   const teamsList = useMemo(
     () =>

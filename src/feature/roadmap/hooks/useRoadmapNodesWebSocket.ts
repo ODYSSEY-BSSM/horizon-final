@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { DeleteMessage, NodeUpdateMessage, RoadmapNodeMessage } from '@/shared/api/stompTypes';
+import type { NodeDeleteMessage, NodeUpdateMessage, RoadmapNodeMessage } from '@/shared/api';
 import { useStompWebSocket } from '@/shared/hooks/useStompWebSocket';
 
 export interface UseRoadmapNodesWebSocketOptions {
@@ -7,7 +7,7 @@ export interface UseRoadmapNodesWebSocketOptions {
 
   onCreated?: (node: RoadmapNodeMessage) => void;
 
-  onUpdated?: (nodeId: number, updates: NodeUpdateMessage) => void;
+  onUpdated?: (update: NodeUpdateMessage) => void;
 
   onDeleted?: (nodeId: number) => void;
 
@@ -15,7 +15,7 @@ export interface UseRoadmapNodesWebSocketOptions {
 }
 
 export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOptions) {
-  const { roadmapId, onCreated, onDeleted, autoSubscribe = true } = options;
+  const { roadmapId, onCreated, onUpdated, onDeleted, autoSubscribe = true } = options;
 
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { isConnected, subscribe, unsubscribe, send } = useStompWebSocket();
@@ -27,8 +27,15 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     [onCreated],
   );
 
+  const handleUpdated = useCallback(
+    (update: NodeUpdateMessage) => {
+      onUpdated?.(update);
+    },
+    [onUpdated],
+  );
+
   const handleDeleted = useCallback(
-    (nodeId: DeleteMessage) => {
+    (nodeId: NodeDeleteMessage) => {
       onDeleted?.(nodeId);
     },
     [onDeleted],
@@ -40,48 +47,40 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
     }
 
     const createdTopic = `/topic/node/roadmap/${roadmapId}/created`;
+    const updatedTopic = `/topic/node/roadmap/${roadmapId}/updated`;
     const deletedTopic = `/topic/node/roadmap/${roadmapId}/deleted`;
 
     subscribe(createdTopic, handleCreated);
+    subscribe(updatedTopic, handleUpdated);
     subscribe(deletedTopic, handleDeleted);
 
     setIsSubscribed(true);
 
     return () => {
       unsubscribe(createdTopic);
+      unsubscribe(updatedTopic);
       unsubscribe(deletedTopic);
       setIsSubscribed(false);
     };
-  }, [isConnected, autoSubscribe, roadmapId, subscribe, unsubscribe, handleCreated, handleDeleted]);
-
-  const subscribeNodeUpdate = useCallback(
-    (nodeId: number, handler: (updates: NodeUpdateMessage) => void) => {
-      if (!isConnected) {
-        return;
-      }
-
-      const updateTopic = `/topic/roadmap/${roadmapId}/nodes/${nodeId}`;
-      subscribe(updateTopic, handler);
-    },
-    [isConnected, roadmapId, subscribe],
-  );
-
-  const unsubscribeNodeUpdate = useCallback(
-    (nodeId: number) => {
-      const updateTopic = `/topic/roadmap/${roadmapId}/nodes/${nodeId}`;
-      unsubscribe(updateTopic);
-    },
-    [roadmapId, unsubscribe],
-  );
+  }, [
+    isConnected,
+    autoSubscribe,
+    roadmapId,
+    subscribe,
+    unsubscribe,
+    handleCreated,
+    handleUpdated,
+    handleDeleted,
+  ]);
 
   const sendNodeUpdate = useCallback(
-    (nodeId: number, updates: NodeUpdateMessage) => {
+    (nodeId: number, data: NodeUpdateMessage['data']) => {
       if (!isConnected) {
         return;
       }
 
-      const destination = `/app/roadmap/${roadmapId}/nodes/${nodeId}`;
-      send(destination, updates);
+      const destination = `/app/node/${nodeId}/roadmap/${roadmapId}/updated`;
+      send(destination, { id: nodeId, data });
     },
     [isConnected, roadmapId, send],
   );
@@ -89,8 +88,6 @@ export function useRoadmapNodesWebSocket(options: UseRoadmapNodesWebSocketOption
   return {
     isConnected,
     isSubscribed,
-    subscribeNodeUpdate,
-    unsubscribeNodeUpdate,
     sendNodeUpdate,
   };
 }
