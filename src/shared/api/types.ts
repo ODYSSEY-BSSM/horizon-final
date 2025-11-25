@@ -138,3 +138,152 @@ export enum UserRole {
   USER = 'USER',
   ADMIN = 'ADMIN',
 }
+
+// ============================================
+// WebSocket Message Types
+// ============================================
+
+// Team Directory Messages
+export interface TeamDirectoryMessage {
+  id: number;
+  name: string;
+  teamId: number;
+  roadmaps: unknown[];
+}
+
+export type DirectoryDeleteMessage = number; // Deleted directory ID
+
+// Roadmap Node Messages
+export interface RoadmapNodeMessage {
+  id: number;
+  title: string;
+  description: string;
+  height: number;
+  width: number;
+  type: NodeType;
+  x: number;
+  y: number;
+  category: string;
+  roadmapId: number;
+  parentNodeId: number | null;
+  childNode: unknown[];
+}
+
+export interface NodeUpdateMessage {
+  id: number;
+  data: {
+    title: string;
+    description: string;
+    height: number;
+    width: number;
+    type: NodeType;
+    x: number;
+    y: number;
+    color: Color;
+  };
+}
+
+export type NodeDeleteMessage = number; // Deleted node ID
+
+// Cursor Messages
+export interface CursorSendMessage {
+  x: number;
+  y: number;
+}
+
+export interface CursorReceiveMessage {
+  userId: number;
+  userName: string;
+  x: number;
+  y: number;
+}
+
+// Section Messages
+export interface SectionNode {
+  id: number;
+  title: string;
+  description: string;
+  problemCount: number;
+  solverProblemCount: number;
+}
+
+export interface SectionMessage {
+  section: {
+    id: number;
+    name: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    nodes: SectionNode[];
+  };
+}
+
+export interface SectionUpdateMessage {
+  id: number;
+  data: {
+    name: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    nodeIds: number[];
+  };
+}
+
+export type SectionDeleteMessage = number; // Deleted section ID
+
+// Text Messages
+export enum TextType {
+  NORMAL = 'NORMAL',
+}
+
+export interface TextMessage {
+  texts: {
+    id: number;
+    text: string;
+    type: TextType;
+    roadmapId: number;
+    sectionId: number | null;
+  };
+}
+
+export interface TextUpdateMessage {
+  id: number;
+  data: {
+    text: string;
+    type: TextType;
+    sectionId: number | null;
+  };
+}
+
+export type TextDeleteMessage = number; // Deleted text ID
+
+// Roadmap Messages
+export interface RoadmapMessage {
+  roadmap: {
+    id: number;
+    title: string;
+    description: string;
+    color: Color;
+    icon: Icon;
+    isFavorite: boolean;
+    directoryId: number | null;
+    teamId: number;
+  };
+}
+
+export interface RoadmapUpdateMessage {
+  roadmap: {
+    id: number;
+    title: string;
+    description: string;
+    color: Color;
+    icon: Icon;
+    isFavorite: boolean;
+    directoryId: number | null;
+    teamId: number;
+  };
+}
+
+export type RoadmapDeleteMessage = number; // Deleted roadmap ID

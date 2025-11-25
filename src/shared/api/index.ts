@@ -1,19 +1,28 @@
 export { apiClient } from './client';
 export { ApiError } from './errors';
+export type { StompMessageHandler } from './stompWebSocket';
+export { destroyStompClient, getStompClient, StompWebSocketClient } from './stompWebSocket';
 export type {
+  ApiErrorResponse,
+  ApiResponse,
   CursorReceiveMessage,
   CursorSendMessage,
-  DeleteMessage,
-  NodeCategory,
-  NodeType as WsNodeType,
+  DirectoryDeleteMessage,
+  NodeDeleteMessage,
   NodeUpdateMessage,
+  PaginatedResponse,
+  RoadmapDeleteMessage,
+  RoadmapMessage,
   RoadmapNodeMessage,
+  RoadmapUpdateMessage,
+  SectionDeleteMessage,
+  SectionMessage,
+  SectionUpdateMessage,
   TeamDirectoryMessage,
-} from './stompTypes';
-export type { StompMessageHandler } from './stompWebSocket';
-
-export { destroyStompClient, getStompClient, StompWebSocketClient } from './stompWebSocket';
-export type { ApiErrorResponse, ApiResponse, PaginatedResponse } from './types';
+  TextDeleteMessage,
+  TextMessage,
+  TextUpdateMessage,
+} from './types';
 export {
   Color,
   ColorHexMap,

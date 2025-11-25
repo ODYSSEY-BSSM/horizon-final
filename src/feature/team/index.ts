@@ -15,6 +15,8 @@ export type { UseTeamDirectoryWebSocketOptions } from './hooks/useTeamDirectoryW
 export { useTeamDirectoryWebSocket } from './hooks/useTeamDirectoryWebSocket';
 export { useTeamFolderDetail } from './hooks/useTeamFolderDetail';
 export { useTeams } from './hooks/useTeamQueries';
+export type { UseTeamRoadmapWebSocketOptions } from './hooks/useTeamRoadmapWebSocket';
+export { useTeamRoadmapWebSocket } from './hooks/useTeamRoadmapWebSocket';
 
 export { TeamFolderRoadmapListSection } from './sections/TeamFolderRoadmapListSection';
 export { TeamSpaceHeader } from './sections/TeamSpaceHeader';

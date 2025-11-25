@@ -3,6 +3,8 @@
 import styled from '@emotion/styled';
 import { useCallback, useState } from 'react';
 import type { Node } from 'reactflow';
+import { useRoadmapNodesWebSocket } from '@/feature/roadmap';
+import type { NodeDeleteMessage, RoadmapNodeMessage } from '@/shared/api';
 import { ViewerCanvas } from './components/ViewerCanvas';
 import { ViewerHeader } from './components/ViewerHeader';
 import { type ViewerNodeType, ViewerSidebar } from './components/ViewerSidebar';
@@ -26,6 +28,7 @@ interface SelectedNodeData {
 }
 
 export const RoadmapViewer = ({
+  roadmapId,
   roadmapTitle,
   nodes,
   edges,
@@ -33,6 +36,22 @@ export const RoadmapViewer = ({
   showEditButton = true,
 }: RoadmapViewerProps) => {
   const [selectedNodeData, setSelectedNodeData] = useState<SelectedNodeData | null>(null);
+
+  // WebSocket integration for real-time node synchronization (read-only)
+  useRoadmapNodesWebSocket({
+    roadmapId: Number(roadmapId),
+    onCreated: useCallback((nodeData: RoadmapNodeMessage) => {
+      console.log('Node created in viewer:', nodeData);
+      // TODO: Add node to canvas in real-time
+      // For now, viewer will refetch on next load
+    }, []),
+    onDeleted: useCallback((nodeId: NodeDeleteMessage) => {
+      console.log('Node deleted in viewer:', nodeId);
+      // TODO: Remove node from canvas in real-time
+      // For now, viewer will refetch on next load
+    }, []),
+    autoSubscribe: true,
+  });
 
   const handleNodeClick = useCallback(
     (node: Node) => {
