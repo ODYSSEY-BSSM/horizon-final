@@ -21,6 +21,7 @@ export interface RoadmapNodeMessage {
   roadmapId: number;
   parentNodeId: number | null;
   childNode: unknown[];
+  color?: string;
 }
 
 export interface NodeUpdateMessage {

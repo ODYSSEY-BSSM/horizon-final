@@ -136,14 +136,13 @@ export const ViewerSidebar = ({
           <StyledSectionTitle>
             확인 문제 진행도: {quizProgress.current}/{quizProgress.total}
           </StyledSectionTitle>
-          <Button
+          <StyledFullWidthButton
             variant={quizProgress.allSolved ? 'outlined' : 'contained'}
             size="large"
-            fullWidth
             onClick={onQuizClick}
           >
             {quizProgress.allSolved ? '문제 다시 풀기' : '확인 문제 풀기'}
-          </Button>
+          </StyledFullWidthButton>
         </StyledQuizSection>
       )}
     </StyledSidebar>
@@ -335,4 +334,8 @@ const StyledProgressFill = styled.div<{ $progress: number }>`
   background-color: #2666dc;
   border-radius: 4px;
   transition: width 0.3s ease;
+`;
+
+const StyledFullWidthButton = styled(Button)`
+  width: 100%;
 `;
