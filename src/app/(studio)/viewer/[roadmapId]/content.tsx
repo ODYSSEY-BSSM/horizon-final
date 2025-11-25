@@ -25,7 +25,7 @@ export function ViewerContent({ roadmapId }: ViewerContentProps) {
 
   const handleEditClick = () => {
     // Editor로 이동
-    router.push(`/editor/${roadmapId}`);
+    router.push(`/viewer/${roadmapId}`);
   };
 
   if (isLoading) {

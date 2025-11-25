@@ -59,41 +59,14 @@ const edgeTypes: EdgeTypes = {
   horizonEdge: HorizonEdge,
 };
 
-// 초기 노드 데이터 (예시)
-const initialNodes: Node[] = [
-  {
-    id: '1',
-    type: 'horizonNode',
-    position: { x: 250, y: 200 },
-    data: {
-      type: 'title' as const,
-      label: 'Roadmap Title',
-      color: 'blue' as const,
-      isSchoolNode: false,
-    },
-    style: { zIndex: 1 },
-  },
-  {
-    id: '2',
-    type: 'horizonNode',
-    position: { x: 250, y: 320 },
-    data: {
-      type: 'standard' as const,
-      title: 'Standard Node',
-      description: '노드 설명을 입력하세요',
-      color: 'blue' as const,
-      progress: 50,
-      isSchoolNode: false,
-    },
-    style: { zIndex: 1 },
-  },
-];
-
+// 초기 노드 데이터 (서버에서 로드)
+const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 // 상수 정의
 const HISTORY_DEBOUNCE_MS = 500;
 const SAVE_SUCCESS_DISPLAY_MS = 3000;
+const AUTO_SAVE_INTERVAL_MS = 30000;
 
 interface RoadmapEditorProps {
   roadmapId: number;
@@ -121,28 +94,29 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // WebSocket handlers for real-time synchronization
   const handleNodeCreated = useCallback(
     (nodeData: RoadmapNodeMessage) => {
-      // Convert WebSocket message to NodeResponse format
-      const nodeResponse: NodeResponse = {
-        id: nodeData.id,
-        title: nodeData.title,
-        description: nodeData.description,
-        height: nodeData.height,
-        width: nodeData.width,
-        type: nodeData.type as ApiNodeType,
-        x: nodeData.x,
-        y: nodeData.y,
-        color: 'blue' as ApiColor, // Default color
-        roadmapId: nodeData.roadmapId,
-        parentNodeId: nodeData.parentNodeId ?? 0,
-        childNode: [],
-        progress: 0,
-        isEducation: false,
-        subject: '',
-      };
-
-      // Convert API node to ReactFlow node and add it to the canvas
-      const newNode = apiToReactFlow(nodeResponse, apiNodes || []);
       setNodes((nds) => {
+        // Convert WebSocket message to NodeResponse format
+        const nodeResponse: NodeResponse = {
+          id: nodeData.id,
+          title: nodeData.title,
+          description: nodeData.description,
+          height: nodeData.height,
+          width: nodeData.width,
+          type: nodeData.type as ApiNodeType,
+          x: nodeData.x,
+          y: nodeData.y,
+          color: (nodeData.color as ApiColor) || ('blue' as ApiColor),
+          roadmapId: nodeData.roadmapId,
+          parentNodeId: nodeData.parentNodeId ?? 0,
+          childNode: [],
+          progress: 0,
+          isEducation: false,
+          subject: '',
+        };
+
+        // Convert API node to ReactFlow node and add it to the canvas
+        const newNode = apiToReactFlow(nodeResponse, apiNodes || []);
+
         // Check if node already exists to avoid duplicates
         if (nds.some((n) => n.id === newNode.id)) {
           return nds;
@@ -277,14 +251,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
         if (failures.length === 0) {
           toast({
-            title: 'Success',
-            description: `${successCount} node(s) deleted`,
+            title: '성공',
+            description: `${successCount}개의 노드가 삭제되었습니다`,
             variant: 'success',
           });
         } else if (successCount > 0) {
           toast({
-            title: 'Partial Success',
-            description: `${successCount} node(s) deleted, ${failures.length} already removed`,
+            title: '일부 성공',
+            description: `${successCount}개 삭제됨, ${failures.length}개는 이미 제거됨`,
             variant: 'success',
           });
         }
@@ -408,8 +382,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     saveLastSaveTime(roadmapId);
 
     toast({
-      title: 'Temp Saved',
-      description: 'Saved to local storage',
+      title: '임시 저장',
+      description: '로컬 스토리지에 저장되었습니다',
       variant: 'success',
     });
   }, [roadmapId, nodes, edges, toast]);
@@ -418,8 +392,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const handleSave = useCallback(async () => {
     if (!roadmapId) {
       toast({
-        title: 'Error',
-        description: 'Roadmap ID is required',
+        title: '오류',
+        description: '로드맵 ID가 필요합니다',
         variant: 'failed',
       });
       return;
@@ -526,8 +500,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       // 결과에 따라 토스트 표시
       if (totalFailures > 0) {
         toast({
-          title: 'Partial Save',
-          description: `${totalSuccess} nodes saved, ${totalFailures} failed`,
+          title: '일부 저장',
+          description: `${totalSuccess}개 저장됨, ${totalFailures}개 실패`,
           variant: 'failed',
         });
         setHeaderState('editing');
@@ -536,8 +510,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
       setHeaderState('saved');
       toast({
-        title: 'Success',
-        description: `${totalSuccess} nodes saved successfully`,
+        title: '성공',
+        description: `${totalSuccess}개의 노드가 저장되었습니다`,
         variant: 'success',
       });
 
@@ -553,8 +527,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     } catch (error) {
       setHeaderState('editing');
       toast({
-        title: 'Save failed',
-        description: error instanceof Error ? error.message : 'Failed to save roadmap',
+        title: '저장 실패',
+        description: error instanceof Error ? error.message : '로드맵 저장에 실패했습니다',
         variant: 'failed',
       });
     }
@@ -568,7 +542,15 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     setEdges,
   ]);
 
-  // 30초 자동 임시저장
+  // 30초 자동 임시저장 (최적화: ref를 사용해 최신 값 참조)
+  const nodesRef = useRef(nodes);
+  const edgesRef = useRef(edges);
+
+  useEffect(() => {
+    nodesRef.current = nodes;
+    edgesRef.current = edges;
+  }, [nodes, edges]);
+
   useEffect(() => {
     if (!roadmapId) {
       return;
@@ -576,21 +558,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
     // 30초마다 localStorage에 자동 저장
     autoSaveIntervalRef.current = setInterval(() => {
-      saveNodes(roadmapId, nodes);
-      saveEdges(roadmapId, edges);
+      saveNodes(roadmapId, nodesRef.current);
+      saveEdges(roadmapId, edgesRef.current);
       saveLastSaveTime(roadmapId);
-    }, 30000); // 30초
+    }, AUTO_SAVE_INTERVAL_MS);
 
     return () => {
-      if (autoSaveIntervalRef.current) {
-        clearInterval(autoSaveIntervalRef.current);
-      }
-    };
-  }, [roadmapId, nodes, edges]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
+      // Cleanup: timeout과 interval 정리
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
@@ -598,7 +572,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         clearInterval(autoSaveIntervalRef.current);
       }
     };
-  }, []);
+  }, [roadmapId]);
 
   // selectedNodeId와 React Flow의 선택 상태 동기화 (최적화)
   useEffect(() => {
@@ -638,26 +612,50 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
             // horizonNode에만 타입 전환 로직 적용 (텍스트/섹션 노드는 단순 필드 변경)
             if (node.type === 'horizonNode') {
               const newType = value as NodeType;
-              const currentData = node.data as any;
+              const currentData = node.data;
 
               // 타입별 필수 필드 설정
-              const newData: any = {
+              const newData = {
                 type: newType,
-                color: currentData.color || 'blue',
-                isSchoolNode: currentData.isSchoolNode ?? false,
+                color: ('color' in currentData ? currentData.color : 'blue') as ApiColor,
+                isSchoolNode: ('isSchoolNode' in currentData
+                  ? currentData.isSchoolNode
+                  : false) as boolean,
               };
 
               if (newType === 'title') {
                 // title 노드는 label 필드 사용
-                newData.label = currentData.label || currentData.title || 'New Title';
-              } else if (newType === 'standard' || newType === 'secondary') {
-                // standard/secondary 노드는 title, description 필드 사용
-                newData.title = currentData.title || currentData.label || 'New Node';
-                newData.description = currentData.description || '';
-                newData.progress = currentData.progress || 0;
+                return {
+                  ...node,
+                  data: {
+                    ...newData,
+                    label: ('label' in currentData
+                      ? currentData.label
+                      : 'title' in currentData
+                        ? currentData.title
+                        : 'New Title') as string,
+                  },
+                };
               }
 
-              return { ...node, data: newData };
+              if (newType === 'standard' || newType === 'secondary') {
+                // standard/secondary 노드는 title, description 필드 사용
+                return {
+                  ...node,
+                  data: {
+                    ...newData,
+                    title: ('title' in currentData
+                      ? currentData.title
+                      : 'label' in currentData
+                        ? currentData.label
+                        : 'New Node') as string,
+                    description: ('description' in currentData
+                      ? currentData.description
+                      : '') as string,
+                    progress: ('progress' in currentData ? currentData.progress : 0) as number,
+                  },
+                };
+              }
             }
 
             // 텍스트/섹션 노드는 type만 변경 (기존 데이터 보존)
@@ -704,8 +702,8 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
       if (!apiNodes) {
         toast({
-          title: 'Error',
-          description: 'Roadmap data is not loaded yet',
+          title: '오류',
+          description: '로드맵 데이터가 아직 로드되지 않았습니다',
           variant: 'failed',
         });
         return;
@@ -745,14 +743,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         setNodes((nds) => [...nds, newNode]);
 
         toast({
-          title: 'Success',
-          description: 'Node created successfully',
+          title: '성공',
+          description: '노드가 생성되었습니다',
           variant: 'success',
         });
       } catch (error) {
         toast({
-          title: 'Error',
-          description: error instanceof Error ? error.message : 'Failed to create node',
+          title: '오류',
+          description: error instanceof Error ? error.message : '노드 생성에 실패했습니다',
           variant: 'failed',
         });
       }
