@@ -2,6 +2,7 @@ export { apiClient } from './client';
 export { ApiError } from './errors';
 export type { StompMessageHandler } from './stompWebSocket';
 export { destroyStompClient, getStompClient, StompWebSocketClient } from './stompWebSocket';
+export { tokenStore } from './tokenStore';
 export type {
   ApiErrorResponse,
   ApiResponse,

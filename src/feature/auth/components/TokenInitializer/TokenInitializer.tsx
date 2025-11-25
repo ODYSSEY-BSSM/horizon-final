@@ -2,8 +2,7 @@
 
 import { useEffect } from 'react';
 import { authApi } from '@/feature/auth/api/authApi';
-import { tokenStore } from '@/feature/auth/store/tokenStore';
-import { apiClient } from '@/shared/api';
+import { apiClient, tokenStore } from '@/shared/api';
 
 export function TokenInitializer() {
   useEffect(() => {

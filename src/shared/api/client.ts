@@ -1,4 +1,5 @@
 import { ApiError } from './errors';
+import { tokenStore } from './tokenStore';
 import type { ApiResponse } from './types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
@@ -18,9 +19,6 @@ class ApiClient {
   }
 
   private getTokenStore() {
-    // Lazy import to avoid circular dependency
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { tokenStore } = require('@/feature/auth');
     return tokenStore;
   }
 

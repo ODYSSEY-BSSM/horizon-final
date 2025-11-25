@@ -20,7 +20,6 @@ export { UsernameStep } from './steps/UsernameStep';
 export { VerificationStep } from './steps/VerificationStep';
 
 export { useSignupFlow } from './store/signupFlow';
-export { tokenStore } from './store/tokenStore';
 
 export type {
   DeleteUserRequest,

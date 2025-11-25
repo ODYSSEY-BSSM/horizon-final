@@ -1,5 +1,5 @@
 import { Client, type IFrame, type IMessage, type StompSubscription } from '@stomp/stompjs';
-import { tokenStore } from '@/feature/auth';
+import { tokenStore } from './tokenStore';
 
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080';
 const WS_ENDPOINT = '/ws';
