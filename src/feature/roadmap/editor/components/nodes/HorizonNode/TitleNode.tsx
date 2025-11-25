@@ -15,16 +15,27 @@ export const TitleNode = ({ data, selected }: TitleNodeProps) => {
   const colorTheme = getNodeColor(data.color);
 
   const handleStyle = {
-    opacity: selected ? 1 : 0,
+    width: '2.5px',
+    height: '2.5px',
+    minWidth: '2.5px',
+    minHeight: '2.5px',
+    border: `0.3px solid ${tokens.colors.white}`,
+    background: tokens.colors.black,
+    opacity: 1,
   };
+
+  const topHandleStyle = { ...handleStyle, top: '-1.25px' };
+  const bottomHandleStyle = { ...handleStyle, bottom: '-1.25px' };
+  const leftHandleStyle = { ...handleStyle, left: '-1.25px' };
+  const rightHandleStyle = { ...handleStyle, right: '-1.25px' };
 
   return (
     <StyledContainer $backgroundColor={colorTheme.primary}>
       {/* 4방향 핸들 */}
-      <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
-      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
-      <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
-      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
+      <Handle type="target" position={Position.Top} id="top" style={topHandleStyle} />
+      <Handle type="source" position={Position.Right} id="right" style={rightHandleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={bottomHandleStyle} />
+      <Handle type="target" position={Position.Left} id="left" style={leftHandleStyle} />
 
       {/* 타이틀 텍스트 */}
       <StyledTitle $color={colorTheme.primary}>{data.label}</StyledTitle>

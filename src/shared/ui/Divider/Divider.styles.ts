@@ -10,11 +10,11 @@ export const shouldForwardProp = (prop: string): boolean => {
 
 export const StyledHorizontalDivider = styled('hr', { shouldForwardProp })<StyledDividerProps>`
   width: ${({ length }) => length};
-  border-top: ${spacing.medium} solid ${colors.neutral[300]};
+  border-top: 1px solid ${colors.neutral[300]};
 `;
 
 export const StyledVerticalDivider = styled('div', { shouldForwardProp })<StyledDividerProps>`
   height: ${({ length }) => length};
   display: inline-block;
-  border-left: ${spacing.medium} solid ${colors.neutral[300]};
+  border-left: 1px solid ${colors.neutral[300]};
 `;

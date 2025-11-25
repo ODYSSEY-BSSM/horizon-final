@@ -24,7 +24,7 @@ const RoadmapListSection = ({ folderId, onAddRoadmapClick }: RoadmapListSectionP
   } = useFolderDetail({ folderId });
 
   const handleRoadmapClick = (roadmapId: string) => {
-    router.push(`/editor/${roadmapId}`);
+    router.push(`/viewer/${roadmapId}`);
   };
 
   return (
