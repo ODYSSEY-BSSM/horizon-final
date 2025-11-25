@@ -173,6 +173,4 @@ const StyledMain = styled.main<{ $hasSidebar: boolean }>`
   height: calc(100vh - 64px);
   display: flex;
   overflow: hidden;
-  transition: padding-right 0.3s ease;
-  padding-right: ${(props) => (props.$hasSidebar ? '400px' : '0')};
 `;

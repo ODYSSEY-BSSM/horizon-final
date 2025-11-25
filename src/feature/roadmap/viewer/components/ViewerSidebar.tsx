@@ -153,13 +153,17 @@ export const ViewerSidebar = ({
 // Styled Components
 
 const StyledSidebar = styled.aside`
+  position: fixed;
+  top: 64px;
+  right: 0;
   width: 400px;
-  height: 100vh;
+  height: calc(100vh - 64px);
   background-color: ${tokens.colors.white};
   border-left: 1px solid ${tokens.colors.neutral[200]};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  z-index: 50;
 `;
 
 const StyledHeader = styled.div`
