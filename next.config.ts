@@ -36,9 +36,10 @@ const nextConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
-              "style-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: http: https:",
-              "font-src 'self' data:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              'frame-src https://vercel.live',
               `connect-src 'self' ${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'} ${process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080'} https://vercel.live wss://ws-us3.pusher.com`,
             ].join('; '),
           },
