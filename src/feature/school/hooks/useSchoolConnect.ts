@@ -92,7 +92,7 @@ export const useSchoolConnect = () => {
       const nodes: SchoolNode[] = educationNodes.map((node) => ({
         id: String(node.id),
         name: node.title,
-        teacher: node.subject || '과목 미지정',
+        description: node.subject || '과목 미지정',
         usageCount: 0,
       }));
 

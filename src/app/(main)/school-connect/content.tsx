@@ -2,12 +2,13 @@
 
 import styled from '@emotion/styled';
 import {
+  EducationListSection,
   EmptyState,
   SchoolConnectHeader,
   SchoolInfoSection,
-  SchoolNodeListSection,
+  useEducation,
+  useEducationPagination,
   useSchoolConnect,
-  useSchoolNodeList,
 } from '@/feature/school';
 import { ConfirmModal } from '@/shared/ui';
 
@@ -15,7 +16,15 @@ const SchoolConnectContent = () => {
   const { state, modals, handleConnect, handleDisconnectClick, handleDisconnect, closeModal } =
     useSchoolConnect();
 
-  const { currentNodes, currentPage, totalPages, goToPage } = useSchoolNodeList(state.nodes);
+  const { educations, isLoading } = useEducation();
+  const { currentEducations, currentPage, totalPages, goToPage } =
+    useEducationPagination(educations);
+
+  const handleViewClick = (educationId: number) => {
+    // TODO: Navigate to education detail or roadmap list
+    // educationId will be used for navigation
+    void educationId;
+  };
 
   return (
     <>
@@ -23,13 +32,24 @@ const SchoolConnectContent = () => {
         {state.status === 'connected' && state.school ? (
           <>
             <SchoolConnectHeader />
-            <SchoolInfoSection school={state.school} onDisconnect={handleDisconnectClick} />
-            <SchoolNodeListSection
-              nodes={currentNodes}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={goToPage}
+            <SchoolInfoSection
+              school={state.school}
+              educationCount={educations.length}
+              onDisconnect={handleDisconnectClick}
             />
+            {isLoading ? (
+              <div>로딩 중...</div>
+            ) : educations.length === 0 ? (
+              <div>교육 데이터가 없습니다.</div>
+            ) : (
+              <EducationListSection
+                educations={currentEducations}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={goToPage}
+                onViewClick={handleViewClick}
+              />
+            )}
           </>
         ) : (
           <EmptyState onConnect={handleConnect} />
@@ -65,4 +85,5 @@ const StyledPageContainer = styled.div`
   box-sizing: border-box;
   position: relative;
   height: calc(100vh - 72px);
+  overflow: auto;
 `;

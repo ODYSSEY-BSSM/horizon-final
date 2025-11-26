@@ -17,7 +17,6 @@ export interface EducationNodeResponse {
   title: string;
   description?: string;
   subject: Subject;
-  teacher?: string;
   grade?: number;
   semester?: number;
   createdAt: string;
@@ -31,4 +30,33 @@ export interface EducationNodeListResponse {
 export interface SchoolDisconnectResponse {
   success: boolean;
   message?: string;
+}
+
+// API에서 실제로 반환하는 타입 (progress 필드 포함)
+export interface EducationApiResponse {
+  id: number;
+  title: string;
+  description: string;
+  progress: number;
+}
+
+// UI에서 사용하는 타입 (usageCount 필드 포함)
+export interface EducationResponse {
+  id: number;
+  title: string;
+  description?: string;
+  usageCount?: number;
+}
+
+export interface SubjectInfo {
+  subjectName: string;
+  description: string;
+}
+
+export interface EducationSubjectResponse {
+  subjects: SubjectInfo[];
+}
+
+export interface EducationCountResponse {
+  count: number;
 }

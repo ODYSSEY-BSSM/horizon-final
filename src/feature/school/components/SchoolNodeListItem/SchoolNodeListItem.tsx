@@ -20,7 +20,7 @@ const SchoolNodeListItem = ({ node }: SchoolNodeListItemProps) => {
             {node.name}
           </Text>
           <Text as="p" variant="B2" color={tokens.colors.neutral[500]}>
-            담당교사: {node.teacher}
+            설명: {node.description}
           </Text>
         </StyledNodeInfo>
       </StyledItemLeft>

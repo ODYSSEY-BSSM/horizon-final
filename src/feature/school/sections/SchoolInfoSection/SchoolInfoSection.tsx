@@ -7,13 +7,14 @@ import { tokens } from '@/shared/tokens';
 
 interface SchoolInfoSectionProps {
   school: SchoolInfo;
+  educationCount?: number;
   onDisconnect: () => void;
 }
 
-const SchoolInfoSection = ({ school, onDisconnect }: SchoolInfoSectionProps) => {
+const SchoolInfoSection = ({ school, educationCount, onDisconnect }: SchoolInfoSectionProps) => {
   return (
     <StyledSection>
-      <SchoolCard school={school} onDisconnect={onDisconnect} />
+      <SchoolCard school={school} educationCount={educationCount} onDisconnect={onDisconnect} />
     </StyledSection>
   );
 };

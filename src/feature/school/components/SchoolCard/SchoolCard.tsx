@@ -8,10 +8,11 @@ import { Button, Text } from '@/shared/ui';
 
 interface SchoolCardProps {
   school: SchoolInfo;
+  educationCount?: number;
   onDisconnect: () => void;
 }
 
-const SchoolCard = ({ school, onDisconnect }: SchoolCardProps) => {
+const SchoolCard = ({ school, educationCount, onDisconnect }: SchoolCardProps) => {
   return (
     <StyledCardContainer>
       <StyledCardContent>
@@ -27,7 +28,7 @@ const SchoolCard = ({ school, onDisconnect }: SchoolCardProps) => {
             {school.name}
           </Text>
           <Text as="p" variant="ST" color={tokens.colors.neutral[900]}>
-            학교 노드: {school.nodeCount}개
+            학교 노드: {educationCount ?? school.nodeCount}개
           </Text>
         </StyledSchoolInfo>
       </StyledCardContent>

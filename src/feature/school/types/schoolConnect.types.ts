@@ -8,7 +8,7 @@ export interface SchoolInfo {
 export interface SchoolNode {
   id: string;
   name: string;
-  teacher: string;
+  description: string;
   usageCount: number;
 }
 

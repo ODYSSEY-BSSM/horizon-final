@@ -1,11 +1,15 @@
+export { EducationNodeCard } from './components/EducationNodeCard';
 export { EmptyState } from './components/EmptyState';
 export { SchoolCard } from './components/SchoolCard';
 export { SchoolNodeListItem } from './components/SchoolNodeListItem';
 export * from './constants/schoolConnect.constants';
+export { useEducation, useEducationCount } from './hooks/useEducation';
+export { useEducationPagination } from './hooks/useEducationPagination';
 export { useSchoolConnect } from './hooks/useSchoolConnect';
 export { useSchoolNodeList } from './hooks/useSchoolNodeList';
+export { EducationListSection } from './sections/EducationListSection';
 export { SchoolConnectHeader } from './sections/SchoolConnectHeader';
 export { SchoolInfoSection } from './sections/SchoolInfoSection';
 export { SchoolNodeListSection } from './sections/SchoolNodeListSection';
-
+export * from './types/schoolApi';
 export * from './types/schoolConnect.types';
