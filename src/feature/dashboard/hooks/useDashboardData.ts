@@ -109,7 +109,12 @@ export const useDashboardData = () => {
       ...(teamRoadmaps || []),
     ];
 
-    return combinedRoadmaps.map((roadmap) => {
+    // Deduplicate by roadmap ID (keep first occurrence)
+    const uniqueRoadmaps = Array.from(
+      new Map(combinedRoadmaps.map((roadmap) => [roadmap.roadmapInfo.id, roadmap])).values(),
+    );
+
+    return uniqueRoadmaps.map((roadmap) => {
       const isTeamRoadmap = 'teamId' in roadmap;
 
       const category = isTeamRoadmap ? ('team' as const) : ('personal' as const);
