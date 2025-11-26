@@ -987,16 +987,18 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
         </ReactFlow>
       </StyledCanvasWrapper>
 
-      {/* 사이드바 */}
-      <StyledSidebar>
-        <EditorSidebar
-          nodeType={nodeType}
-          nodeData={selectedNode?.data}
-          nodeStyle={selectedNode?.style}
-          onNodeUpdate={handleNodeUpdate}
-          onNodeStyleUpdate={handleNodeStyleUpdate}
-        />
-      </StyledSidebar>
+      {/* 사이드바 - 노드 선택 시에만 표시 */}
+      {selectedNode && (
+        <StyledSidebar>
+          <EditorSidebar
+            nodeType={nodeType}
+            nodeData={selectedNode?.data}
+            nodeStyle={selectedNode?.style}
+            onNodeUpdate={handleNodeUpdate}
+            onNodeStyleUpdate={handleNodeStyleUpdate}
+          />
+        </StyledSidebar>
+      )}
 
       {/* 툴바 */}
       <StyledToolbar>
@@ -1014,6 +1016,8 @@ const StyledEditorContainer = styled.div`
   width: 100vw;
   height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
   background-color: ${tokens.colors.neutral[100]};
 `;
 
@@ -1026,15 +1030,15 @@ const StyledHistoryController = styled.div`
 
 const StyledCanvasWrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 64px);
-  margin-top: 64px;
+  flex: 1;
+  position: relative;
 `;
 
 const StyledSidebar = styled.div`
   position: absolute;
   top: 64px;
   right: 0;
-  height: calc(100vh - 64px);
+  bottom: 0;
   z-index: 10;
 `;
 
