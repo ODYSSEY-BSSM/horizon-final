@@ -174,6 +174,7 @@ const StyledContainer = styled.div`
   border-radius: ${tokens.radius.large};
   overflow: visible;
   background-color: ${tokens.colors.white};
+  position: relative;
 `;
 
 const StyledHeader = styled.div`
@@ -237,6 +238,7 @@ const StyledThumbnailGrid = styled.div`
   grid-template-columns: repeat(4, 246px);
   gap: ${tokens.spacing.medium};
   max-height: 1032px;
+  overflow: visible;
 `;
 
 const StyledPaginationWrapper = styled.div`

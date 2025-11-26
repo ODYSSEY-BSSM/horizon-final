@@ -16,7 +16,8 @@ export const getBreadcrumbs = (path: string): string[] => {
     const match = path.match(/\/my-roadmaps\/([^/]+)/);
     if (match) {
       const folderId = match[1];
-      // TODO: Fetch actual folder name from API/store instead of using ID
+      // Future: Replace folderId with actual folder name from API
+      // Requires async breadcrumb fetching or global folder state
       return ['My Roadmaps', folderId];
     }
     return ['My Roadmaps'];

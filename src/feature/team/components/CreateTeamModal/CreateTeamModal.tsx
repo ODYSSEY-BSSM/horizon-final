@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import type { TeamResponse } from '@/feature/team/types/teamApi';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
+import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 import { Button, Icon, Text, TextField } from '@/shared/ui';
 
@@ -24,6 +25,7 @@ export const CreateTeamModal = ({
 }: CreateTeamModalProps) => {
   const titleId = useId();
   const descriptionId = useId();
+  const showToast = useToast();
   const [step, setStep] = useState<Step>(1);
   const [teamName, setTeamName] = useState('');
   const [createdTeam, setCreatedTeam] = useState<TeamResponse | null>(null);
@@ -76,8 +78,11 @@ export const CreateTeamModal = ({
       setCreatedTeam(result);
       setCopyState('idle');
       setStep(2);
-    } catch (_error) {
-      // TODO: 에러 토스트 또는 경고 추가
+    } catch (error) {
+      showToast({
+        message: error instanceof Error ? error.message : '팀 생성에 실패했습니다.',
+        type: 'error',
+      });
     } finally {
       setIsSubmitting(false);
     }

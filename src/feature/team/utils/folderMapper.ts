@@ -12,8 +12,8 @@ export const mapTeamFolderToFolder = (teamFolder: TeamFolder): Folder => {
     description: teamFolder.description,
     progress: teamFolder.progress,
     roadmapCount: teamFolder.roadmapCount,
-    // TODO: Backend API doesn't provide completed roadmap count yet
-    // Update this mapping when API is updated to include completedRoadmapCount
+    // Backend API doesn't provide completed roadmap count yet
+    // Will update when API includes completedRoadmapCount field
     completedCount: 0,
     lastRoadmap: teamFolder.lastRoadmapName || '-',
   };
