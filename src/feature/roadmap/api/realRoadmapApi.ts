@@ -44,8 +44,21 @@ export const realRoadmapApi = {
     return apiClient.get<RoadmapCountResponse>('/roadmap/count');
   },
 
+  getRoadmapsByDirectory: async (directoryId: number): Promise<RoadmapResponse[]> => {
+    return apiClient.get<RoadmapResponse[]>(`/roadmap/directoryId?directoryId=${directoryId}`);
+  },
+
   getTeamRoadmaps: async (teamId: number): Promise<TeamRoadmapResponse[]> => {
     return apiClient.get<TeamRoadmapResponse[]>(`/teams/${teamId}/roadmap`);
+  },
+
+  getTeamRoadmapsByDirectory: async (
+    teamId: number,
+    directoryId: number,
+  ): Promise<TeamRoadmapResponse[]> => {
+    return apiClient.get<TeamRoadmapResponse[]>(
+      `/teams/${teamId}/roadmap/directory-id?directoryId=${directoryId}`,
+    );
   },
 
   createTeamRoadmap: async (

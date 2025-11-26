@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { useRoadmaps, useRoadmapsByDirectory } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import { mapRoadmapResponseToRoadmapItem } from '@/shared/utils/roadmapMapper';
 
 const ITEMS_PER_PAGE = 10;
@@ -15,7 +15,17 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: roadmapsData, isLoading } = useRoadmaps();
+  const directoryId = options?.folderId ? Number(options.folderId) : undefined;
+
+  // Use server-side filtered query when directoryId is provided
+  const { data: allRoadmapsData, isLoading: isLoadingAll } = useRoadmaps();
+  const { data: directoryRoadmapsData, isLoading: isLoadingDirectory } = useRoadmapsByDirectory(
+    directoryId ?? 0,
+  );
+
+  // Use directory-filtered data when folderId is provided, otherwise use all roadmaps
+  const roadmapsData = directoryId ? directoryRoadmapsData : allRoadmapsData;
+  const isLoading = directoryId ? isLoadingDirectory : isLoadingAll;
 
   const roadmaps = useMemo(() => {
     if (!roadmapsData) {
@@ -25,24 +35,13 @@ const useFolderDetail = (options?: UseFolderDetailOptions) => {
     // Convert API response to RoadmapItem format
     const allRoadmaps = roadmapsData.map(mapRoadmapResponseToRoadmapItem);
 
-    // Filter by folderId if provided
-    let filteredRoadmaps = allRoadmaps;
-    if (options?.folderId) {
-      const folderIdNum = Number(options.folderId);
-      filteredRoadmaps = allRoadmaps.filter((roadmap) => {
-        // Find the roadmap in the original response to get directoryId
-        const originalRoadmap = roadmapsData.find((r) => r.uuid.toString() === roadmap.id);
-        return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
-      });
-    }
-
     // Deduplicate by ID to prevent duplicate key errors in React
     const uniqueRoadmaps = Array.from(
-      new Map(filteredRoadmaps.map((roadmap) => [roadmap.id, roadmap])).values(),
+      new Map(allRoadmaps.map((roadmap) => [roadmap.id, roadmap])).values(),
     );
 
     return uniqueRoadmaps;
-  }, [roadmapsData, options?.folderId]);
+  }, [roadmapsData]);
 
   const filteredRoadmaps = useMemo(() => {
     return roadmaps.filter((roadmap: (typeof roadmaps)[0]) => {

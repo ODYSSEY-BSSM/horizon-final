@@ -26,7 +26,7 @@ const calculateStatus = (progress: number): RoadmapStatus => {
 
 export const mapRoadmapResponseToRoadmapItem = (roadmap: RoadmapResponse): RoadmapItem => {
   return {
-    id: roadmap.uuid.toString(),
+    id: (roadmap.uuid ?? roadmap.roadmapInfo.id).toString(),
     title: roadmap.roadmapInfo.title,
     description: roadmap.roadmapInfo.description,
     icon: roadmap.icon || 'deployed_code',
@@ -40,7 +40,7 @@ export const mapRoadmapResponseToRoadmapItem = (roadmap: RoadmapResponse): Roadm
 
 export const mapTeamRoadmapResponseToRoadmapItem = (roadmap: TeamRoadmapResponse): RoadmapItem => {
   return {
-    id: roadmap.uuid.toString(),
+    id: (roadmap.uuid ?? roadmap.roadmapInfo.id).toString(),
     title: roadmap.roadmapInfo.title,
     description: roadmap.roadmapInfo.description,
     icon: roadmap.icon || 'deployed_code',

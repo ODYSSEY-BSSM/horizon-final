@@ -25,13 +25,17 @@ const useFolderDetail = (teamId: string, folderId: string) => {
     // Filter by folderId
     const folderIdNum = Number(folderId);
     const filteredItems = allItems.filter((item) => {
-      const originalRoadmap = teamRoadmapsData.find((r) => r.uuid.toString() === item.id);
+      const originalRoadmap = teamRoadmapsData.find(
+        (r) => (r.uuid ?? r.roadmapInfo.id).toString() === item.id,
+      );
       return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
     });
 
     // Convert RoadmapItem to Roadmap (team-specific type)
     const roadmaps = filteredItems.map((item) => {
-      const originalRoadmap = teamRoadmapsData.find((r) => r.uuid.toString() === item.id);
+      const originalRoadmap = teamRoadmapsData.find(
+        (r) => (r.uuid ?? r.roadmapInfo.id).toString() === item.id,
+      );
       // Map 'not-started' to 'in-progress' for team Roadmap type
       const status = item.status === 'not-started' ? 'in-progress' : item.status;
       return {

@@ -32,13 +32,15 @@ export const useSchoolConnect = () => {
 
   // 각 로드맵의 노드 조회
   const roadmapNodesQueries = useQuery<NodeResponse[]>({
-    queryKey: ['roadmaps', 'all-nodes', roadmaps?.map((r) => r.uuid)],
+    queryKey: ['roadmaps', 'all-nodes', roadmaps?.map((r) => r.uuid ?? r.roadmapInfo.id)],
     queryFn: async () => {
       if (!roadmaps || roadmaps.length === 0) {
         return [];
       }
 
-      const allNodesPromises = roadmaps.map((roadmap) => nodeApi.getNodes(roadmap.uuid));
+      const allNodesPromises = roadmaps.map((roadmap) =>
+        nodeApi.getNodes(roadmap.uuid ?? roadmap.roadmapInfo.id),
+      );
       const allNodesArrays = await Promise.all(allNodesPromises);
 
       // 모든 노드를 하나의 배열로 합치고, 교육 노드만 필터링

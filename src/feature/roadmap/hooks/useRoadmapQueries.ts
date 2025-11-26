@@ -12,18 +12,29 @@ export const roadmapKeys = {
   all: ['roadmaps'] as const,
   lists: () => [...roadmapKeys.all, 'list'] as const,
   list: (filters?: string) => [...roadmapKeys.lists(), filters] as const,
+  byDirectory: (directoryId: number) => [...roadmapKeys.lists(), 'directory', directoryId] as const,
   details: () => [...roadmapKeys.all, 'detail'] as const,
   detail: (id: number) => [...roadmapKeys.details(), id] as const,
   count: () => [...roadmapKeys.all, 'count'] as const,
   lastAccessed: () => [...roadmapKeys.all, 'lastAccessed'] as const,
   team: (teamId: number) => [...roadmapKeys.all, 'team', teamId] as const,
   teamList: (teamId: number) => [...roadmapKeys.team(teamId), 'list'] as const,
+  teamByDirectory: (teamId: number, directoryId: number) =>
+    [...roadmapKeys.team(teamId), 'directory', directoryId] as const,
 };
 
 export function useRoadmaps() {
   return useQuery({
     queryKey: roadmapKeys.lists(),
     queryFn: () => roadmapApi.getRoadmaps(),
+  });
+}
+
+export function useRoadmapsByDirectory(directoryId: number) {
+  return useQuery({
+    queryKey: roadmapKeys.byDirectory(directoryId),
+    queryFn: () => roadmapApi.getRoadmapsByDirectory(directoryId),
+    enabled: !!directoryId,
   });
 }
 
@@ -186,6 +197,14 @@ export function useTeamRoadmaps(teamId: number) {
     queryKey: roadmapKeys.teamList(teamId),
     queryFn: () => roadmapApi.getTeamRoadmaps(teamId),
     enabled: !!teamId,
+  });
+}
+
+export function useTeamRoadmapsByDirectory(teamId: number, directoryId: number) {
+  return useQuery({
+    queryKey: roadmapKeys.teamByDirectory(teamId, directoryId),
+    queryFn: () => roadmapApi.getTeamRoadmapsByDirectory(teamId, directoryId),
+    enabled: !!teamId && !!directoryId,
   });
 }
 
