@@ -184,9 +184,9 @@ const EXAMPLE_EDGES = [
 ];
 
 export default function RoadmapViewerPage() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
-  const roadmapId = params.id as string;
+  const roadmapId = params.id;
 
   const handleEditClick = () => {
     router.push(`/roadmap-editor/${roadmapId}`);

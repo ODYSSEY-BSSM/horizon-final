@@ -79,10 +79,9 @@ const TeamSpaceContent = () => {
           return;
         }
       }
-
-      toast({ description: '팀 가입에 성공했습니다.' });
-    } catch (_error) {
-      toast({ description: '유효하지 않은 초대 코드입니다.' });
+    } catch {
+      // useApplyToTeam의 onError에서 이미 toast 처리하므로 여기선 추가 처리 불필요
+      // 단, 모달은 닫지 않고 유지하여 사용자가 다시 시도할 수 있게 함
     }
   };
 
