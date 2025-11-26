@@ -12,9 +12,10 @@ const EmptyState = ({ onConnect }: EmptyStateProps) => {
   return (
     <StyledContainer>
       <StyledContent>
-        <Text as="p" variant="H3" color={tokens.colors.black}>
-          연동된 학교가 없어요. 학교에서 지급받은 구글 계정으로 연동할 수 있어요.
-        </Text>
+        <StyledText as="p" variant="H3" color={tokens.colors.black}>
+          연동된 학교가 없어요. <br />
+          학교에서 지급받은 구글 계정으로 연동할 수 있어요.
+        </StyledText>
         <Button
           variant="contained"
           size="medium"
@@ -32,11 +33,10 @@ const EmptyState = ({ onConnect }: EmptyStateProps) => {
 export default EmptyState;
 
 const StyledContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  padding: ${tokens.spacing.xxlarge};
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
 `;
 
 const StyledContent = styled.div`
@@ -46,4 +46,8 @@ const StyledContent = styled.div`
   gap: ${tokens.spacing.xlarge};
   max-width: 395px;
   text-align: center;
+`;
+
+const StyledText = styled(Text)`
+    text-align: center;
 `;

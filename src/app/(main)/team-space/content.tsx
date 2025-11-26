@@ -140,6 +140,8 @@ const StyledPageContainer = styled.div`
   gap: 40px;
   padding: 16px 60px 80px;
   box-sizing: border-box;
+  position: relative;
+  height: calc(100vh - 72px);
 `;
 
 const StyledLoadingMessage = styled.div`
