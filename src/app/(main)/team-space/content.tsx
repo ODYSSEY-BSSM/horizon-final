@@ -37,8 +37,12 @@ const TeamSpaceContent = () => {
   const handleTeamCreate = async ({ name }: { name: string }) => {
     const team = await createTeamMutation.mutateAsync({ name });
     closeModal('teamCreate');
-    // 팀 생성 즉시 해당 팀 페이지로 이동
-    router.push(`/team-space/${team.id}`);
+
+    // 팀 생성 직후 해당 팀 페이지로 이동
+    if (team.id) {
+      router.push(`/team-space/${team.id}`);
+    }
+
     return team;
   };
 
