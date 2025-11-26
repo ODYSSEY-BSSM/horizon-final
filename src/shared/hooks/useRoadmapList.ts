@@ -32,7 +32,7 @@ export const useRoadmapList = (items: RoadmapItem[] = []) => {
         return item.status === 'completed';
       }
       if (currentFilter === 'in-progress') {
-        return item.status === 'in-progress';
+        return item.status === 'in-progress' && item.progress > 0;
       }
       return true;
     });

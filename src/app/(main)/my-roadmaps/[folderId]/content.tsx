@@ -3,6 +3,7 @@
 import styled from '@emotion/styled';
 import { notFound, useParams } from 'next/navigation';
 import { useState } from 'react';
+import { RoadmapFormModal } from '@/feature/dashboard';
 import type { ColorOption, IconOption } from '@/feature/roadmap';
 import { RoadmapListSection, RoadmapStyleModal } from '@/feature/roadmap';
 import { useCreateRoadmap } from '@/feature/roadmap/hooks/useRoadmapQueries';
@@ -121,6 +122,8 @@ const FolderDetailContent = () => {
         onSubmit={handleStyleSubmit}
         onBack={handleStyleBack}
       />
+
+      <RoadmapFormModal />
     </StyledPageContainer>
   );
 };
