@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "prepare": "husky",
+    "typecheck": "tsc --noEmit --incremental",
+    "typecheck:ci": "tsc --noEmit --skipLibCheck",
     "format": "bunx @biomejs/biome format . --write && bunx @biomejs/biome lint . --write",
     "lint": "bunx @biomejs/biome check .",
     "lint:fix": "bunx @biomejs/biome format . --write && bunx @biomejs/biome lint . --write",
