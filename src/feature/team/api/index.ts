@@ -1,2 +1,1 @@
-export * from './realTeamApi';
-export * from './teamApi';
+export { realTeamApi as teamApi } from './realTeamApi';

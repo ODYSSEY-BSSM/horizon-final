@@ -1,1 +1,1 @@
-export * from './schoolApi';
+export { realSchoolApi as schoolApi } from './realSchoolApi';

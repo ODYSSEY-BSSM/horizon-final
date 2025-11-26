@@ -1,3 +1,1 @@
-export * from './folderApi';
-
-export * from './realFolderApi';
+export { realFolderApi as folderApi } from './realFolderApi';

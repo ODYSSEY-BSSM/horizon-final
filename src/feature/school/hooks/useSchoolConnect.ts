@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { authApi } from '@/feature/auth';
 import { nodeApi, roadmapApi } from '@/feature/roadmap/api';
 import type { NodeResponse, RoadmapResponse } from '@/feature/roadmap/types';
-import { schoolApi } from '@/feature/school/api/schoolApi';
+import { schoolApi } from '@/feature/school/api';
 import type { ModalState, SchoolConnectState, SchoolInfo, SchoolNode } from '../types';
 
 export const useSchoolConnect = () => {
