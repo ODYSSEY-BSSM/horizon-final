@@ -39,7 +39,14 @@ export const realFolderApi = {
     teamId: number,
     data: TeamDirectoryCreateRequest,
   ): Promise<TeamDirectoryResponse> => {
-    return apiClient.post<TeamDirectoryResponse>(`/directories/team/${teamId}`, data);
+    // parentId가 undefined면 속성 자체를 제거
+    const requestData: Partial<TeamDirectoryCreateRequest> = {
+      name: data.name,
+      ...(data.description && { description: data.description }),
+      ...(data.parentId !== undefined && { parentId: data.parentId }),
+    };
+
+    return apiClient.post<TeamDirectoryResponse>(`/directories/team/${teamId}`, requestData);
   },
 
   updateTeamDirectory: async (

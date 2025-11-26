@@ -1,5 +1,6 @@
 export interface DirectoryCreateRequest {
   name: string;
+  description?: string;
   parentId?: number;
 }
 

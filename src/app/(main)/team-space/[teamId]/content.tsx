@@ -172,10 +172,24 @@ const TeamFoldersContent = () => {
     createFolderMutation.mutate(
       {
         name: data.name,
+        description: data.description || '',
       },
       {
         onSuccess: () => {
+          toast({
+            title: '폴더 생성',
+            description: `${data.name} 폴더가 생성되었습니다.`,
+            variant: 'success',
+          });
           setShowFolderModal(false);
+          refetchRootFolder();
+        },
+        onError: (error) => {
+          toast({
+            title: '폴더 생성 실패',
+            description: error.message || '폴더 생성 중 오류가 발생했습니다.',
+            variant: 'failed',
+          });
         },
       },
     );

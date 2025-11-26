@@ -83,6 +83,7 @@ export function useCreateTeamFolder(teamId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: folderKeys.teamList(teamId) });
       queryClient.invalidateQueries({ queryKey: folderKeys.team(teamId) });
+      queryClient.invalidateQueries({ queryKey: folderKeys.root() });
     },
   });
 }
