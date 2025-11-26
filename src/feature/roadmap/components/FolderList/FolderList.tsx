@@ -41,7 +41,7 @@ const FolderList = ({ className, onAddFolderClick }: FolderListProps) => {
       return {
         id: folder.id ?? 0,
         name: folder.name ?? '',
-        description: '',
+        description: folder.description ?? '',
         progress,
         roadmapCount,
         completedCount,

@@ -1,8 +1,8 @@
 'use client';
 
 import styled from '@emotion/styled';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   PrimaryButton,
   SignUpSecondaryAction as SecondaryAction,
@@ -10,6 +10,7 @@ import {
   useLogin,
 } from '@/feature/auth';
 import ContinueWithGoogle from '@/feature/auth/components/ContinueWithGoogle';
+import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 import { Text, TextField } from '@/shared/ui';
 
@@ -18,7 +19,20 @@ export default function SignInContent() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
   const loginMutation = useLogin();
+
+  // URL query parameter로 전달된 메시지 처리
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message === 'loginRequired') {
+      toast({
+        description: '로그인이 필요한 서비스입니다.',
+        variant: 'failed',
+      });
+    }
+  }, [searchParams, toast]);
 
   const isFormValid = email.trim() !== '' && password.trim() !== '';
 

@@ -116,6 +116,7 @@ const RoadmapList = ({
                   roadmap={{
                     id: roadmap.id,
                     name: roadmap.title,
+                    description: roadmap.description,
                     icon: roadmap.icon,
                     color: roadmap.color,
                     type: roadmap.category,

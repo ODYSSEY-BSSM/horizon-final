@@ -2,8 +2,11 @@
 
 import styled from '@emotion/styled';
 import { useRouter } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
+import { useDeleteFolder } from '@/feature/folder/hooks/useFolderQueries';
 import { tokens } from '@/shared/tokens';
-import { Icon, Text, UnderlineButton } from '@/shared/ui';
+import type { DropdownMenuItem } from '@/shared/ui';
+import { Dropdown, Icon, Modal, Text, TextField, UnderlineButton } from '@/shared/ui';
 
 export interface Folder {
   id: number;
@@ -27,8 +30,14 @@ interface FolderCardProps {
 
 const FolderCard = ({ folder, basePath = '/my-roadmaps' }: FolderCardProps) => {
   const router = useRouter();
+  const deleteMutation = useDeleteFolder();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [editName, setEditName] = useState(folder.name);
+  const [editDescription, setEditDescription] = useState(folder.description);
 
   const handleCardClick = () => {
+    console.log('handleCardClick called');
     router.push(`${basePath}/${folder.id}`);
   };
 
@@ -37,67 +46,186 @@ const FolderCard = ({ folder, basePath = '/my-roadmaps' }: FolderCardProps) => {
     router.push(`${basePath}/${folder.id}`);
   };
 
+  const handleDetailView = useCallback(() => {
+    console.log('handleDetailView called');
+    setIsDetailModalOpen(true);
+  }, []);
+
+  const handleEdit = useCallback(() => {
+    console.log('handleEdit called');
+    setEditName(folder.name);
+    setEditDescription(folder.description);
+    setIsEditModalOpen(true);
+  }, [folder.name, folder.description]);
+
+  const handleDelete = useCallback(() => {
+    console.log('handleDelete called');
+    if (window.confirm(`"${folder.name}" 폴더를 삭제하시겠습니까?`)) {
+      deleteMutation.mutate(folder.id);
+    }
+  }, [folder.name, folder.id, deleteMutation]);
+
+  const dropdownItems: DropdownMenuItem[] = useMemo(
+    () => [
+      {
+        label: '자세히 보기',
+        onClick: handleDetailView,
+        icon: <Icon name="visibility" variant="SM" color={tokens.colors.neutral[600]} decorative />,
+      },
+      {
+        label: '수정',
+        onClick: handleEdit,
+        icon: <Icon name="edit" variant="SM" color={tokens.colors.neutral[600]} decorative />,
+      },
+      {
+        label: '삭제',
+        onClick: handleDelete,
+        variant: 'danger',
+        icon: <Icon name="delete" variant="SM" color={tokens.colors.error[200]} decorative />,
+      },
+    ],
+    [handleDetailView, handleEdit, handleDelete],
+  );
+
   return (
-    <StyledFolderItem onClick={handleCardClick}>
-      <StyledFolderHeader>
-        <StyledFolderIcon>
-          <Icon name="folder" variant="SM" color={tokens.colors.neutral[800]} filled decorative />
-        </StyledFolderIcon>
-        <StyledFolderInfo>
-          <Text as="h3" variant="ST" color={tokens.colors.neutral[800]}>
-            {folder.name}
-          </Text>
-          <Text as="p" variant="B2" color={tokens.colors.neutral[500]}>
-            {folder.description}
-          </Text>
-        </StyledFolderInfo>
-      </StyledFolderHeader>
-
-      <StyledProgressSection>
-        <StyledProgressHeader>
-          <Text as="span" variant="C" color={tokens.colors.neutral[500]}>
-            진행률
-          </Text>
-          <Text as="span" variant="C" color={tokens.colors.primary[500]}>
-            {folder.progress}%
-          </Text>
-        </StyledProgressHeader>
-        <StyledProgressBar>
-          <StyledProgressFill $progress={folder.progress} />
-        </StyledProgressBar>
-      </StyledProgressSection>
-
-      <StyledDetailsContainer>
-        <StyledFolderStats>
-          <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-            로드맵:{' '}
-          </Text>
-          <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-            {folder.roadmapCount}개
-          </Text>
-          <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-            {' • '}
-          </Text>
-          <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-            완료:{' '}
-          </Text>
-          <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
-            {folder.completedCount}개
-          </Text>
-        </StyledFolderStats>
-        <StyledLastRoadmap>
-          <StyledLastRoadmapInfo>
-            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
-              마지막 로드맵:{' '}
+    <>
+      <StyledFolderItem onClick={handleCardClick}>
+        <StyledFolderHeader>
+          <StyledFolderIcon>
+            <Icon name="folder" variant="SM" color={tokens.colors.neutral[800]} filled decorative />
+          </StyledFolderIcon>
+          <StyledFolderInfo>
+            <Text as="h3" variant="ST" color={tokens.colors.neutral[800]}>
+              {folder.name}
             </Text>
-            <StyledRoadmapName as="span" variant="B2" color={tokens.colors.neutral[800]}>
-              {folder.lastRoadmap || '-'}
-            </StyledRoadmapName>
-          </StyledLastRoadmapInfo>
-          <UnderlineButton onClick={handleContinueClick}>계속하기</UnderlineButton>
-        </StyledLastRoadmap>
-      </StyledDetailsContainer>
-    </StyledFolderItem>
+            <Text as="p" variant="B2" color={tokens.colors.neutral[500]}>
+              {folder.description}
+            </Text>
+          </StyledFolderInfo>
+          <StyledDropdownWrapper onClick={(e) => e.stopPropagation()}>
+            <Dropdown
+              trigger={
+                <StyledOverflowButton aria-label="더보기">
+                  <Icon
+                    name="more_horiz"
+                    variant="SM"
+                    color={tokens.colors.neutral[500]}
+                    decorative
+                  />
+                </StyledOverflowButton>
+              }
+              items={dropdownItems}
+              align="right"
+            />
+          </StyledDropdownWrapper>
+        </StyledFolderHeader>
+
+        <StyledProgressSection>
+          <StyledProgressHeader>
+            <Text as="span" variant="C" color={tokens.colors.neutral[500]}>
+              진행률
+            </Text>
+            <Text as="span" variant="C" color={tokens.colors.primary[500]}>
+              {folder.progress}%
+            </Text>
+          </StyledProgressHeader>
+          <StyledProgressBar>
+            <StyledProgressFill $progress={folder.progress} />
+          </StyledProgressBar>
+        </StyledProgressSection>
+
+        <StyledDetailsContainer>
+          <StyledFolderStats>
+            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
+              로드맵:{' '}
+            </Text>
+            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+              {folder.roadmapCount}개
+            </Text>
+            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
+              {' • '}
+            </Text>
+            <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
+              완료:{' '}
+            </Text>
+            <Text as="span" variant="B2" color={tokens.colors.neutral[800]}>
+              {folder.completedCount}개
+            </Text>
+          </StyledFolderStats>
+          <StyledLastRoadmap>
+            <StyledLastRoadmapInfo>
+              <Text as="span" variant="B2" color={tokens.colors.neutral[500]}>
+                마지막 로드맵:{' '}
+              </Text>
+              <StyledRoadmapName as="span" variant="B2" color={tokens.colors.neutral[800]}>
+                {folder.lastRoadmap || '-'}
+              </StyledRoadmapName>
+            </StyledLastRoadmapInfo>
+            <UnderlineButton onClick={handleContinueClick}>계속하기</UnderlineButton>
+          </StyledLastRoadmap>
+        </StyledDetailsContainer>
+      </StyledFolderItem>
+
+      <Modal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title={folder.name}
+        width="small"
+      >
+        <StyledDetailContent>
+          <StyledDetailSection>
+            <Text variant="B1" color={tokens.colors.neutral[600]}>
+              설명
+            </Text>
+            <Text variant="B1" color={tokens.colors.neutral[800]}>
+              {folder.description || '설명이 없습니다.'}
+            </Text>
+          </StyledDetailSection>
+          <StyledDetailSection>
+            <Text variant="B1" color={tokens.colors.neutral[600]}>
+              로드맵 통계
+            </Text>
+            <StyledStats>
+              <Text variant="B2" color={tokens.colors.neutral[800]}>
+                전체: {folder.roadmapCount}개
+              </Text>
+              <Text variant="B2" color={tokens.colors.neutral[800]}>
+                완료: {folder.completedCount}개
+              </Text>
+              <Text variant="B2" color={tokens.colors.neutral[800]}>
+                진행률: {folder.progress}%
+              </Text>
+            </StyledStats>
+          </StyledDetailSection>
+        </StyledDetailContent>
+      </Modal>
+
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="폴더 수정"
+        width="small"
+      >
+        <StyledEditContent>
+          <TextField
+            label="폴더 이름"
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            width="100%"
+          />
+          <TextField
+            label="설명"
+            value={editDescription}
+            onChange={(e) => setEditDescription(e.target.value)}
+            width="100%"
+            placeholder="폴더 설명을 입력하세요"
+          />
+          <Text variant="C" color={tokens.colors.neutral[500]}>
+            폴더 수정 기능은 곧 지원될 예정입니다.
+          </Text>
+        </StyledEditContent>
+      </Modal>
+    </>
   );
 };
 
@@ -126,6 +254,7 @@ const StyledFolderHeader = styled.div`
   display: flex;
   gap: ${tokens.spacing.small};
   align-items: center;
+  position: relative;
 `;
 
 const StyledFolderIcon = styled.div`
@@ -206,4 +335,52 @@ const StyledRoadmapName = styled(Text)`
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 144px;
+`;
+
+const StyledDropdownWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+`;
+
+const StyledOverflowButton = styled.button`
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: ${tokens.colors.neutral[100]};
+    border-radius: ${tokens.radius.small};
+  }
+`;
+
+const StyledDetailContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.large};
+`;
+
+const StyledDetailSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.small};
+`;
+
+const StyledStats = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.xsmall};
+`;
+
+const StyledEditContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.medium};
 `;

@@ -25,6 +25,7 @@ export type ViewType = 'list' | 'thumbnail';
 export interface RoadmapItem {
   id: string;
   title: string;
+  description?: string;
   icon: string;
   color: RoadmapColor;
   category: RoadmapCategory;

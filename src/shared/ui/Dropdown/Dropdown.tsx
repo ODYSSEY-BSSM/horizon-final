@@ -23,10 +23,15 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, right: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isInsideDropdown = dropdownRef.current?.contains(target);
+      const isInsideMenu = menuRef.current?.contains(target);
+
+      if (!isInsideDropdown && !isInsideMenu) {
         setIsOpen(false);
       }
     };
@@ -51,24 +56,32 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
     }
   }, [isOpen, align]);
 
-  const handleItemClick = (item: DropdownMenuItem) => {
+  const handleItemClick = (item: DropdownMenuItem, e: React.MouseEvent) => {
+    console.log('Dropdown handleItemClick called', item.label);
+    e.stopPropagation();
     item.onClick();
     setIsOpen(false);
   };
 
   return (
     <StyledDropdownContainer ref={dropdownRef} $isOpen={isOpen}>
-      <StyledTrigger ref={triggerRef} onClick={() => setIsOpen(!isOpen)}>
+      <StyledTrigger
+        ref={triggerRef}
+        onClick={() => {
+          console.log('Dropdown trigger clicked, isOpen:', isOpen);
+          setIsOpen(!isOpen);
+        }}
+      >
         {trigger}
       </StyledTrigger>
       {isOpen &&
         typeof document !== 'undefined' &&
         createPortal(
-          <StyledMenu $align={align} $position={menuPosition}>
+          <StyledMenu ref={menuRef} $align={align} $position={menuPosition}>
             {items.map((item, index) => (
               <StyledMenuItem
                 key={index}
-                onClick={() => handleItemClick(item)}
+                onClick={(e) => handleItemClick(item, e)}
                 $variant={item.variant || 'default'}
               >
                 {item.icon && <StyledIcon>{item.icon}</StyledIcon>}

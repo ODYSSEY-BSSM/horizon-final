@@ -151,7 +151,7 @@ const RoadmapCard = ({ item, onClick, className }: RoadmapCardProps) => {
               설명
             </Text>
             <Text variant="B1" color={tokens.colors.neutral[800]}>
-              설명이 없습니다.
+              {item.description || '설명이 없습니다.'}
             </Text>
           </StyledDetailSection>
         </StyledDetailContent>

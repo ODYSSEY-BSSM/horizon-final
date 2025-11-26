@@ -28,6 +28,7 @@ export const mapRoadmapResponseToRoadmapItem = (roadmap: RoadmapResponse): Roadm
   return {
     id: roadmap.uuid.toString(),
     title: roadmap.roadmapInfo.title,
+    description: roadmap.roadmapInfo.description,
     icon: roadmap.icon || 'deployed_code',
     color: mapColorToRoadmapColor(roadmap.color),
     category: 'personal',
@@ -41,6 +42,7 @@ export const mapTeamRoadmapResponseToRoadmapItem = (roadmap: TeamRoadmapResponse
   return {
     id: roadmap.uuid.toString(),
     title: roadmap.roadmapInfo.title,
+    description: roadmap.roadmapInfo.description,
     icon: roadmap.icon || 'deployed_code',
     color: mapColorToRoadmapColor(roadmap.color),
     category: 'team',

@@ -31,6 +31,7 @@ export const mapTeamRoadmapToRoadmapItem = (teamRoadmap: TeamRoadmap): RoadmapIt
   return {
     id: teamRoadmap.id,
     title: teamRoadmap.name,
+    description: teamRoadmap.description,
     icon: teamRoadmap.icon || 'deployed_code',
     color: teamRoadmap.color && isValidRoadmapColor(teamRoadmap.color) ? teamRoadmap.color : 'blue',
     category: teamRoadmap.type === 'personal' ? 'personal' : 'team',
