@@ -25,7 +25,7 @@ export const CreateTeamModal = ({
 }: CreateTeamModalProps) => {
   const titleId = useId();
   const descriptionId = useId();
-  const showToast = useToast();
+  const { toast } = useToast();
   const [step, setStep] = useState<Step>(1);
   const [teamName, setTeamName] = useState('');
   const [createdTeam, setCreatedTeam] = useState<TeamResponse | null>(null);
@@ -79,9 +79,9 @@ export const CreateTeamModal = ({
       setCopyState('idle');
       setStep(2);
     } catch (error) {
-      showToast({
-        message: error instanceof Error ? error.message : '팀 생성에 실패했습니다.',
-        type: 'error',
+      toast({
+        description: error instanceof Error ? error.message : '팀 생성에 실패했습니다.',
+        variant: 'failed',
       });
     } finally {
       setIsSubmitting(false);
