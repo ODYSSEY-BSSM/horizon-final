@@ -35,7 +35,8 @@ export interface NodeData {
   text?: string;
   quizCurrent?: number;
   quizTotal?: number;
-  [key: string]: any; // 확장성을 위한 인덱스 시그니처
+  isSchoolNode?: boolean;
+  [key: string]: string | number | boolean | undefined;
 }
 
 export interface EditorSidebarProps {
@@ -69,7 +70,7 @@ export const EditorSidebar = ({
   onSchoolNodeToggle: _onSchoolNodeToggle,
 }: EditorSidebarProps) => {
   // nodeData에서 isSchoolNode를 우선 사용, prop은 fallback
-  const isSchoolNode = (nodeData as any)?.isSchoolNode ?? isSchoolNodeProp ?? false;
+  const isSchoolNode = nodeData?.isSchoolNode ?? isSchoolNodeProp ?? false;
   const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
 

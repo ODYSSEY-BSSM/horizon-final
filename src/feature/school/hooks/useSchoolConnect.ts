@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { authApi } from '@/feature/auth';
+import { authApi, type UserInfoResponse } from '@/feature/auth';
 import { nodeApi, roadmapApi } from '@/feature/roadmap/api';
 import type { NodeResponse, RoadmapResponse } from '@/feature/roadmap/types';
 import { schoolApi } from '@/feature/school/api';
@@ -134,12 +134,12 @@ export const useSchoolConnect = () => {
 
   const handleDisconnect = async () => {
     // 연동 해제 기능은 Swagger에 없으므로 클라이언트 상태만 변경
-    queryClient.setQueryData(['user', 'profile'], (old: any) =>
+    queryClient.setQueryData<UserInfoResponse | undefined>(['user', 'profile'], (old) =>
       old
         ? {
             ...old,
             isConnectedSchool: false,
-            school: null,
+            school: '',
           }
         : old,
     );

@@ -2,6 +2,11 @@
 
 import { GeneralErrorPage } from '@/shared/components/ErrorPage';
 
-export default function SignUpError() {
-  return <GeneralErrorPage />;
+interface ErrorProps {
+  error: Error & { digest?: string };
+  reset: () => void;
+}
+
+export default function SignUpError({ reset }: ErrorProps) {
+  return <GeneralErrorPage onRetry={reset} />;
 }

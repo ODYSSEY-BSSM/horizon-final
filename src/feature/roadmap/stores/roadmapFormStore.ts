@@ -233,10 +233,28 @@ export const useRoadmapFormStore = create<RoadmapFormStore>()(
 
       updateField: <K extends keyof RoadmapFormData>(field: K, value: RoadmapFormData[K]) =>
         set(
-          (state: RoadmapFormStore) => ({
-            formData: { ...state.formData, [field]: value },
-            errors: {},
-          }),
+          (state: RoadmapFormStore) => {
+            // 해당 필드와 관련된 step의 에러만 초기화
+            const fieldToStepMap: Record<string, RoadmapFormStep> = {
+              category: 'category',
+              folderId: 'folder',
+              folderName: 'folder',
+              teamId: 'team',
+              name: 'info',
+              description: 'info',
+              color: 'style',
+              icon: 'style',
+            };
+            const relatedStep = fieldToStepMap[field as string];
+            const newErrors = { ...state.errors };
+            if (relatedStep) {
+              delete newErrors[relatedStep];
+            }
+            return {
+              formData: { ...state.formData, [field]: value },
+              errors: newErrors,
+            };
+          },
           false,
           'updateField',
         ),

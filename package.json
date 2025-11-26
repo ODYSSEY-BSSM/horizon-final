@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun run dev:https & sleep 0.5 && bun run dev:http",
-    "dev:http": "next dev --turbopack -p 3001",
+    "dev": "next dev --turbopack -p 3001",
     "dev:https": "local-ssl-proxy --source 3000 --target 3001 --cert ~/.mkcert/localhost.pem --key ~/.mkcert/localhost-key.pem",
     "build": "next build",
     "start": "next start",

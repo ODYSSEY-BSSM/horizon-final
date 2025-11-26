@@ -22,18 +22,18 @@ export function middleware(request: NextRequest) {
   }
 
   // 로그인 됨: (auth) 페이지 접근 시 대시보드로
-  if (isLoggedIn) {
-    if (isAuthPage) {
-      const url = new URL('/dashboard', request.url);
-      url.searchParams.set('message', 'alreadyLoggedIn');
-      return NextResponse.redirect(url);
-    }
-    // 루트 경로도 대시보드로
-    if (pathname === '/') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-    return NextResponse.next();
+  if (isAuthPage) {
+    const url = new URL('/dashboard', request.url);
+    url.searchParams.set('message', 'alreadyLoggedIn');
+    return NextResponse.redirect(url);
   }
+
+  // 루트 경로도 대시보드로
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

@@ -66,22 +66,48 @@ export function useCreateTeam() {
 
 export function useDeleteTeam() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (teamId: number) => teamApi.deleteTeam(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.all });
+      toast({
+        variant: 'success',
+        title: '팀 삭제 완료',
+        description: '팀이 성공적으로 삭제되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'failed',
+        title: '팀 삭제 실패',
+        description: error.message || '팀 삭제 중 오류가 발생했습니다.',
+      });
     },
   });
 }
 
 export function useApplyToTeam() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: ({ inviteCode }: { inviteCode: string }) => teamApi.joinTeam({ inviteCode }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.all });
+      toast({
+        variant: 'success',
+        title: '팀 가입 완료',
+        description: '팀에 성공적으로 가입되었습니다.',
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: 'failed',
+        title: '팀 가입 실패',
+        description: error.message || '팀 가입 중 오류가 발생했습니다.',
+      });
     },
   });
 }

@@ -6,14 +6,16 @@ import { useCallback, useMemo, useState } from 'react';
 import { useCreateTeamFolder, useTeamRootFolder } from '@/feature/folder/hooks/useFolderQueries';
 import type { DirectoryResponse } from '@/feature/folder/types';
 import {
+  CreateTeamModal,
   FolderGrid,
   InviteTeamModal,
   TeamDropdown,
   useTeamDirectoryWebSocket,
   useTeamRoadmapWebSocket,
 } from '@/feature/team';
-import { useTeam, useTeams } from '@/feature/team/hooks/useTeamQueries';
+import { useCreateTeam, useTeam, useTeams } from '@/feature/team/hooks/useTeamQueries';
 import type { TeamFolder } from '@/feature/team/types/team';
+import type { TeamResponse } from '@/feature/team/types/teamApi';
 import { generateInviteCode } from '@/feature/team/utils/inviteCode';
 import type { DirectoryDeleteMessage, RoadmapMessage, TeamDirectoryMessage } from '@/shared/api';
 import { useToast } from '@/shared/hooks/useToast';
@@ -37,6 +39,7 @@ const TeamFoldersContent = () => {
   const [activeTab, setActiveTab] = useState<string>('recent');
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
 
   const currentTeam = teamData
     ? {
@@ -50,6 +53,7 @@ const TeamFoldersContent = () => {
   const createFolderMutation = useCreateTeamFolder(Number(teamId));
   const { data: teamRootFolder, refetch: refetchRootFolder } = useTeamRootFolder(Number(teamId));
   const { toast } = useToast();
+  const createTeamMutation = useCreateTeam();
 
   // WebSocket integration for real-time directory synchronization
   useTeamDirectoryWebSocket({
@@ -210,6 +214,17 @@ const TeamFoldersContent = () => {
     setShowInviteModal(false);
   };
 
+  const handleCreateTeam = async (payload: { name: string }) => {
+    const result = await createTeamMutation.mutateAsync(payload);
+    return result;
+  };
+
+  const handleCreateTeamComplete = (team: TeamResponse) => {
+    setShowCreateTeamModal(false);
+    // 생성된 팀으로 이동
+    router.push(`/team-space/${team.id}`);
+  };
+
   if (isLoading) {
     return (
       <StyledPageContainer>
@@ -237,6 +252,7 @@ const TeamFoldersContent = () => {
           teams={teamsList}
           selectedTeamId={currentTeam.id}
           onChange={handleTeamChange}
+          onCreateTeam={() => setShowCreateTeamModal(true)}
         />
         <StyledButtonGroup>
           <Button
@@ -287,6 +303,13 @@ const TeamFoldersContent = () => {
         teamName={currentTeam?.name}
         inviteCode={inviteCode}
         onComplete={handleInviteComplete}
+      />
+
+      <CreateTeamModal
+        isOpen={showCreateTeamModal}
+        onClose={() => setShowCreateTeamModal(false)}
+        onCreate={handleCreateTeam}
+        onComplete={handleCreateTeamComplete}
       />
     </StyledPageContainer>
   );

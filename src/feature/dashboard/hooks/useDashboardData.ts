@@ -6,6 +6,14 @@ import type { RoadmapResponse, TeamRoadmapResponse } from '@/feature/roadmap/typ
 import { useTeams } from '@/feature/team/hooks/useTeamQueries';
 import type { RoadmapColor } from '@/shared/types/roadmap';
 
+// 디렉토리 순회를 위한 로컬 타입 (API 응답 구조)
+interface DirectoryWithRoadmaps {
+  id?: number;
+  name?: string;
+  roadmaps?: Array<{ id?: number }>;
+  directories?: DirectoryWithRoadmaps[];
+}
+
 export const useDashboardData = () => {
   const { data: userProfile, isLoading: isLoadingUser, error: userError } = useUserProfile();
 
@@ -44,7 +52,7 @@ export const useDashboardData = () => {
     }
     const myRoadmapsCount = roadmapsData?.length || 0;
     const myRoadmapsInProgress =
-      roadmapsData?.filter((roadmap) => roadmap.roadmapInfo.isFavorite).length || 0;
+      roadmapsData?.filter((roadmap) => roadmap.progress > 0 && roadmap.progress < 100).length || 0;
 
     const teamRoadmapsCount = teamRoadmaps?.length || 0;
     const teamRoadmapsInProgress =
@@ -76,11 +84,13 @@ export const useDashboardData = () => {
       return map;
     }
 
-    const traverse = (directories: any[]): void => {
+    const traverse = (directories: DirectoryWithRoadmaps[]): void => {
       for (const dir of directories) {
-        if (dir.roadmaps) {
+        if (dir.roadmaps && dir.id != null && dir.name != null) {
           for (const roadmap of dir.roadmaps) {
-            map.set(roadmap.id, { id: dir.id, name: dir.name });
+            if (roadmap.id != null) {
+              map.set(roadmap.id, { id: dir.id, name: dir.name });
+            }
           }
         }
         if (dir.directories?.length) {

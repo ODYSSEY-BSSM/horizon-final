@@ -9,7 +9,7 @@ export { TokenInitializer } from './components/TokenInitializer';
 
 export { useEmailForm } from './hooks/useEmailForm';
 export { usePasswordForm } from './hooks/usePasswordForm';
-export { useLogin } from './hooks/useSignIn';
+export { useLogin, useLogout, useUserProfile } from './hooks/useSignIn';
 export { useRegister } from './hooks/useSignUp';
 export { useUsernameForm } from './hooks/useUsernameForm';
 export { useVerificationForm } from './hooks/useVerificationForm';

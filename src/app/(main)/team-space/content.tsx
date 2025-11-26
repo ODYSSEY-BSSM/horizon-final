@@ -102,9 +102,13 @@ const TeamSpaceContent = () => {
     );
   }
 
-  // 팀이 있을 때는 리다이렉트 중이므로 아무것도 렌더링하지 않음
+  // 팀이 있을 때는 리다이렉트 중이므로 로딩 표시
   if (hasTeams) {
-    return null;
+    return (
+      <StyledPageContainer>
+        <StyledLoadingMessage>팀 페이지로 이동 중...</StyledLoadingMessage>
+      </StyledPageContainer>
+    );
   }
 
   return (

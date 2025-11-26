@@ -2,6 +2,11 @@
 
 import { GeneralErrorPage } from '@/shared/components/ErrorPage';
 
-export default function DashboardError() {
-  return <GeneralErrorPage />;
+interface ErrorProps {
+  error: Error & { digest?: string };
+  reset: () => void;
+}
+
+export default function DashboardError({ reset }: ErrorProps) {
+  return <GeneralErrorPage onRetry={reset} />;
 }

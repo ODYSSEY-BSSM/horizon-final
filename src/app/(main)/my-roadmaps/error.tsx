@@ -2,6 +2,11 @@
 
 import { GeneralErrorPage } from '@/shared/components/ErrorPage';
 
-export default function MyRoadmapsError() {
-  return <GeneralErrorPage />;
+interface ErrorProps {
+  error: Error & { digest?: string };
+  reset: () => void;
+}
+
+export default function MyRoadmapsError({ reset }: ErrorProps) {
+  return <GeneralErrorPage onRetry={reset} />;
 }

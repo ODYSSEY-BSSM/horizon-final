@@ -45,12 +45,14 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-activedescendant={
-          isOpen && highlightedIndex > -1
+          isOpen && highlightedIndex > -1 && teams[highlightedIndex]
             ? `${buttonId}-option-${teams[highlightedIndex].id}`
             : undefined
         }
       >
-        <StyledTeamName id={labelId}>{selectedTeam ? selectedTeam.name : '팀 선택'}</StyledTeamName>
+        <StyledTeamName id={labelId}>
+          {selectedTeam ? selectedTeam.name : teams.length === 0 ? '팀 없음' : '팀 선택'}
+        </StyledTeamName>
         <StyledIconWrapper>
           <Icon
             name={isOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
@@ -63,6 +65,12 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
 
       {isOpen && (
         <StyledDropdownContent>
+          {onCreateTeam && (
+            <StyledCreateTeamOption type="button" onClick={handleCreateTeam}>
+              <Icon name="add" size={20} color={tokens.colors.neutral[600]} decorative />
+              <span>팀 생성</span>
+            </StyledCreateTeamOption>
+          )}
           <StyledDropdownList role="listbox">
             {teams.map((team, index) => (
               <StyledTeamOption
@@ -82,12 +90,6 @@ const TeamDropdown = ({ teams, selectedTeamId, onChange, onCreateTeam }: TeamDro
               </StyledTeamOption>
             ))}
           </StyledDropdownList>
-          {onCreateTeam && (
-            <StyledCreateTeamOption type="button" onClick={handleCreateTeam}>
-              <Icon name="add" size={20} color={tokens.colors.neutral[600]} decorative />
-              <span>팀 생성</span>
-            </StyledCreateTeamOption>
-          )}
         </StyledDropdownContent>
       )}
     </StyledContainer>
@@ -98,19 +100,20 @@ export default TeamDropdown;
 
 const StyledContainer = styled.div`
   position: relative;
-  z-index: 10;
+  z-index: 100;
 `;
 
 const StyledDropdownHeader = styled.button`
   display: flex;
   align-items: center;
   gap: 4px;
-  background: none;
+  background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
   color: ${tokens.colors.neutral[800]};
   white-space: nowrap;
+  min-width: 120px;
 
   &:hover {
     opacity: 0.8;
@@ -169,7 +172,7 @@ const StyledCreateTeamOption = styled.button`
   padding: 0 12px;
   background-color: ${tokens.colors.white};
   border: none;
-  border-top: 1px solid ${tokens.colors.neutral[200]};
+  border-bottom: 1px solid ${tokens.colors.neutral[200]};
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -181,7 +184,7 @@ const StyledCreateTeamOption = styled.button`
   color: ${tokens.colors.neutral[600]};
 
   &:hover {
-    background-color: ${tokens.colors.neutral[200]};
+    background-color: ${tokens.colors.neutral[100]};
   }
 
   &:focus-visible {

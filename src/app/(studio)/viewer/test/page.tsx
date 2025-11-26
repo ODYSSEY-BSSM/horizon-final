@@ -1,7 +1,13 @@
 'use client';
 
+import { notFound } from 'next/navigation';
 import { ReactFlowProvider } from 'reactflow';
 import { RoadmapViewer } from '@/feature/roadmap/viewer';
+
+// 프로덕션 환경에서는 테스트 페이지 숨김
+if (process.env.NODE_ENV === 'production') {
+  notFound();
+}
 
 // 하드코딩된 테스트 데이터
 const TEST_NODES = [

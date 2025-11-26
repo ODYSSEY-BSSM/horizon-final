@@ -136,6 +136,9 @@ export class StompWebSocketClient {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       setTimeout(() => this.connect(), this.reconnectDelay);
+    } else {
+      // 최대 재연결 시도 초과 - 사용자 알림을 위한 이벤트 발생
+      this.emitEvent('error', new Error('서버 연결이 끊어졌습니다. 페이지를 새로고침해 주세요.'));
     }
   }
 

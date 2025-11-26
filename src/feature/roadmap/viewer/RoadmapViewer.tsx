@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import { useCallback, useState } from 'react';
-import type { Node } from 'reactflow';
+import type { Edge, Node } from 'reactflow';
 import { useRoadmapNodesWebSocket } from '@/feature/roadmap';
 import type { NodeDeleteMessage, RoadmapNodeMessage } from '@/shared/api';
 import { ViewerCanvas } from './components/ViewerCanvas';
@@ -13,7 +13,7 @@ interface RoadmapViewerProps {
   roadmapId: string;
   roadmapTitle: string;
   nodes: Node[];
-  edges: any[];
+  edges: Edge[];
   onEditClick?: () => void;
   showEditButton?: boolean;
 }

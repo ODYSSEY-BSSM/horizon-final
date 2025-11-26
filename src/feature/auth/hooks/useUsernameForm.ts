@@ -7,7 +7,7 @@ import { type UsernameFormData, usernameSchema } from '@/feature/auth/validation
 
 export const useUsernameForm = () => {
   const router = useRouter();
-  const { completedData } = useSignupFlow();
+  const { completedData, reset: resetSignupFlow } = useSignupFlow();
   const registerMutation = useRegister();
 
   const form = useForm<UsernameFormData>({
@@ -30,6 +30,7 @@ export const useUsernameForm = () => {
         username: data.username,
       });
 
+      resetSignupFlow();
       router.push('/signin');
     } catch (error) {
       const errorMessage =
