@@ -37,7 +37,6 @@ const FolderCard = ({ folder, basePath = '/my-roadmaps' }: FolderCardProps) => {
   const [editDescription, setEditDescription] = useState(folder.description);
 
   const handleCardClick = () => {
-    console.log('handleCardClick called');
     router.push(`${basePath}/${folder.id}`);
   };
 
@@ -47,19 +46,16 @@ const FolderCard = ({ folder, basePath = '/my-roadmaps' }: FolderCardProps) => {
   };
 
   const handleDetailView = useCallback(() => {
-    console.log('handleDetailView called');
     setIsDetailModalOpen(true);
   }, []);
 
   const handleEdit = useCallback(() => {
-    console.log('handleEdit called');
     setEditName(folder.name);
     setEditDescription(folder.description);
     setIsEditModalOpen(true);
   }, [folder.name, folder.description]);
 
   const handleDelete = useCallback(() => {
-    console.log('handleDelete called');
     if (window.confirm(`"${folder.name}" 폴더를 삭제하시겠습니까?`)) {
       deleteMutation.mutate(folder.id);
     }

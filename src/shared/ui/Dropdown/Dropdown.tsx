@@ -57,7 +57,6 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
   }, [isOpen, align]);
 
   const handleItemClick = (item: DropdownMenuItem, e: React.MouseEvent) => {
-    console.log('Dropdown handleItemClick called', item.label);
     e.stopPropagation();
     item.onClick();
     setIsOpen(false);
@@ -68,7 +67,6 @@ const Dropdown = ({ trigger, items, align = 'right' }: DropdownProps) => {
       <StyledTrigger
         ref={triggerRef}
         onClick={() => {
-          console.log('Dropdown trigger clicked, isOpen:', isOpen);
           setIsOpen(!isOpen);
         }}
       >

@@ -142,7 +142,7 @@ const StyledContainer = styled.div`
 const StyledMainContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${tokens.spacing.large};
+  justify-content: space-between;
   min-height: 524px;
 `;
 
@@ -163,6 +163,7 @@ const StyledPaginationWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding: ${tokens.spacing.large} 0;
 
   > div {
     padding: 0;
