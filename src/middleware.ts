@@ -15,8 +15,10 @@ export function middleware(request: NextRequest) {
     if (isAuthPage) {
       return NextResponse.next();
     }
-    // 나머지는 모두 /signin으로 리다이렉트
-    return NextResponse.redirect(new URL('/signin', request.url));
+    // 나머지는 모두 /signin으로 리다이렉트 (토스트 메시지용 query parameter 추가)
+    const url = new URL('/signin', request.url);
+    url.searchParams.set('message', 'loginRequired');
+    return NextResponse.redirect(url);
   }
 
   // 로그인 됨: (auth) 페이지 접근 시 대시보드로
@@ -45,6 +47,9 @@ export const config = {
     '/dashboard',
     '/my-roadmaps/:path*',
     '/school-connect',
-    '/team-space',
+    '/team-space/:path*',
+    '/editor/:path*',
+    '/roadmap-viewer/:path*',
+    '/viewer/:path*',
   ],
 };
