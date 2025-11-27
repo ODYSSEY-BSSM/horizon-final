@@ -5,6 +5,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/client';
+import { nodeKeys } from '../../hooks/useNodeQueries';
 import type { NodeRequest, NodeResponse, SubjectRequest } from '../types/api.types';
 
 // Optimistic update ID counter (음수로 시작하여 실제 ID와 충돌 방지)
@@ -87,20 +88,7 @@ export async function updateEducationStatus(
 }
 
 // ============================================================================
-// TanStack Query Keys
-// ============================================================================
-
-export const editorNodeKeys = {
-  all: ['editor-nodes'] as const,
-  lists: () => [...editorNodeKeys.all, 'list'] as const,
-  list: (roadmapId: number) => [...editorNodeKeys.lists(), roadmapId] as const,
-  details: () => [...editorNodeKeys.all, 'detail'] as const,
-  detail: (roadmapId: number, nodeId: number) =>
-    [...editorNodeKeys.details(), roadmapId, nodeId] as const,
-};
-
-// ============================================================================
-// TanStack Query Hooks
+// TanStack Query Hooks (nodeKeys from useNodeQueries.ts for cache consistency)
 // ============================================================================
 
 /**
@@ -110,7 +98,7 @@ export const editorNodeKeys = {
  */
 export function useNodes(roadmapId: number) {
   return useQuery({
-    queryKey: editorNodeKeys.list(roadmapId),
+    queryKey: nodeKeys.list(roadmapId),
     queryFn: () => getNodes(roadmapId),
     enabled: !!roadmapId && roadmapId > 0,
     retry: 1, // 1번만 재시도
@@ -128,7 +116,7 @@ export function useNodes(roadmapId: number) {
  */
 export function useNode(roadmapId: number, nodeId: number) {
   return useQuery({
-    queryKey: editorNodeKeys.detail(roadmapId, nodeId),
+    queryKey: nodeKeys.detail(roadmapId, nodeId),
     queryFn: () => getNodeById(roadmapId, nodeId),
     enabled: !!roadmapId && roadmapId > 0 && !!nodeId && nodeId > 0,
   });
@@ -147,11 +135,9 @@ export function useCreateNode(roadmapId: number) {
 
     // 낙관적 업데이트: 임시 노드 추가
     onMutate: async (data) => {
-      await queryClient.cancelQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      await queryClient.cancelQueries({ queryKey: nodeKeys.list(roadmapId) });
 
-      const previousNodes = queryClient.getQueryData<NodeResponse[]>(
-        editorNodeKeys.list(roadmapId),
-      );
+      const previousNodes = queryClient.getQueryData<NodeResponse[]>(nodeKeys.list(roadmapId));
 
       // 임시 ID로 노드 추가 (음수 카운터 사용하여 충돌 방지)
       if (previousNodes) {
@@ -166,7 +152,7 @@ export function useCreateNode(roadmapId: number) {
           ...data,
         };
 
-        queryClient.setQueryData<NodeResponse[]>(editorNodeKeys.list(roadmapId), [
+        queryClient.setQueryData<NodeResponse[]>(nodeKeys.list(roadmapId), [
           ...previousNodes,
           tempNode,
         ]);
@@ -177,12 +163,12 @@ export function useCreateNode(roadmapId: number) {
 
     onError: (_error, _variables, context) => {
       if (context?.previousNodes) {
-        queryClient.setQueryData(editorNodeKeys.list(roadmapId), context.previousNodes);
+        queryClient.setQueryData(nodeKeys.list(roadmapId), context.previousNodes);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
 
     retry: 3,
@@ -205,16 +191,14 @@ export function useUpdateNode(roadmapId: number) {
     // 낙관적 업데이트: 즉시 UI 반영
     onMutate: async ({ nodeId, data }) => {
       // 진행 중인 쿼리 취소
-      await queryClient.cancelQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      await queryClient.cancelQueries({ queryKey: nodeKeys.list(roadmapId) });
 
       // 이전 데이터 백업
-      const previousNodes = queryClient.getQueryData<NodeResponse[]>(
-        editorNodeKeys.list(roadmapId),
-      );
+      const previousNodes = queryClient.getQueryData<NodeResponse[]>(nodeKeys.list(roadmapId));
 
       // 낙관적으로 캐시 업데이트
       if (previousNodes) {
-        queryClient.setQueryData<NodeResponse[]>(editorNodeKeys.list(roadmapId), (old) =>
+        queryClient.setQueryData<NodeResponse[]>(nodeKeys.list(roadmapId), (old) =>
           old
             ? old.map((node) => (node.id === nodeId ? { ...node, ...data, id: nodeId } : node))
             : old,
@@ -228,13 +212,13 @@ export function useUpdateNode(roadmapId: number) {
     // 에러 발생 시 롤백
     onError: (_error, _variables, context) => {
       if (context?.previousNodes) {
-        queryClient.setQueryData(editorNodeKeys.list(roadmapId), context.previousNodes);
+        queryClient.setQueryData(nodeKeys.list(roadmapId), context.previousNodes);
       }
     },
 
     // 성공/실패 관계없이 최종적으로 서버 데이터로 동기화
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
 
     // 네트워크 에러 시 자동 재시도
@@ -256,16 +240,14 @@ export function useDeleteNode(roadmapId: number) {
 
     // 낙관적 업데이트: 즉시 노드 제거
     onMutate: async (nodeId) => {
-      await queryClient.cancelQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      await queryClient.cancelQueries({ queryKey: nodeKeys.list(roadmapId) });
 
-      const previousNodes = queryClient.getQueryData<NodeResponse[]>(
-        editorNodeKeys.list(roadmapId),
-      );
+      const previousNodes = queryClient.getQueryData<NodeResponse[]>(nodeKeys.list(roadmapId));
 
       // 낙관적으로 노드 제거
       if (previousNodes) {
         queryClient.setQueryData<NodeResponse[]>(
-          editorNodeKeys.list(roadmapId),
+          nodeKeys.list(roadmapId),
           previousNodes.filter((node) => node.id !== nodeId),
         );
       }
@@ -275,12 +257,12 @@ export function useDeleteNode(roadmapId: number) {
 
     onError: (_error, _variables, context) => {
       if (context?.previousNodes) {
-        queryClient.setQueryData(editorNodeKeys.list(roadmapId), context.previousNodes);
+        queryClient.setQueryData(nodeKeys.list(roadmapId), context.previousNodes);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
 
     retry: 3,
@@ -302,14 +284,12 @@ export function useUpdateEducationStatus(roadmapId: number) {
 
     // 낙관적 업데이트: 교육 상태 즉시 반영
     onMutate: async ({ nodeId, data }) => {
-      await queryClient.cancelQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      await queryClient.cancelQueries({ queryKey: nodeKeys.list(roadmapId) });
 
-      const previousNodes = queryClient.getQueryData<NodeResponse[]>(
-        editorNodeKeys.list(roadmapId),
-      );
+      const previousNodes = queryClient.getQueryData<NodeResponse[]>(nodeKeys.list(roadmapId));
 
       if (previousNodes) {
-        queryClient.setQueryData<NodeResponse[]>(editorNodeKeys.list(roadmapId), (old) =>
+        queryClient.setQueryData<NodeResponse[]>(nodeKeys.list(roadmapId), (old) =>
           old
             ? old.map((node) =>
                 node.id === nodeId ? { ...node, isEducation: true, subject: data.subject } : node,
@@ -323,12 +303,12 @@ export function useUpdateEducationStatus(roadmapId: number) {
 
     onError: (_error, _variables, context) => {
       if (context?.previousNodes) {
-        queryClient.setQueryData(editorNodeKeys.list(roadmapId), context.previousNodes);
+        queryClient.setQueryData(nodeKeys.list(roadmapId), context.previousNodes);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: editorNodeKeys.list(roadmapId) });
+      queryClient.invalidateQueries({ queryKey: nodeKeys.list(roadmapId) });
     },
 
     retry: 3,

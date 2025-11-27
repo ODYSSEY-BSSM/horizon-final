@@ -1,5 +1,13 @@
 // Main Editor
 
+// AI API
+export {
+  aiKeys,
+  generateAIRoadmap,
+  modifyAINodes,
+  useGenerateAIRoadmap,
+  useModifyAINodes,
+} from './api/aiApi';
 // Edges
 export { HorizonEdge } from './components/edges';
 // Layout
@@ -7,6 +15,11 @@ export type { EditorHeaderProps, EditorHeaderState } from './components/layout/E
 export { EditorHeader } from './components/layout/EditorHeader';
 export type { EditorNodeType, EditorSidebarProps } from './components/layout/EditorSidebar';
 export { EditorSidebar } from './components/layout/EditorSidebar';
+export type { AINodeModifyModalProps } from './components/modals/AINodeModifyModal';
+export { AINodeModifyModal } from './components/modals/AINodeModifyModal';
+export type { AIRoadmapGenerateModalProps } from './components/modals/AIRoadmapGenerateModal';
+// AI Modals
+export { AIRoadmapGenerateModal } from './components/modals/AIRoadmapGenerateModal';
 // Nodes
 export {
   HorizonNode,
@@ -52,9 +65,18 @@ export { useHistory } from './hooks/useHistory';
 // Hooks
 export { useNodeCreator } from './hooks/useNodeCreator';
 export { RoadmapEditor } from './RoadmapEditor';
+export type { AIGenerateStep } from './store/aiStore';
+export { useAIStore } from './store/aiStore';
 // Store
 export { useEditorStore } from './store/editorStore';
-
+export type {
+  AINodeInput,
+  AINodeModifyRequest,
+  AINodeModifyResponse,
+  AIRoadmapGenerateRequest,
+  AIRoadmapGenerateResponse,
+  CourseInput,
+} from './types/ai.types';
 // Types
 export type {
   CreateNodeParams,

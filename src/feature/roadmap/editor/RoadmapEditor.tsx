@@ -44,13 +44,17 @@ import { useCreateText } from './api/textApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
 import { EditorSidebar } from './components/layout/EditorSidebar';
+import { AINodeModifyModal } from './components/modals/AINodeModifyModal';
+import { AIRoadmapGenerateModal } from './components/modals/AIRoadmapGenerateModal';
 import { HorizonNode } from './components/nodes/HorizonNode';
 import { HorizonSection } from './components/nodes/HorizonSection';
 import { HorizonText } from './components/nodes/HorizonText';
 import { EditorToolbar } from './components/toolbar/EditorToolbar';
 import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
+import { useAIStore } from './store/aiStore';
 import { useEditorStore } from './store/editorStore';
+import type { AINodeModifyResponse } from './types/ai.types';
 import type { ApiColor, ApiNodeType, NodeRequest, NodeResponse } from './types/api.types';
 import type { NodeType } from './types/node.types';
 import { loadEdges, saveEdges } from './utils/edgeStorage';
@@ -87,9 +91,13 @@ const AUTO_SAVE_INTERVAL_MS = 30000;
 
 interface RoadmapEditorProps {
   roadmapId: number;
+  /** 폴더 ID (AI 로드맵 생성용, optional) */
+  directoryId?: number;
+  /** 팀 ID (팀 로드맵인 경우, optional) */
+  teamId?: number;
 }
 
-export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
+export const RoadmapEditor = ({ roadmapId, directoryId, teamId }: RoadmapEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
@@ -100,10 +108,29 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
+  // 초기 로드 완료 여부 (저장 후 apiNodes 변경 시 useEffect 재실행 방지)
+  const isInitialLoadDoneRef = useRef(false);
+  // 이전 roadmapId 추적 (로드맵 전환 시 ref 리셋용)
+  const prevRoadmapIdRef = useRef<number | null>(null);
+
+  // roadmapId 변경 시 초기화 상태 리셋
+  useEffect(() => {
+    if (prevRoadmapIdRef.current !== null && prevRoadmapIdRef.current !== roadmapId) {
+      // 로드맵 전환 감지 - 상태 리셋
+      isInitialLoadDoneRef.current = false;
+      setIsNodesLoaded(false);
+      setIsEdgesLoaded(false);
+      setNodes([]);
+      setEdges([]);
+    }
+    prevRoadmapIdRef.current = roadmapId;
+  }, [roadmapId, setNodes, setEdges]);
+
   // Refs for preventing duplicate API calls (timestamp-based debounce)
   const lastNodeCreateTime = useRef(0);
   const lastSectionCreateTime = useRef(0);
   const lastTextCreateTime = useRef(0);
+  const isSavingRef = useRef(false); // 저장 중복 호출 방지
   const DEBOUNCE_MS = 1000; // 1초 내 중복 호출 방지
 
   // Toast
@@ -224,6 +251,16 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 에디터 스토어
   const { selectedNodeId, setSelectedNodeId } = useEditorStore();
+
+  // AI 스토어
+  const {
+    isGenerateModalOpen,
+    isModifyModalOpen,
+    openGenerateModal,
+    closeGenerateModal,
+    openModifyModal,
+    closeModifyModal,
+  } = useAIStore();
 
   // 선택된 노드 찾기
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
@@ -463,7 +500,14 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 저장 핸들러
   const handleSave = useCallback(async () => {
+    // 중복 호출 방지 (ref 기반 - 즉시 체크)
+    if (isSavingRef.current) {
+      return;
+    }
+    isSavingRef.current = true;
+
     if (!roadmapId) {
+      isSavingRef.current = false;
       toast({
         title: '오류',
         description: '로드맵 ID가 필요합니다',
@@ -578,10 +622,12 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           variant: 'failed',
         });
         setHeaderState('editing');
+        isSavingRef.current = false;
         return;
       }
 
       setHeaderState('saved');
+      isSavingRef.current = false;
       toast({
         title: '성공',
         description: `${totalSuccess}개의 노드가 저장되었습니다`,
@@ -599,6 +645,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       }, SAVE_SUCCESS_DISPLAY_MS);
     } catch (error) {
       setHeaderState('editing');
+      isSavingRef.current = false;
       toast({
         title: '저장 실패',
         description: error instanceof Error ? error.message : '로드맵 저장에 실패했습니다',
@@ -939,11 +986,90 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     [createTextMutation, setNodes, toast],
   );
 
+  // 툴바 - AI 액션 선택 핸들러
+  const handleAiActionSelect = useCallback(
+    (action: string) => {
+      if (action === 'generate') {
+        if (!directoryId) {
+          toast({
+            title: '오류',
+            description: 'AI 로드맵 생성은 폴더에서만 가능합니다',
+            variant: 'failed',
+          });
+          return;
+        }
+        openGenerateModal();
+      } else if (action === 'edit-selection') {
+        if (!selectedNodeId) {
+          toast({
+            title: '알림',
+            description: '수정할 노드를 먼저 선택해주세요',
+            variant: 'failed',
+          });
+          return;
+        }
+        openModifyModal();
+      }
+    },
+    [directoryId, selectedNodeId, openGenerateModal, openModifyModal, toast],
+  );
+
+  // AI 로드맵 생성 성공 핸들러
+  const handleAiGenerateSuccess = useCallback(
+    (newNodes: Node[], _newRoadmapId: number) => {
+      // 생성된 노드들을 캔버스에 추가
+      setNodes((nds) => [...nds, ...newNodes]);
+      toast({
+        title: '성공',
+        description: 'AI가 로드맵을 생성했습니다',
+        variant: 'success',
+      });
+    },
+    [setNodes, toast],
+  );
+
+  // AI 노드 수정 성공 핸들러
+  const handleAiModifySuccess = useCallback(
+    (modifiedNodes: AINodeModifyResponse[]) => {
+      // 수정된 노드들 업데이트
+      setNodes((nds) =>
+        nds.map((node) => {
+          const modified = modifiedNodes.find((m) => String(m.id) === node.id);
+          if (modified) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                title: modified.title,
+                description: modified.description,
+              },
+            };
+          }
+          return node;
+        }),
+      );
+
+      // 노드 캐시 무효화 (서버에서 최신 데이터 가져오기)
+      toast({
+        title: '성공',
+        description: 'AI가 노드를 수정했습니다',
+        variant: 'success',
+      });
+    },
+    [setNodes, toast],
+  );
+
   // API 노드 로드 시 React Flow 노드로 변환 (localStorage 위치 우선)
   // Section/Text는 목록 조회 API가 없으므로 localStorage에서만 로드
+  // ⚠️ 초기 로드 시에만 실행 (저장 후 invalidateQueries로 인한 재실행 방지)
   useEffect(() => {
     // roadmapId가 없거나 API 데이터가 아직 로드되지 않았으면 스킵
     if (!roadmapId || apiNodes === undefined) {
+      return;
+    }
+
+    // 이미 초기 로드가 완료된 경우 스킵 (저장 후 refetch 시 화면 튀는 문제 방지)
+    if (isInitialLoadDoneRef.current) {
       return;
     }
 
@@ -991,6 +1117,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
     setNodes(mergedNodes);
     setIsNodesLoaded(true);
+    isInitialLoadDoneRef.current = true; // 초기 로드 완료 표시
     // setNodes는 useNodesState에서 제공하는 안정적인 함수이므로 의존성에서 제외
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roadmapId, apiNodes, setNodes]);
@@ -1069,6 +1196,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       <EditorHeader
         state={headerState}
         roadmapTitle={roadmapData?.roadmapInfo?.title || 'Roadmap'}
+        roadmapId={String(roadmapId)}
         onTempSave={handleTempSave}
         onSave={handleSave}
       />
@@ -1138,8 +1266,30 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
           onToolSelect={handleToolSelect}
           onNodeTypeSelect={handleNodeTypeSelect}
           onTextTypeSelect={handleTextTypeSelect}
+          onAiActionSelect={handleAiActionSelect}
         />
       </StyledToolbar>
+
+      {/* AI 로드맵 생성 모달 */}
+      {isGenerateModalOpen && directoryId && (
+        <AIRoadmapGenerateModal
+          directoryId={directoryId}
+          teamId={teamId}
+          onClose={closeGenerateModal}
+          onSuccess={handleAiGenerateSuccess}
+        />
+      )}
+
+      {/* AI 노드 수정 모달 */}
+      {isModifyModalOpen && selectedNodeId && (
+        <AINodeModifyModal
+          roadmapId={roadmapId}
+          selectedNodeId={selectedNodeId}
+          nodes={nodes}
+          onClose={closeModifyModal}
+          onSuccess={handleAiModifySuccess}
+        />
+      )}
     </StyledEditorContainer>
   );
 };

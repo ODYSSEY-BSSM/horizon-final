@@ -8,6 +8,7 @@ export type EditorHeaderState = EditorState;
 export interface EditorHeaderProps {
   state?: EditorHeaderState;
   roadmapTitle?: string;
+  roadmapId?: string;
   onTempSave?: () => void;
   onSave?: () => void;
 }
@@ -15,6 +16,7 @@ export interface EditorHeaderProps {
 export const EditorHeader = ({
   state = 'editing',
   roadmapTitle = 'Roadmap1',
+  roadmapId,
   onTempSave,
   onSave,
 }: EditorHeaderProps) => {
@@ -22,6 +24,7 @@ export const EditorHeader = ({
     <RoadmapHeader
       mode="editor"
       roadmapTitle={roadmapTitle}
+      roadmapId={roadmapId}
       editorState={state}
       onTempSave={onTempSave}
       onSave={onSave}

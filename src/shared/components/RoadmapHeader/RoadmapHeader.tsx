@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { tokens } from '@/shared/tokens';
 import { Button, Divider, Text } from '@/shared/ui';
 
@@ -11,6 +12,7 @@ export type EditorState = 'editing' | 'saved' | 'saving';
 export interface RoadmapHeaderProps {
   mode: RoadmapHeaderMode;
   roadmapTitle?: string;
+  roadmapId?: string;
 
   // Editor mode props
   editorState?: EditorState;
@@ -28,6 +30,7 @@ export interface RoadmapHeaderProps {
 export const RoadmapHeader = ({
   mode,
   roadmapTitle = 'Roadmap1',
+  roadmapId,
   editorState = 'editing',
   onTempSave,
   onSave,
@@ -35,16 +38,25 @@ export const RoadmapHeader = ({
   showEditButton = true,
   fixed = false,
 }: RoadmapHeaderProps) => {
+  const router = useRouter();
   const isEditor = mode === 'editor';
   const isSaving = editorState === 'saving';
   const isSaved = editorState === 'saved';
 
+  const handleLogoClick = () => {
+    if (isEditor && roadmapId) {
+      router.push(`/roadmap/${roadmapId}`);
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
   return (
     <StyledContainer fixed={fixed}>
       <StyledLeftSection>
-        <StyledLogoIcon>
+        <StyledLogoButton type="button" onClick={handleLogoClick}>
           <Image src="/logo.svg" alt="Horizon Logo" width={40} height={40} priority />
-        </StyledLogoIcon>
+        </StyledLogoButton>
         <StyledTitleSection>
           <Text variant="H3" color={tokens.colors.neutral[900]} as="h1">
             {isEditor ? 'Roadmap Editor' : 'Roadmap Viewer'}
@@ -144,13 +156,23 @@ const StyledLeftSection = styled.div`
   min-width: 0;
 `;
 
-const StyledLogoIcon = styled.div`
+const StyledLogoButton = styled.button`
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: ${tokens.radius.small};
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${tokens.colors.neutral[100]};
+  }
 `;
 
 const StyledTitleSection = styled.div`

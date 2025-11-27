@@ -150,6 +150,7 @@ export const RoadmapViewer = ({
     <StyledContainer>
       <ViewerHeader
         roadmapTitle={roadmapTitle}
+        roadmapId={roadmapId}
         onEditClick={onEditClick}
         showEditButton={showEditButton}
       />
