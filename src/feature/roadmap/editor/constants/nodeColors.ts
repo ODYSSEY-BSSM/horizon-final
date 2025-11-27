@@ -59,8 +59,8 @@ export const NODE_COLORS: Record<NodeColor, ColorTheme> = {
 };
 
 /**
- * 색상 테마 가져오기
+ * 색상 테마 가져오기 (기본값: blue)
  */
-export const getNodeColor = (color: NodeColor): ColorTheme => {
-  return NODE_COLORS[color];
+export const getNodeColor = (color?: NodeColor): ColorTheme => {
+  return NODE_COLORS[color ?? 'blue'] ?? NODE_COLORS.blue;
 };

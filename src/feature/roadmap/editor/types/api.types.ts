@@ -266,6 +266,105 @@ export interface RoadmapResponse {
 }
 
 // ============================================================================
+// Section API Types
+// ============================================================================
+
+/**
+ * 텍스트 타입 (API)
+ */
+export type ApiTextType = 'TITLE' | 'PARAGRAPH';
+
+/**
+ * 섹션 생성 요청 (클라이언트 → 서버)
+ * POST /{roadmap-id}/section
+ */
+export interface SectionRequest {
+  /** 섹션 이름 */
+  name: string;
+  /** X 좌표 */
+  x: number;
+  /** Y 좌표 */
+  y: number;
+  /** 너비 */
+  width: number;
+  /** 높이 */
+  height: number;
+}
+
+/**
+ * 섹션 업데이트 요청 (클라이언트 → 서버)
+ * PATCH /{roadmap-id}/section/{section-id}
+ */
+export interface SectionUpdateRequest extends SectionRequest {
+  /** 섹션 내 노드 ID 목록 */
+  nodeIds: number[];
+}
+
+/**
+ * 섹션 응답 (서버 → 클라이언트)
+ */
+export interface SectionResponse {
+  /** 섹션 ID */
+  id: number;
+  /** 섹션 이름 */
+  name: string;
+  /** X 좌표 */
+  x: number;
+  /** Y 좌표 */
+  y: number;
+  /** 너비 */
+  width: number;
+  /** 높이 */
+  height: number;
+  /** 섹션 내 노드 목록 */
+  nodes: SimpleNodeResponse[];
+}
+
+// ============================================================================
+// Text API Types
+// ============================================================================
+
+/**
+ * 텍스트 생성 요청 (클라이언트 → 서버)
+ * POST /{roadmap-id}/text
+ */
+export interface TextRequest {
+  /** 텍스트 내용 */
+  text: string;
+  /** 텍스트 타입 */
+  type: ApiTextType;
+}
+
+/**
+ * 텍스트 업데이트 요청 (클라이언트 → 서버)
+ * PATCH /{roadmap-id}/text/{id}
+ */
+export interface TextUpdateRequest extends TextRequest {
+  /** 섹션 ID (optional) */
+  sectionId?: number | null;
+}
+
+/**
+ * 텍스트 응답 (서버 → 클라이언트)
+ */
+export interface TextResponse {
+  /** 텍스트 ID */
+  id: number;
+  /** 텍스트 내용 */
+  text: string;
+  /** 텍스트 타입 */
+  type: ApiTextType;
+  /** 로드맵 ID */
+  roadmapId: number;
+  /** 섹션 ID */
+  sectionId: number | null;
+  /** X 좌표 */
+  x?: number;
+  /** Y 좌표 */
+  y?: number;
+}
+
+// ============================================================================
 // Type Guards
 // ============================================================================
 

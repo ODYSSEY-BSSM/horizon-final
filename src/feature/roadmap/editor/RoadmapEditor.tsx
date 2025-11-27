@@ -39,6 +39,8 @@ import { useToast } from '@/shared/hooks/useToast';
 import { tokens } from '@/shared/tokens';
 import { useRoadmap } from '../hooks/useRoadmapQueries';
 import { useCreateNode, useDeleteNode, useNodes, useUpdateNode } from './api/nodeApi';
+import { useCreateSection } from './api/sectionApi';
+import { useCreateText } from './api/textApi';
 import { HorizonEdge } from './components/edges';
 import { EditorHeader, type EditorHeaderState } from './components/layout/EditorHeader';
 import { EditorSidebar } from './components/layout/EditorSidebar';
@@ -48,7 +50,6 @@ import { HorizonText } from './components/nodes/HorizonText';
 import { EditorToolbar } from './components/toolbar/EditorToolbar';
 import { HistoryController } from './components/ui/HistoryController';
 import { useHistory } from './hooks/useHistory';
-import { useNodeCreator } from './hooks/useNodeCreator';
 import { useEditorStore } from './store/editorStore';
 import type { ApiColor, ApiNodeType, NodeRequest, NodeResponse } from './types/api.types';
 import type { NodeType } from './types/node.types';
@@ -93,6 +94,7 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [headerState, setHeaderState] = useState<EditorHeaderState>('editing');
   const [isEdgesLoaded, setIsEdgesLoaded] = useState(false);
+  const [isNodesLoaded, setIsNodesLoaded] = useState(false);
 
   // Refs for cleanup
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -109,6 +111,10 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const updateNodeMutation = useUpdateNode(roadmapId);
   const createNodeMutation = useCreateNode(roadmapId);
   const deleteNodeMutation = useDeleteNode(roadmapId);
+
+  // API 연동: Section/Text 생성 (목록 조회 API 없음)
+  const createSectionMutation = useCreateSection(roadmapId);
+  const createTextMutation = useCreateText(roadmapId);
 
   // WebSocket handlers for real-time synchronization
   const handleNodeCreated = useCallback(
@@ -209,9 +215,6 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
 
   // 히스토리 관리
   const { saveState, undo, redo, canUndo, canRedo } = useHistory();
-
-  // 노드 생성 훅 (섹션과 텍스트용)
-  const { addSection, addText } = useNodeCreator();
 
   // 에디터 스토어
   const { selectedNodeId, setSelectedNodeId } = useEditorStore();
@@ -822,50 +825,145 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
     [roadmapId, createNodeMutation, apiNodes, setNodes, toast],
   );
 
-  // 툴바 - 도구 선택 핸들러
+  // 툴바 - 도구 선택 핸들러 (섹션 생성)
   const handleToolSelect = useCallback(
-    (tool: string) => {
+    async (tool: string) => {
       if (tool === 'section') {
-        addSection({ x: 100, y: 100 }, { width: 600, height: 400 });
+        try {
+          const position = { x: 100, y: 100 };
+          const size = { width: 600, height: 400 };
+
+          // API 호출
+          const response = await createSectionMutation.mutateAsync({
+            name: 'New Section',
+            x: position.x,
+            y: position.y,
+            width: size.width,
+            height: size.height,
+          });
+
+          // React Flow에 섹션 추가
+          const newSection = {
+            id: String(response.id),
+            type: 'horizonSection',
+            position,
+            data: { label: response.name, color: 'blue' as const },
+            style: { width: size.width, height: size.height, zIndex: 0 },
+            selected: false,
+          };
+
+          setNodes((nds) => [...nds, newSection]);
+
+          toast({
+            title: '성공',
+            description: '섹션이 생성되었습니다',
+            variant: 'success',
+          });
+        } catch (error) {
+          toast({
+            title: '오류',
+            description: error instanceof Error ? error.message : '섹션 생성에 실패했습니다',
+            variant: 'failed',
+          });
+        }
       }
     },
-    [addSection],
+    [createSectionMutation, setNodes, toast],
   );
 
   // 툴바 - 텍스트 타입 선택 핸들러
   const handleTextTypeSelect = useCallback(
-    (textType: string) => {
-      if (textType === 'title-text') {
-        addText('title', { x: 250, y: 250 });
-      } else if (textType === 'paragraph-text') {
-        addText('paragraph', { x: 250, y: 250 });
+    async (textType: string) => {
+      const position = { x: 250, y: 250 };
+      const apiTextType = textType === 'title-text' ? 'TITLE' : 'PARAGRAPH';
+      const localTextType = textType === 'title-text' ? 'title' : 'paragraph';
+
+      try {
+        // API 호출
+        const response = await createTextMutation.mutateAsync({
+          text: 'New Text',
+          type: apiTextType as 'TITLE' | 'PARAGRAPH',
+        });
+
+        // React Flow에 텍스트 추가
+        const newText = {
+          id: String(response.id),
+          type: 'horizonText',
+          position,
+          data: { type: localTextType as 'title' | 'paragraph', text: response.text },
+          style: { zIndex: 1 },
+        };
+
+        setNodes((nds) => [...nds, newText]);
+
+        toast({
+          title: '성공',
+          description: '텍스트가 생성되었습니다',
+          variant: 'success',
+        });
+      } catch (error) {
+        toast({
+          title: '오류',
+          description: error instanceof Error ? error.message : '텍스트 생성에 실패했습니다',
+          variant: 'failed',
+        });
       }
     },
-    [addText],
+    [createTextMutation, setNodes, toast],
   );
 
-  // API 노드 로드 시 React Flow 노드로 변환 (서버 데이터 우선)
+  // API 노드 로드 시 React Flow 노드로 변환 (localStorage 위치 우선)
+  // Section/Text는 목록 조회 API가 없으므로 localStorage에서만 로드
   useEffect(() => {
-    // roadmapId가 없거나 apiNodes가 아직 로드되지 않았으면 스킵
+    // roadmapId가 없거나 API 데이터가 아직 로드되지 않았으면 스킵
     if (!roadmapId || apiNodes === undefined) {
       return;
     }
 
-    // 서버 데이터 우선: API에서 로드한 노드
-    if (apiNodes.length > 0) {
-      const reactFlowNodes = apiNodesToReactFlow(apiNodes);
-      setNodes(reactFlowNodes);
-      // localStorage도 동기화
-      saveNodes(roadmapId, reactFlowNodes);
-    } else {
-      // 서버에 노드가 없으면 localStorage 확인
-      const localNodes = loadNodes(roadmapId);
-      if (localNodes && localNodes.length > 0) {
-        setNodes(localNodes);
-      } else {
-        setNodes([]);
+    // localStorage에서 저장된 노드 가져오기
+    const localNodes = loadNodes(roadmapId);
+    const localNodeMap = new Map<string, Node>();
+    if (localNodes) {
+      for (const node of localNodes) {
+        localNodeMap.set(node.id, node);
       }
     }
+
+    // 모든 노드를 담을 배열
+    const allNodes: Node[] = [];
+
+    // 1. API 노드들을 ReactFlow 노드로 변환
+    if (apiNodes.length > 0) {
+      const reactFlowNodes = apiNodesToReactFlow(apiNodes);
+      allNodes.push(...reactFlowNodes);
+    }
+
+    // 2. localStorage에 저장된 위치/data/style 병합
+    const mergedNodes = allNodes.map((node) => {
+      const savedNode = localNodeMap.get(node.id);
+      if (savedNode) {
+        return {
+          ...node,
+          position: savedNode.position,
+          data: savedNode.data ?? node.data,
+          style: savedNode.style ?? node.style,
+        };
+      }
+      return node;
+    });
+
+    // 3. localStorage에만 있는 로컬 노드(섹션, 텍스트 등) 추가
+    if (localNodes) {
+      for (const localNode of localNodes) {
+        const existsInMerged = mergedNodes.some((n) => n.id === localNode.id);
+        if (!existsInMerged) {
+          mergedNodes.push(localNode);
+        }
+      }
+    }
+
+    setNodes(mergedNodes);
+    setIsNodesLoaded(true);
     // setNodes는 useNodesState에서 제공하는 안정적인 함수이므로 의존성에서 제외
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roadmapId, apiNodes, setNodes]);
@@ -887,6 +985,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
       saveEdges(roadmapId, edges);
     }
   }, [isEdgesLoaded, roadmapId, edges]);
+
+  // Node 변경 시 자동으로 localStorage에 저장 (로드 완료 후에만)
+  useEffect(() => {
+    if (isNodesLoaded && roadmapId && roadmapId > 0) {
+      saveNodes(roadmapId, nodes);
+    }
+  }, [isNodesLoaded, roadmapId, nodes]);
 
   // 노드/엣지 변경 완료 시 히스토리 저장 (debounced)
   useEffect(() => {
