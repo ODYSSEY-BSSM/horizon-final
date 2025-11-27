@@ -45,7 +45,7 @@ export const RoadmapHeader = ({
 
   const handleLogoClick = () => {
     if (isEditor && roadmapId) {
-      router.push(`/roadmap/${roadmapId}`);
+      router.push(`/viewer/${roadmapId}`);
     } else {
       router.push('/dashboard');
     }
