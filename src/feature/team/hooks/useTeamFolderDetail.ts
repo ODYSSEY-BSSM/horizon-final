@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTeamRoadmaps } from '@/feature/roadmap/hooks/useRoadmapQueries';
+import { useTeamRoadmapsByDirectory } from '@/feature/roadmap/hooks/useRoadmapQueries';
 import type { Roadmap } from '@/feature/team/types/team';
 import { mapTeamRoadmapResponseToRoadmapItem } from '@/shared/utils/roadmapMapper';
 
@@ -12,27 +12,19 @@ const useFolderDetail = (teamId: string, folderId: string) => {
   const [viewMode, setViewMode] = useState<'list' | 'thumbnail'>('list');
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: teamRoadmapsData } = useTeamRoadmaps(Number(teamId));
+  // Use directory-specific API for better performance
+  const { data: teamRoadmapsData } = useTeamRoadmapsByDirectory(Number(teamId), Number(folderId));
 
   const allRoadmaps: Roadmap[] = useMemo(() => {
     if (!teamRoadmapsData) {
       return [];
     }
 
-    // Convert API response to RoadmapItem format first
+    // Convert API response to RoadmapItem format
     const allItems = teamRoadmapsData.map(mapTeamRoadmapResponseToRoadmapItem);
 
-    // Filter by folderId
-    const folderIdNum = Number(folderId);
-    const filteredItems = allItems.filter((item) => {
-      const originalRoadmap = teamRoadmapsData.find(
-        (r) => (r.uuid ?? r.roadmapInfo.id).toString() === item.id,
-      );
-      return originalRoadmap?.roadmapInfo?.directoryId === folderIdNum;
-    });
-
     // Convert RoadmapItem to Roadmap (team-specific type)
-    const roadmaps = filteredItems.map((item) => {
+    const roadmaps = allItems.map((item) => {
       const originalRoadmap = teamRoadmapsData.find(
         (r) => (r.uuid ?? r.roadmapInfo.id).toString() === item.id,
       );
