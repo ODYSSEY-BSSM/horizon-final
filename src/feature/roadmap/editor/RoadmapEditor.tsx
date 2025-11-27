@@ -100,6 +100,12 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const autoSaveIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
+  // Refs for preventing duplicate API calls (timestamp-based debounce)
+  const lastNodeCreateTime = useRef(0);
+  const lastSectionCreateTime = useRef(0);
+  const lastTextCreateTime = useRef(0);
+  const DEBOUNCE_MS = 1000; // 1초 내 중복 호출 방지
+
   // Toast
   const { toast } = useToast();
 
@@ -758,6 +764,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // 툴바 - 노드 타입 선택 핸들러
   const handleNodeTypeSelect = useCallback(
     async (nodeTypeStr: string) => {
+      // 중복 호출 방지 (timestamp 기반 debounce)
+      const now = Date.now();
+      if (now - lastNodeCreateTime.current < DEBOUNCE_MS) {
+        return;
+      }
+      lastNodeCreateTime.current = now;
+
       if (!roadmapId) {
         toast({
           title: 'Error',
@@ -829,6 +842,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   const handleToolSelect = useCallback(
     async (tool: string) => {
       if (tool === 'section') {
+        // 중복 호출 방지 (timestamp 기반 debounce)
+        const now = Date.now();
+        if (now - lastSectionCreateTime.current < DEBOUNCE_MS) {
+          return;
+        }
+        lastSectionCreateTime.current = now;
+
         try {
           const position = { x: 100, y: 100 };
           const size = { width: 600, height: 400 };
@@ -874,6 +894,13 @@ export const RoadmapEditor = ({ roadmapId }: RoadmapEditorProps) => {
   // 툴바 - 텍스트 타입 선택 핸들러
   const handleTextTypeSelect = useCallback(
     async (textType: string) => {
+      // 중복 호출 방지 (timestamp 기반 debounce)
+      const now = Date.now();
+      if (now - lastTextCreateTime.current < DEBOUNCE_MS) {
+        return;
+      }
+      lastTextCreateTime.current = now;
+
       const position = { x: 250, y: 250 };
       const apiTextType = textType === 'title-text' ? 'TITLE' : 'PARAGRAPH';
       const localTextType = textType === 'title-text' ? 'title' : 'paragraph';
