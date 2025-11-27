@@ -18,6 +18,8 @@ export interface RoadmapHeaderProps {
   editorState?: EditorState;
   onTempSave?: () => void;
   onSave?: () => void;
+  /** 뷰어로 이동하기 전에 호출됨 (저장 등) - Promise 완료 후 이동 */
+  onBeforeViewerNavigate?: () => Promise<void>;
 
   // Viewer mode props
   onEditClick?: () => void;
@@ -34,6 +36,7 @@ export const RoadmapHeader = ({
   editorState = 'editing',
   onTempSave,
   onSave,
+  onBeforeViewerNavigate,
   onEditClick,
   showEditButton = true,
   fixed = false,
@@ -43,8 +46,16 @@ export const RoadmapHeader = ({
   const isSaving = editorState === 'saving';
   const isSaved = editorState === 'saved';
 
-  const handleLogoClick = () => {
+  const handleLogoClick = async () => {
     if (isEditor && roadmapId) {
+      // 뷰어로 이동 전 저장 콜백이 있으면 실행
+      if (onBeforeViewerNavigate) {
+        try {
+          await onBeforeViewerNavigate();
+        } catch {
+          // 저장 실패해도 이동은 진행 (사용자가 선택할 수 있도록)
+        }
+      }
       router.push(`/viewer/${roadmapId}`);
     } else {
       router.push('/dashboard');

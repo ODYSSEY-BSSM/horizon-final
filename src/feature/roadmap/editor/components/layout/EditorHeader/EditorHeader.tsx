@@ -11,6 +11,8 @@ export interface EditorHeaderProps {
   roadmapId?: string;
   onTempSave?: () => void;
   onSave?: () => void;
+  /** 뷰어로 이동하기 전에 호출됨 (저장 등) - Promise 완료 후 이동 */
+  onBeforeViewerNavigate?: () => Promise<void>;
 }
 
 export const EditorHeader = ({
@@ -19,6 +21,7 @@ export const EditorHeader = ({
   roadmapId,
   onTempSave,
   onSave,
+  onBeforeViewerNavigate,
 }: EditorHeaderProps) => {
   return (
     <RoadmapHeader
@@ -28,6 +31,7 @@ export const EditorHeader = ({
       editorState={state}
       onTempSave={onTempSave}
       onSave={onSave}
+      onBeforeViewerNavigate={onBeforeViewerNavigate}
       fixed={false}
     />
   );

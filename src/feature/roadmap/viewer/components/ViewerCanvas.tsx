@@ -14,6 +14,8 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { HorizonEdge } from '@/feature/roadmap/editor/components/edges/HorizonEdge';
 import { HorizonNode } from '@/feature/roadmap/editor/components/nodes/HorizonNode/HorizonNode';
+import { HorizonSection } from '@/feature/roadmap/editor/components/nodes/HorizonSection/HorizonSection';
+import { HorizonText } from '@/feature/roadmap/editor/components/nodes/HorizonText/HorizonText';
 import { tokens } from '@/shared/tokens';
 
 interface ViewerCanvasProps {
@@ -25,6 +27,8 @@ interface ViewerCanvasProps {
 // nodeTypes를 컴포넌트 외부에서 정의 (React Flow 권장사항)
 const nodeTypes: NodeTypes = {
   horizonNode: HorizonNode,
+  horizonSection: HorizonSection,
+  horizonText: HorizonText,
 };
 
 const edgeTypes = {

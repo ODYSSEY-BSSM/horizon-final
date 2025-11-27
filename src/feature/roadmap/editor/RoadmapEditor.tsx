@@ -403,11 +403,74 @@ export const RoadmapEditor = ({ roadmapId, directoryId, teamId }: RoadmapEditorP
   // 노드 드래그 종료 시 부모-자식 관계 설정
   const onNodeDragStop = useCallback(
     (_event: React.MouseEvent, node: Node) => {
-      // 섹션이 아닌 노드만 처리
+      // 섹션 드래그 시: 섹션 영역 안에 있는 노드들을 자식으로 설정
       if (node.type === 'horizonSection') {
+        const sectionX = node.position.x;
+        const sectionY = node.position.y;
+        const sectionWidth = (node.style?.width as number | undefined) ?? 600;
+        const sectionHeight = (node.style?.height as number | undefined) ?? 400;
+
+        setNodes((nds) =>
+          nds.map((n) => {
+            // 섹션 자체나 다른 섹션은 처리하지 않음
+            if (n.type === 'horizonSection') {
+              return n;
+            }
+
+            // 노드의 절대 좌표 계산
+            let nodeAbsoluteX = n.position.x;
+            let nodeAbsoluteY = n.position.y;
+
+            if (n.parentNode && n.parentNode !== node.id) {
+              // 다른 섹션의 자식인 경우 절대 좌표 계산
+              const currentParent = nds.find((p) => p.id === n.parentNode);
+              if (currentParent) {
+                nodeAbsoluteX = currentParent.position.x + n.position.x;
+                nodeAbsoluteY = currentParent.position.y + n.position.y;
+              }
+            } else if (n.parentNode === node.id) {
+              // 이미 이 섹션의 자식인 경우 절대 좌표 계산
+              nodeAbsoluteX = sectionX + n.position.x;
+              nodeAbsoluteY = sectionY + n.position.y;
+            }
+
+            // 노드가 이 섹션 영역 안에 있는지 확인
+            const isInsideSection =
+              nodeAbsoluteX >= sectionX &&
+              nodeAbsoluteX <= sectionX + sectionWidth &&
+              nodeAbsoluteY >= sectionY &&
+              nodeAbsoluteY <= sectionY + sectionHeight;
+
+            if (isInsideSection && n.parentNode !== node.id) {
+              // 섹션 안에 있고, 아직 이 섹션의 자식이 아닌 경우 → 자식으로 설정
+              const relativeX = nodeAbsoluteX - sectionX;
+              const relativeY = nodeAbsoluteY - sectionY;
+
+              // 기존 parentNode 제거하고 새 parentNode 설정
+              const { parentNode: _oldParent, ...rest } = n;
+              return {
+                ...rest,
+                parentNode: node.id,
+                position: { x: relativeX, y: relativeY },
+              };
+            }
+
+            if (!isInsideSection && n.parentNode === node.id) {
+              // 섹션 밖으로 나갔고, 이 섹션의 자식인 경우 → 부모에서 제거
+              const { parentNode: _oldParent, ...rest } = n;
+              return {
+                ...rest,
+                position: { x: nodeAbsoluteX, y: nodeAbsoluteY },
+              };
+            }
+
+            return n;
+          }),
+        );
         return;
       }
 
+      // 일반 노드 드래그 시: 기존 로직
       // 모든 섹션 찾기
       const sections = nodes.filter((n) => n.type === 'horizonSection');
 
@@ -1199,6 +1262,7 @@ export const RoadmapEditor = ({ roadmapId, directoryId, teamId }: RoadmapEditorP
         roadmapId={String(roadmapId)}
         onTempSave={handleTempSave}
         onSave={handleSave}
+        onBeforeViewerNavigate={handleSave}
       />
 
       {/* 히스토리 컨트롤러 */}

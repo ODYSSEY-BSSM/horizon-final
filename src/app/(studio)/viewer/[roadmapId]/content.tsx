@@ -66,30 +66,6 @@ export function ViewerContent({ roadmapId }: ViewerContentProps) {
     );
   }
 
-  if (!apiNodes || apiNodes.length === 0) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          gap: '16px',
-        }}
-      >
-        <div>노드가 없습니다</div>
-        <button
-          type="button"
-          onClick={handleEditClick}
-          style={{ padding: '8px 16px', cursor: 'pointer' }}
-        >
-          편집하기
-        </button>
-      </div>
-    );
-  }
-
   return (
     <ReactFlowProvider>
       <RoadmapViewer
